@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Environment
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel
+.vercel/
+
+# Private local files
+.local/
+
+# Documentation (generated)
+docs/
+
+# Harness runtime
+.harness/state/
+.harness/logs/
+
+# TypeScript
+tsconfig.tsbuildinfo
+
+# Testing
+coverage/
+
+# OS
+.DS_Store
+*.swp
+*.swo

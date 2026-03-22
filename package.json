@@ -1,0 +1,52 @@
+{
+  "name": "daily-dev",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "type-check": "tsc --noEmit",
+    "validate": "bash .harness/scripts/validate.sh",
+    "generate-readme": "tsx .harness/scripts/generate-readme.ts",
+    "update-goals": "tsx .harness/scripts/update-goals-progress.ts",
+    "select-agent": "tsx .harness/scripts/select-agent.ts"
+  },
+  "dependencies": {
+    "next": "^15",
+    "react": "^19",
+    "react-dom": "^19",
+    "zustand": "^5",
+    "framer-motion": "^12",
+    "prismjs": "^1",
+    "zod": "^3",
+    "clsx": "^2",
+    "date-fns": "^4",
+    "lucide-react": "^0.474",
+    "sonner": "^1"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/prismjs": "^1",
+    "tailwindcss": "^4",
+    "@tailwindcss/postcss": "^4",
+    "postcss": "^8",
+    "eslint": "^9",
+    "eslint-config-next": "^15",
+    "jest": "^29",
+    "@jest/globals": "^29",
+    "ts-jest": "^29",
+    "@types/jest": "^29",
+    "@testing-library/react": "^16",
+    "@testing-library/jest-dom": "^6",
+    "jest-environment-jsdom": "^29",
+    "ts-node": "^10",
+    "tsx": "^4"
+  }
+}
