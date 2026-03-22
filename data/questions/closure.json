@@ -1,0 +1,119 @@
+[
+  {
+    "id": "closure-001",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "클로저(Closure)의 정의로 가장 적절한 것은?",
+    "options": [
+      "함수가 선언된 렉시컬 환경을 기억하여 외부 변수에 접근할 수 있는 함수",
+      "전역 변수를 참조하는 함수",
+      "즉시 실행 함수(IIFE)의 다른 이름",
+      "재귀적으로 자기 자신을 호출하는 함수"
+    ],
+    "correctIndex": 0,
+    "explanation": "클로저는 함수와 그 함수가 선언된 렉시컬 환경의 조합입니다. 내부 함수가 외부 함수의 변수에 접근할 수 있는 것은 클로저 덕분입니다. 외부 함수의 실행이 끝나도 내부 함수가 참조하는 변수는 메모리에 유지됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-002",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function outer() {\n  let count = 0;\n  return function inner() {\n    count++;\n    return count;\n  };\n}\nconst counter = outer();\nconsole.log(counter());\nconsole.log(counter());",
+    "options": [
+      "0, 0",
+      "1, 2",
+      "1, 1",
+      "undefined, undefined"
+    ],
+    "correctIndex": 1,
+    "explanation": "outer 함수가 실행되면 count 변수와 inner 함수가 생성됩니다. inner 함수는 클로저로서 count 변수를 기억합니다. counter()를 호출할 때마다 동일한 count 변수를 증가시키므로 1, 2가 순서대로 출력됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-003",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function makeAdder(x) {\n  return function(y) {\n    return x + y;\n  };\n}\nconst add5 = makeAdder(5);\nconst add10 = makeAdder(10);\nconsole.log(add5(3));\nconsole.log(add10(3));",
+    "options": [
+      "8, 8",
+      "5, 10",
+      "8, 13",
+      "15, 15"
+    ],
+    "correctIndex": 2,
+    "explanation": "makeAdder(5)는 x=5를 클로저로 기억하는 함수를 반환합니다. add5(3)은 5+3=8입니다. makeAdder(10)은 x=10을 기억하는 별도의 클로저를 생성합니다. add10(3)은 10+3=13입니다. 각 클로저는 독립적인 렉시컬 환경을 가집니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-004",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "클로저를 활용한 데이터 은닉에 대한 설명으로 올바른 것은?",
+    "options": [
+      "클로저 내부 변수는 항상 전역 스코프에 노출된다",
+      "클로저는 메모리를 전혀 사용하지 않는다",
+      "클로저 내부 변수는 가비지 컬렉션의 대상이 된다",
+      "외부에서 직접 접근할 수 없는 프라이빗 변수를 만들 수 있다"
+    ],
+    "correctIndex": 3,
+    "explanation": "클로저를 사용하면 외부 함수의 변수를 내부 함수만 접근할 수 있는 프라이빗 변수로 만들 수 있습니다. 이는 JavaScript에서 정보 은닉(Information Hiding)을 구현하는 대표적인 패턴입니다. 모듈 패턴이 이 원리를 활용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-005",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function createFunctions() {\n  const result = [];\n  for (let i = 0; i < 3; i++) {\n    result.push(() => i);\n  }\n  return result;\n}\nconst fns = createFunctions();\nconsole.log(fns[0](), fns[1](), fns[2]());",
+    "options": [
+      "0 1 2",
+      "3 3 3",
+      "undefined undefined undefined",
+      "0 0 0"
+    ],
+    "correctIndex": 0,
+    "explanation": "let은 블록 스코프를 생성하므로 for 루프의 각 반복마다 새로운 i 바인딩이 생성됩니다. 각 클로저는 자신의 반복에 해당하는 i 값(0, 1, 2)을 기억합니다. var를 사용했다면 모두 3을 반환했을 것입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/let"
+  },
+  {
+    "id": "closure-006",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 메모리 누수가 발생할 수 있는 이유는?",
+    "code": "function createHandler() {\n  const largeData = new Array(1000000).fill('data');\n  return function handler(event) {\n    console.log(event.type);\n  };\n}\nconst handler = createHandler();",
+    "options": [
+      "event 객체가 너무 크기 때문",
+      "handler 함수가 클로저로 largeData를 참조하여 가비지 컬렉션이 되지 않는다",
+      "Array.fill 메서드가 메모리를 해제하지 않기 때문",
+      "console.log가 메모리를 누적하기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "handler 함수는 createHandler의 렉시컬 환경을 클로저로 캡처합니다. 비록 handler 내부에서 largeData를 직접 사용하지 않지만, 일부 JavaScript 엔진은 클로저가 외부 함수의 전체 렉시컬 환경을 유지할 수 있습니다. 이런 경우 큰 데이터가 불필요하게 메모리에 남아있게 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Memory_management"
+  },
+  {
+    "id": "closure-007",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const module = (() => {\n  let private_count = 0;\n  return {\n    increment() { private_count++; },\n    getCount() { return private_count; }\n  };\n})();\nmodule.increment();\nmodule.increment();\nconsole.log(module.getCount());\nconsole.log(module.private_count);",
+    "options": [
+      "2, 2",
+      "2, 0",
+      "2, undefined",
+      "0, undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "IIFE(즉시 실행 함수)로 모듈 패턴을 구현했습니다. private_count는 클로저로 보호되어 increment와 getCount로만 접근 가능합니다. module.private_count는 반환된 객체에 해당 프로퍼티가 없으므로 undefined입니다. getCount()는 클로저를 통해 2를 반환합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  }
+]

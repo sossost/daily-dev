@@ -27,6 +27,7 @@ The following files and directories must NEVER be modified by agents:
 - All functions and components must have clear, single responsibilities.
 - File size limit: 800 lines. Function limit: 50 lines.
 - No `console.log` in production code.
+- Tests run in jsdom. Browser APIs (matchMedia, IntersectionObserver, etc.) are mocked in `__tests__/setup.ts`. Use the existing mocks, don't add new global mocks inline.
 
 ## Content Rules
 

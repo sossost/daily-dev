@@ -15,6 +15,8 @@ const config: Config = {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   roots: ['<rootDir>/__tests__'],
+  testPathIgnorePatterns: ['/node_modules/', '/__tests__/setup\\.ts$'],
+  setupFilesAfterEnv: ['<rootDir>/__tests__/setup.ts'],
   coverageThreshold: {
     global: {
       lines: 80,

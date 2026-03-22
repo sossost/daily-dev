@@ -1,0 +1,102 @@
+[
+  {
+    "id": "this-001",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "JavaScript에서 this 바인딩이 결정되는 시점은?",
+    "options": [
+      "함수가 호출될 때 결정된다",
+      "함수가 선언될 때 결정된다",
+      "스크립트가 로드될 때 결정된다",
+      "컴파일 타임에 결정된다"
+    ],
+    "correctIndex": 0,
+    "explanation": "일반 함수의 this는 함수가 어떻게 호출되는지에 따라 결정됩니다(동적 바인딩). 메서드 호출, 생성자 호출, call/apply/bind, 일반 호출 등 호출 방식에 따라 this가 달라집니다. 단, 화살표 함수는 예외로 선언 시점의 this를 상속합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/this"
+  },
+  {
+    "id": "this-002",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const obj = {\n  name: 'Alice',\n  greet() {\n    return `Hello, ${this.name}`;\n  }\n};\nconsole.log(obj.greet());",
+    "options": [
+      "Hello, undefined",
+      "Hello, Alice",
+      "TypeError",
+      "Hello, "
+    ],
+    "correctIndex": 1,
+    "explanation": "obj.greet()는 메서드 호출 패턴입니다. 점(.) 앞의 객체인 obj가 this로 바인딩됩니다. 따라서 this.name은 'Alice'이고, 'Hello, Alice'가 반환됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/this"
+  },
+  {
+    "id": "this-003",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const obj = {\n  name: 'Bob',\n  greet() {\n    return this.name;\n  }\n};\nconst greet = obj.greet;\nconsole.log(greet());",
+    "options": [
+      "Bob",
+      "null",
+      "undefined",
+      "TypeError"
+    ],
+    "correctIndex": 2,
+    "explanation": "greet 변수에 obj.greet 메서드의 참조를 저장한 후 단독으로 호출하면, this는 전역 객체(브라우저: window, strict mode: undefined)를 가리킵니다. 전역 객체에 name이 없으므로 undefined가 반환됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/this"
+  },
+  {
+    "id": "this-004",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const obj = {\n  name: 'Charlie',\n  greet: () => {\n    return this.name;\n  }\n};\nconsole.log(obj.greet());",
+    "options": [
+      "Charlie",
+      "TypeError",
+      "null",
+      "undefined"
+    ],
+    "correctIndex": 3,
+    "explanation": "화살표 함수는 자체 this 바인딩이 없으며, 선언된 위치의 상위 스코프의 this를 상속합니다. 객체 리터럴은 스코프를 생성하지 않으므로, 화살표 함수의 this는 모듈/전역 스코프의 this입니다. 전역에 name이 없으므로 undefined가 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/Arrow_functions"
+  },
+  {
+    "id": "this-005",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "call, apply, bind의 차이점으로 올바른 것은?",
+    "options": [
+      "call, apply는 즉시 실행하고 bind는 새 함수를 반환한다",
+      "call은 배열로 인자를 전달하고, apply는 개별 인자를 전달한다",
+      "세 메서드 모두 새 함수를 반환한다",
+      "bind만 this를 변경하고, call과 apply는 변경하지 않는다"
+    ],
+    "correctIndex": 0,
+    "explanation": "call과 apply는 함수를 즉시 실행하면서 this를 지정합니다. call은 인자를 개별적으로, apply는 배열로 전달합니다. bind는 this가 바인딩된 새 함수를 반환하며 즉시 실행하지 않습니다. bind로 생성된 함수는 나중에 호출할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Function/bind"
+  },
+  {
+    "id": "this-006",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function Timer() {\n  this.seconds = 0;\n  setInterval(function() {\n    this.seconds++;\n    console.log(this.seconds);\n  }, 1000);\n}\nconst timer = new Timer();\n// 1초 후 출력 결과는?",
+    "options": [
+      "1",
+      "NaN",
+      "undefined",
+      "TypeError"
+    ],
+    "correctIndex": 1,
+    "explanation": "setInterval의 콜백은 일반 함수로 호출되므로 this는 전역 객체를 가리킵니다. 전역 객체에 seconds 프로퍼티가 없으므로 undefined + 1 = NaN이 됩니다. 이를 해결하려면 화살표 함수를 사용하거나 bind(this)를 사용하여 Timer 인스턴스의 this를 유지해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/this"
+  }
+]

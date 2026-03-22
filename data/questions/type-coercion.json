@@ -1,0 +1,103 @@
+[
+  {
+    "id": "type-coercion-001",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(1 + '2');\nconsole.log('3' - 1);",
+    "options": [
+      "12, 2",
+      "3, 2",
+      "12, '31'",
+      "3, '31'"
+    ],
+    "correctIndex": 0,
+    "explanation": "'+' 연산자는 피연산자 중 하나가 문자열이면 문자열 연결을 수행합니다. 1 + '2'는 '12'입니다. '-' 연산자는 숫자 연산만 가능하므로 '3'을 숫자 3으로 변환합니다. 3 - 1은 2입니다. 이것이 JavaScript 타입 변환의 비대칭성입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Addition"
+  },
+  {
+    "id": "type-coercion-002",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log('' == false);\nconsole.log('' === false);",
+    "options": [
+      "true, true",
+      "true, false",
+      "false, false",
+      "false, true"
+    ],
+    "correctIndex": 1,
+    "explanation": "== (동등 연산자)는 타입 변환을 수행합니다. 빈 문자열 ''과 false는 모두 숫자 0으로 변환되어 true입니다. === (일치 연산자)는 타입 변환 없이 비교하므로 string과 boolean은 다른 타입이라 false입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-003",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log([] + []);\nconsole.log([] + {});\nconsole.log({} + []);",
+    "options": [
+      "'', '[object Object]', 0",
+      "0, 0, 0",
+      "'', '[object Object]', '[object Object]'",
+      "NaN, NaN, NaN"
+    ],
+    "correctIndex": 2,
+    "explanation": "배열과 객체의 + 연산은 먼저 원시값으로 변환합니다. [].toString()은 빈 문자열 ''입니다. '' + '' = ''입니다. [] + {}는 '' + '[object Object]' = '[object Object]'입니다. {} + []도 표현식 컨텍스트에서는 '[object Object]'가 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Addition"
+  },
+  {
+    "id": "type-coercion-004",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "JavaScript에서 falsy 값이 아닌 것은?",
+    "options": [
+      "0",
+      "''(빈 문자열)",
+      "null",
+      "'0'(문자열 '0')"
+    ],
+    "correctIndex": 3,
+    "explanation": "JavaScript의 falsy 값은 false, 0, -0, 0n, ''(빈 문자열), null, undefined, NaN입니다. 문자열 '0'은 비어있지 않은 문자열이므로 truthy 값입니다. 빈 배열 []과 빈 객체 {}도 truthy입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Falsy"
+  },
+  {
+    "id": "type-coercion-005",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(null == undefined);\nconsole.log(null === undefined);\nconsole.log(null == 0);\nconsole.log(null >= 0);",
+    "options": [
+      "true, false, true, true",
+      "true, true, false, false",
+      "false, false, true, true",
+      "true, false, false, true"
+    ],
+    "correctIndex": 3,
+    "explanation": "null == undefined은 특별한 규칙으로 true입니다. null === undefined은 타입이 다르므로 false입니다. null == 0에서 null은 숫자로 변환되지 않아 false입니다. 하지만 null >= 0에서는 null이 0으로 변환되어 0 >= 0은 true입니다. 이는 ==와 비교 연산자의 변환 규칙이 다르기 때문입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-006",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(typeof null);\nconsole.log(typeof undefined);\nconsole.log(typeof NaN);",
+    "options": [
+      "null, undefined, NaN",
+      "object, undefined, number",
+      "object, undefined, NaN",
+      "null, undefined, number"
+    ],
+    "correctIndex": 1,
+    "explanation": "typeof null이 'object'인 것은 JavaScript의 유명한 버그입니다(초기 구현의 실수). typeof undefined는 'undefined'입니다. NaN은 'Not a Number'의 약자이지만 타입은 number입니다. 이는 IEEE 754 부동소수점 표준에 따른 것입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/typeof"
+  }
+]

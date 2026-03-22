@@ -1,0 +1,85 @@
+[
+  {
+    "id": "scope-001",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "var x = 10;\nfunction foo() {\n  console.log(x);\n  var x = 20;\n}\nfoo();",
+    "options": [
+      "undefined",
+      "10",
+      "20",
+      "ReferenceError"
+    ],
+    "correctIndex": 0,
+    "explanation": "함수 내부에서 var x가 호이스팅되어 선언은 함수 스코프 최상단으로 올라가지만, 할당은 원래 위치에서 실행됩니다. 따라서 console.log(x) 시점에서 x는 선언되었지만 아직 할당되지 않아 undefined가 출력됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Hoisting"
+  },
+  {
+    "id": "scope-002",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "JavaScript에서 블록 스코프를 생성하는 키워드는 무엇인가요?",
+    "options": [
+      "var",
+      "let과 const",
+      "function",
+      "this"
+    ],
+    "correctIndex": 1,
+    "explanation": "let과 const는 블록 스코프({} 내부)를 가집니다. var는 함수 스코프를 가지며, 블록({}) 내에서 선언해도 블록 외부에서 접근 가능합니다. ES6부터 let/const를 사용하여 더 예측 가능한 스코프 관리가 가능해졌습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/let"
+  },
+  {
+    "id": "scope-003",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "렉시컬 스코프(Lexical Scope)에 대한 설명으로 올바른 것은?",
+    "options": [
+      "함수가 호출되는 위치에 따라 스코프가 결정된다",
+      "런타임에 동적으로 스코프가 변경된다",
+      "함수가 정의된 위치에 따라 상위 스코프가 결정된다",
+      "전역 스코프만 참조할 수 있다"
+    ],
+    "correctIndex": 2,
+    "explanation": "렉시컬 스코프(정적 스코프)는 함수가 정의된 위치를 기준으로 상위 스코프를 결정합니다. 호출 위치가 아닌 선언 위치가 중요합니다. JavaScript는 렉시컬 스코프를 따르며, 이것이 클로저의 기반이 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "scope-004",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "let a = 1;\n{\n  let a = 2;\n  {\n    let a = 3;\n    console.log(a);\n  }\n  console.log(a);\n}\nconsole.log(a);",
+    "options": [
+      "1, 2, 3",
+      "3, 3, 3",
+      "1, 1, 1",
+      "3, 2, 1"
+    ],
+    "correctIndex": 3,
+    "explanation": "let은 블록 스코프를 가지므로 각 블록({}) 내의 a는 서로 다른 변수입니다. 가장 안쪽 블록에서는 3, 중간 블록에서는 2, 최외곽에서는 1이 출력됩니다. 스코프 체인에 의해 각 console.log는 자신이 속한 블록의 변수를 참조합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/block"
+  },
+  {
+    "id": "scope-005",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "for (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}\nconsole.log(i);",
+    "options": [
+      "3, 3, 3, 3",
+      "0, 1, 2, 3",
+      "0, 1, 2, undefined",
+      "ReferenceError"
+    ],
+    "correctIndex": 0,
+    "explanation": "var는 함수 스코프이므로 for 루프에서 블록 스코프를 생성하지 않습니다. setTimeout 콜백이 실행될 때는 이미 루프가 완료되어 i는 3입니다. 동기 코드인 console.log(i)가 먼저 실행되어 3을 출력하고, 이후 콜백 3개도 각각 3을 출력합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/var"
+  }
+]
