@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:is(.dark *));
+
 /* Prism.js Tomorrow Night theme */
 code[class*="language-"], pre[class*="language-"] {
   color: #ccc; background: none;

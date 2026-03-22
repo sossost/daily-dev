@@ -10,20 +10,23 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 - Multiple question types: concept, output prediction, debugging, comparison
 - Progress tracking with topic-level statistics
 - Mobile-responsive design
+- Dark mode with system preference detection
+- Streak tracking for daily sessions
+- Export/Import progress data
 
 ## Topics
 
 | Topic | Questions |
 |-------|-----------|
-| Scope | 0 |
-| Closure | 0 |
-| Prototype | 0 |
-| this Keyword | 0 |
-| Event Loop | 0 |
-| Async | 0 |
-| Type Coercion | 0 |
+| Async | 6 |
+| Closure | 7 |
+| Event Loop | 6 |
+| Prototype | 5 |
+| Scope | 5 |
+| this Keyword | 6 |
+| Type Coercion | 6 |
 
-**Total: 0 questions across 7 topics**
+**Total: 41 questions across 7 topics**
 
 ## Getting Started
 

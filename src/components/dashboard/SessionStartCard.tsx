@@ -10,12 +10,12 @@ interface SessionStartCardProps {
 export function SessionStartCard({ completedToday }: SessionStartCardProps) {
   if (completedToday) {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-2xl p-6 text-center">
+      <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-2xl p-6 text-center">
         <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
-        <h2 className="text-lg font-semibold text-green-800">
+        <h2 className="text-lg font-semibold text-green-800 dark:text-green-300">
           오늘의 학습 완료!
         </h2>
-        <p className="text-sm text-green-600 mt-1">
+        <p className="text-sm text-green-600 dark:text-green-400 mt-1">
           내일 다시 도전해보세요
         </p>
       </div>

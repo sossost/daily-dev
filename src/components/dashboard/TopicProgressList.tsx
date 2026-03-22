@@ -24,7 +24,7 @@ export function TopicProgressList({ topicStats }: TopicProgressListProps) {
 
   return (
     <div className="mt-8">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
         토픽별 진행률
       </h3>
       <div className="flex flex-col gap-4">
@@ -38,16 +38,16 @@ export function TopicProgressList({ topicStats }: TopicProgressListProps) {
               : 0
 
           return (
-            <div key={topic} className="bg-white rounded-xl border border-gray-100 p-4">
+            <div key={topic} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-4">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-800">
+                <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
                   {TOPIC_LABELS[topic]}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-500 dark:text-gray-400">
                   {attempted}/{total} ({stat.accuracy}% 정답률)
                 </span>
               </div>
-              <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="w-full h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-500 ${TOPIC_COLORS[topic]}`}
                   style={{ width: `${percentage}%` }}

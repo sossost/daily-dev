@@ -40,23 +40,23 @@ export function QuizCard({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -50 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+      className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6"
     >
       <div className="flex items-center gap-2 mb-4">
-        <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
+        <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">
           {TOPIC_LABELS[question.topic]}
         </span>
-        <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
+        <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
           {DIFFICULTY_LABELS[question.difficulty]}
         </span>
         {isReview && (
-          <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">
+          <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300">
             복습
           </span>
         )}
       </div>
 
-      <h2 className="text-lg font-semibold text-gray-900 leading-relaxed">
+      <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 leading-relaxed">
         {question.question}
       </h2>
 
