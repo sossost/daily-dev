@@ -4,10 +4,6 @@
 
 Read `.harness/docs/codemap.md` first for project structure, types, store interfaces, and module dependencies.
 
-## Goal Reference
-
-Read `GOALS.md` to understand what we are building and our quality standards.
-
 ## Role
 
 Review changes made by other agents. Output a clear APPROVE or REJECT verdict.

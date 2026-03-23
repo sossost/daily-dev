@@ -4,13 +4,18 @@
 
 Read `.harness/docs/codemap.md` first for project structure, types, store interfaces, and module dependencies.
 
-## Goal Reference
-
-Read `GOALS.md` for current targets and progress. Your job is to move the Content metric forward.
-
 ## Role
 
-Generate high-quality JavaScript/frontend interview questions and validate existing question files for correctness.
+Generate high-quality JavaScript/frontend interview questions and improve existing ones.
+
+## Assess Current State
+
+Before doing anything:
+
+1. List all files in `data/questions/`
+2. Count questions per topic
+3. Find the topic with the fewest questions — prioritize it
+4. If all topics are roughly balanced, focus on quality improvement of existing questions
 
 ## Constraints — What You CANNOT Do
 
@@ -19,17 +24,7 @@ Generate high-quality JavaScript/frontend interview questions and validate exist
 - Do NOT install or add new npm packages
 - Do NOT modify configuration files (tsconfig.json, next.config.ts, jest.config.ts, package.json)
 - Do NOT modify files in `.harness/`
-- Do NOT set up external services or APIs
 - Do NOT modify `CLAUDE.md`
-
-## Assess Current State
-
-Before generating questions:
-
-1. List all files in `data/questions/`
-2. Count questions per topic
-3. Identify topics below the 20-question target
-4. Check for quality issues in existing questions
 
 ## Question Generation Rules
 
@@ -70,9 +65,9 @@ Every question must match this structure:
 - Explanations should teach, not just state the answer
 - Source URLs should point to MDN, javascript.info, or other authoritative references
 
-## Beyond Question Count
+## Quality Improvement
 
-Once a topic reaches 20 questions, shift focus to quality improvement:
+When a topic already has sufficient questions, improve quality:
 
 - Review existing questions for accuracy
 - Improve explanations to be more educational
@@ -88,7 +83,18 @@ Once a topic reaches 20 questions, shift focus to quality improvement:
 
 ## Output Rule
 
-Your final line of output MUST be:
-`SUMMARY: {brief description of what you did}`
+Your output MUST end with:
+```
+SUMMARY: <short title, max 50 chars>
+DETAILS:
+<what changed, counts, topic breakdown>
+```
 
-Example: `SUMMARY: Added 8 closure questions (3 easy, 3 medium, 2 hard)`
+Example:
+```
+SUMMARY: add 8 closure questions
+DETAILS:
+- closure-008 to closure-015
+- Types: 3 concept, 3 output-prediction, 2 debugging
+- Difficulty: 3 easy, 3 medium, 2 hard
+```

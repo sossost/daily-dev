@@ -64,46 +64,9 @@ fi
 # Per-Agent Checks
 ########################################
 case "${AGENT_TYPE}" in
-  content)
-    questions_dir="${PROJECT_DIR}/data/questions"
-
-    # If questions directory doesn't exist or is empty, allow run (initial creation)
-    if [ ! -d "${questions_dir}" ] || [ -z "$(ls -A "${questions_dir}" 2>/dev/null)" ]; then
-      echo "Questions directory missing or empty. Allowing initial content run."
-      exit 0
-    fi
-
-    # Check if all topics have 20+ questions
-    all_complete=true
-    for qfile in "${questions_dir}"/*.json; do
-      [ -f "${qfile}" ] || continue
-      count=0
-      if command -v jq &>/dev/null; then
-        count="$(jq 'length' "${qfile}" 2>/dev/null || echo "0")"
-      else
-        # Fallback: count "id" occurrences
-        count="$(grep -c '"id"' "${qfile}" 2>/dev/null || echo "0")"
-      fi
-      count="$(echo "${count}" | tr -d '[:space:]')"
-      if ! [[ "${count}" =~ ^[0-9]+$ ]]; then
-        count=0
-      fi
-      if [ "${count}" -lt 20 ]; then
-        all_complete=false
-        break
-      fi
-    done
-
-    if [ "${all_complete}" = true ]; then
-      echo "All topics have 20+ questions. Content agent not needed." >&2
-      exit 1
-    fi
+  content|code|expansion|feature)
+    # All agents self-assess what needs doing via select-agent.ts
     ;;
-
-  code|expansion|feature)
-    # Always pass — these agents self-assess what needs doing
-    ;;
-
   *)
     echo "ERROR: Unknown agent type: ${AGENT_TYPE}" >&2
     exit 1

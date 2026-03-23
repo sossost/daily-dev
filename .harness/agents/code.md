@@ -4,10 +4,6 @@
 
 Read `.harness/docs/codemap.md` first for project structure, types, store interfaces, and module dependencies.
 
-## Goal Reference
-
-Read `GOALS.md` for current targets and progress. Your job is to move the Code metric forward.
-
 ## Role
 
 Improve code quality, add missing tests, fix bugs, improve type safety, enhance accessibility, and optimize performance.
@@ -56,7 +52,9 @@ If the codebase is in good shape and all tests pass with adequate coverage, make
 
 ## Output Rule
 
-Your final line of output MUST be:
-`SUMMARY: {brief description of what you did}`
-
-Example: `SUMMARY: Added 12 unit tests for session store, fixed null check in useProgress hook`
+Your output MUST end with:
+```
+SUMMARY: <short title, max 50 chars>
+DETAILS:
+<what changed, files, test counts>
+```

@@ -4,13 +4,17 @@
 
 Read `.harness/docs/codemap.md` first for project structure, types, store interfaces, and module dependencies.
 
-## Goal Reference
-
-Read `GOALS.md` for current targets and progress. Your job is to move the Features metric forward.
-
 ## Role
 
 Add new user-facing features to the DailyDev application.
+
+## Assess Current State
+
+Before doing anything:
+
+1. Read the codemap to understand existing features
+2. Browse `src/app/` and `src/components/` to see what's already built
+3. Identify what would add the most value for users right now
 
 ## Constraints — What You CANNOT Do
 
@@ -19,33 +23,23 @@ Add new user-facing features to the DailyDev application.
 - Do NOT install or add new npm packages
 - Do NOT modify configuration files (tsconfig.json, next.config.ts, jest.config.ts, package.json)
 - Do NOT modify files in `.harness/`
-- Do NOT set up external services or APIs
 - Do NOT modify `CLAUDE.md`
-- If a feature requires any of the above, SKIP it and pick another feature from the backlog
+- If a feature requires any of the above, SKIP it and pick another
 
-## Feature Backlog
+## Feature Ideas
 
-Pick the highest-priority unimplemented feature:
+Pick what's most impactful based on what already exists. This is NOT a fixed list:
 
-1. **Dark mode** — Toggle between light and dark themes using CSS variables and Tailwind
-2. **Streak tracking** — Track consecutive daily sessions, display streak count and calendar
-3. **Export/Import** — Allow users to export progress as JSON and import it back
-4. **Bookmark** — Let users bookmark questions for later review
-5. **Session history** — Show a list of past sessions with scores and details
-6. **Topic filter** — Allow users to select which topics to include in sessions
-7. **Keyboard shortcuts** — Navigate questions, select answers, and submit with keyboard
-8. **Extra practice mode** — Practice specific topics or difficulty levels outside the daily session
+- Session history — show past sessions with scores and details
+- Topic filter — select which topics to include in sessions
+- Keyboard shortcuts — navigate and answer with keyboard
+- Practice mode — practice specific topics or difficulty levels
+- Statistics dashboard — detailed accuracy trends, weak areas
+- Question review — review wrong answers with explanations after session
+- Progress sharing — generate shareable progress card image
+- Spaced repetition visualization — show upcoming review schedule
 
-## Self-Directed UX Improvement
-
-After the backlog above is exhausted, look for opportunities to improve the user experience autonomously:
-
-- Improve loading states and transitions
-- Add empty states with helpful messages
-- Improve error handling and recovery
-- Enhance mobile responsiveness
-- Add micro-interactions and feedback
-- Improve information hierarchy and visual design
+Use judgment. If something similar already exists, pick something else.
 
 ## Implementation Rules
 
@@ -57,6 +51,7 @@ After the backlog above is exhausted, look for opportunities to improve the user
 - Ensure mobile responsiveness (375px minimum viewport)
 - Add appropriate ARIA attributes for accessibility
 - Write at least basic tests for new functionality
+- Update `useHydration` hook if adding a new persisted store
 
 ## Scope Rules
 
@@ -66,7 +61,9 @@ After the backlog above is exhausted, look for opportunities to improve the user
 
 ## Output Rule
 
-Your final line of output MUST be:
-`SUMMARY: {brief description of what you did}`
-
-Example: `SUMMARY: Added dark mode toggle with system preference detection and localStorage persistence`
+Your output MUST end with:
+```
+SUMMARY: <short title, max 50 chars>
+DETAILS:
+<what was added, files changed, components created>
+```
