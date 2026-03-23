@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from 'next'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { SentryProvider } from '@/components/SentryProvider'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -26,9 +28,13 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen antialiased transition-colors">
-        <main className="max-w-lg mx-auto px-4 py-8">
-          {children}
-        </main>
+        <SentryProvider>
+          <ErrorBoundary>
+            <main className="max-w-lg mx-auto px-4 py-8">
+              {children}
+            </main>
+          </ErrorBoundary>
+        </SentryProvider>
       </body>
     </html>
   )

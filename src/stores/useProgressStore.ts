@@ -101,6 +101,16 @@ export const useProgressStore = create<ProgressState>()(
     }),
     {
       name: 'daily-dev-progress',
+      merge: (persisted, current) => {
+        const merged = { ...current, ...(persisted as object) }
+        // Ensure new topics added after initial storage are included
+        const currentState = current as ProgressState
+        const persistedState = persisted as Partial<ProgressState>
+        if (persistedState.topicStats != null) {
+          merged.topicStats = { ...currentState.topicStats, ...persistedState.topicStats }
+        }
+        return merged
+      },
     },
   ),
 )

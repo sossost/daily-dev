@@ -72,8 +72,6 @@ export function selectReviewQuestions(
   return reviewQuestions
 }
 
-const DIFFICULTY_ORDER: Record<string, number> = { easy: 0, medium: 1, hard: 2 }
-
 /**
  * Select new (unattempted) questions, ordered easy → medium → hard.
  * Within the same difficulty, questions are shuffled randomly.
