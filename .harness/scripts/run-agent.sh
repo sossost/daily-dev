@@ -371,9 +371,15 @@ main() {
   fi
 
   if [ "${has_changes}" = false ]; then
-    log "No changes detected. Skipping commit."
-    write_state "${AGENT_TYPE}" "no-changes" "${SUMMARY}"
-    record_history "${AGENT_TYPE}" "no-changes" "${SUMMARY}"
+    if [ "${SUMMARY}" != "auto-update" ] && [ -n "${SUMMARY}" ]; then
+      log_error "Agent reported work but no files changed: ${SUMMARY}"
+      write_state "${AGENT_TYPE}" "error" "Ghost run — agent reported work but no changes: ${SUMMARY}"
+      record_history "${AGENT_TYPE}" "error" "Ghost run: ${SUMMARY}"
+    else
+      log "No changes detected. Skipping commit."
+      write_state "${AGENT_TYPE}" "no-changes" "${SUMMARY}"
+      record_history "${AGENT_TYPE}" "no-changes" "${SUMMARY}"
+    fi
     exit 0
   fi
 
