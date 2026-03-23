@@ -12,7 +12,7 @@
       "메모리를 관리하는 가비지 컬렉터이다"
     ],
     "correctIndex": 0,
-    "explanation": "이벤트 루프는 콜 스택과 태스크 큐(매크로태스크, 마이크로태스크)를 모니터링합니다. 콜 스택이 비어있을 때 큐에서 대기 중인 콜백을 콜 스택으로 이동시켜 실행합니다. JavaScript는 싱글 스레드이지만 이벤트 루프를 통해 비동기 처리가 가능합니다.",
+    "explanation": "이벤트 루프는 콜 스택과 태스크 큐(매크로태스크, 마이크로태스크)를 지속적으로 모니터링하는 런타임 메커니즘입니다. 콜 스택이 비어있을 때 마이크로태스크 큐를 먼저 모두 처리한 후 매크로태스크 큐에서 하나의 콜백을 콜 스택으로 이동시켜 실행합니다. JavaScript는 싱글 스레드이지만 이벤트 루프를 통해 비동기 처리가 가능하며, 이 모델을 '동시성(concurrency) 모델'이라 합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Event_loop"
   },
   {
@@ -29,7 +29,7 @@
       "3, 1, 2"
     ],
     "correctIndex": 1,
-    "explanation": "동기 코드가 먼저 실행됩니다. console.log('1')이 먼저 실행되고, setTimeout은 콜백을 태스크 큐에 등록합니다(0ms여도 비동기). console.log('3')이 실행된 후, 콜 스택이 비면 태스크 큐의 콜백이 실행되어 '2'가 출력됩니다.",
+    "explanation": "동기 코드가 항상 먼저 완료됩니다. console.log('1')이 실행되고, setTimeout(fn, 0)은 딜레이가 0ms여도 콜백을 매크로태스크 큐에 비동기로 등록합니다(최소 지연 시간은 브라우저마다 다르지만 0ms도 동기 코드보다 늦게 실행됩니다). console.log('3')까지 동기 코드가 완료된 후 콜 스택이 비면 태스크 큐의 콜백이 실행되어 '2'가 출력됩니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/setTimeout"
   },
   {

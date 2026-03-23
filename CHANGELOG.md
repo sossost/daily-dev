@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: Reorder answer options and update correctIndex values to achieve perfectly even ... (`9196f96`)
 - **content**: Added 5 new TypeScript questions (016-020) covering array inference, Omit/Pick, ... (`475388f`)
 - **expansion**: add typescript topic with 15 questions (`6c5408a`)
 - auto-generated CHANGELOG.md from git history (`92f2ddd`)
@@ -36,6 +37,7 @@
 
 ### Refactoring
 
+- inject agent principles via pipeline, not CLAUDE.md (`4c12902`)
 - remove fixed targets, enable autonomous agent loop (`cf8f9a3`)
 - structured commit messages in agent runner (`ba5d77e`)
 

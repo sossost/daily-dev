@@ -29,7 +29,7 @@
       "Error"
     ],
     "correctIndex": 1,
-    "explanation": "Promise.resolve(42)는 값 42로 즉시 이행(fulfilled)되는 Promise를 생성합니다. then 콜백에 이행된 값 42가 전달되어 출력됩니다. then은 비동기적으로 실행되지만, 이행된 값은 42입니다.",
+    "explanation": "Promise.resolve(42)는 값 42로 즉시 이행(fulfilled)되는 Promise를 생성합니다. then 콜백에 이행된 값 42가 전달되어 출력됩니다. 중요한 점은 Promise가 이미 이행되어 있더라도 then 콜백은 동기적으로 실행되지 않고 마이크로태스크 큐에 등록되어 현재 실행 중인 코드가 모두 끝난 후 실행된다는 것입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
   },
   {
@@ -129,7 +129,7 @@
       "A, C, B"
     ],
     "correctIndex": 3,
-    "explanation": "Promise의 executor 함수는 동기적으로 실행됩니다. 먼저 'A'가 출력됩니다. resolve('B')는 Promise를 이행 상태로 만들지만 실행을 멈추지 않습니다. 'C'가 출력됩니다. 그 후 마이크로태스크로 등록된 .then 콜백이 실행되어 'B'가 출력됩니다.",
+    "explanation": "Promise 생성자에 전달하는 executor 함수는 동기적으로 즉시 실행됩니다(이것이 자주 출제되는 핵심 포인트입니다). 먼저 'A'가 출력됩니다. resolve('B')는 Promise를 이행 상태로 만들지만 return하지 않으면 이후 코드가 계속 실행됩니다. 'C'가 출력된 후, 마이크로태스크로 등록된 .then 콜백이 실행되어 'B'가 출력됩니다. resolve() 호출 후에도 코드가 계속 실행된다는 점이 핵심입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
   },
   {
@@ -229,7 +229,7 @@
       "약 3초"
     ],
     "correctIndex": 1,
-    "explanation": "두 개의 await가 순차적으로 실행됩니다. 첫 번째 delay(1000)이 완료된 후 두 번째 delay(1000)이 시작되므로 총 약 2초가 걸립니다. 병렬로 실행하려면 const [a, b] = await Promise.all([delay(1000), delay(1000)])으로 작성하면 약 1초로 단축됩니다.",
+    "explanation": "await는 해당 줄에서 Promise가 settle될 때까지 함수 실행을 일시 중지하므로, 두 await가 순차적으로 실행됩니다. 첫 번째 delay(1000)이 완료된 후에야 두 번째 delay(1000)이 시작되어 총 약 2초가 걸립니다. 병렬 실행 패턴: const [a, b] = await Promise.all([delay(1000), delay(1000)])으로 두 Promise를 동시에 시작하면 약 1초로 단축됩니다. 이 순차 vs 병렬 패턴은 실무에서 API 호출 최적화의 핵심입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/await"
   },
   {
