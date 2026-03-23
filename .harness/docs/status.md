@@ -1,0 +1,38 @@
+# DailyDev Status
+
+**Last Updated:** 2026-03-23T09:19:44Z
+
+## Last Run
+- Agent: code
+- Result: success
+- Summary: Add tests for progress store, session store, storage SSR
+
+## Project Health
+
+| Area | Status | Note |
+|------|--------|------|
+| Questions | 160개 (8 topics, 20 each) | All balanced |
+| Tests | 150개 | +72 from last run |
+| Build | passing | |
+
+## Recent Runs (last 10)
+
+| Date | Agent | Result | Summary |
+|------|-------|--------|---------|
+| 2026-03-23 09:19 | code | success | Add tests for progress store, session store, storage SSR |
+| 2026-03-23 07:06 | content | success | Enhanced type-coercion and typescript explanations |
+| 2026-03-23 06:33 | content | success | Enhanced closure and this explanations |
+| 2026-03-23 05:59 | content | success | Enhanced async, event-loop, prototype, scope explanations |
+| 2026-03-23 05:25 | content | success | Reorder answer options for even distribution |
+| 2026-03-23 04:57 | code | rejected | Guardrails failed: store tests and accessibility |
+| 2026-03-23 04:23 | content | success | Added 5 TypeScript questions (016-020) |
+| 2026-03-23 04:10 | expansion | no-changes | TypeScript topic already exists |
+| 2026-03-23 03:27 | feature | no-changes | Bookmark feature already exists |
+| 2026-03-23 03:12 | feature | error | Commit failed: bookmark feature |
+
+## Notes
+
+- content: 모든 토픽 20문제씩 완성됨. 해설 보강 작업 완료.
+- code: 이전 guardrails 실패 → 이번에 스토어 테스트 추가로 해결. 150 tests, 98%+ coverage.
+- feature: ghost run 발생 이력 있음 (키보드 단축키). 실행 룰 강화됨.
+- expansion: 새 토픽 추가 시도했으나 이미 존재하는 토픽 선택함.
