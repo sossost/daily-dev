@@ -21,7 +21,7 @@ export function ResultSummary({ correct, incorrect, total }: ResultSummaryProps)
       <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">학습 결과</h2>
 
       <div className="relative w-40 h-40 mx-auto mb-6" aria-label={`정답률 ${scorePercentage}%`}>
-        <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+        <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100" role="img" aria-label={`정답률 ${scorePercentage}퍼센트 원형 차트`}>
           <circle
             cx="50"
             cy="50"

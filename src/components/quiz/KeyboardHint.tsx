@@ -10,18 +10,30 @@ const MAX_DISPLAY_COUNT = 3
 
 function isDismissed(): boolean {
   if (typeof window === 'undefined') return true
-  return localStorage.getItem(DISMISS_STORAGE_KEY) === 'true'
+  try {
+    return localStorage.getItem(DISMISS_STORAGE_KEY) === 'true'
+  } catch {
+    return true
+  }
 }
 
 function getDisplayCount(): number {
   if (typeof window === 'undefined') return MAX_DISPLAY_COUNT
-  const count = localStorage.getItem(HINT_DISPLAY_COUNT_KEY)
-  return count != null ? Number(count) : 0
+  try {
+    const count = localStorage.getItem(HINT_DISPLAY_COUNT_KEY)
+    return count != null ? Number(count) : 0
+  } catch {
+    return MAX_DISPLAY_COUNT
+  }
 }
 
 function incrementDisplayCount(): void {
-  const current = getDisplayCount()
-  localStorage.setItem(HINT_DISPLAY_COUNT_KEY, String(current + 1))
+  try {
+    const current = getDisplayCount()
+    localStorage.setItem(HINT_DISPLAY_COUNT_KEY, String(current + 1))
+  } catch {
+    // localStorage unavailable — silently skip
+  }
 }
 
 export function KeyboardHint() {
@@ -41,7 +53,11 @@ export function KeyboardHint() {
 
   const handleDismiss = () => {
     setVisible(false)
-    localStorage.setItem(DISMISS_STORAGE_KEY, 'true')
+    try {
+      localStorage.setItem(DISMISS_STORAGE_KEY, 'true')
+    } catch {
+      // localStorage unavailable — silently skip
+    }
   }
 
   return (
@@ -66,7 +82,7 @@ export function KeyboardHint() {
           </p>
           <button
             onClick={handleDismiss}
-            className="ml-auto shrink-0 text-blue-400 dark:text-blue-500 hover:text-blue-600 dark:hover:text-blue-300 text-xs"
+            className="ml-auto shrink-0 text-blue-400 dark:text-blue-500 hover:text-blue-600 dark:hover:text-blue-300 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
             aria-label="단축키 안내 닫기"
           >
             ✕

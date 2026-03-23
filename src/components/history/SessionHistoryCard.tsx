@@ -37,7 +37,7 @@ export function SessionHistoryCard({ session, index }: SessionHistoryCardProps) 
     >
       <button
         onClick={() => setIsExpanded((prev) => !prev)}
-        className="w-full text-left p-4 flex items-center gap-3"
+        className="w-full text-left p-4 flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900 rounded-xl"
         aria-expanded={isExpanded}
         aria-label={`세션 ${formatSessionDate(session.date)}, ${percentage}% 정답률`}
       >

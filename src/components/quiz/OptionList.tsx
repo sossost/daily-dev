@@ -21,7 +21,7 @@ export function OptionList({
   onSelect,
 }: OptionListProps) {
   return (
-    <div className="flex flex-col gap-3 mt-4">
+    <div className="flex flex-col gap-3 mt-4" role="group" aria-label="답변 선택지">
       {options.map((option, index) => {
         const isSelected = selectedIndex === index
         const isCorrect = index === correctIndex
@@ -35,7 +35,7 @@ export function OptionList({
             onClick={() => onSelect(index)}
             disabled={isAnswered}
             className={clsx(
-              'flex items-start gap-3 p-4 rounded-lg border-2 text-left transition-colors',
+              'flex items-start gap-3 p-4 rounded-lg border-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900',
               {
                 'border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 cursor-pointer':
                   !isAnswered,

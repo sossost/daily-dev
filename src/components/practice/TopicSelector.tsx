@@ -45,7 +45,7 @@ export function TopicSelector({
           <button
             type="button"
             onClick={allSelected ? onDeselectAll : onSelectAll}
-            className="text-xs text-blue-500 dark:text-blue-400 hover:underline"
+            className="text-xs text-blue-500 dark:text-blue-400 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900 rounded"
           >
             {allSelected ? '전체 해제' : '전체 선택'}
           </button>
@@ -61,7 +61,7 @@ export function TopicSelector({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * ANIMATION_DELAY_STEP }}
                 onClick={() => onToggleTopic(topic)}
-                className={`flex items-center gap-2 p-3 rounded-xl border text-left transition-colors ${
+                className={`flex items-center gap-2 p-3 rounded-xl border text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900 ${
                   isSelected
                     ? 'border-blue-300 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/30'
                     : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
@@ -102,7 +102,7 @@ export function TopicSelector({
               key={option.value}
               type="button"
               onClick={() => onDifficultyChange(option.value)}
-              className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900 ${
                 difficulty === option.value
                   ? 'bg-blue-500 text-white'
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
