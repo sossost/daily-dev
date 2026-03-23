@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
 import type { SessionQuestion, SessionAnswer, Topic } from '@/types'
 
 interface SessionState {
@@ -26,7 +27,9 @@ const INITIAL_STATE = {
   startTime: null as number | null,
 }
 
-export const useSessionStore = create<SessionState>((set, get) => ({
+export const useSessionStore = create<SessionState>()(
+  persist(
+    (set, get) => ({
   ...INITIAL_STATE,
 
   startSession: (questions) => {
@@ -91,4 +94,10 @@ export const useSessionStore = create<SessionState>((set, get) => ({
   reset: () => {
     set(INITIAL_STATE)
   },
-}))
+    }),
+    {
+      name: 'daily-dev-session',
+      storage: createJSONStorage(() => sessionStorage),
+    },
+  ),
+)
