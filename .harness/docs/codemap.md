@@ -4,6 +4,9 @@
 
 ## Constants
 
+- `PERCENTAGE_MULTIPLIER` = `100`
+- `MS_PER_SECOND` = `1000`
+- `SECONDS_PER_MINUTE` = `60`
 - `MIN_EASINESS_FACTOR` = `1.3`
 - `SESSION_TOTAL_QUESTIONS` = `10`
 - `SESSION_REVIEW_QUESTIONS` = `5`
@@ -48,6 +51,7 @@
 
 - async.json — 20 questions
 - closure.json — 20 questions
+- css-layout.json — 20 questions
 - dom-manipulation.json — 20 questions
 - event-loop.json — 20 questions
 - promise.json — 20 questions
@@ -99,6 +103,13 @@
 #### `sentry.ts`
 - `initSentry` ()
 - `captureError` (error: Error, context?: Record<string, unknown>)
+
+#### `session-history.ts`
+- `formatDuration` (ms: number) → string
+- `formatSessionDate` (dateStr: string) → string
+- `getTopicBreakdown` (answers: readonly SessionAnswer[]) → readonly TopicBreakdownEntry[]
+- `TopicBreakdownEntry`
+- *deps*: types
 
 #### `session.ts` — Session generator — builds a quiz session using SRS (spaced repetition). Each session = up to 5 review questions (due today) + new questions to fill 10 total. Options are shuffled per question to prevent answer memorization.
 - `shuffleOptions` (question: Question) → Question — Shuffle the options of a question and remap the correctIndex. Returns a new Question with shuffled options.
@@ -222,3 +233,14 @@
 
 #### `page.tsx`
 - *deps*: stores/useBookmarkStore, hooks/useHydration, lib/questions, types, types, components/quiz/BookmarkButton, components/quiz/CodeBlock
+
+### src/app/history/
+
+#### `page.tsx`
+- *deps*: stores/useProgressStore, hooks/useHydration, components/history/SessionHistoryCard
+
+### src/components/history/
+
+#### `SessionHistoryCard.tsx`
+- `SessionHistoryCard` ({ session, index }: SessionHistoryCardProps)
+- *deps*: types, types, lib/session-history

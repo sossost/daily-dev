@@ -12,6 +12,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 - Mobile-responsive design
 - Dark mode with system preference detection
 - Streak tracking for daily sessions
+- Session history with past results
 - Export/Import progress data
 - Bookmark questions for review
 
@@ -21,6 +22,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 |-------|-----------|
 | Async | 20 |
 | Closure | 20 |
+| CSS Layout | 20 |
 | Dom Manipulation | 20 |
 | Event Loop | 20 |
 | Promise | 20 |
@@ -30,7 +32,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Type Coercion | 20 |
 | TypeScript | 20 |
 
-**Total: 200 questions across 10 topics**
+**Total: 220 questions across 11 topics**
 
 ## Getting Started
 

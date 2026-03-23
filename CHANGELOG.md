@@ -6,6 +6,8 @@
 
 ### Features
 
+- **feature**: add session history page with details (`78a576d`)
+- **expansion**: add dom-manipulation topic with 20 questions (`bae2660`)
 - **expansion**: add promise topic with 20 questions (`d12b190`)
 - **code**: Add comprehensive tests for progress store, session store, and storage SSR safet... (`89faa41`)
 - **content**: Enhanced 10 question explanations in type-coercion.json and typescript.json with... (`90dc9cf`)
@@ -43,6 +45,7 @@
 
 ### Refactoring
 
+- sequential agent execution, no nested claude calls (`16d3f1b`)
 - replace harness with manager-agent orchestrator pattern (`a01d255`)
 - inject agent principles via pipeline, not CLAUDE.md (`4c12902`)
 - remove fixed targets, enable autonomous agent loop (`cf8f9a3`)
