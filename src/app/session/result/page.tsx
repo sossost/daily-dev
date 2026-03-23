@@ -6,8 +6,10 @@ import { useSessionStore } from '@/stores/useSessionStore'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { ResultSummary } from '@/components/result/ResultSummary'
 import { ReviewSchedule } from '@/components/result/ReviewSchedule'
+import { AnswerReviewList } from '@/components/result/AnswerReviewList'
 
 export default function ResultPage() {
+  const questions = useSessionStore((s) => s.questions)
   const answers = useSessionStore((s) => s.answers)
   const reset = useSessionStore((s) => s.reset)
   const updateAfterSession = useProgressStore((s) => s.updateAfterSession)
@@ -57,6 +59,7 @@ export default function ResultPage() {
         total={totalCount}
       />
       <ReviewSchedule incorrectCount={incorrectCount} />
+      <AnswerReviewList questions={questions} answers={answers} />
       <Link
         href="/"
         className="block mt-6 text-center py-3 rounded-xl bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"

@@ -6,6 +6,7 @@
 
 ### Features
 
+- **code**: Improve a11y focus styles & error safety (`8e136de`)
 - **content**: Add 5 data-structures questions to 20 (`32f98d2`)
 - **expansion**: Add data-structures topic with 15 questions (`d1fcbba`)
 - **code**: Extract shuffle, fix dark mode & a11y (`65f13ca`)

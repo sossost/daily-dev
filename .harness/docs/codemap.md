@@ -9,6 +9,7 @@
 - `DISMISS_STORAGE_KEY` = `'daily-dev-keyboard-hint-dismissed'`
 - `HINT_DISPLAY_COUNT_KEY` = `'daily-dev-keyboard-hint-count'`
 - `MAX_DISPLAY_COUNT` = `3`
+- `ANIMATION_DELAY_STEP` = `0.05`
 - `BAR_MAX_HEIGHT` = `120`
 - `PERCENTAGE_MULTIPLIER` = `100`
 - `ANIMATION_DELAY_STEP` = `0.05`
@@ -204,7 +205,7 @@
 ### src/app/session/result/
 
 #### `page.tsx`
-- *deps*: stores/useSessionStore, stores/useProgressStore, components/result/ResultSummary, components/result/ReviewSchedule
+- *deps*: stores/useSessionStore, stores/useProgressStore, components/result/ResultSummary, components/result/ReviewSchedule, components/result/AnswerReviewList
 
 ### src/app/topics/
 
@@ -260,6 +261,10 @@
 - *deps*: types, types, components/quiz/CodeBlock, components/quiz/OptionList, components/quiz/Explanation, components/quiz/BookmarkButton
 
 ### src/components/result/
+
+#### `AnswerReviewList.tsx`
+- `AnswerReviewList` ({ questions, answers }: AnswerReviewListProps)
+- *deps*: types, types, components/quiz/CodeBlock, components/quiz/BookmarkButton
 
 #### `ResultSummary.tsx`
 - `ResultSummary` ({ correct, incorrect, total }: ResultSummaryProps)
