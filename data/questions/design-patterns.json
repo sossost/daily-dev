@@ -246,5 +246,87 @@
     "correctIndex": 3,
     "explanation": "첫 번째 미들웨어에서 ctx.value = 1만 설정하고 next()를 호출하지 않습니다. 미들웨어 패턴에서는 각 미들웨어가 next()를 호출해야 다음 미들웨어로 제어가 넘어갑니다. 첫 번째에서 체인이 끊겨 두 번째 미들웨어가 실행되지 않으므로 ctx.value는 1이 되어 'fail'이 출력됩니다.",
     "sourceUrl": "https://www.patterns.dev/vanilla/middleware-pattern"
+  },
+  {
+    "id": "design-patterns-016",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "플라이웨이트(Flyweight) 패턴이 JavaScript에서 효과적인 경우는 언제인가요?",
+    "options": [
+      "DOM 이벤트를 하나의 핸들러로 위임하는 것과 무관하다",
+      "수천 개의 유사한 객체가 공통 데이터를 공유하여 메모리 사용을 줄여야 할 때",
+      "비동기 작업의 실행 순서를 제어해야 할 때",
+      "서로 다른 클래스 간의 인터페이스를 변환해야 할 때"
+    ],
+    "correctIndex": 1,
+    "explanation": "플라이웨이트 패턴은 많은 수의 유사 객체에서 공유 가능한 상태(intrinsic state)를 분리하여 하나의 인스턴스로 공유합니다. JavaScript에서는 대량의 DOM 요소 대신 이벤트 위임을 사용하거나, 공통 속성을 프로토타입에 두는 방식이 이 패턴의 활용 예입니다.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/flyweight"
+  },
+  {
+    "id": "design-patterns-017",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 빌더(Builder) 패턴 코드의 출력 결과는 무엇인가요?",
+    "code": "class QueryBuilder {\n  #parts = [];\n  select(fields) { this.#parts.push(`SELECT ${fields}`); return this; }\n  from(table) { this.#parts.push(`FROM ${table}`); return this; }\n  where(cond) { this.#parts.push(`WHERE ${cond}`); return this; }\n  build() { return this.#parts.join(' '); }\n}\nconst q = new QueryBuilder()\n  .select('name')\n  .from('users')\n  .where('age > 18')\n  .build();\nconsole.log(q);",
+    "options": [
+      "SELECT name FROM users WHERE age > 18",
+      "SELECT name",
+      "에러: #parts는 private이므로 접근 불가",
+      "undefined"
+    ],
+    "correctIndex": 0,
+    "explanation": "빌더 패턴은 메서드 체이닝을 통해 복잡한 객체를 단계적으로 구성합니다. 각 메서드가 this를 반환하므로 체이닝이 가능하고, build() 호출 시 #parts 배열의 모든 요소가 공백으로 결합됩니다. #parts는 클래스 내부 메서드인 build()에서 접근하므로 private 필드 에러가 발생하지 않습니다.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/builder"
+  },
+  {
+    "id": "design-patterns-018",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 이터레이터 패턴 구현에서 무한 루프가 발생하는 이유는 무엇인가요?",
+    "code": "const range = {\n  from: 1,\n  to: 3,\n  [Symbol.iterator]() {\n    return {\n      current: this.from,\n      last: this.to,\n      next() {\n        return this.current <= this.last\n          ? { value: this.current, done: false }\n          : { done: true };\n      }\n    };\n  }\n};\nfor (const n of range) console.log(n);",
+    "options": [
+      "Symbol.iterator가 올바르게 구현되지 않았기 때문",
+      "next() 메서드에서 current를 증가시키지 않아 항상 같은 값을 반환하기 때문",
+      "this.from이 undefined이기 때문",
+      "done 속성이 누락되어 종료 조건을 인식하지 못하기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "next() 메서드가 this.current 값을 반환하지만 증가시키지 않습니다. 따라서 this.current <= this.last 조건이 항상 true가 되어 무한 루프가 발생합니다. { value: this.current++, done: false }로 수정해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols"
+  },
+  {
+    "id": "design-patterns-019",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "JavaScript에서 의존성 주입(Dependency Injection)의 가장 일반적인 구현 방식은 무엇인가요?",
+    "options": [
+      "전역 변수를 통해 의존성을 공유한다",
+      "모든 의존성을 하드코딩하여 직접 import한다",
+      "생성자 또는 함수의 매개변수로 의존성을 전달한다",
+      "프로토타입 체인을 통해 의존성을 상속받는다"
+    ],
+    "correctIndex": 2,
+    "explanation": "의존성 주입은 객체가 자신의 의존성을 직접 생성하지 않고 외부에서 전달받는 패턴입니다. JavaScript에서는 주로 생성자 매개변수나 함수 인자로 의존성을 주입합니다. React의 props, Express의 미들웨어 등이 대표적인 예이며, 이를 통해 테스트 용이성과 모듈 간 결합도를 낮출 수 있습니다.",
+    "sourceUrl": "https://www.patterns.dev/vanilla/dependency-injection"
+  },
+  {
+    "id": "design-patterns-020",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "상태(State) 패턴과 전략(Strategy) 패턴의 구조적 차이점은 무엇인가요?",
+    "options": [
+      "전략 패턴은 클래스를 사용하고 상태 패턴은 함수만 사용한다",
+      "상태 패턴은 생성 패턴이고 전략 패턴은 구조 패턴이다",
+      "전략 패턴은 런타임에만 동작하고 상태 패턴은 컴파일 타임에만 동작한다",
+      "상태 패턴에서는 상태 객체가 스스로 다음 상태로 전환할 수 있지만, 전략 패턴에서는 클라이언트가 전략을 교체한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "상태 패턴과 전략 패턴은 구조적으로 유사하지만 의도가 다릅니다. 상태 패턴에서는 ConcreteState가 Context의 상태를 직접 변경할 수 있어 상태 전이가 자동으로 이루어집니다. 반면 전략 패턴에서는 클라이언트(외부 코드)가 어떤 전략을 사용할지 명시적으로 선택하고 교체합니다.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/state"
   }
 ]

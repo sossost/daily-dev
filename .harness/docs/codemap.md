@@ -72,7 +72,7 @@
 - closure.json — 20 questions
 - css-layout.json — 20 questions
 - data-structures.json — 20 questions
-- design-patterns.json — 15 questions
+- design-patterns.json — 20 questions
 - dom-manipulation.json — 20 questions
 - event-loop.json — 20 questions
 - promise.json — 20 questions

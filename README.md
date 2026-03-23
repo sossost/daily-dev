@@ -25,7 +25,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Closure | 20 |
 | CSS Layout | 20 |
 | Data Structures | 20 |
-| Design Patterns | 15 |
+| Design Patterns | 20 |
 | Dom Manipulation | 20 |
 | Event Loop | 20 |
 | Promise | 20 |
@@ -37,7 +37,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | TypeScript | 20 |
 | Web Performance | 20 |
 
-**Total: 295 questions across 15 topics**
+**Total: 300 questions across 15 topics**
 
 ## Getting Started
 
