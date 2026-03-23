@@ -12,6 +12,7 @@ const TOPIC_COLORS: Record<Topic, string> = {
   'event-loop': 'bg-cyan-500',
   async: 'bg-blue-500',
   'type-coercion': 'bg-violet-500',
+  typescript: 'bg-indigo-500',
 }
 
 interface TopicProgressListProps {

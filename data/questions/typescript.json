@@ -1,0 +1,250 @@
+[
+  {
+    "id": "typescript-001",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "TypeScript에서 `unknown`과 `any`의 차이점은 무엇인가요?",
+    "options": [
+      "unknown은 타입 검사를 무시하고, any는 타입 검사를 수행한다",
+      "unknown은 타입을 좁혀야 사용할 수 있고, any는 어떤 연산이든 허용한다",
+      "any는 컴파일 에러를 발생시키지만, unknown은 그렇지 않다",
+      "둘은 완전히 동일하며 호환 가능하다"
+    ],
+    "correctIndex": 1,
+    "explanation": "unknown 타입은 any와 마찬가지로 모든 값을 할당받을 수 있지만, unknown 타입의 값을 사용하려면 typeof, instanceof 등으로 타입을 좁혀야 합니다. 반면 any는 모든 연산을 허용하므로 타입 안전성이 보장되지 않습니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/types.html#unknown"
+  },
+  {
+    "id": "typescript-002",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 TypeScript 코드에서 컴파일 에러가 발생하는 줄은?",
+    "code": "interface User {\n  name: string;\n  age: number;\n}\n\nconst user: User = { name: 'Kim', age: 25 };\nuser.age = 30;          // Line A\nuser.email = 'a@b.com'; // Line B",
+    "options": [
+      "Line A에서 에러 발생",
+      "Line B에서 에러 발생",
+      "Line A와 Line B 모두 에러 발생",
+      "에러 없이 정상 컴파일"
+    ],
+    "correctIndex": 1,
+    "explanation": "User 인터페이스에 email 속성이 정의되어 있지 않으므로 Line B에서 'Property email does not exist on type User' 컴파일 에러가 발생합니다. Line A는 age가 number 타입이고 30도 number이므로 정상입니다. const는 변수 재할당을 막지만 객체 속성 변경은 허용합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/objects.html"
+  },
+  {
+    "id": "typescript-003",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "TypeScript의 `interface`와 `type`의 차이점으로 올바른 것은?",
+    "options": [
+      "type은 유니온 타입을 정의할 수 있지만, interface는 할 수 없다",
+      "interface는 extends를 사용할 수 없다",
+      "type은 객체 타입만 정의할 수 있다",
+      "둘은 모든 면에서 완전히 동일하다"
+    ],
+    "correctIndex": 0,
+    "explanation": "type 별칭은 유니온(|), 인터섹션(&), 튜플 등 다양한 타입 조합을 정의할 수 있습니다. interface는 객체 형태만 정의할 수 있지만 선언 병합(declaration merging)이 가능하고 extends로 확장할 수 있습니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#differences-between-type-aliases-and-interfaces"
+  },
+  {
+    "id": "typescript-004",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 TypeScript 코드의 `result` 타입은 무엇인가요?",
+    "code": "function getValue(flag: boolean) {\n  if (flag) {\n    return 42;\n  }\n  return 'hello';\n}\n\nconst result = getValue(true);",
+    "options": [
+      "number",
+      "string",
+      "number | string",
+      "42 | 'hello'"
+    ],
+    "correctIndex": 2,
+    "explanation": "TypeScript는 함수의 모든 return 문을 분석하여 반환 타입을 추론합니다. getValue 함수는 number(42)를 반환하거나 string('hello')을 반환하므로, 반환 타입은 number | string으로 추론됩니다. 호출 시 인자가 true여도 컴파일러는 런타임 값을 추적하지 않습니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/functions.html#return-type"
+  },
+  {
+    "id": "typescript-005",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 컴파일 에러를 해결하려면 어떻게 해야 할까요?",
+    "code": "function processInput(input: string | number) {\n  return input.toUpperCase();\n}",
+    "options": [
+      "input을 any로 캐스팅한다",
+      "typeof input === 'string' 타입 가드를 추가한다",
+      "input을 unknown으로 변경한다",
+      "함수 반환 타입을 string으로 명시한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "input이 string | number 유니온 타입이므로 toUpperCase()를 바로 호출할 수 없습니다. typeof input === 'string'으로 타입을 좁히면 해당 블록 안에서 input이 string으로 인식되어 toUpperCase()를 안전하게 호출할 수 있습니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html"
+  },
+  {
+    "id": "typescript-006",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "TypeScript의 제네릭(Generics)에 대한 설명으로 올바른 것은?",
+    "options": [
+      "제네릭은 런타임에 타입 정보를 유지한다",
+      "제네릭은 함수에만 사용할 수 있다",
+      "제네릭을 사용하면 타입을 매개변수화하여 재사용 가능한 컴포넌트를 만들 수 있다",
+      "제네릭은 any와 동일한 역할을 한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "제네릭은 타입을 매개변수로 받아 다양한 타입에 대해 동작하는 재사용 가능한 컴포넌트를 만들 수 있게 합니다. any와 달리 타입 안전성을 유지하면서도 유연한 코드를 작성할 수 있습니다. 제네릭은 함수, 인터페이스, 클래스, 타입 별칭 등에 사용 가능합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/generics.html"
+  },
+  {
+    "id": "typescript-007",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드에서 `Pick<User, 'name' | 'email'>`의 결과 타입은?",
+    "code": "interface User {\n  name: string;\n  email: string;\n  age: number;\n  isAdmin: boolean;\n}",
+    "options": [
+      "{ age: number; isAdmin: boolean }",
+      "{ name: string; email: string }",
+      "{ name: string; email: string; age: number; isAdmin: boolean }",
+      "string | string"
+    ],
+    "correctIndex": 1,
+    "explanation": "Pick<T, K> 유틸리티 타입은 타입 T에서 속성 K만 선택하여 새 타입을 만듭니다. Pick<User, 'name' | 'email'>은 User에서 name과 email 속성만 포함하는 { name: string; email: string } 타입을 생성합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys"
+  },
+  {
+    "id": "typescript-008",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "`readonly`와 `const`의 차이점은?",
+    "options": [
+      "readonly는 변수에, const는 속성에 사용된다",
+      "readonly는 객체 속성의 재할당을 막고, const는 변수의 재할당을 막는다",
+      "const는 깊은 불변성을 보장하지만, readonly는 그렇지 않다",
+      "둘은 동일하며 상호 교환 가능하다"
+    ],
+    "correctIndex": 1,
+    "explanation": "const는 변수 바인딩의 재할당을 막는 JavaScript 키워드이고, readonly는 TypeScript에서 객체 속성이나 배열의 변경을 막는 타입 수정자입니다. 둘 다 얕은(shallow) 불변성만 제공하며, 서로 다른 수준에서 동작합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/objects.html#readonly-properties"
+  },
+  {
+    "id": "typescript-009",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 발생하는 문제와 해결 방법은?",
+    "code": "interface Shape {\n  kind: 'circle' | 'square';\n  radius?: number;\n  sideLength?: number;\n}\n\nfunction getArea(shape: Shape): number {\n  if (shape.kind === 'circle') {\n    return Math.PI * shape.radius ** 2;\n  }\n  return shape.sideLength ** 2;\n}",
+    "options": [
+      "kind 속성이 리터럴 타입이 아니어서 에러가 발생한다",
+      "radius와 sideLength가 optional이므로 undefined일 수 있어 에러가 발생한다. 판별 유니온(discriminated union)으로 해결한다",
+      "Math.PI의 타입이 맞지 않아 에러가 발생한다",
+      "반환 타입이 number | undefined여야 한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "radius와 sideLength가 optional(?)이므로 undefined일 수 있고, undefined에 대해 ** 연산을 수행할 수 없습니다. 해결 방법은 Circle과 Square를 별도 인터페이스로 분리하고 kind를 판별자로 사용하는 판별 유니온(discriminated union) 패턴을 적용하는 것입니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions"
+  },
+  {
+    "id": "typescript-010",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "TypeScript에서 `never` 타입이 사용되는 경우가 아닌 것은?",
+    "options": [
+      "함수가 항상 예외를 던질 때",
+      "switch 문에서 모든 케이스를 처리했는지 검사할 때",
+      "빈 배열의 초기 타입으로 사용될 때",
+      "함수가 값을 반환하지 않고 정상 종료될 때"
+    ],
+    "correctIndex": 3,
+    "explanation": "never 타입은 절대 발생하지 않는 값의 타입입니다. 항상 예외를 던지거나 무한 루프로 종료되지 않는 함수의 반환 타입, 그리고 exhaustive check에 사용됩니다. 값을 반환하지 않고 정상 종료되는 함수는 void 타입입니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html#the-never-type"
+  },
+  {
+    "id": "typescript-011",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 `keyof typeof config`의 결과 타입은?",
+    "code": "const config = {\n  apiUrl: 'https://api.example.com',\n  timeout: 5000,\n  debug: false,\n} as const;",
+    "options": [
+      "string",
+      "'apiUrl' | 'timeout' | 'debug'",
+      "string | number | boolean",
+      "'https://api.example.com' | 5000 | false"
+    ],
+    "correctIndex": 1,
+    "explanation": "typeof config는 객체의 타입을 가져오고, keyof는 그 타입의 모든 속성 키를 유니온 타입으로 반환합니다. 따라서 keyof typeof config는 'apiUrl' | 'timeout' | 'debug' 리터럴 유니온 타입이 됩니다. as const는 값을 리터럴 타입으로 좁히지만 keyof에는 영향을 주지 않습니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/keyof-types.html"
+  },
+  {
+    "id": "typescript-012",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "TypeScript에서 `Partial<T>`와 `Required<T>`의 관계는?",
+    "options": [
+      "Partial은 모든 속성을 필수로, Required는 모든 속성을 선택적으로 만든다",
+      "Partial은 모든 속성을 선택적으로, Required는 모든 속성을 필수로 만든다",
+      "Partial은 속성을 제거하고, Required는 속성을 추가한다",
+      "둘 다 동일한 동작을 수행한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Partial<T>는 타입 T의 모든 속성을 선택적(optional)으로 만들고, Required<T>는 모든 속성을 필수(required)로 만듭니다. 이 두 유틸리티 타입은 서로 반대 역할을 하며, 기존 타입을 변형하여 새 타입을 만들 때 유용합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype"
+  },
+  {
+    "id": "typescript-013",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 에러가 발생하는 이유는?",
+    "code": "const numbers: number[] = [1, 2, 3];\nnumbers.push('4');",
+    "options": [
+      "push 메서드가 배열에 존재하지 않는다",
+      "const로 선언된 배열에 요소를 추가할 수 없다",
+      "문자열 '4'를 number[] 타입 배열에 추가할 수 없다",
+      "배열 리터럴에 타입 어노테이션을 사용할 수 없다"
+    ],
+    "correctIndex": 2,
+    "explanation": "numbers 배열은 number[] 타입으로 선언되어 number 타입의 값만 포함할 수 있습니다. 문자열 '4'는 string 타입이므로 number[] 배열에 push할 수 없어 컴파일 에러가 발생합니다. const는 재할당만 막을 뿐 배열 내용 변경은 허용합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays"
+  },
+  {
+    "id": "typescript-014",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "TypeScript의 조건부 타입(Conditional Types)에 대한 설명으로 올바른 것은?",
+    "code": "type IsString<T> = T extends string ? true : false;",
+    "options": [
+      "조건부 타입은 런타임에 평가된다",
+      "extends 키워드는 클래스 상속만을 의미한다",
+      "조건부 타입은 T extends U ? X : Y 형태로 타입 수준의 조건 분기를 수행한다",
+      "조건부 타입은 제네릭 없이만 사용할 수 있다"
+    ],
+    "correctIndex": 2,
+    "explanation": "조건부 타입은 T extends U ? X : Y 형태로, 타입 수준에서 삼항 연산자처럼 동작합니다. T가 U에 할당 가능하면 X 타입, 아니면 Y 타입이 됩니다. 이는 컴파일 타임에 평가되며, 제네릭과 함께 사용하여 유연한 타입 변환을 구현할 수 있습니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/conditional-types.html"
+  },
+  {
+    "id": "typescript-015",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "타입 단언(Type Assertion)과 타입 가드(Type Guard)의 차이점은?",
+    "options": [
+      "타입 단언은 런타임 검사를 수행하고, 타입 가드는 컴파일 타임만 변경한다",
+      "타입 단언은 개발자가 타입을 강제 지정하고, 타입 가드는 조건문으로 타입을 안전하게 좁힌다",
+      "둘 다 동일한 방식으로 타입을 좁힌다",
+      "타입 가드는 as 키워드를 사용한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "타입 단언(as)은 개발자가 컴파일러에게 특정 타입임을 강제로 알려주는 것으로, 런타임 검사 없이 타입만 변경합니다. 타입 가드(typeof, instanceof, in, is)는 런타임 조건문을 통해 타입을 안전하게 좁히므로, 가능하면 타입 가드를 사용하는 것이 더 안전합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html"
+  }
+]

@@ -11,6 +11,7 @@ import thisQuestions from '../../data/questions/this.json'
 import eventLoopQuestions from '../../data/questions/event-loop.json'
 import asyncQuestions from '../../data/questions/async.json'
 import typeCoercionQuestions from '../../data/questions/type-coercion.json'
+import typescriptQuestions from '../../data/questions/typescript.json'
 
 const ALL_QUESTIONS: Question[] = [
   ...scopeQuestions,
@@ -20,6 +21,7 @@ const ALL_QUESTIONS: Question[] = [
   ...eventLoopQuestions,
   ...asyncQuestions,
   ...typeCoercionQuestions,
+  ...typescriptQuestions,
 ] as Question[]
 
 const QUESTIONS_BY_ID = new Map<string, Question>(
