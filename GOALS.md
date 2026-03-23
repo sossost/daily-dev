@@ -14,7 +14,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 
 | Area | Target | Current |
 |------|--------|---------|
-| Content | 15 frontend topics, 20 questions each (300 total) | 7 topics, 41 questions |
+| Content | 15 frontend topics, 20 questions each (300 total) | 7 topics, 51 questions |
 | Features | Dark mode, streak tracking, keyboard shortcuts | Dark mode, Streak, Export/Import |
 | Code | Test coverage 80%+ | 72 tests |
 | Deploy | Vercel deployment | Deployed |

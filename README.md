@@ -21,12 +21,12 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Async | 6 |
 | Closure | 7 |
 | Event Loop | 6 |
-| Prototype | 5 |
+| Prototype | 15 |
 | Scope | 5 |
 | this Keyword | 6 |
 | Type Coercion | 6 |
 
-**Total: 41 questions across 7 topics**
+**Total: 51 questions across 7 topics**
 
 ## Getting Started
 
