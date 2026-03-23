@@ -51,6 +51,7 @@ When reviewing new features:
 - [ ] Mobile responsive
 - [ ] Accessible (keyboard navigation, screen reader support)
 - [ ] Does not break existing features
+- [ ] Safe for existing deployed users — changes must not crash on old localStorage data
 
 ## Review Method
 
