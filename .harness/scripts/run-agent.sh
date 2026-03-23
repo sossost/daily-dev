@@ -523,16 +523,28 @@ Your very last line of output must be SUMMARY: followed by a brief description o
   }
 
   # ------------------------------------------
-  # Push
+  # Push (with auto-rebase on conflict)
   # ------------------------------------------
   log "Pushing to remote..."
-  git push 2>&1 | tee -a "${LOG_FILE}" || {
-    log_error "Push failed."
-    write_state "${AGENT_TYPE}" "error" "Push failed (commit preserved locally)"
-    record_history "${AGENT_TYPE}" "error" "Push failed: ${SUMMARY}"
-    exit 1
-  }
-
+  if ! git push 2>&1 | tee -a "${LOG_FILE}"; then
+    log "Push rejected. Attempting pull --rebase..."
+    if git pull --rebase 2>&1 | tee -a "${LOG_FILE}"; then
+      log "Rebase successful. Retrying push..."
+      if ! git push 2>&1 | tee -a "${LOG_FILE}"; then
+        log_error "Push failed after rebase."
+        write_state "${AGENT_TYPE}" "error" "Push failed after rebase"
+        record_history "${AGENT_TYPE}" "error" "Push failed after rebase: ${SUMMARY}"
+        exit 1
+      fi
+    else
+      log_error "Rebase failed. Aborting rebase and rolling back."
+      git rebase --abort 2>/dev/null || true
+      rollback
+      write_state "${AGENT_TYPE}" "error" "Rebase conflict"
+      record_history "${AGENT_TYPE}" "error" "Rebase conflict: ${SUMMARY}"
+      exit 1
+    fi
+  fi
   # ------------------------------------------
   # Record State
   # ------------------------------------------
