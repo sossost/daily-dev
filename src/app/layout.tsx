@@ -21,6 +21,12 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-VV73KM83GP" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VV73KM83GP');`,
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var m=JSON.parse(localStorage.getItem('daily-dev-theme')||'{}');var mode=m.state&&m.state.mode||'system';var dark=mode==='dark'||(mode==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(dark)document.documentElement.classList.add('dark')}catch(e){}})()`,
