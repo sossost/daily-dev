@@ -13,6 +13,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 - Dark mode with system preference detection
 - Streak tracking for daily sessions
 - Export/Import progress data
+- Bookmark questions for review
 
 ## Topics
 
@@ -25,8 +26,9 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Scope | 20 |
 | this Keyword | 20 |
 | Type Coercion | 20 |
+| TypeScript | 20 |
 
-**Total: 140 questions across 7 topics**
+**Total: 160 questions across 8 topics**
 
 ## Getting Started
 

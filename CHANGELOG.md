@@ -6,6 +6,8 @@
 
 ### Features
 
+- **expansion**: add typescript topic with 15 questions (`6c5408a`)
+- auto-generated CHANGELOG.md from git history (`92f2ddd`)
 - add Discord webhook notifications to harness (`f14eddb`)
 - **feature**: add bookmark feature with persistent store and dedicated page (`91a57ee`)
 - **content**: Added 99 new questions across all 7 topic files (41→140 total), each file now ha... (`a7ad744`)
@@ -18,6 +20,7 @@
 
 ### Bug Fixes
 
+- detect ghost runs where agent reports work but no files change (`975d736`)
 - exclude .harness/docs/ from protected pattern (`1cfb2b1`)
 - update review schedule text for unlimited sessions (`2649ee1`)
 - SSR crash in useHydration during static export (`8ddc39b`)
@@ -29,6 +32,7 @@
 
 ### Refactoring
 
+- remove fixed targets, enable autonomous agent loop (`cf8f9a3`)
 - structured commit messages in agent runner (`ba5d77e`)
 
 ### Documentation

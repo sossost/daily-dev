@@ -11,6 +11,13 @@
 
 ## Store Interfaces
 
+### BookmarkState (`src/stores/useBookmarkStore.ts`)
+```
+  bookmarkedIds: readonly string[]
+  toggleBookmark: (questionId: string) => void
+  isBookmarked: (questionId: string) => boolean
+```
+
 ### ProgressState (`src/stores/useProgressStore.ts`)
 ```
   updateAfterSession: (answers: SessionAnswer[]) => void
@@ -46,6 +53,7 @@
 - scope.json — 20 questions
 - this.json — 20 questions
 - type-coercion.json — 20 questions
+- typescript.json — 20 questions
 
 ## Modules
 
@@ -105,6 +113,9 @@
 
 ### src/stores/
 
+#### `useBookmarkStore.ts` — Bookmark store — tracks bookmarked question IDs. Persisted to localStorage so bookmarks survive across sessions.
+- `useBookmarkStore`
+
 #### `useProgressStore.ts` — Progress store — persistent user learning data. Stores SRS records, topic accuracy stats, streak counts, and session history. Persisted to localStorage (permanent across sessions). updateAfterSession() recalculates SRS intervals, topic stats, and streaks.
 - `useProgressStore`
 - *deps*: types, types, lib/srs, lib/date
@@ -124,7 +135,7 @@
 - `viewport` Viewport
 
 #### `page.tsx`
-- *deps*: stores/useProgressStore, hooks/useHydration, components/dashboard/SessionStartCard, components/dashboard/TopicProgressList, components/ThemeToggle
+- *deps*: stores/useProgressStore, stores/useBookmarkStore, hooks/useHydration, components/dashboard/SessionStartCard, components/dashboard/TopicProgressList, components/ThemeToggle
 
 ### src/app/session/
 
@@ -158,6 +169,10 @@
 
 ### src/components/quiz/
 
+#### `BookmarkButton.tsx`
+- `BookmarkButton` ({ questionId }: BookmarkButtonProps)
+- *deps*: stores/useBookmarkStore
+
 #### `CodeBlock.tsx`
 - `CodeBlock` ({ code, language = 'javascript' }: CodeBlockProps)
 
@@ -173,7 +188,7 @@
 #### `QuizCard.tsx`
 - `QuizCard` ({ sessionQuestion, selectedIndex, isAnswered, onSelect, }: QuizCardProps)
 - `NextButton` ({ isAnswered, isLast, onNext, }: { isAnswered: boolean isLast: boolean onNext: ()
-- *deps*: types, types, components/quiz/CodeBlock, components/quiz/OptionList, components/quiz/Explanation
+- *deps*: types, types, components/quiz/CodeBlock, components/quiz/OptionList, components/quiz/Explanation, components/quiz/BookmarkButton
 
 ### src/components/result/
 
@@ -187,4 +202,9 @@
 
 #### `useHydration.ts`
 - `useHydration` () → boolean
-- *deps*: stores/useProgressStore, stores/useSessionStore, stores/useThemeStore
+- *deps*: stores/useProgressStore, stores/useSessionStore, stores/useThemeStore, stores/useBookmarkStore
+
+### src/app/bookmarks/
+
+#### `page.tsx`
+- *deps*: stores/useBookmarkStore, hooks/useHydration, lib/questions, types, types, components/quiz/BookmarkButton, components/quiz/CodeBlock
