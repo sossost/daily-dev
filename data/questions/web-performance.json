@@ -18,34 +18,36 @@
   {
     "id": "web-performance-002",
     "topic": "web-performance",
-    "type": "concept",
+    "type": "output-prediction",
     "difficulty": "easy",
-    "question": "Largest Contentful Paint(LCP)의 권장 기준값은?",
+    "question": "다음 HTML에서 페이지 로딩 성능에 미치는 영향은?",
+    "code": "<head>\n  <link rel=\"stylesheet\" href=\"styles.css\">\n  <script src=\"app.js\"></script>\n</head>",
     "options": [
-      "100ms 이하",
-      "1.0초 이하",
-      "2.5초 이하",
-      "4.0초 이하"
+      "app.js가 렌더 차단 리소스가 되어, 스크립트 다운로드와 실행이 완료될 때까지 HTML 파싱이 중단된다",
+      "styles.css와 app.js가 병렬로 로드되어 페이지 성능에 영향이 없다",
+      "app.js는 자동으로 defer되어 HTML 파싱을 차단하지 않는다",
+      "link 태그가 script 태그보다 먼저 있으므로 성능 문제가 발생하지 않는다"
     ],
-    "correctIndex": 2,
-    "explanation": "Google은 LCP가 2.5초 이하일 때 좋은(Good) 사용자 경험으로 간주합니다. 2.5~4.0초는 개선 필요(Needs Improvement), 4.0초 초과는 나쁨(Poor)으로 분류됩니다.",
-    "sourceUrl": "https://web.dev/articles/lcp"
+    "correctIndex": 0,
+    "explanation": "defer나 async 속성이 없는 <script> 태그는 파서 차단(parser-blocking) 리소스입니다. 브라우저는 스크립트를 다운로드하고 실행 완료할 때까지 HTML 파싱을 중단합니다. 이는 페이지의 첫 렌더링을 지연시킵니다. defer 또는 async 속성을 추가하거나, script를 body 끝에 배치하여 이 문제를 해결할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#notes"
   },
   {
     "id": "web-performance-003",
     "topic": "web-performance",
-    "type": "concept",
-    "difficulty": "easy",
-    "question": "브라우저에서 리소스 로딩 우선순위를 높이기 위해 사용하는 링크 힌트는?",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드가 구현하는 성능 최적화 패턴과 그 동작은?",
+    "code": "const observer = new IntersectionObserver((entries) => {\n  entries.forEach(entry => {\n    if (entry.isIntersecting) {\n      entry.target.src = entry.target.dataset.src;\n      observer.unobserve(entry.target);\n    }\n  });\n});\n\ndocument.querySelectorAll('img[data-src]').forEach(img => {\n  observer.observe(img);\n});",
     "options": [
-      "<link rel=\"prefetch\">",
-      "<link rel=\"dns-prefetch\">",
-      "<link rel=\"prerender\">",
-      "<link rel=\"preload\">"
+      "이미지 압축 — 이미지 파일 크기를 줄여 대역폭을 절약한다",
+      "이미지 지연 로딩 — 뷰포트에 진입할 때 data-src의 실제 URL을 src에 할당하여 초기 로딩 리소스를 줄인다",
+      "이미지 프리로딩 — 모든 이미지를 미리 다운로드하여 캐시에 저장한다",
+      "이미지 크기 조정 — 뷰포트 크기에 맞게 이미지를 동적으로 리사이즈한다"
     ],
-    "correctIndex": 3,
-    "explanation": "preload는 현재 페이지에서 곧 필요한 리소스를 높은 우선순위로 미리 가져옵니다. prefetch는 다음 페이지 탐색을 위한 낮은 우선순위 요청이고, dns-prefetch는 DNS 조회만 미리 수행합니다.",
-    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload"
+    "correctIndex": 1,
+    "explanation": "IntersectionObserver를 활용한 이미지 지연 로딩(lazy loading) 패턴입니다. 이미지의 실제 URL을 data-src에 저장하고, 요소가 뷰포트에 진입(isIntersecting)할 때 src 속성에 할당하여 이미지를 로드합니다. unobserve로 한 번 로드된 이미지는 관찰을 해제하여 불필요한 콜백을 방지합니다. 이 방식은 초기 페이지 로드 시 네트워크 요청을 줄여 LCP와 전체 로딩 성능을 개선합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API"
   },
   {
     "id": "web-performance-004",
@@ -99,18 +101,19 @@
   {
     "id": "web-performance-007",
     "topic": "web-performance",
-    "type": "concept",
+    "type": "output-prediction",
     "difficulty": "medium",
-    "question": "이미지 최적화에서 loading=\"lazy\" 속성의 동작은?",
+    "question": "DocumentFragment를 사용하는 다음 코드의 성능 이점은?",
+    "code": "const list = document.getElementById('list');\nconst fragment = document.createDocumentFragment();\n\nfor (let i = 0; i < 1000; i++) {\n  const li = document.createElement('li');\n  li.textContent = `Item ${i}`;\n  fragment.appendChild(li);\n}\n\nlist.appendChild(fragment);",
     "options": [
-      "뷰포트에 가까워질 때까지 이미지 로딩을 지연시킨다",
-      "이미지를 WebP 형식으로 자동 변환한다",
-      "이미지를 낮은 해상도로 먼저 로드한 후 고해상도로 교체한다",
-      "이미지를 Service Worker 캐시에 저장한다"
+      "DOM 삽입이 한 번만 발생하여 리플로우와 리페인트 횟수를 최소화한다",
+      "fragment가 Web Worker에서 병렬로 처리되어 메인 스레드를 차단하지 않는다",
+      "1000개의 li 요소가 가상 DOM에서 배치 처리된 후 한꺼번에 렌더링된다",
+      "createElement 호출이 메모리에서 최적화되어 가비지 컬렉션 부담이 줄어든다"
     ],
     "correctIndex": 0,
-    "explanation": "loading=\"lazy\"는 네이티브 지연 로딩으로, 이미지가 뷰포트에 가까워질 때까지 네트워크 요청을 보내지 않습니다. 초기 로드 시 필요하지 않은 이미지의 대역폭을 절약하여 LCP와 전체 페이지 로딩 속도를 개선합니다.",
-    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#loading"
+    "explanation": "DocumentFragment는 메모리상의 경량 DOM 컨테이너로, 실제 DOM에 연결되지 않습니다. fragment에 요소를 추가하는 동안은 리플로우/리페인트가 발생하지 않고, appendChild(fragment) 한 번의 호출로 모든 자식 요소가 DOM에 삽입됩니다. 직접 list에 1000번 appendChild하면 매번 리플로우가 트리거될 수 있어 성능이 크게 저하됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment"
   },
   {
     "id": "web-performance-008",
@@ -147,18 +150,19 @@
   {
     "id": "web-performance-010",
     "topic": "web-performance",
-    "type": "concept",
+    "type": "debugging",
     "difficulty": "hard",
-    "question": "Code splitting에서 dynamic import의 역할은?",
+    "question": "다음 코드를 반복 호출할 때 발생하는 메모리 문제와 해결책은?",
+    "code": "function setupHandler() {\n  const data = new Array(10000).fill('*');\n  const button = document.getElementById('btn');\n  \n  button.addEventListener('click', () => {\n    console.log(data.length);\n  });\n}",
     "options": [
-      "모든 모듈을 한 번에 로드하여 캐시 효율을 높인다",
-      "CSS 파일만 별도로 분리하여 로드한다",
-      "서버에서 모듈을 미리 컴파일한다",
-      "필요한 시점에 모듈을 비동기로 로드하여 초기 번들 크기를 줄인다"
+      "new Array가 메모리를 과도하게 할당하므로 배열 크기를 줄여야 한다",
+      "console.log가 메모리를 누적하므로 프로덕션에서는 로그를 제거해야 한다",
+      "addEventListener가 동기적이므로 setTimeout으로 감싸야 한다",
+      "클릭 핸들러가 클로저로 data를 참조하여 GC되지 않으며, 이전 리스너를 제거하지 않으면 핸들러와 data가 계속 누적된다"
     ],
     "correctIndex": 3,
-    "explanation": "dynamic import(import())를 사용하면 해당 모듈이 실제로 필요할 때까지 로딩을 지연시킵니다. 이를 통해 초기 JavaScript 번들 크기를 줄이고 첫 로딩 성능을 개선할 수 있습니다. React.lazy()도 내부적으로 dynamic import를 사용합니다.",
-    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import"
+    "explanation": "매번 setupHandler()를 호출하면 새로운 클릭 핸들러가 등록되고, 각 핸들러는 클로저를 통해 10000개 요소의 data 배열을 참조합니다. 이전 리스너를 제거하지 않으므로 핸들러와 참조된 data가 가비지 컬렉션되지 않고 메모리에 계속 누적됩니다. 해결책은 AbortController를 사용하거나, 새 리스너 등록 전에 removeEventListener로 이전 리스너를 제거하는 것입니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#memory_issues"
   },
   {
     "id": "web-performance-011",
@@ -309,17 +313,17 @@
   {
     "id": "web-performance-020",
     "topic": "web-performance",
-    "type": "concept",
+    "type": "comparison",
     "difficulty": "hard",
-    "question": "Intersection Observer API를 사용한 지연 로딩의 장점은?",
+    "question": "HTTP/1.1과 HTTP/2의 성능 최적화 전략 차이로 올바른 것은?",
     "options": [
-      "scroll 이벤트 리스너보다 정확한 타이밍을 제공한다",
-      "메인 스레드에서 비동기적으로 동작하여 scroll 이벤트 리스너 대비 성능 오버헤드가 적다",
-      "모든 브라우저에서 scroll 이벤트보다 먼저 지원되었다",
-      "CSS만으로 구현할 수 있어 JavaScript가 필요 없다"
+      "HTTP/2에서는 도메인 샤딩이 더 효과적이므로 여러 CDN에 리소스를 분산해야 한다",
+      "HTTP/2는 멀티플렉싱을 지원하여 단일 연결로 여러 리소스를 동시 전송할 수 있으므로, HTTP/1.1에서 사용하던 번들링과 스프라이트의 필요성이 줄어든다",
+      "HTTP/1.1이 HTTP/2보다 항상 빠르다 — 연결당 하나의 요청이 더 효율적이기 때문",
+      "HTTP/2는 브라우저 캐싱을 지원하지 않으므로 모든 리소스를 매번 다운로드해야 한다"
     ],
     "correctIndex": 1,
-    "explanation": "Intersection Observer는 브라우저가 내부적으로 요소의 가시성을 비동기적으로 감시합니다. scroll 이벤트는 스크롤할 때마다 메인 스레드에서 콜백이 실행되어 jank를 유발할 수 있지만, Intersection Observer는 이를 브라우저에 위임하여 효율적으로 처리합니다.",
-    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API"
+    "explanation": "HTTP/2의 멀티플렉싱은 하나의 TCP 연결에서 여러 요청/응답을 동시에 처리합니다. HTTP/1.1에서는 연결당 하나의 요청만 처리하므로, 요청 수를 줄이기 위해 파일 번들링, CSS 스프라이트, 도메인 샤딩 등의 최적화가 필요했습니다. HTTP/2에서는 이러한 핵(hack)들이 오히려 캐시 효율을 떨어뜨릴 수 있으므로, 작은 모듈 단위로 제공하는 것이 더 효과적입니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/HTTP_2"
   }
 ]
