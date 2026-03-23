@@ -29,7 +29,7 @@
       "undefined, undefined"
     ],
     "correctIndex": 1,
-    "explanation": "outer 함수가 실행되면 count 변수와 inner 함수가 생성됩니다. inner 함수는 클로저로서 count 변수를 기억합니다. counter()를 호출할 때마다 동일한 count 변수를 증가시키므로 1, 2가 순서대로 출력됩니다.",
+    "explanation": "outer 함수가 실행되면 count 변수와 inner 함수가 생성됩니다. inner 함수는 클로저로서 outer의 렉시컬 환경(LexicalEnvironment)을 참조하며, 이 환경은 outer의 실행 컨텍스트가 콜 스택에서 제거된 후에도 힙(heap)에 유지됩니다. counter()를 호출할 때마다 동일한 count 변수를 증가시키므로 1, 2가 순서대로 출력됩니다. 이것이 클로저로 상태를 유지하는 가장 기본적인 패턴입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
   },
   {
@@ -46,7 +46,7 @@
       "15, 15"
     ],
     "correctIndex": 2,
-    "explanation": "makeAdder(5)는 x=5를 클로저로 기억하는 함수를 반환합니다. add5(3)은 5+3=8입니다. makeAdder(10)은 x=10을 기억하는 별도의 클로저를 생성합니다. add10(3)은 10+3=13입니다. 각 클로저는 독립적인 렉시컬 환경을 가집니다.",
+    "explanation": "makeAdder(5)는 x=5를 클로저로 기억하는 함수를 반환합니다. add5(3)은 5+3=8입니다. makeAdder(10)은 x=10을 기억하는 별도의 클로저를 생성합니다. add10(3)은 10+3=13입니다. 각 호출은 독립적인 렉시컬 환경을 생성하므로 add5와 add10은 서로 다른 x를 참조합니다. 이 패턴은 부분 적용(Partial Application)의 기초이며, 함수형 프로그래밍에서 함수 팩토리를 만드는 핵심 기법입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
   },
   {
@@ -96,7 +96,7 @@
       "console.log가 메모리를 누적하기 때문"
     ],
     "correctIndex": 1,
-    "explanation": "handler 함수는 createHandler의 렉시컬 환경을 클로저로 캡처합니다. 비록 handler 내부에서 largeData를 직접 사용하지 않지만, 일부 JavaScript 엔진은 클로저가 외부 함수의 전체 렉시컬 환경을 유지할 수 있습니다. 이런 경우 큰 데이터가 불필요하게 메모리에 남아있게 됩니다.",
+    "explanation": "handler 함수는 createHandler의 렉시컬 환경을 클로저로 캡처합니다. 비록 handler 내부에서 largeData를 직접 사용하지 않지만, 일부 JavaScript 엔진은 클로저가 외부 함수의 전체 렉시컬 환경을 유지할 수 있습니다. V8 등 최신 엔진은 실제로 참조되는 변수만 캡처하도록 최적화하지만, eval이나 with가 포함되면 이 최적화가 비활성화됩니다. 실무에서는 handler = null로 참조를 명시적으로 해제하거나, 불필요한 대용량 데이터를 클로저 스코프 밖으로 분리하는 것이 권장됩니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Memory_management"
   },
   {
@@ -129,7 +129,7 @@
       "async 함수에서만 생성된다"
     ],
     "correctIndex": 0,
-    "explanation": "클로저는 함수가 자신이 선언된 렉시컬 환경 바깥에서 실행될 때, 여전히 그 환경의 변수에 접근할 수 있는 경우에 형성됩니다. 핵심 조건은 내부 함수가 외부 함수의 변수를 참조하면서 외부 함수 밖으로 반환되거나 전달되는 것입니다.",
+    "explanation": "클로저는 함수가 자신이 선언된 렉시컬 환경 바깥에서 실행될 때, 여전히 그 환경의 변수에 접근할 수 있는 경우에 형성됩니다. ECMAScript 명세에서 모든 함수는 내부 슬롯 [[Environment]]를 통해 생성 시점의 렉시컬 환경을 참조합니다. 핵심 조건은 내부 함수가 외부 함수의 변수를 참조하면서 외부 함수 밖으로 반환되거나 콜백으로 전달되는 것입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
   },
   {
@@ -262,7 +262,7 @@
       "TypeError"
     ],
     "correctIndex": 0,
-    "explanation": "multiply(2)는 x=2를 클로저로 캡처한 함수를 반환합니다. 그 함수에 3을 전달하면 y=3을 캡처한 또 다른 함수를 반환합니다. 마지막으로 4를 전달하면 x*y*z = 2*3*4 = 24를 반환합니다. 이처럼 중첩 클로저를 통해 함수를 체이닝할 수 있습니다.",
+    "explanation": "multiply(2)는 x=2를 클로저로 캡처한 함수를 반환합니다. 그 함수에 3을 전달하면 y=3을 캡처한 또 다른 함수를 반환합니다. 마지막으로 4를 전달하면 x*y*z = 2*3*4 = 24를 반환합니다. 이 패턴은 다중 커링(multi-level currying)으로, 각 호출이 새로운 렉시컬 환경을 생성하여 스코프 체인을 형성합니다. 내부 함수가 외부 변수를 참조할 때 스코프 체인을 따라 올라가며 변수를 찾습니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
   },
   {

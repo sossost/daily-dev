@@ -6,6 +6,8 @@
 
 ### Features
 
+- add Google Analytics 4 tracking (`3a5f1fd`)
+- **content**: Enhanced explanations in async, event-loop, prototype, and scope question files ... (`cec76ba`)
 - **content**: Reorder answer options and update correctIndex values to achieve perfectly even ... (`9196f96`)
 - **content**: Added 5 new TypeScript questions (016-020) covering array inference, Omit/Pick, ... (`475388f`)
 - **expansion**: add typescript topic with 15 questions (`6c5408a`)
