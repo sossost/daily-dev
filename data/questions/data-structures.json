@@ -246,5 +246,87 @@
     "correctIndex": 2,
     "explanation": "Set은 값 비교 시 참조 동등성(===)을 사용합니다. 같은 내용이더라도 서로 다른 객체 참조이면 별개의 값으로 취급합니다. 객체 중복 제거에는 id 기반 Map이나 filter + findIndex 패턴을 사용해야 합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Set"
+  },
+  {
+    "id": "data-structures-016",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "JavaScript의 Map에서 entries(), keys(), values() 메서드가 반환하는 것은 무엇인가요?",
+    "options": [
+      "일반 배열(Array)",
+      "이터레이터(Iterator) 객체",
+      "새로운 Map 객체",
+      "제너레이터 함수"
+    ],
+    "correctIndex": 1,
+    "explanation": "Map의 entries(), keys(), values() 메서드는 모두 이터레이터(Iterator) 객체를 반환합니다. 이터레이터는 for...of 루프나 스프레드 연산자(...)로 순회할 수 있으며, next() 메서드를 호출하여 값을 하나씩 꺼낼 수도 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Map/entries"
+  },
+  {
+    "id": "data-structures-017",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "WeakSet이 일반 Set과 달리 size 프로퍼티와 반복(iteration) 메서드를 제공하지 않는 이유는 무엇인가요?",
+    "options": [
+      "브라우저 호환성 문제 때문이다",
+      "가비지 컬렉션이 비결정적으로 동작하여 요소 수를 정확히 알 수 없기 때문이다",
+      "WeakSet은 아직 실험적 기능이라 구현이 완료되지 않았기 때문이다",
+      "WeakSet은 원시 값만 저장하므로 반복이 의미 없기 때문이다"
+    ],
+    "correctIndex": 1,
+    "explanation": "WeakSet은 요소에 대한 약한 참조를 유지하므로, 가비지 컬렉터가 언제든 요소를 회수할 수 있습니다. GC의 동작 시점은 비결정적이기 때문에 특정 시점의 정확한 요소 수를 보장할 수 없어 size 프로퍼티와 반복 메서드가 제공되지 않습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/WeakSet"
+  },
+  {
+    "id": "data-structures-018",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const m = new Map();\nconst objKey = {};\nm.set(objKey, 'first');\nm.set({}, 'second');\nm.set(objKey, 'third');\nconsole.log(m.size, m.get(objKey), m.get({}));",
+    "options": [
+      "2 'third' undefined",
+      "3 'third' 'second'",
+      "2 'first' undefined",
+      "3 'first' 'second'"
+    ],
+    "correctIndex": 0,
+    "explanation": "Map은 키를 참조 동등성(===)으로 비교합니다. objKey로 두 번 set하면 같은 참조이므로 값이 'first'에서 'third'로 덮어씌워집니다. {}로 set한 것은 별도의 객체 참조이므로 다른 키입니다. 따라서 size는 2이고, objKey로 조회하면 'third', 새로운 {}로 조회하면 해당 참조가 없으므로 undefined입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Map#key_equality"
+  },
+  {
+    "id": "data-structures-019",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 원형 참조(circular reference)로 인해 발생하는 문제와 해결 방법은 무엇인가요?",
+    "code": "const a = { name: 'A', ref: null };\nconst b = { name: 'B', ref: a };\na.ref = b;\ntry {\n  const json = JSON.stringify(a);\n  console.log(json);\n} catch (e) {\n  console.log(e.constructor.name);\n}",
+    "options": [
+      "RangeError가 발생하며, 깊은 복사(structuredClone)로 해결한다",
+      "TypeError가 발생하며, replacer 함수로 원형 참조를 제거해야 한다",
+      "SyntaxError가 발생하며, toJSON() 메서드를 정의해야 한다",
+      "정상적으로 직렬화되어 문제가 없다"
+    ],
+    "correctIndex": 1,
+    "explanation": "JSON.stringify()는 원형 참조가 있는 객체를 직렬화할 수 없어 TypeError를 던집니다. 이를 해결하려면 두 번째 인자로 replacer 함수를 전달하여 순환 참조를 감지하고 제거하거나, 라이브러리를 사용하여 안전하게 직렬화해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#exceptions"
+  },
+  {
+    "id": "data-structures-020",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "TypedArray(예: Int32Array)와 일반 Array의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "TypedArray는 push(), pop() 등 모든 배열 메서드를 지원한다",
+      "일반 Array가 TypedArray보다 숫자 연산 성능이 더 좋다",
+      "TypedArray는 문자열, 객체 등 다양한 타입을 저장할 수 있다",
+      "TypedArray는 고정된 타입과 크기를 가지며, 연속 메모리 블록에 데이터를 저장한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "TypedArray는 ArrayBuffer 위에 구축된 뷰로, 특정 숫자 타입(Int32, Float64 등)만 저장할 수 있으며 크기가 생성 시 고정됩니다. 연속된 메모리 블록을 사용하므로 대량의 숫자 데이터를 처리할 때 일반 Array보다 메모리 효율과 성능이 우수합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/TypedArray"
   }
 ]

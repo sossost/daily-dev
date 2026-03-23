@@ -24,7 +24,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Async | 20 |
 | Closure | 20 |
 | CSS Layout | 20 |
-| Data Structures | 15 |
+| Data Structures | 20 |
 | Dom Manipulation | 20 |
 | Event Loop | 20 |
 | Promise | 20 |
@@ -36,7 +36,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | TypeScript | 20 |
 | Web Performance | 20 |
 
-**Total: 275 questions across 14 topics**
+**Total: 280 questions across 14 topics**
 
 ## Getting Started
 
