@@ -59,6 +59,13 @@ Use judgment. If something similar already exists, pick something else.
 - Do NOT modify question data files
 - Keep changes focused — do not refactor unrelated code while adding a feature
 
+## Execution Rule
+
+You MUST write actual code and save files using the Write or Edit tools.
+Explaining, describing, or planning what to do is NOT acceptable — you must implement it.
+Do NOT output code in markdown blocks as your final answer — code must be written to actual files.
+If you determine the feature cannot be implemented within your constraints, output SUMMARY: skipped — <reason> and stop.
+
 ## Output Rule
 
 Your output MUST end with:

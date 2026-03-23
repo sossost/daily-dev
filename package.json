@@ -12,8 +12,7 @@
     "type-check": "tsc --noEmit",
     "validate": "bash .harness/scripts/validate.sh",
     "generate-readme": "tsx .harness/scripts/generate-readme.ts",
-    "update-goals": "tsx .harness/scripts/update-goals-progress.ts",
-    "select-agent": "tsx .harness/scripts/select-agent.ts"
+    "update-goals": "tsx .harness/scripts/update-goals-progress.ts"
   },
   "dependencies": {
     "@sentry/react": "^10.45.0",
