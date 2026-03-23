@@ -1,21 +1,14 @@
 'use client'
 
-import { useEffect } from 'react'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { SessionStartCard } from '@/components/dashboard/SessionStartCard'
 import { TopicProgressList } from '@/components/dashboard/TopicProgressList'
 import { ThemeToggle } from '@/components/ThemeToggle'
 
 export default function DashboardPage() {
-  const completedToday = useProgressStore((s) => s.completedToday)
   const topicStats = useProgressStore((s) => s.topicStats)
   const totalSessions = useProgressStore((s) => s.totalSessions)
   const currentStreak = useProgressStore((s) => s.currentStreak)
-  const refreshDailyState = useProgressStore((s) => s.refreshDailyState)
-
-  useEffect(() => {
-    refreshDailyState()
-  }, [refreshDailyState])
 
   return (
     <div>
@@ -40,7 +33,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <SessionStartCard completedToday={completedToday} />
+      <SessionStartCard />
       <TopicProgressList topicStats={topicStats} />
     </div>
   )

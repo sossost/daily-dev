@@ -6,17 +6,13 @@ import { calculateSRS, createInitialSRS } from '@/lib/srs'
 import { getToday } from '@/lib/date'
 
 interface ProgressState extends UserProgress {
-  completedToday: boolean
-
   updateAfterSession: (answers: SessionAnswer[]) => void
-  refreshDailyState: () => void
 }
 
 export const useProgressStore = create<ProgressState>()(
   persist(
     (set, get) => ({
       ...DEFAULT_USER_PROGRESS,
-      completedToday: false,
 
       updateAfterSession: (answers) => {
         const state = get()
@@ -93,18 +89,9 @@ export const useProgressStore = create<ProgressState>()(
           topicStats: updatedTopicStats,
           srsRecords: updatedSrsRecords,
           sessions: [...state.sessions, sessionRecord],
-          completedToday: true,
         })
       },
 
-      refreshDailyState: () => {
-        const state = get()
-        const today = getToday()
-
-        if (state.lastSessionDate !== today) {
-          set({ completedToday: false })
-        }
-      },
     }),
     {
       name: 'daily-dev-progress',

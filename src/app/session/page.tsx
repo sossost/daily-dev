@@ -11,9 +11,7 @@ import { QuizCard, NextButton } from '@/components/quiz/QuizCard'
 
 export default function SessionPage() {
   const router = useRouter()
-  const completedToday = useProgressStore((s) => s.completedToday)
   const srsRecords = useProgressStore((s) => s.srsRecords)
-  const refreshDailyState = useProgressStore((s) => s.refreshDailyState)
 
   const questions = useSessionStore((s) => s.questions)
   const currentIndex = useSessionStore((s) => s.currentIndex)
@@ -31,19 +29,10 @@ export default function SessionPage() {
   )
 
   useEffect(() => {
-    refreshDailyState()
-  }, [refreshDailyState])
-
-  useEffect(() => {
-    if (completedToday === true) {
-      router.replace('/')
-      return
-    }
-
     if (questions.length === 0) {
       startSession(sessionQuestions)
     }
-  }, [completedToday, questions.length, startSession, sessionQuestions, router])
+  }, [questions.length, startSession, sessionQuestions])
 
   useEffect(() => {
     if (isComplete === true) {
@@ -51,7 +40,7 @@ export default function SessionPage() {
     }
   }, [isComplete, router])
 
-  if (completedToday === true || questions.length === 0) {
+  if (questions.length === 0) {
     return null
   }
 
