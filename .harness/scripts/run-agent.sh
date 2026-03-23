@@ -22,6 +22,49 @@ LOG_FILE="${LOGS_DIR}/run-${TIMESTAMP}.log"
 
 mkdir -p "${STATE_DIR}" "${LOGS_DIR}" "${HISTORY_DIR}" "${RUN_COUNT_DIR}"
 
+# Load environment variables
+if [ -f "${PROJECT_DIR}/.env" ]; then
+  set -a
+  source "${PROJECT_DIR}/.env"
+  set +a
+fi
+
+########################################
+# Discord Notification
+########################################
+notify() {
+  local status="$1" title="$2" body="${3:-}"
+  local webhook_url="${DISCORD_WEBHOOK_URL:-}"
+
+  if [ -z "${webhook_url}" ] || [ "${webhook_url}" = "YOUR_WEBHOOK_URL_HERE" ]; then
+    return 0
+  fi
+
+  local color
+  case "${status}" in
+    success) color=3066993 ;;   # green
+    error)   color=15158332 ;;  # red
+    warning) color=16776960 ;;  # yellow
+    *)       color=3447003 ;;   # blue
+  esac
+
+  local payload
+  payload="$(cat <<PAYLOAD
+{
+  "embeds": [{
+    "title": "${title}",
+    "description": $(echo "${body}" | python3 -c 'import sys,json; print(json.dumps(sys.stdin.read()))' 2>/dev/null || echo '""'),
+    "color": ${color},
+    "footer": { "text": "DailyDev Harness" },
+    "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  }]
+}
+PAYLOAD
+)"
+
+  curl -s -H "Content-Type: application/json" -d "${payload}" "${webhook_url}" > /dev/null 2>&1 || true
+}
+
 ########################################
 # Logging
 ########################################
@@ -91,6 +134,22 @@ write_state() {
   local state_file="${STATE_DIR}/last-run"
   printf '%s|%s|%s|%s\n' \
     "${agent}" "${status}" "${summary}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "${state_file}"
+
+  # Discord notification
+  case "${status}" in
+    success)
+      notify "success" "✅ ${agent} 성공" "${summary}"
+      ;;
+    error|fail)
+      notify "error" "❌ ${agent} 실패" "${summary}"
+      ;;
+    rejected)
+      notify "warning" "⚠️ ${agent} 거부" "${summary}"
+      ;;
+    skipped|no-changes)
+      # 스킵/무변경은 알림 안 함
+      ;;
+  esac
 }
 
 record_history() {
