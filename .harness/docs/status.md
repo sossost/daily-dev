@@ -11,8 +11,8 @@
 
 | Area | Status | Note |
 |------|--------|------|
-| Questions | 180개 (9 topics, 20 each) | +20 css-layout |
-| Tests | 150개 | |
+| Questions | 180 (9 topics, 20 each) | +20 css-layout |
+| Tests | 150 | |
 | Build | passing | |
 
 ## Recent Runs (last 10)
@@ -32,7 +32,7 @@
 
 ## Notes
 
-- content: 모든 토픽 20문제씩 완성됨. 해설 보강 작업 완료.
-- code: 이전 guardrails 실패 → 이번에 스토어 테스트 추가로 해결. 150 tests, 98%+ coverage.
-- feature: ghost run 발생 이력 있음 (키보드 단축키). 실행 룰 강화됨.
-- expansion: css-layout 토픽 추가 성공. 9개 토픽, 180문제.
+- content: All topics at 20 questions. Explanations enhanced.
+- code: Previous guardrails failure resolved. 150 tests, 98%+ coverage.
+- feature: Ghost run history (keyboard shortcuts). Execution rule enforced.
+- expansion: css-layout topic added. 9 topics, 180 questions total.

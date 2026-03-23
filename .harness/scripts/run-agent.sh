@@ -290,11 +290,13 @@ Review and output APPROVE or REJECT with reason." \
   # Step 7: Update status + notify
   # ----------------------------------------
   log "Step 7: Updating status..."
-  claude -p "Read .harness/docs/status.md. Update it: last run was ${agent}, result success, summary '${summary}'. Add to recent runs table. Update project health if needed. Write the updated file." \
+  claude -p "Read .harness/docs/status.md. Update it: last run was ${agent}, result success, summary '${summary}'. Add to recent runs table. Update project health if needed. Write the updated file. ALL text in status.md must be in English." \
     --dangerously-skip-permissions \
     --max-turns 5 2>&1 | tee -a "${LOG_FILE}" || true
 
-  git add -f .harness/docs/status.md 2>/dev/null && git commit -m "chore: update status.md" && git push 2>/dev/null || true
+  # Include status.md in the same commit (amend)
+  git add -f .harness/docs/status.md 2>/dev/null && git commit --amend --no-edit 2>/dev/null || true
+  git push --force-with-lease 2>&1 | tee -a "${LOG_FILE}" || git push 2>&1 | tee -a "${LOG_FILE}" || true
 
   notify "success" "✅ ${agent} 성공" "${summary}"
   log "=== Run complete: ${agent} — ${summary} ==="
