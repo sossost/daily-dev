@@ -1,14 +1,20 @@
 'use client'
 
 import { useProgressStore } from '@/stores/useProgressStore'
+import { useHydration } from '@/hooks/useHydration'
 import { SessionStartCard } from '@/components/dashboard/SessionStartCard'
 import { TopicProgressList } from '@/components/dashboard/TopicProgressList'
 import { ThemeToggle } from '@/components/ThemeToggle'
 
 export default function DashboardPage() {
+  const isHydrated = useHydration()
   const topicStats = useProgressStore((s) => s.topicStats)
   const totalSessions = useProgressStore((s) => s.totalSessions)
   const currentStreak = useProgressStore((s) => s.currentStreak)
+
+  if (!isHydrated) {
+    return <DashboardSkeleton />
+  }
 
   return (
     <div>
@@ -35,6 +41,30 @@ export default function DashboardPage() {
 
       <SessionStartCard />
       <TopicProgressList topicStats={topicStats} />
+    </div>
+  )
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="animate-pulse">
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <div className="h-8 w-32 bg-gray-200 dark:bg-gray-700 rounded" />
+          <div className="h-4 w-48 bg-gray-200 dark:bg-gray-700 rounded mt-2" />
+        </div>
+        <div className="h-9 w-24 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+      </div>
+      <div className="flex gap-4 mb-6">
+        <div className="flex-1 h-20 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+        <div className="flex-1 h-20 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+      </div>
+      <div className="h-24 bg-gray-200 dark:bg-gray-700 rounded-2xl mb-6" />
+      <div className="space-y-3">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="h-12 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+        ))}
+      </div>
     </div>
   )
 }

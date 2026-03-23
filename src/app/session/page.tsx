@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { AnimatePresence } from 'framer-motion'
 import { useSessionStore } from '@/stores/useSessionStore'
 import { useProgressStore } from '@/stores/useProgressStore'
+import { useHydration } from '@/hooks/useHydration'
 import { generateSession } from '@/lib/session'
 import { ProgressBar } from '@/components/quiz/ProgressBar'
 import { QuizCard, NextButton } from '@/components/quiz/QuizCard'
@@ -12,6 +13,7 @@ import { QuizCard, NextButton } from '@/components/quiz/QuizCard'
 export default function SessionPage() {
   const router = useRouter()
   const srsRecords = useProgressStore((s) => s.srsRecords)
+  const isHydrated = useHydration()
 
   const questions = useSessionStore((s) => s.questions)
   const currentIndex = useSessionStore((s) => s.currentIndex)
@@ -29,10 +31,11 @@ export default function SessionPage() {
   )
 
   useEffect(() => {
+    if (!isHydrated) return
     if (questions.length === 0) {
       startSession(sessionQuestions)
     }
-  }, [questions.length, startSession, sessionQuestions])
+  }, [isHydrated, questions.length, startSession, sessionQuestions])
 
   useEffect(() => {
     if (isComplete === true) {
@@ -40,7 +43,7 @@ export default function SessionPage() {
     }
   }, [isComplete, router])
 
-  if (questions.length === 0) {
+  if (!isHydrated || questions.length === 0) {
     return null
   }
 
