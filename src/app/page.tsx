@@ -1,6 +1,9 @@
 'use client'
 
+import Link from 'next/link'
+import { Bookmark } from 'lucide-react'
 import { useProgressStore } from '@/stores/useProgressStore'
+import { useBookmarkStore } from '@/stores/useBookmarkStore'
 import { useHydration } from '@/hooks/useHydration'
 import { SessionStartCard } from '@/components/dashboard/SessionStartCard'
 import { TopicProgressList } from '@/components/dashboard/TopicProgressList'
@@ -11,6 +14,7 @@ export default function DashboardPage() {
   const topicStats = useProgressStore((s) => s.topicStats)
   const totalSessions = useProgressStore((s) => s.totalSessions)
   const currentStreak = useProgressStore((s) => s.currentStreak)
+  const bookmarkCount = useBookmarkStore((s) => s.bookmarkedIds.length)
 
   if (!isHydrated) {
     return <DashboardSkeleton />
@@ -38,6 +42,21 @@ export default function DashboardPage() {
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">연속 학습</p>
         </div>
       </div>
+
+      {bookmarkCount > 0 && (
+        <Link
+          href="/bookmarks"
+          className="flex items-center gap-3 mb-6 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
+        >
+          <Bookmark size={18} className="text-blue-500 fill-blue-500" />
+          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            북마크
+          </span>
+          <span className="ml-auto text-sm text-gray-500 dark:text-gray-400">
+            {bookmarkCount}개
+          </span>
+        </Link>
+      )}
 
       <SessionStartCard />
       <TopicProgressList topicStats={topicStats} />

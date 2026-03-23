@@ -3,11 +3,13 @@ import { useEffect, useState } from 'react'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useSessionStore } from '@/stores/useSessionStore'
 import { useThemeStore } from '@/stores/useThemeStore'
+import { useBookmarkStore } from '@/stores/useBookmarkStore'
 
 const stores = [
   useProgressStore.persist,
   useSessionStore.persist,
   useThemeStore.persist,
+  useBookmarkStore.persist,
 ]
 
 export function useHydration(): boolean {

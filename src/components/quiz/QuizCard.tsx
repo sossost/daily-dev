@@ -6,6 +6,7 @@ import { TOPIC_LABELS } from '@/types'
 import { CodeBlock } from '@/components/quiz/CodeBlock'
 import { OptionList } from '@/components/quiz/OptionList'
 import { Explanation } from '@/components/quiz/Explanation'
+import { BookmarkButton } from '@/components/quiz/BookmarkButton'
 
 const DIFFICULTY_LABELS: Record<Difficulty, string> = {
   easy: '쉬움',
@@ -50,6 +51,9 @@ export function QuizCard({
             복습
           </span>
         )}
+        <div className="ml-auto">
+          <BookmarkButton questionId={question.id} />
+        </div>
       </div>
 
       <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 leading-relaxed">
