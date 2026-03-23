@@ -72,8 +72,11 @@ export function selectReviewQuestions(
   return reviewQuestions
 }
 
+const DIFFICULTY_ORDER: Record<string, number> = { easy: 0, medium: 1, hard: 2 }
+
 /**
- * Select new (unattempted) questions, randomly shuffled.
+ * Select new (unattempted) questions, ordered easy → medium → hard.
+ * Within the same difficulty, questions are shuffled randomly.
  */
 export function selectNewQuestions(
   srsRecords: Record<string, SRSRecord>,
@@ -82,7 +85,15 @@ export function selectNewQuestions(
   const attemptedIds = new Set(Object.keys(srsRecords))
 
   const unattempted = allQuestions.filter((q) => !attemptedIds.has(q.id))
-  return shuffle(unattempted)
+
+  const byDifficulty = new Map<string, Question[]>()
+  for (const q of unattempted) {
+    const group = byDifficulty.get(q.difficulty) ?? []
+    group.push(q)
+    byDifficulty.set(q.difficulty, group)
+  }
+
+  return ['easy', 'medium', 'hard'].flatMap((d) => shuffle(byDifficulty.get(d) ?? []))
 }
 
 /**
