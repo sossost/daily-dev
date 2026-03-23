@@ -132,33 +132,58 @@ build_history_context() {
 }
 
 ########################################
-# SUMMARY extraction
+# SUMMARY / DETAILS extraction
 ########################################
 extract_summary() {
   local output="$1"
   local summary
 
-  # Try extracting from agent output
   summary="$(echo "${output}" | grep -o 'SUMMARY: .*' | tail -1 | sed 's/^SUMMARY: //')"
 
-  # Fallback: generate from git diff stat
   if [ -z "${summary}" ]; then
-    local changed_files new_files
-    changed_files="$(git diff --name-only 2>/dev/null | wc -l | tr -d ' ')"
-    new_files="$(git ls-files --others --exclude-standard -- src/ data/ __tests__/ 2>/dev/null | wc -l | tr -d ' ')"
     local diff_stat
     diff_stat="$(git diff --stat 2>/dev/null | tail -1 | sed 's/^ *//')"
+    summary="${diff_stat:-auto-update}"
+  fi
 
-    if [ -n "${diff_stat}" ]; then
-      summary="${diff_stat}"
-    elif [ "${new_files}" -gt 0 ]; then
-      summary="${new_files} new files created"
-    else
-      summary="auto-update"
-    fi
+  # Truncate to 50 chars for commit title
+  if [ "${#summary}" -gt 50 ]; then
+    summary="$(echo "${summary}" | cut -c1-47)..."
   fi
 
   echo "${summary}"
+}
+
+extract_details() {
+  local output="$1"
+
+  # Try extracting DETAILS block from agent output
+  local details
+  details="$(echo "${output}" | sed -n '/^DETAILS:$/,/^$/p' | sed '1d;$d')"
+
+  # Fallback: auto-generate from git diff
+  if [ -z "${details}" ]; then
+    local diff_stat files_changed insertions deletions
+    diff_stat="$(git diff --stat 2>/dev/null | tail -1)"
+    files_changed="$(echo "${diff_stat}" | grep -o '[0-9]* file' | grep -o '[0-9]*')"
+    insertions="$(echo "${diff_stat}" | grep -o '[0-9]* insertion' | grep -o '[0-9]*')"
+    deletions="$(echo "${diff_stat}" | grep -o '[0-9]* deletion' | grep -o '[0-9]*')"
+
+    local new_files
+    new_files="$(git ls-files --others --exclude-standard -- src/ data/ __tests__/ 2>/dev/null)"
+
+    details=""
+    if [ -n "${files_changed}" ]; then
+      details="Files: ${files_changed:-0} changed, +${insertions:-0} -${deletions:-0}"
+    fi
+    if [ -n "${new_files}" ]; then
+      local new_list
+      new_list="$(echo "${new_files}" | head -5 | sed 's/^/  - /')"
+      details="${details}${details:+\n}New:\n${new_list}"
+    fi
+  fi
+
+  echo "${details}"
 }
 
 ########################################
@@ -239,7 +264,7 @@ main() {
   agent_prompt="$(cat "${agent_prompt_file}")"
 
   local full_prompt
-  full_prompt="$(printf '%s\n%s\n\nWork directory: %s\nIMPORTANT: Your very last line of output must be SUMMARY: followed by a brief description of what you did.' \
+  full_prompt="$(printf '%s\n%s\n\nWork directory: %s\n\nIMPORTANT: End your output with:\nSUMMARY: <short title, max 50 chars>\nDETAILS:\n<structured body: what changed, counts, stats>' \
     "${agent_prompt}" "${history_context}" "${PROJECT_DIR}")"
 
   local agent_output=""
@@ -250,8 +275,9 @@ main() {
 
   log "Agent execution complete."
 
-  local SUMMARY
+  local SUMMARY DETAILS
   SUMMARY="$(extract_summary "${agent_output}")"
+  DETAILS="$(extract_details "${agent_output}")"
   log "Summary: ${SUMMARY}"
 
   # ------------------------------------------
@@ -514,9 +540,15 @@ Your very last line of output must be SUMMARY: followed by a brief description o
   # ------------------------------------------
   # Commit
   # ------------------------------------------
-  local commit_msg="feat(${AGENT_TYPE}): ${SUMMARY}"
-  log "Committing: ${commit_msg}"
-  git commit -m "${commit_msg}" 2>&1 | tee -a "${LOG_FILE}" || {
+  local commit_title="feat(${AGENT_TYPE}): ${SUMMARY}"
+  log "Committing: ${commit_title}"
+
+  local commit_body=""
+  if [ -n "${DETAILS}" ]; then
+    commit_body="$(printf '\n%b' "${DETAILS}")"
+  fi
+
+  git commit -m "${commit_title}${commit_body}" 2>&1 | tee -a "${LOG_FILE}" || {
     log_error "Commit failed."
     rollback
     write_state "${AGENT_TYPE}" "error" "Commit failed"
