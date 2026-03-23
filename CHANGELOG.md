@@ -6,6 +6,7 @@
 
 ### Features
 
+- **expansion**: add web-performance topic with 20 questions (`1e267bf`)
 - **feature**: add quiz keyboard shortcuts (`2845556`)
 
 ## 2026-03-23

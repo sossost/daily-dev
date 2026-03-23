@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Bookmark, History } from 'lucide-react'
+import { BarChart3, Bookmark, History } from 'lucide-react'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useBookmarkStore } from '@/stores/useBookmarkStore'
 import { useHydration } from '@/hooks/useHydration'
@@ -55,6 +55,17 @@ export default function DashboardPage() {
             </span>
             <span className="ml-auto text-sm text-gray-500 dark:text-gray-400">
               {totalSessions}개 세션
+            </span>
+          </Link>
+        )}
+        {totalSessions > 0 && (
+          <Link
+            href="/stats"
+            className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
+          >
+            <BarChart3 size={18} className="text-blue-500" />
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              학습 통계
             </span>
           </Link>
         )}

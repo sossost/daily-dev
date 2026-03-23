@@ -8,11 +8,23 @@
 - `DISMISS_STORAGE_KEY` = `'daily-dev-keyboard-hint-dismissed'`
 - `HINT_DISPLAY_COUNT_KEY` = `'daily-dev-keyboard-hint-count'`
 - `MAX_DISPLAY_COUNT` = `3`
+- `BAR_MAX_HEIGHT` = `120`
+- `PERCENTAGE_MULTIPLIER` = `100`
+- `ANIMATION_DELAY_STEP` = `0.05`
+- `ANIMATION_DELAY_STEP` = `0.08`
+- `ANIMATION_DELAY_STEP` = `0.04`
+- `HIGH_ACCURACY` = `80`
+- `MEDIUM_ACCURACY` = `60`
+- `ANIMATION_DELAY_STEP` = `0.08`
 - `OPTION_COUNT` = `4`
 - `DIGIT_KEY_OFFSET` = `1`
 - `MS_PER_SECOND` = `1000`
 - `SECONDS_PER_MINUTE` = `60`
 - `MIN_EASINESS_FACTOR` = `1.3`
+- `PERCENTAGE_MULTIPLIER` = `100`
+- `RECENT_SESSIONS_LIMIT` = `10`
+- `WEAK_TOPIC_THRESHOLD` = `70`
+- `MIN_ATTEMPTS_FOR_WEAK` = `1`
 - `SESSION_TOTAL_QUESTIONS` = `10`
 - `SESSION_REVIEW_QUESTIONS` = `5`
 - `SESSION_NEW_QUESTIONS` = `5`
@@ -128,6 +140,16 @@
 - `calculateSRS` (current: SRSRecord, isCorrect: boolean, today: string,) → SRSRecord — SM-2 spaced repetition algorithm. Calculates the next review state based on whether the answer was correct.
 - `createInitialSRS` (questionId: string, today: string) → SRSRecord — Create an initial SRS record for a question seen for the first time.
 - *deps*: types, lib/date
+
+#### `stats.ts` — Statistics computation utilities. Pure functions that derive analytics from UserProgress data.
+- `getAccuracyTrend` (sessions: readonly SessionRecord[]) → readonly AccuracyPoint[] — Compute accuracy trend from the most recent sessions.
+- `getWeakTopics` (topicStats: Record<Topic, TopicStat>,) → readonly WeakTopic[] — Identify weak topics — topics with accuracy below threshold. Sorted by accuracy ascending (weakest first).
+- `getOverallAccuracy` (totalCorrect: number, totalAnswered: number) → number — Compute overall accuracy percentage.
+- `getAttemptedTopicCount` (topicStats: Record<Topic, TopicStat>) → number — Count how many topics have been attempted.
+- `getBestAndWorstTopics` (topicStats: Record<Topic, TopicStat>,) — Get best and worst performing topic. Only considers topics with at least one answer.
+- `AccuracyPoint`
+- `WeakTopic`
+- *deps*: types, types
 
 #### `storage.ts`
 - `loadFromStorage` (key: string) → T | null — Generic localStorage wrapper with SSR safety and JSON serialization.
@@ -251,8 +273,30 @@
 #### `page.tsx`
 - *deps*: stores/useProgressStore, hooks/useHydration, components/history/SessionHistoryCard
 
+### src/app/stats/
+
+#### `page.tsx`
+- *deps*: stores/useProgressStore, hooks/useHydration, lib/stats, components/stats/AccuracyTrendChart, components/stats/WeakTopicsList, components/stats/StatCard, components/stats/TopicAccuracyBars
+
 ### src/components/history/
 
 #### `SessionHistoryCard.tsx`
 - `SessionHistoryCard` ({ session, index }: SessionHistoryCardProps)
 - *deps*: types, types, lib/session-history
+
+### src/components/stats/
+
+#### `AccuracyTrendChart.tsx`
+- `AccuracyTrendChart` ({ trend }: AccuracyTrendChartProps)
+- *deps*: lib/stats
+
+#### `StatCard.tsx`
+- `StatCard` ({ icon: Icon, label, value, subtext, index }: StatCardProps)
+
+#### `TopicAccuracyBars.tsx`
+- `TopicAccuracyBars` ({ topicStats }: TopicAccuracyBarsProps)
+- *deps*: types, types
+
+#### `WeakTopicsList.tsx`
+- `WeakTopicsList` ({ weakTopics }: WeakTopicsListProps)
+- *deps*: lib/stats
