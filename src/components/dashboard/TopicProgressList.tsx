@@ -14,6 +14,7 @@ const TOPIC_COLORS: Record<Topic, string> = {
   'type-coercion': 'bg-violet-500',
   typescript: 'bg-indigo-500',
   promise: 'bg-pink-500',
+  'dom-manipulation': 'bg-teal-500',
 }
 
 interface TopicProgressListProps {

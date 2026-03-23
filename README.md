@@ -21,6 +21,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 |-------|-----------|
 | Async | 20 |
 | Closure | 20 |
+| Dom Manipulation | 20 |
 | Event Loop | 20 |
 | Promise | 20 |
 | Prototype | 20 |
@@ -29,7 +30,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Type Coercion | 20 |
 | TypeScript | 20 |
 
-**Total: 180 questions across 9 topics**
+**Total: 200 questions across 10 topics**
 
 ## Getting Started
 

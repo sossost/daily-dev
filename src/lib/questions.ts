@@ -13,6 +13,7 @@ import asyncQuestions from '../../data/questions/async.json'
 import typeCoercionQuestions from '../../data/questions/type-coercion.json'
 import typescriptQuestions from '../../data/questions/typescript.json'
 import promiseQuestions from '../../data/questions/promise.json'
+import domManipulationQuestions from '../../data/questions/dom-manipulation.json'
 
 const ALL_QUESTIONS: Question[] = [
   ...scopeQuestions,
@@ -24,6 +25,7 @@ const ALL_QUESTIONS: Question[] = [
   ...typeCoercionQuestions,
   ...typescriptQuestions,
   ...promiseQuestions,
+  ...domManipulationQuestions,
 ] as Question[]
 
 const QUESTIONS_BY_ID = new Map<string, Question>(

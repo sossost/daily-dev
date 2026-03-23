@@ -6,6 +6,7 @@
 
 ### Features
 
+- **expansion**: add promise topic with 20 questions (`d12b190`)
 - **code**: Add comprehensive tests for progress store, session store, and storage SSR safet... (`89faa41`)
 - **content**: Enhanced 10 question explanations in type-coercion.json and typescript.json with... (`90dc9cf`)
 - **content**: Enhanced 10 question explanations in closure.json and this.json with deeper tech... (`f44531c`)
@@ -42,6 +43,7 @@
 
 ### Refactoring
 
+- replace harness with manager-agent orchestrator pattern (`a01d255`)
 - inject agent principles via pipeline, not CLAUDE.md (`4c12902`)
 - remove fixed targets, enable autonomous agent loop (`cf8f9a3`)
 - structured commit messages in agent runner (`ba5d77e`)
@@ -53,5 +55,6 @@
 
 ### Chores
 
+- add status.md for harness manager context (`9aeac7f`)
 - change scheduler interval from 1 hour to 30 minutes (`86cc410`)
 - project setup + AI harness system (`ecdb9b0`)

@@ -1,0 +1,331 @@
+[
+  {
+    "id": "dom-manipulation-001",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "document.getElementById()와 document.querySelector()의 차이점으로 올바른 것은?",
+    "options": [
+      "getElementById()는 CSS 선택자를 사용하고, querySelector()는 ID만 사용한다",
+      "getElementById()는 ID로만 검색하고, querySelector()는 CSS 선택자를 사용한다",
+      "두 메서드는 완전히 동일하게 동작한다",
+      "querySelector()는 여러 요소를 반환하고, getElementById()는 하나만 반환한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "getElementById()는 요소의 id 속성으로만 검색하며 문자열을 인자로 받습니다. querySelector()는 CSS 선택자 문법을 사용하여 더 유연한 검색이 가능합니다. querySelector()는 매칭되는 첫 번째 요소만 반환하며, 여러 요소를 반환하는 것은 querySelectorAll()입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Document/querySelector"
+  },
+  {
+    "id": "dom-manipulation-002",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "innerHTML과 textContent의 차이점으로 올바른 것은?",
+    "options": [
+      "textContent는 HTML 태그를 파싱하여 렌더링한다",
+      "innerHTML은 보안상 항상 안전하다",
+      "innerHTML은 HTML을 파싱하고, textContent는 순수 텍스트로 처리한다",
+      "두 속성은 동일하게 동작한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "innerHTML은 문자열을 HTML로 파싱하여 DOM에 삽입하므로 XSS 공격에 취약할 수 있습니다. textContent는 문자열을 순수 텍스트로 처리하여 HTML 태그가 그대로 텍스트로 표시됩니다. 사용자 입력을 DOM에 삽입할 때는 textContent를 사용하는 것이 안전합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/innerHTML"
+  },
+  {
+    "id": "dom-manipulation-003",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드 실행 후 #container의 자식 요소 개수는?",
+    "code": "const container = document.getElementById('container');\ncontainer.innerHTML = '<div>A</div>';\nconst span = document.createElement('span');\nspan.textContent = 'B';\ncontainer.appendChild(span);\nconsole.log(container.children.length);",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "0"
+    ],
+    "correctIndex": 1,
+    "explanation": "innerHTML = '<div>A</div>'로 기존 내용을 대체하고 div 하나를 생성합니다. 이후 appendChild(span)으로 span 요소를 추가하면 총 2개의 자식 요소(div, span)가 됩니다. innerHTML은 기존 자식을 모두 제거하고 새 내용으로 대체합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Node/appendChild"
+  },
+  {
+    "id": "dom-manipulation-004",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "이벤트 위임(Event Delegation)의 장점으로 올바른 것은?",
+    "options": [
+      "각 자식 요소에 개별 이벤트 리스너를 등록하는 것보다 메모리 효율적이다",
+      "이벤트 버블링을 방지할 수 있다",
+      "이벤트 캡처링 단계에서만 동작한다",
+      "동적으로 추가된 요소에는 적용할 수 없다"
+    ],
+    "correctIndex": 0,
+    "explanation": "이벤트 위임은 부모 요소에 하나의 이벤트 리스너만 등록하고, 이벤트 버블링을 활용하여 자식 요소의 이벤트를 처리하는 패턴입니다. 메모리 사용을 줄이고, 동적으로 추가된 자식 요소에도 자동으로 적용됩니다. event.target으로 실제 클릭된 요소를 식별합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Learn/JavaScript/Building_blocks/Events#event_delegation"
+  },
+  {
+    "id": "dom-manipulation-005",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 실행 결과는?",
+    "code": "const div = document.createElement('div');\ndiv.classList.add('active', 'visible');\ndiv.classList.toggle('active');\ndiv.classList.replace('visible', 'hidden');\nconsole.log([...div.classList].join(', '));",
+    "options": [
+      "active, visible",
+      "active, hidden",
+      "hidden",
+      "visible, hidden"
+    ],
+    "correctIndex": 2,
+    "explanation": "classList.add('active', 'visible')로 두 클래스를 추가합니다. classList.toggle('active')로 active를 제거합니다(이미 있으므로). classList.replace('visible', 'hidden')으로 visible을 hidden으로 대체합니다. 최종 결과는 'hidden' 하나만 남습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/DOMTokenList"
+  },
+  {
+    "id": "dom-manipulation-006",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "DocumentFragment를 사용하는 주된 이유는?",
+    "options": [
+      "DOM 트리에 직접 삽입할 수 없기 때문에",
+      "innerHTML보다 느리지만 더 안전하기 때문에",
+      "메모리에서 자동으로 가비지 컬렉션되기 때문에",
+      "여러 노드를 한 번에 추가하여 리플로우를 최소화하기 위해"
+    ],
+    "correctIndex": 3,
+    "explanation": "DocumentFragment는 메모리 상의 가벼운 DOM으로, 여러 노드를 Fragment에 먼저 추가한 후 한 번에 실제 DOM에 삽입할 수 있습니다. 이렇게 하면 각 노드를 개별적으로 추가할 때 발생하는 반복적인 리플로우와 리페인트를 방지하여 성능을 개선합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/DocumentFragment"
+  },
+  {
+    "id": "dom-manipulation-007",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "const ul = document.createElement('ul');\nconst li1 = document.createElement('li');\nconst li2 = document.createElement('li');\nul.appendChild(li1);\nul.appendChild(li2);\n\nconst items = ul.querySelectorAll('li');\nul.removeChild(li1);\nconsole.log(items.length, ul.children.length);",
+    "options": [
+      "2, 1",
+      "1, 1",
+      "2, 2",
+      "1, 2"
+    ],
+    "correctIndex": 0,
+    "explanation": "querySelectorAll()은 정적(static) NodeList를 반환합니다. 호출 시점의 스냅샷이므로 이후 DOM 변경이 반영되지 않습니다. 따라서 items.length는 여전히 2입니다. 반면 children은 라이브(live) HTMLCollection이므로 li1 제거 후 1이 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Document/querySelectorAll"
+  },
+  {
+    "id": "dom-manipulation-008",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "DOM에서 요소의 속성(attribute)을 설정하는 올바른 방법은?",
+    "options": [
+      "element.attr('name', 'value')",
+      "element.attribute('name', 'value')",
+      "element.setProperty('name', 'value')",
+      "element.setAttribute('name', 'value')"
+    ],
+    "correctIndex": 3,
+    "explanation": "setAttribute()는 요소의 HTML 속성을 설정하는 표준 DOM API입니다. 속성이 이미 존재하면 값을 업데이트하고, 없으면 새로 생성합니다. 속성값을 읽으려면 getAttribute(), 제거하려면 removeAttribute()를 사용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/setAttribute"
+  },
+  {
+    "id": "dom-manipulation-009",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "append()와 appendChild()의 차이점으로 올바른 것은?",
+    "options": [
+      "appendChild()는 문자열도 삽입할 수 있다",
+      "append()는 여러 노드와 문자열을 동시에 삽입할 수 있다",
+      "append()는 삽입된 노드를 반환한다",
+      "appendChild()는 여러 노드를 동시에 삽입할 수 있다"
+    ],
+    "correctIndex": 1,
+    "explanation": "append()는 여러 Node 객체와 문자열(DOMString)을 동시에 인자로 받을 수 있으며, 반환값이 없습니다. appendChild()는 하나의 Node만 인자로 받고, 삽입된 노드를 반환합니다. append()는 더 현대적인 API로 유연하게 사용할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/append"
+  },
+  {
+    "id": "dom-manipulation-010",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "const div = document.createElement('div');\ndiv.dataset.userId = '42';\ndiv.dataset.userName = 'Alice';\nconsole.log(div.getAttribute('data-user-name'));",
+    "options": [
+      "undefined",
+      "null",
+      "Alice",
+      "TypeError"
+    ],
+    "correctIndex": 2,
+    "explanation": "dataset API는 data-* 속성을 카멜 케이스로 접근합니다. dataset.userName은 실제 HTML에서 data-user-name 속성으로 변환됩니다. 따라서 getAttribute('data-user-name')으로 'Alice' 값을 가져올 수 있습니다. 카멜 케이스 ↔ 케밥 케이스 변환이 자동으로 이루어집니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/HTMLElement/dataset"
+  },
+  {
+    "id": "dom-manipulation-011",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "이벤트 전파에서 stopPropagation()과 stopImmediatePropagation()의 차이는?",
+    "options": [
+      "stopPropagation()은 캡처링만 중단하고, stopImmediatePropagation()은 버블링만 중단한다",
+      "두 메서드는 동일하게 동작한다",
+      "stopPropagation()은 기본 동작도 방지하지만 stopImmediatePropagation()은 그렇지 않다",
+      "stopImmediatePropagation()은 같은 요소의 나머지 리스너도 실행을 중단한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "stopPropagation()은 이벤트가 부모/자식 요소로 전파되는 것을 막지만, 같은 요소에 등록된 다른 리스너는 실행됩니다. stopImmediatePropagation()은 전파도 막고, 같은 요소에 등록된 나머지 리스너의 실행도 중단합니다. 기본 동작 방지는 preventDefault()가 담당합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Event/stopImmediatePropagation"
+  },
+  {
+    "id": "dom-manipulation-012",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 순서는?",
+    "code": "const parent = document.createElement('div');\nconst child = document.createElement('span');\nparent.appendChild(child);\n\nparent.addEventListener('click', () => console.log('parent bubble'));\nparent.addEventListener('click', () => console.log('parent capture'), true);\nchild.addEventListener('click', () => console.log('child bubble'));\nchild.addEventListener('click', () => console.log('child capture'), true);\n\nchild.click();",
+    "options": [
+      "parent capture, child capture, child bubble, parent bubble",
+      "child capture, child bubble, parent capture, parent bubble",
+      "parent bubble, child bubble, child capture, parent capture",
+      "child bubble, parent bubble, child capture, parent capture"
+    ],
+    "correctIndex": 0,
+    "explanation": "DOM 이벤트는 캡처링 → 타겟 → 버블링 순서로 전파됩니다. 먼저 캡처링 단계에서 parent capture가 실행되고, 타겟 단계에서 child에 등록된 순서대로 child capture, child bubble이 실행됩니다. 마지막으로 버블링 단계에서 parent bubble이 실행됩니다. 타겟 요소에서는 등록 순서가 캡처/버블 구분보다 우선합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/EventTarget/addEventListener"
+  },
+  {
+    "id": "dom-manipulation-013",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "요소의 인라인 스타일을 JavaScript로 변경하는 올바른 방법은?",
+    "options": [
+      "element.style.backgroundColor = 'red'",
+      "element.css('background-color', 'red')",
+      "element.setStyle('background-color', 'red')",
+      "element.style['background-color'] = 'red'"
+    ],
+    "correctIndex": 0,
+    "explanation": "element.style 객체를 통해 인라인 스타일을 설정할 수 있습니다. CSS 속성명은 카멜 케이스로 변환하여 사용합니다(background-color → backgroundColor). element.style['background-color']도 동작하지만, 카멜 케이스가 표준적인 접근 방식입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/HTMLElement/style"
+  },
+  {
+    "id": "dom-manipulation-014",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "cloneNode(true)와 cloneNode(false)의 차이점은?",
+    "options": [
+      "cloneNode(true)는 이벤트 리스너도 복사한다",
+      "cloneNode(false)는 자식 노드를 포함하여 복사한다",
+      "cloneNode(true)는 자식 노드를 포함하여 깊은 복사를 수행한다",
+      "cloneNode(false)는 원본 노드를 제거한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "cloneNode(true)는 해당 노드와 모든 자손 노드를 포함한 깊은 복사(deep clone)를 수행합니다. cloneNode(false)는 해당 노드만 복사하고 자식은 포함하지 않습니다. 두 경우 모두 addEventListener()으로 등록한 이벤트 리스너는 복사되지 않습니다. 인라인 이벤트 핸들러(onclick 속성)는 복사됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Node/cloneNode"
+  },
+  {
+    "id": "dom-manipulation-015",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드 실행 후 DOM 구조는?",
+    "code": "const parent = document.createElement('div');\nconst a = document.createElement('span');\nconst b = document.createElement('span');\nconst c = document.createElement('span');\na.id = 'a'; b.id = 'b'; c.id = 'c';\n\nparent.append(a, b);\nparent.insertBefore(c, a);\nconsole.log([...parent.children].map(el => el.id).join(', '));",
+    "options": [
+      "a, b, c",
+      "c, a, b",
+      "a, c, b",
+      "c, b, a"
+    ],
+    "correctIndex": 1,
+    "explanation": "append(a, b)로 a, b 순서로 추가합니다. insertBefore(c, a)는 a 앞에 c를 삽입합니다. 따라서 최종 순서는 c, a, b가 됩니다. insertBefore(newNode, referenceNode)에서 referenceNode 앞에 newNode가 삽입됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Node/insertBefore"
+  },
+  {
+    "id": "dom-manipulation-016",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "MutationObserver의 용도로 올바른 것은?",
+    "options": [
+      "네트워크 요청의 변화를 감시한다",
+      "JavaScript 변수의 값 변화를 감시한다",
+      "CSS 스타일 변경을 동기적으로 감시한다",
+      "DOM 트리의 변경 사항을 비동기적으로 감시한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "MutationObserver는 DOM 트리의 변경(자식 노드 추가/제거, 속성 변경, 텍스트 변경 등)을 비동기적으로 감시하는 API입니다. 마이크로태스크 큐에서 콜백이 실행되어 여러 DOM 변경을 배치로 처리할 수 있습니다. 이전의 동기적 Mutation Events를 대체합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/MutationObserver"
+  },
+  {
+    "id": "dom-manipulation-017",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 클릭 이벤트가 작동하지 않는 이유는?",
+    "code": "document.getElementById('btn').addEventListener('click', handler());\n\nfunction handler() {\n  console.log('clicked!');\n}",
+    "options": [
+      "handler 함수가 선언 전에 사용되었기 때문에",
+      "addEventListener의 두 번째 인자로 함수 실행 결과(undefined)가 전달되었기 때문에",
+      "getElementById가 null을 반환하기 때문에",
+      "click 이벤트 이름이 잘못되었기 때문에"
+    ],
+    "correctIndex": 1,
+    "explanation": "handler()는 함수를 즉시 실행하여 그 반환값(undefined)을 addEventListener에 전달합니다. 함수 참조를 전달하려면 handler (괄호 없이)를 사용해야 합니다. 이것은 JavaScript에서 흔히 발생하는 실수로, 함수 참조와 함수 호출의 차이를 이해하는 것이 중요합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/EventTarget/addEventListener"
+  },
+  {
+    "id": "dom-manipulation-018",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "const div = document.createElement('div');\ndiv.innerHTML = '  <span>hello</span>  ';\nconsole.log(div.childNodes.length, div.children.length);",
+    "options": [
+      "1, 1",
+      "3, 1",
+      "3, 3",
+      "1, 3"
+    ],
+    "correctIndex": 1,
+    "explanation": "childNodes는 텍스트 노드를 포함한 모든 자식 노드를 반환합니다. '  <span>hello</span>  '에는 앞쪽 공백 텍스트 노드, span 요소, 뒤쪽 공백 텍스트 노드 총 3개의 childNodes가 있습니다. children은 Element 노드만 반환하므로 span 1개만 포함됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Node/childNodes"
+  },
+  {
+    "id": "dom-manipulation-019",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "getBoundingClientRect()가 반환하는 좌표의 기준은?",
+    "options": [
+      "문서(document) 전체의 좌상단 기준",
+      "부모 요소의 좌상단 기준",
+      "뷰포트(viewport)의 좌상단 기준",
+      "body 요소의 좌상단 기준"
+    ],
+    "correctIndex": 2,
+    "explanation": "getBoundingClientRect()는 뷰포트(브라우저 화면 표시 영역)의 좌상단을 기준으로 요소의 위치와 크기를 반환합니다. 스크롤 위치가 반영되므로, 문서 기준 좌표를 얻으려면 window.scrollX/scrollY를 더해야 합니다. top, right, bottom, left, width, height 속성을 가집니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/getBoundingClientRect"
+  },
+  {
+    "id": "dom-manipulation-020",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 발생하는 문제는?",
+    "code": "const items = document.querySelectorAll('.item');\nitems.forEach((item, index) => {\n  item.style.order = index;\n});",
+    "options": [
+      "querySelectorAll은 forEach를 지원하지 않는다",
+      "style.order에 숫자를 직접 할당할 수 없다 — 문자열이어야 한다",
+      "forEach에서 index 파라미터를 사용할 수 없다",
+      "코드에 문제가 없다 — 정상적으로 동작한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "이 코드는 정상적으로 동작합니다. NodeList는 forEach()를 지원하며, style 속성에 숫자를 할당하면 자동으로 문자열로 변환됩니다. 단위가 없는 CSS 속성(order, z-index, opacity 등)은 숫자를 직접 할당할 수 있습니다. querySelectorAll은 정적 NodeList를 반환합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/NodeList/forEach"
+  }
+]

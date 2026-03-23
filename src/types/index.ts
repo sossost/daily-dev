@@ -9,6 +9,7 @@ export const TOPICS = [
   'type-coercion',
   'typescript',
   'promise',
+  'dom-manipulation',
 ] as const
 
 export type Topic = (typeof TOPICS)[number]
@@ -24,6 +25,7 @@ export const TOPIC_LABELS: Record<Topic, string> = {
   'type-coercion': '타입 변환',
   typescript: '타입스크립트',
   promise: '프로미스',
+  'dom-manipulation': 'DOM 조작',
 }
 
 // Question schema
