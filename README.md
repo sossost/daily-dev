@@ -28,13 +28,14 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Event Loop | 20 |
 | Promise | 20 |
 | Prototype | 20 |
+| React Basics | 20 |
 | Scope | 20 |
 | this Keyword | 20 |
 | Type Coercion | 20 |
 | TypeScript | 20 |
 | Web Performance | 20 |
 
-**Total: 240 questions across 12 topics**
+**Total: 260 questions across 13 topics**
 
 ## Getting Started
 

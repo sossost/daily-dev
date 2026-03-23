@@ -12,6 +12,7 @@ export const TOPICS = [
   'dom-manipulation',
   'css-layout',
   'web-performance',
+  'react-basics',
 ] as const
 
 export type Topic = (typeof TOPICS)[number]
@@ -30,6 +31,7 @@ export const TOPIC_LABELS: Record<Topic, string> = {
   'dom-manipulation': 'DOM 조작',
   'css-layout': 'CSS 레이아웃',
   'web-performance': '웹 성능 최적화',
+  'react-basics': 'React 기초',
 }
 
 // Question schema
