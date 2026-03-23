@@ -1,0 +1,41 @@
+# Changelog
+
+> Auto-generated from git history. Do not edit manually.
+
+## 2026-03-23
+
+### Features
+
+- add Discord webhook notifications to harness (`f14eddb`)
+- **feature**: add bookmark feature with persistent store and dedicated page (`91a57ee`)
+- **content**: Added 99 new questions across all 7 topic files (41→140 total), each file now ha... (`a7ad744`)
+- order new questions by difficulty (easy → hard) (`9053b6a`)
+- auto-generated codemap for agent context (`d516933`)
+- remove daily session limit (`a4bd5fd`)
+- **content**: Added 10 new prototype-related questions (006-015) covering debugging, compariso... (`57cf88c`)
+- **feature**: Agent run completed (no summary provided); fix: Agent run completed (no summary ... (`b4eeb71`)
+- DailyDev MVP — daily learning app for developers (`9347ced`)
+
+### Bug Fixes
+
+- exclude .harness/docs/ from protected pattern (`1cfb2b1`)
+- update review schedule text for unlimited sessions (`2649ee1`)
+- SSR crash in useHydration during static export (`8ddc39b`)
+- hydration race condition and layout shift (`48103f5`)
+- auto-rebase on push conflict in agent runner (`b31ca24`)
+- persist session state across page refresh (`4a3e5e1`)
+- floating next button, dark mode contrast, code quality standard (`b803c60`)
+- improve commit message quality — max-turns 50, review summary fallback (`d0be31c`)
+
+### Refactoring
+
+- structured commit messages in agent runner (`ba5d77e`)
+
+### Documentation
+
+- add domain JSDoc to core modules (`1bd597b`)
+
+### Chores
+
+- change scheduler interval from 1 hour to 30 minutes (`86cc410`)
+- project setup + AI harness system (`ecdb9b0`)
