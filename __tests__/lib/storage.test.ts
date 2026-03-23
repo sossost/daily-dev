@@ -60,4 +60,42 @@ describe('clearStorage', () => {
   it('does not throw when key does not exist', () => {
     expect(() => clearStorage('nonexistent')).not.toThrow()
   })
+
+  it('handles removeItem errors gracefully', () => {
+    const original = window.localStorage.removeItem
+    window.localStorage.removeItem = () => {
+      throw new Error('Storage unavailable')
+    }
+
+    expect(() => clearStorage('test')).not.toThrow()
+
+    window.localStorage.removeItem = original
+  })
+})
+
+describe('SSR safety — window undefined', () => {
+  const originalWindow = globalThis.window
+
+  beforeEach(() => {
+    // Simulate SSR by making typeof window === 'undefined'
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete (globalThis as Record<string, unknown>).window
+  })
+
+  afterEach(() => {
+    globalThis.window = originalWindow
+  })
+
+  it('loadFromStorage returns null when window is undefined', () => {
+    const result = loadFromStorage('test')
+    expect(result).toBeNull()
+  })
+
+  it('saveToStorage does nothing when window is undefined', () => {
+    expect(() => saveToStorage('test', 'value')).not.toThrow()
+  })
+
+  it('clearStorage does nothing when window is undefined', () => {
+    expect(() => clearStorage('test')).not.toThrow()
+  })
 })
