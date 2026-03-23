@@ -70,6 +70,7 @@
 - async.json — 20 questions
 - closure.json — 20 questions
 - css-layout.json — 20 questions
+- data-structures.json — 15 questions
 - dom-manipulation.json — 20 questions
 - event-loop.json — 20 questions
 - promise.json — 20 questions

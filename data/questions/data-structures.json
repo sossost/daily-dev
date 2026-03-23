@@ -1,0 +1,250 @@
+[
+  {
+    "id": "data-structures-001",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "JavaScript에서 배열의 push()와 pop() 메서드가 따르는 자료구조 원리는 무엇인가요?",
+    "options": [
+      "LIFO (Last In, First Out)",
+      "FIFO (First In, First Out)",
+      "Priority Queue",
+      "Deque (Double-ended Queue)"
+    ],
+    "correctIndex": 0,
+    "explanation": "push()는 배열 끝에 요소를 추가하고, pop()은 배열 끝에서 요소를 제거합니다. 이는 LIFO(Last In, First Out) 원리를 따르는 스택(Stack) 자료구조의 동작 방식입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/push"
+  },
+  {
+    "id": "data-structures-002",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const queue = [1, 2, 3];\nqueue.push(4);\nconst first = queue.shift();\nconsole.log(first, queue.length);",
+    "options": [
+      "4 3",
+      "3 3",
+      "1 4",
+      "1 3"
+    ],
+    "correctIndex": 3,
+    "explanation": "push(4)로 배열 끝에 4가 추가되어 [1, 2, 3, 4]가 됩니다. shift()는 배열 앞에서 요소를 제거하고 반환하므로 first는 1이 되고, 남은 배열 [2, 3, 4]의 length는 3입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/shift"
+  },
+  {
+    "id": "data-structures-003",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "JavaScript의 Set 자료구조의 가장 큰 특징은 무엇인가요?",
+    "options": [
+      "중복 값을 허용하지 않는다",
+      "키-값 쌍으로 데이터를 저장한다",
+      "요소가 항상 정렬된 상태로 유지된다",
+      "고정 크기를 가진다"
+    ],
+    "correctIndex": 0,
+    "explanation": "Set은 중복되지 않는 값들의 컬렉션입니다. 동일한 값을 여러 번 추가해도 하나만 저장됩니다. 이 특성을 활용하여 배열에서 중복을 제거하는 데 자주 사용됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Set"
+  },
+  {
+    "id": "data-structures-004",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const map = new Map();\nmap.set('a', 1);\nmap.set('b', 2);\nmap.set('a', 3);\nconsole.log(map.size, map.get('a'));",
+    "options": [
+      "3 1",
+      "3 3",
+      "2 3",
+      "2 1"
+    ],
+    "correctIndex": 2,
+    "explanation": "Map에서 동일한 키로 set()을 호출하면 값이 덮어씌워집니다. 'a' 키에 1을 넣고 다시 3을 넣었으므로 최종 값은 3입니다. 키는 'a'와 'b' 두 개이므로 size는 2입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Map"
+  },
+  {
+    "id": "data-structures-005",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Map과 일반 객체(Object)의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "Object는 어떤 타입이든 키로 사용할 수 있지만, Map은 문자열만 가능하다",
+      "Map은 JSON.stringify()로 직접 직렬화할 수 있다",
+      "Object가 Map보다 항상 조회 성능이 빠르다",
+      "Map은 어떤 타입이든 키로 사용할 수 있고, 삽입 순서를 보장한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Map은 문자열뿐 아니라 객체, 함수 등 어떤 값이든 키로 사용할 수 있으며, 삽입 순서를 보장합니다. 반면 Object의 키는 문자열 또는 Symbol로 제한됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Map#objects_vs._maps"
+  },
+  {
+    "id": "data-structures-006",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const set = new Set([1, 2, 3, 2, 1]);\nconst arr = [...set].filter(x => x > 1);\nconsole.log(arr);",
+    "options": [
+      "[2, 3]",
+      "[2, 3, 2]",
+      "[1, 2, 3]",
+      "[3]"
+    ],
+    "correctIndex": 0,
+    "explanation": "Set은 중복을 제거하므로 new Set([1, 2, 3, 2, 1])은 {1, 2, 3}이 됩니다. 스프레드 연산자로 배열 [1, 2, 3]으로 변환한 후, filter(x => x > 1)로 1보다 큰 값만 남기면 [2, 3]이 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Set"
+  },
+  {
+    "id": "data-structures-007",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 객체를 Map의 키로 사용할 때 발생하는 문제는 무엇인가요?",
+    "code": "const cache = new Map();\nfunction getData(config) {\n  if (cache.has(config)) return cache.get(config);\n  const result = expensiveComputation(config);\n  cache.set(config, result);\n  return result;\n}\ngetData({ page: 1 });\ngetData({ page: 1 });",
+    "options": [
+      "Map은 객체를 키로 사용할 수 없어 에러가 발생한다",
+      "Map의 크기 제한을 초과한다",
+      "config 객체가 가비지 컬렉션되어 키가 사라진다",
+      "매번 새로운 객체 참조가 전달되어 캐시가 작동하지 않는다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Map은 키 비교 시 참조 동등성(===)을 사용합니다. { page: 1 }을 두 번 호출하면 매번 새로운 객체가 생성되므로 서로 다른 키로 인식됩니다. 캐시를 제대로 활용하려면 동일한 객체 참조를 사용하거나 문자열 키를 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Map#key_equality"
+  },
+  {
+    "id": "data-structures-008",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "WeakMap과 Map의 가장 중요한 차이점은 무엇인가요?",
+    "options": [
+      "WeakMap은 문자열도 키로 사용할 수 있다",
+      "WeakMap은 반복(iteration)이 가능하다",
+      "WeakMap의 키는 가비지 컬렉션 대상이 될 수 있다",
+      "WeakMap은 Map보다 조회 속도가 빠르다"
+    ],
+    "correctIndex": 2,
+    "explanation": "WeakMap은 키에 대한 약한 참조(weak reference)를 유지합니다. 키 객체에 대한 다른 참조가 없으면 가비지 컬렉션 대상이 됩니다. 이 특성 덕분에 메모리 누수를 방지하면서 객체에 메타데이터를 연결할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/WeakMap"
+  },
+  {
+    "id": "data-structures-009",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const stack = [];\nstack.push(10);\nstack.push(20);\nstack.push(30);\nstack.pop();\nstack.push(40);\nconsole.log(stack[stack.length - 1], stack.length);",
+    "options": [
+      "40 3",
+      "30 3",
+      "40 4",
+      "20 2"
+    ],
+    "correctIndex": 0,
+    "explanation": "push(10), push(20), push(30)으로 [10, 20, 30]이 됩니다. pop()으로 30이 제거되어 [10, 20]이 되고, push(40)으로 [10, 20, 40]이 됩니다. 마지막 요소(stack[2])는 40이고, length는 3입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/pop"
+  },
+  {
+    "id": "data-structures-010",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "대량의 데이터에서 특정 값의 존재 여부를 확인할 때, Array.includes()보다 Set.has()가 더 효율적인 이유는 무엇인가요?",
+    "options": [
+      "Set은 내부적으로 정렬된 배열을 사용하기 때문이다",
+      "Set은 메모리를 더 적게 사용하기 때문이다",
+      "Array.includes()는 타입 변환 오버헤드가 있기 때문이다",
+      "Set.has()는 해시 기반 O(1) 조회인 반면, Array.includes()는 O(n) 선형 탐색이다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Set은 해시 테이블 기반 자료구조로, has() 메서드는 평균 O(1) 시간 복잡도로 값을 조회합니다. 반면 Array의 includes()는 배열을 처음부터 끝까지 순회하는 O(n) 선형 탐색을 수행합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Set/has"
+  },
+  {
+    "id": "data-structures-011",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 트리 순회 코드에서 발생할 수 있는 문제는 무엇인가요?",
+    "code": "function flatten(node) {\n  const result = [node.value];\n  if (node.children) {\n    for (const child of node.children) {\n      result.push(flatten(child));\n    }\n  }\n  return result;\n}",
+    "options": [
+      "무한 루프가 발생한다",
+      "push 대신 spread나 concat을 사용해야 중첩 배열이 생기지 않는다",
+      "children가 undefined일 때 에러가 발생한다",
+      "const result를 let으로 변경해야 한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "flatten()은 배열을 반환하는데, push()로 배열을 추가하면 중첩 배열이 됩니다. result.push(...flatten(child)) 또는 result = result.concat(flatten(child))를 사용해야 평탄화된 결과를 얻을 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/flat"
+  },
+  {
+    "id": "data-structures-012",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "React에서 상태 관리 시 불변 자료구조를 사용해야 하는 주된 이유는 무엇인가요?",
+    "options": [
+      "불변 자료구조가 메모리를 더 적게 사용하기 때문이다",
+      "JavaScript 엔진이 불변 객체를 더 빠르게 처리하기 때문이다",
+      "참조 비교(===)로 변경을 빠르게 감지하여 리렌더링을 최적화하기 위해서이다",
+      "가비지 컬렉션 성능이 향상되기 때문이다"
+    ],
+    "correctIndex": 2,
+    "explanation": "React는 상태 변경 감지 시 참조 비교(===)를 사용합니다. 객체를 직접 변경(mutate)하면 참조가 같아 변경을 감지할 수 없습니다. 새 객체를 생성하면 참조가 달라져 React가 변경을 감지하고 효율적으로 리렌더링할 수 있습니다.",
+    "sourceUrl": "https://react.dev/learn/updating-objects-in-state"
+  },
+  {
+    "id": "data-structures-013",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const arr = [1, 2, 3, 4, 5];\nconst result = arr.reduce((acc, val) => {\n  return val % 2 === 0 ? [...acc, val * 2] : acc;\n}, []);\nconsole.log(result);",
+    "options": [
+      "[2, 4, 6, 8, 10]",
+      "[4, 8]",
+      "[1, 4, 3, 8, 5]",
+      "[2, 6, 10]"
+    ],
+    "correctIndex": 1,
+    "explanation": "reduce는 배열을 순회하면서 짝수(val % 2 === 0)인 경우에만 val * 2를 누적 배열에 추가합니다. 짝수는 2와 4이므로, 각각 2배한 [4, 8]이 결과입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce"
+  },
+  {
+    "id": "data-structures-014",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "JSON 직렬화를 고려할 때 Map 대신 일반 객체를 선택해야 하는 경우는 언제인가요?",
+    "options": [
+      "키의 삽입 순서가 중요할 때",
+      "키로 객체나 함수를 사용해야 할 때",
+      "API 응답이나 localStorage와 같이 JSON 직렬화가 필요할 때",
+      "빈번한 키-값 추가/삭제가 필요할 때"
+    ],
+    "correctIndex": 2,
+    "explanation": "Map은 JSON.stringify()로 직접 직렬화할 수 없습니다. API 통신이나 localStorage 저장처럼 JSON 변환이 필요한 경우에는 일반 객체가 더 적합합니다. Map을 직렬화하려면 Array.from()이나 Object.fromEntries() 등의 변환 과정이 필요합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify"
+  },
+  {
+    "id": "data-structures-015",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 의도한 대로 중복이 제거되지 않는 이유는 무엇인가요?",
+    "code": "const users = [\n  { id: 1, name: 'Alice' },\n  { id: 2, name: 'Bob' },\n  { id: 1, name: 'Alice' }\n];\nconst unique = [...new Set(users)];\nconsole.log(unique.length);",
+    "options": [
+      "Set은 배열을 입력으로 받을 수 없다",
+      "스프레드 연산자가 Set을 올바르게 변환하지 못한다",
+      "Set은 참조 동등성으로 비교하므로 동일한 내용의 다른 객체는 중복으로 인식하지 않는다",
+      "객체의 id 필드를 명시적으로 지정해야 한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Set은 값 비교 시 참조 동등성(===)을 사용합니다. 같은 내용이더라도 서로 다른 객체 참조이면 별개의 값으로 취급합니다. 객체 중복 제거에는 id 기반 Map이나 filter + findIndex 패턴을 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Set"
+  }
+]
