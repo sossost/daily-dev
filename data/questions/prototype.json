@@ -247,5 +247,88 @@
     "correctIndex": 3,
     "explanation": "Object.keys()는 객체 자신의 열거 가능한 프로퍼티 이름만 배열로 반환합니다. 반면 for...in은 객체 자신의 프로퍼티뿐 아니라 프로토타입 체인에 있는 모든 열거 가능한 프로퍼티를 순회합니다. 따라서 for...in 사용 시 hasOwnProperty() 체크가 자주 필요합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/keys"
+  },
+  {
+    "id": "prototype-016",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "instanceof 연산자의 동작 원리로 올바른 것은?",
+    "options": [
+      "객체의 프로토타입 체인에 생성자의 prototype이 존재하는지 확인한다",
+      "객체의 타입 이름을 문자열로 비교한다",
+      "객체가 특정 클래스에서 직접 생성되었는지만 확인한다",
+      "typeof 연산자와 동일하게 동작한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "instanceof는 객체의 프로토타입 체인을 따라 올라가면서 주어진 생성자의 prototype 프로퍼티가 체인에 존재하는지 확인합니다. 직접 생성 여부가 아닌 프로토타입 체인 전체를 검사합니다. obj instanceof Foo는 obj의 프로토타입 체인에 Foo.prototype이 있으면 true입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/instanceof"
+  },
+  {
+    "id": "prototype-017",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "new 키워드 없이 생성자 함수를 호출하면 어떻게 되나요?",
+    "options": [
+      "자동으로 new가 추가되어 정상 동작한다",
+      "this가 새 객체가 아닌 전역 객체를 가리키게 되어 의도치 않은 동작이 발생한다",
+      "TypeError가 즉시 발생한다",
+      "항상 undefined가 반환된다"
+    ],
+    "correctIndex": 1,
+    "explanation": "new 없이 생성자 함수를 호출하면 this는 전역 객체(strict mode에서는 undefined)를 가리킵니다. 전역 객체에 프로퍼티가 추가되거나, strict mode에서는 TypeError가 발생합니다. ES6 class는 new 없이 호출하면 자동으로 TypeError를 발생시켜 이 문제를 방지합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/new"
+  },
+  {
+    "id": "prototype-018",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "class Animal {\n  constructor(name) { this.name = name; }\n  speak() { return `${this.name} speaks`; }\n}\nclass Dog extends Animal {\n  speak() { return `${this.name} barks`; }\n}\nconst d = new Dog('Rex');\nconsole.log(d.speak());\nconsole.log(d instanceof Animal);",
+    "options": [
+      "Rex speaks, true",
+      "Rex barks, false",
+      "Rex speaks, false",
+      "Rex barks, true"
+    ],
+    "correctIndex": 3,
+    "explanation": "Dog 클래스가 Animal의 speak 메서드를 오버라이드했으므로 d.speak()는 Dog의 메서드를 호출하여 'Rex barks'를 반환합니다. Dog이 Animal을 extends하므로 프로토타입 체인에 Animal.prototype이 존재하여 d instanceof Animal은 true입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Classes/extends"
+  },
+  {
+    "id": "prototype-019",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function Person(name) { this.name = name; }\nPerson.prototype.greet = function() { return `Hi, ${this.name}`; };\nconst p1 = new Person('Kim');\nconst p2 = new Person('Lee');\nconsole.log(p1.greet === p2.greet);\nconsole.log(p1.name === p2.name);",
+    "options": [
+      "true, false",
+      "false, false",
+      "true, true",
+      "false, true"
+    ],
+    "correctIndex": 0,
+    "explanation": "greet은 Person.prototype에 정의된 메서드이므로 p1과 p2는 동일한 함수 참조를 공유합니다. 따라서 p1.greet === p2.greet는 true입니다. name은 각 인스턴스의 자체 프로퍼티이며 값이 다르므로('Kim' vs 'Lee') p1.name === p2.name은 false입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Inheritance_and_the_prototype_chain"
+  },
+  {
+    "id": "prototype-020",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 super()를 호출하지 않으면 에러가 발생합니다. 원인은 무엇인가요?",
+    "code": "class Base {\n  constructor() { this.x = 1; }\n}\nclass Child extends Base {\n  constructor() {\n    // super() 누락\n    this.y = 2; // ReferenceError\n  }\n}",
+    "options": [
+      "class 문법에서는 constructor를 정의할 수 없기 때문",
+      "this.x가 먼저 초기화되어야 하기 때문",
+      "extends 키워드가 super()를 자동으로 호출하기 때문",
+      "파생 클래스에서 this를 사용하기 전에 반드시 super()를 호출하여 부모의 초기화를 완료해야 하기 때문"
+    ],
+    "correctIndex": 3,
+    "explanation": "파생 클래스(extends를 사용한 클래스)의 constructor에서는 this를 사용하기 전에 반드시 super()를 호출해야 합니다. super()가 부모 클래스의 constructor를 실행하여 this 객체를 초기화합니다. super() 없이 this에 접근하면 ReferenceError가 발생합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/super"
   }
 ]

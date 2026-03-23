@@ -99,5 +99,236 @@
     "correctIndex": 1,
     "explanation": "typeof null이 'object'인 것은 JavaScript의 유명한 버그입니다(초기 구현의 실수). typeof undefined는 'undefined'입니다. NaN은 'Not a Number'의 약자이지만 타입은 number입니다. 이는 IEEE 754 부동소수점 표준에 따른 것입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/typeof"
+  },
+  {
+    "id": "type-coercion-007",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "==(동등)과 ===(일치) 연산자의 차이로 올바른 것은?",
+    "options": [
+      "==는 타입 변환 후 비교하고, ===는 타입 변환 없이 비교한다",
+      "===는 타입 변환 후 비교하고, ==는 타입 변환 없이 비교한다",
+      "둘 다 타입 변환을 수행한다",
+      "둘 다 타입 변환 없이 비교한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "==(동등 연산자)는 두 피연산자의 타입이 다르면 타입 변환(coercion)을 수행한 후 비교합니다. ===(일치 연산자)는 타입 변환 없이 값과 타입 모두 같은지 비교합니다. 예상치 못한 변환을 방지하기 위해 ===를 사용하는 것이 권장됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Strict_equality"
+  },
+  {
+    "id": "type-coercion-008",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(Number('123'));\nconsole.log(Number(''));\nconsole.log(Number('abc'));",
+    "options": [
+      "123, NaN, NaN",
+      "123, 0, NaN",
+      "123, 0, 0",
+      "'123', '', 'abc'"
+    ],
+    "correctIndex": 1,
+    "explanation": "Number() 함수는 문자열을 숫자로 변환합니다. '123'은 정상적으로 123이 됩니다. 빈 문자열 ''은 특별하게 0으로 변환됩니다. 'abc'는 유효한 숫자가 아니므로 NaN이 됩니다. 빈 문자열이 0이 되는 것은 자주 혼동을 일으키는 규칙입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Number"
+  },
+  {
+    "id": "type-coercion-009",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 조건문이 의도와 달리 true로 평가됩니다. 원인은 무엇인가요?",
+    "code": "const value = '0';\nif (value) {\n  console.log('truthy!'); // 실행됨\n}",
+    "options": [
+      "'0'이 자동으로 숫자 0으로 변환되어 falsy이기 때문",
+      "if문은 항상 true로 평가되기 때문",
+      "비어있지 않은 문자열은 '0'이라도 truthy이므로 조건이 true가 된다",
+      "value가 const로 선언되었기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "JavaScript에서 if 조건문은 값을 불리언으로 변환합니다. 문자열의 경우 빈 문자열 ''만 falsy이고, 나머지 모든 문자열은 truthy입니다. '0'은 비어있지 않은 문자열이므로 truthy입니다. 만약 숫자 0이면 falsy입니다. 문자열 '0'과 숫자 0의 불리언 변환이 다르다는 점에 주의하세요.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Truthy"
+  },
+  {
+    "id": "type-coercion-010",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "null과 undefined의 동등 비교(==)에 대해 올바른 것은?",
+    "options": [
+      "null == undefined는 false이다",
+      "null == 0은 true이다",
+      "undefined == false는 true이다",
+      "null == undefined는 true이지만, null == 0과 undefined == 0은 false이다"
+    ],
+    "correctIndex": 3,
+    "explanation": "== 비교에서 null과 undefined는 서로만 같고(null == undefined는 true), 다른 어떤 값과도 같지 않습니다. null == 0, null == false, undefined == 0, undefined == false는 모두 false입니다. 이는 추상적 동등 비교 알고리즘의 특별한 규칙입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-011",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "JavaScript의 암시적 타입 변환(Implicit Coercion)에 대한 설명으로 올바른 것은?",
+    "options": [
+      "연산자에 의해 자동으로 타입이 변환되며 개발자가 의도하지 않은 결과를 초래할 수 있다",
+      "암시적 변환은 항상 문자열로만 변환된다",
+      "strict mode에서는 암시적 변환이 발생하지 않는다",
+      "암시적 변환은 === 연산자에서도 발생한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "암시적 타입 변환은 +, -, ==, if 등의 연산자와 구문에서 JavaScript 엔진이 자동으로 수행합니다. 문자열, 숫자, 불리언 등 다양한 타입으로 변환될 수 있습니다. strict mode에서도 암시적 변환은 동일하게 발생하며, === 연산자만 타입 변환을 수행하지 않습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Type_coercion"
+  },
+  {
+    "id": "type-coercion-012",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(Boolean(0));\nconsole.log(Boolean(''));\nconsole.log(Boolean([]));\nconsole.log(Boolean({}));",
+    "options": [
+      "false, false, false, false",
+      "false, false, true, true",
+      "false, false, false, true",
+      "true, true, true, true"
+    ],
+    "correctIndex": 1,
+    "explanation": "0과 빈 문자열 ''은 falsy 값이므로 false입니다. 빈 배열 []과 빈 객체 {}는 falsy가 아닙니다. JavaScript에서 모든 객체(배열 포함)는 truthy입니다. 빈 배열이 truthy인 것은 자주 혼동을 일으키는 규칙입니다. [] == false가 true인 것과는 다른 규칙입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Falsy"
+  },
+  {
+    "id": "type-coercion-013",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 parseInt('123abc')가 에러 없이 123을 반환합니다. 원인은 무엇인가요?",
+    "code": "console.log(parseInt('123abc')); // 123\nconsole.log(parseInt('abc123')); // NaN\nconsole.log(parseInt('0.99'));   // 0",
+    "options": [
+      "parseInt가 모든 비숫자 문자를 자동으로 제거하기 때문",
+      "parseInt가 문자열 길이를 3으로 제한하기 때문",
+      "parseInt는 문자열을 왼쪽부터 파싱하여 숫자가 아닌 문자를 만나면 그 전까지만 정수로 반환하기 때문",
+      "parseInt가 정규표현식으로 숫자만 추출하기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "parseInt는 문자열을 왼쪽부터 한 문자씩 파싱합니다. '123abc'에서 '1', '2', '3'까지 파싱하고 'a'를 만나면 중단하여 123을 반환합니다. 'abc123'은 첫 문자부터 숫자가 아니므로 NaN입니다. '0.99'에서는 소수점 '.'이 정수 파싱에 유효하지 않아 0만 반환합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/parseInt"
+  },
+  {
+    "id": "type-coercion-014",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Number()와 parseInt()의 차이로 올바른 것은?",
+    "options": [
+      "둘 다 동일한 결과를 반환한다",
+      "Number()만 소수를 처리할 수 있고 parseInt()는 정수만 반환한다",
+      "parseInt()는 문자열만 받을 수 있고 Number()는 모든 타입을 받는다",
+      "Number()는 전체 문자열이 유효한 숫자여야 하고, parseInt()는 앞에서부터 유효한 정수 부분만 파싱한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Number('123abc')는 전체 문자열이 유효한 숫자가 아니므로 NaN을 반환합니다. parseInt('123abc')는 앞에서부터 유효한 정수 부분만 파싱하여 123을 반환합니다. 또한 Number()는 소수를 포함한 모든 숫자 형식을 처리하지만, parseInt()는 정수 부분만 파싱합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Number"
+  },
+  {
+    "id": "type-coercion-015",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "+ 단항 연산자의 타입 변환 동작으로 올바른 것은?",
+    "options": [
+      "피연산자를 숫자로 변환한다. +'42'는 42, +true는 1이 된다",
+      "피연산자를 문자열로 변환한다",
+      "피연산자를 불리언으로 변환한다",
+      "피연산자의 부호를 반전시킨다"
+    ],
+    "correctIndex": 0,
+    "explanation": "+ 단항 연산자는 Number()와 동일하게 피연산자를 숫자로 변환합니다. +'42'는 42, +true는 1, +false는 0, +null은 0, +undefined는 NaN이 됩니다. 부호를 반전시키는 것은 - 단항 연산자입니다. 코드를 간결하게 만들 수 있지만 가독성을 위해 Number()를 사용하는 것이 권장됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Unary_plus"
+  },
+  {
+    "id": "type-coercion-016",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 NaN === NaN이 false인 이유는 무엇인가요?",
+    "code": "const a = NaN;\nconsole.log(a === a);  // false\nconsole.log(a == a);   // false",
+    "options": [
+      "NaN이 아직 초기화되지 않았기 때문",
+      "NaN은 자기 자신을 포함하여 어떤 값과도 같지 않은 유일한 값이기 때문",
+      "===와 == 연산자가 NaN을 처리하지 못하기 때문",
+      "const로 선언된 변수는 동등 비교할 수 없기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "NaN은 IEEE 754 부동소수점 표준에 따라 자기 자신과도 같지 않은 유일한 JavaScript 값입니다. NaN === NaN과 NaN == NaN 모두 false입니다. NaN을 확인하려면 Number.isNaN()을 사용해야 합니다. isNaN()은 인자를 먼저 숫자로 변환하므로 Number.isNaN()이 더 정확합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/NaN"
+  },
+  {
+    "id": "type-coercion-017",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log([] == ![]);\nconsole.log('' == 0);\nconsole.log(null == 0);\nconsole.log(undefined == 0);",
+    "options": [
+      "false, true, false, false",
+      "true, true, true, true",
+      "true, true, false, false",
+      "false, false, false, false"
+    ],
+    "correctIndex": 2,
+    "explanation": "[] == ![]: ![]는 false(배열은 truthy)이므로 [] == false가 됩니다. []는 ''로, false는 0으로, ''도 0으로 변환되어 0 == 0은 true입니다. '' == 0: ''은 0으로 변환되어 true입니다. null == 0과 undefined == 0: null과 undefined는 == 비교에서 서로만 같고 다른 값과는 같지 않으므로 둘 다 false입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-018",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Object.is()와 === 연산자의 차이로 올바른 것은?",
+    "options": [
+      "차이가 없다. 항상 동일한 결과를 반환한다",
+      "Object.is()는 타입 변환을 수행하지만 ===는 하지 않는다",
+      "===는 NaN끼리 true를 반환하지만 Object.is()는 false를 반환한다",
+      "Object.is(NaN, NaN)은 true, Object.is(+0, -0)은 false이며 ===와 다르게 동작한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Object.is()와 ===는 대부분 동일하게 동작하지만 두 가지 경우에서 다릅니다. 1) NaN === NaN은 false이지만 Object.is(NaN, NaN)은 true입니다. 2) +0 === -0은 true이지만 Object.is(+0, -0)은 false입니다. Object.is()는 Same-value equality 알고리즘을 사용하여 더 정밀한 비교를 제공합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/is"
+  },
+  {
+    "id": "type-coercion-019",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 isNaN('hello')가 true인 이유와 올바른 대안은 무엇인가요?",
+    "code": "console.log(isNaN('hello'));        // true\nconsole.log(isNaN(undefined));      // true\nconsole.log(Number.isNaN('hello')); // false",
+    "options": [
+      "isNaN은 인자를 먼저 Number로 변환하므로 Number('hello')가 NaN이 되어 true이다. Number.isNaN은 변환 없이 정확히 NaN인지만 확인한다",
+      "isNaN은 모든 비숫자 값에 true를 반환하도록 설계되었기 때문",
+      "isNaN이 레거시 API이기 때문에 정확도가 떨어진다",
+      "'hello'가 NaN이라는 특수한 값과 동일하기 때문"
+    ],
+    "correctIndex": 0,
+    "explanation": "전역 isNaN()은 인자를 먼저 Number()로 변환한 후 NaN인지 확인합니다. Number('hello')는 NaN이므로 isNaN('hello')는 true입니다. Number.isNaN()은 타입 변환 없이 값이 정확히 NaN 타입인지만 확인합니다. 'hello'는 문자열이므로 Number.isNaN('hello')는 false입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN"
+  },
+  {
+    "id": "type-coercion-020",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "JavaScript의 추상적 동등 비교(==) 알고리즘에서 타입이 다를 때의 변환 규칙으로 올바른 것은?",
+    "options": [
+      "항상 왼쪽 피연산자의 타입으로 변환한다",
+      "문자열과 숫자 비교 시 문자열을 숫자로 변환하고, 불리언이 있으면 먼저 숫자로 변환한다",
+      "항상 문자열로 변환한 후 비교한다",
+      "불리언이 있으면 먼저 문자열로 변환한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "== 알고리즘은 정해진 규칙을 따릅니다: 1) 불리언이 있으면 먼저 숫자로 변환합니다(true→1, false→0). 2) 문자열과 숫자 비교 시 문자열을 숫자로 변환합니다. 3) 객체와 원시값 비교 시 객체를 원시값으로 변환합니다(ToPrimitive). 4) null과 undefined는 서로만 같습니다. 이 복잡한 규칙 때문에 ===를 사용하는 것이 권장됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Equality"
   }
 ]

@@ -18,15 +18,15 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 
 | Topic | Questions |
 |-------|-----------|
-| Async | 6 |
-| Closure | 7 |
-| Event Loop | 6 |
-| Prototype | 15 |
-| Scope | 5 |
-| this Keyword | 6 |
-| Type Coercion | 6 |
+| Async | 20 |
+| Closure | 20 |
+| Event Loop | 20 |
+| Prototype | 20 |
+| Scope | 20 |
+| this Keyword | 20 |
+| Type Coercion | 20 |
 
-**Total: 51 questions across 7 topics**
+**Total: 140 questions across 7 topics**
 
 ## Getting Started
 

@@ -115,5 +115,220 @@
     "correctIndex": 2,
     "explanation": "IIFE(즉시 실행 함수)로 모듈 패턴을 구현했습니다. private_count는 클로저로 보호되어 increment와 getCount로만 접근 가능합니다. module.private_count는 반환된 객체에 해당 프로퍼티가 없으므로 undefined입니다. getCount()는 클로저를 통해 2를 반환합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-008",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "클로저가 생성되는 조건으로 올바른 것은?",
+    "options": [
+      "내부 함수가 외부 함수의 변수를 참조할 때 생성된다",
+      "함수가 전역 스코프에서 선언될 때 생성된다",
+      "클래스의 메서드에서만 생성된다",
+      "async 함수에서만 생성된다"
+    ],
+    "correctIndex": 0,
+    "explanation": "클로저는 함수가 자신이 선언된 렉시컬 환경 바깥에서 실행될 때, 여전히 그 환경의 변수에 접근할 수 있는 경우에 형성됩니다. 핵심 조건은 내부 함수가 외부 함수의 변수를 참조하면서 외부 함수 밖으로 반환되거나 전달되는 것입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-009",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function greet(name) {\n  return function() {\n    return `Hello, ${name}!`;\n  };\n}\nconst hello = greet('World');\nconsole.log(hello());",
+    "options": [
+      "undefined",
+      "Hello, World!",
+      "Hello, !",
+      "TypeError"
+    ],
+    "correctIndex": 1,
+    "explanation": "greet('World')를 호출하면 매개변수 name에 'World'가 바인딩됩니다. 반환된 내부 함수는 클로저로서 name 변수를 기억합니다. hello()를 호출하면 클로저가 캡처한 name 값 'World'를 사용하여 'Hello, World!'를 반환합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-010",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 모든 버튼 클릭 시 '3'이 alert됩니다. 원인은 무엇인가요?",
+    "code": "for (var i = 0; i < 3; i++) {\n  buttons[i].onclick = function() {\n    alert(i);\n  };\n}",
+    "options": [
+      "buttons 배열에 요소가 없기 때문",
+      "onclick 이벤트가 동기적으로 실행되기 때문",
+      "var는 함수 스코프이므로 모든 클로저가 같은 i를 참조하고 루프 종료 후 i는 3이기 때문",
+      "alert 함수가 i를 문자열로 변환하기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "var로 선언된 i는 함수 스코프를 가지므로 for 루프 전체에서 하나의 i만 존재합니다. 각 onclick 핸들러는 동일한 i를 참조하는 클로저입니다. 클릭 시점에는 루프가 이미 종료되어 i는 3입니다. let으로 변경하면 각 반복마다 새로운 i가 생성됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-011",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "클로저와 전역 변수를 사용한 상태 관리의 차이로 올바른 것은?",
+    "options": [
+      "클로저와 전역 변수는 동일한 개념이다",
+      "전역 변수는 함수 내부에서 접근할 수 없다",
+      "클로저는 변수를 전역으로 노출시키는 패턴이다",
+      "클로저는 변수를 함수 스코프 안에 캡슐화하여 외부에서 직접 접근을 차단한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "전역 변수는 어디서든 접근 및 수정이 가능하여 예상치 못한 변경에 취약합니다. 클로저는 변수를 함수 스코프 내에 은닉하고, 정의된 인터페이스(반환된 함수)를 통해서만 접근을 허용합니다. 이로써 데이터 무결성을 보장하고 전역 오염을 방지합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-012",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function counter() {\n  let count = 0;\n  return {\n    increment: () => ++count,\n    decrement: () => --count,\n    getCount: () => count\n  };\n}\nconst c = counter();\nc.increment();\nc.increment();\nc.decrement();\nconsole.log(c.getCount());",
+    "options": [
+      "1",
+      "2",
+      "0",
+      "3"
+    ],
+    "correctIndex": 0,
+    "explanation": "counter() 호출로 count = 0이 생성됩니다. increment, decrement, getCount 세 함수는 모두 같은 count 변수를 클로저로 공유합니다. increment() 두 번(0→1→2), decrement() 한 번(2→1). 최종 count는 1이므로 getCount()는 1을 반환합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-013",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 의도한 1, 2, 3이 아닌 4, 4, 4가 출력됩니다. 원인은 무엇인가요?",
+    "code": "for (var i = 1; i <= 3; i++) {\n  setTimeout(function() {\n    console.log(i);\n  }, i * 100);\n}",
+    "options": [
+      "setTimeout의 딜레이가 너무 짧기 때문",
+      "var는 함수 스코프이므로 모든 콜백이 같은 i를 참조하고 실행 시점에 i는 4이기 때문",
+      "setTimeout은 비동기적으로 실행되지 않기 때문",
+      "콜백 함수가 화살표 함수가 아니기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "var로 선언된 i는 for 루프 전체에서 하나의 변수입니다. setTimeout의 콜백이 실행될 때는 루프가 이미 종료되어 i는 4입니다(i <= 3 조건이 false가 되는 시점). 모든 콜백 클로저가 같은 i를 참조하므로 4, 4, 4가 출력됩니다. let으로 변경하면 해결됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-014",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "클로저를 이용한 모듈 패턴과 ES6 모듈의 차이로 올바른 것은?",
+    "options": [
+      "둘 다 동일한 메커니즘을 사용한다",
+      "클로저 모듈은 정적 분석이 가능하지만 ES6 모듈은 불가능하다",
+      "클로저 모듈은 IIFE로 런타임에 생성되는 반면, ES6 모듈은 파일 단위의 정적 구조를 가진다",
+      "ES6 모듈은 클로저를 전혀 사용하지 않는다"
+    ],
+    "correctIndex": 2,
+    "explanation": "클로저 모듈 패턴은 IIFE를 사용하여 런타임에 스코프를 생성하고, 공개할 API만 반환합니다. ES6 모듈은 파일 자체가 모듈이며, import/export로 의존성을 정적으로 선언합니다. ES6 모듈은 빌드 도구가 정적 분석(tree-shaking 등)을 할 수 있는 장점이 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Modules"
+  },
+  {
+    "id": "closure-015",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "클로저로 인한 메모리 관리에 대한 설명으로 올바른 것은?",
+    "options": [
+      "클로저가 참조하는 변수는 즉시 가비지 컬렉션된다",
+      "클로저는 메모리를 사용하지 않는다",
+      "클로저가 있으면 외부 함수의 모든 변수가 영원히 메모리에 남는다",
+      "클로저가 참조하는 외부 변수는 클로저가 존재하는 한 가비지 컬렉션되지 않는다"
+    ],
+    "correctIndex": 3,
+    "explanation": "클로저는 외부 함수의 변수를 참조하므로, 해당 변수는 클로저가 메모리에 존재하는 동안 가비지 컬렉션되지 않습니다. 클로저에 대한 참조가 사라지면(null 할당 등) 비로소 관련 변수도 가비지 컬렉션 대상이 됩니다. 불필요한 클로저를 제거하면 메모리 최적화에 도움이 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Memory_management"
+  },
+  {
+    "id": "closure-016",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function multiply(x) {\n  return function(y) {\n    return function(z) {\n      return x * y * z;\n    };\n  };\n}\nconsole.log(multiply(2)(3)(4));",
+    "options": [
+      "24",
+      "9",
+      "NaN",
+      "TypeError"
+    ],
+    "correctIndex": 0,
+    "explanation": "multiply(2)는 x=2를 클로저로 캡처한 함수를 반환합니다. 그 함수에 3을 전달하면 y=3을 캡처한 또 다른 함수를 반환합니다. 마지막으로 4를 전달하면 x*y*z = 2*3*4 = 24를 반환합니다. 이처럼 중첩 클로저를 통해 함수를 체이닝할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-017",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "커링(Currying)과 클로저의 관계에 대한 설명으로 올바른 것은?",
+    "options": [
+      "커링은 클로저와 무관한 독립적인 패턴이다",
+      "커링은 클로저를 활용하여 함수의 인자를 하나씩 받아 새 함수를 반환하는 기법이다",
+      "커링을 사용하면 클로저가 생성되지 않는다",
+      "커링은 JavaScript에서 지원하지 않는 기능이다"
+    ],
+    "correctIndex": 1,
+    "explanation": "커링은 여러 인자를 받는 함수를 인자 하나씩 받는 함수의 체인으로 변환하는 기법입니다. 각 단계에서 이전 인자를 클로저로 캡처하여 기억합니다. 예: f(a, b, c) → f(a)(b)(c). 부분 적용(Partial Application)과 함수 합성에 활용되며, 클로저 없이는 구현이 불가능합니다.",
+    "sourceUrl": "https://javascript.info/currying-partials"
+  },
+  {
+    "id": "closure-018",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function createCounter(init) {\n  let count = init;\n  function change(val) { count += val; }\n  return {\n    increment: () => change(1),\n    decrement: () => change(-1),\n    value: () => count\n  };\n}\nconst a = createCounter(5);\nconst b = createCounter(10);\na.increment();\na.increment();\nb.decrement();\nconsole.log(a.value(), b.value());",
+    "options": [
+      "5, 10",
+      "6, 11",
+      "7, 9",
+      "7, 10"
+    ],
+    "correctIndex": 2,
+    "explanation": "createCounter를 호출할 때마다 독립적인 클로저 환경이 생성됩니다. a는 count=5에서 시작하여 increment 두 번으로 7이 됩니다. b는 count=10에서 시작하여 decrement 한 번으로 9가 됩니다. 각 클로저는 자신만의 count와 change 함수를 가지므로 서로 영향을 주지 않습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-019",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "클로저와 클래스 private 필드(#)의 차이로 올바른 것은?",
+    "options": [
+      "클로저가 클래스 private 필드보다 항상 성능이 좋다",
+      "클래스 private 필드는 메모리를 사용하지 않는다",
+      "둘 다 동일한 메커니즘으로 동작한다",
+      "클로저는 함수 스코프로 은닉하고, 클래스 private 필드(#)는 언어 레벨의 접근 제어를 제공한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "클로저는 함수 스코프를 활용해 변수를 은닉하는 패턴입니다. 외부에서 접근할 방법이 없지만, 인스턴스마다 함수가 복사될 수 있어 메모리 효율이 떨어질 수 있습니다. 클래스 private 필드(#)는 ES2022에서 도입된 언어 레벨의 접근 제어로, 프로토타입 메서드를 공유하면서도 필드를 은닉할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Classes/Private_properties"
+  },
+  {
+    "id": "closure-020",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 의도한 0, 1, 2가 아닌 3, 3, 3이 출력됩니다. let을 사용하지 않고 클로저로 해결하는 방법은?",
+    "code": "for (var i = 0; i < 3; i++) {\n  setTimeout(function() {\n    console.log(i);\n  }, 100);\n}",
+    "options": [
+      "setTimeout의 딜레이를 0으로 변경한다",
+      "console.log를 setTimeout 밖으로 이동한다",
+      "var i를 const i로 변경한다",
+      "IIFE로 각 반복의 i를 새로운 스코프에 캡처한다: (function(j) { setTimeout(function() { console.log(j); }, 100); })(i)"
+    ],
+    "correctIndex": 3,
+    "explanation": "IIFE(즉시 실행 함수)를 사용하여 각 반복의 i 값을 매개변수 j로 전달하면, 각 콜백은 독립적인 j 값을 클로저로 캡처합니다. 이 패턴은 ES6 이전에 var의 함수 스코프 문제를 해결하는 전통적인 방법이었습니다. ES6에서는 let으로 간단히 해결할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
   }
 ]

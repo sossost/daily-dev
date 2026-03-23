@@ -39,13 +39,13 @@
 
 ## Data
 
-- async.json — 6 questions
-- closure.json — 7 questions
-- event-loop.json — 6 questions
-- prototype.json — 5 questions
-- scope.json — 5 questions
-- this.json — 6 questions
-- type-coercion.json — 6 questions
+- async.json — 20 questions
+- closure.json — 20 questions
+- event-loop.json — 20 questions
+- prototype.json — 20 questions
+- scope.json — 20 questions
+- this.json — 20 questions
+- type-coercion.json — 20 questions
 
 ## Modules
 
@@ -89,7 +89,7 @@
 #### `session.ts` — Session generator — builds a quiz session using SRS (spaced repetition). Each session = up to 5 review questions (due today) + new questions to fill 10 total. Options are shuffled per question to prevent answer memorization.
 - `shuffleOptions` (question: Question) → Question — Shuffle the options of a question and remap the correctIndex. Returns a new Question with shuffled options.
 - `selectReviewQuestions` (srsRecords: Record<string, SRSRecord>, today: string,) → Question[] — Select questions due for review today, sorted by nextReview date (oldest first).
-- `selectNewQuestions` (srsRecords: Record<string, SRSRecord>,) → Question[] — Select new (unattempted) questions, randomly shuffled.
+- `selectNewQuestions` (srsRecords: Record<string, SRSRecord>,) → Question[] — Select new (unattempted) questions, ordered easy → medium → hard. Within the same difficulty, questions are shuffled randomly.
 - `generateSession` (srsRecords: Record<string, SRSRecord>,) → SessionQuestion[] — Generate a session of questions: up to SESSION_REVIEW_QUESTIONS reviews, filled with new questions to reach SESSION_TOTAL_QUESTIONS.
 - *deps*: types, types, lib/date, lib/questions
 
@@ -124,12 +124,12 @@
 - `viewport` Viewport
 
 #### `page.tsx`
-- *deps*: stores/useProgressStore, components/dashboard/SessionStartCard, components/dashboard/TopicProgressList, components/ThemeToggle
+- *deps*: stores/useProgressStore, hooks/useHydration, components/dashboard/SessionStartCard, components/dashboard/TopicProgressList, components/ThemeToggle
 
 ### src/app/session/
 
 #### `page.tsx`
-- *deps*: stores/useSessionStore, stores/useProgressStore, lib/session, components/quiz/ProgressBar, components/quiz/QuizCard
+- *deps*: stores/useSessionStore, stores/useProgressStore, hooks/useHydration, lib/session, components/quiz/ProgressBar, components/quiz/QuizCard
 
 ### src/app/session/result/
 
@@ -182,3 +182,9 @@
 
 #### `ReviewSchedule.tsx`
 - `ReviewSchedule` ({ incorrectCount }: ReviewScheduleProps)
+
+### src/hooks/
+
+#### `useHydration.ts`
+- `useHydration` () → boolean
+- *deps*: stores/useProgressStore, stores/useSessionStore, stores/useThemeStore

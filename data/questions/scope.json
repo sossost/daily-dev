@@ -81,5 +81,254 @@
     "correctIndex": 0,
     "explanation": "var는 함수 스코프이므로 for 루프에서 블록 스코프를 생성하지 않습니다. setTimeout 콜백이 실행될 때는 이미 루프가 완료되어 i는 3입니다. 동기 코드인 console.log(i)가 먼저 실행되어 3을 출력하고, 이후 콜백 3개도 각각 3을 출력합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/var"
+  },
+  {
+    "id": "scope-006",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Temporal Dead Zone(TDZ)에 대한 설명으로 올바른 것은?",
+    "options": [
+      "let/const 선언 전에 변수에 접근하면 ReferenceError가 발생하는 구간이다",
+      "var 선언에서만 발생하는 현상이다",
+      "함수 스코프의 최상단 영역을 말한다",
+      "변수가 가비지 컬렉션되기 직전의 구간이다"
+    ],
+    "correctIndex": 0,
+    "explanation": "TDZ(Temporal Dead Zone)는 let/const로 선언된 변수가 스코프의 시작부터 실제 선언문까지의 구간입니다. 이 구간에서 변수에 접근하면 ReferenceError가 발생합니다. var는 호이스팅 시 undefined로 초기화되어 TDZ가 없습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/let#temporal_dead_zone"
+  },
+  {
+    "id": "scope-007",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const x = 'outer';\n{\n  const x = 'inner';\n  console.log(x);\n}\nconsole.log(x);",
+    "options": [
+      "inner, inner",
+      "inner, outer",
+      "outer, outer",
+      "SyntaxError"
+    ],
+    "correctIndex": 1,
+    "explanation": "const는 블록 스코프를 가집니다. 블록 내부의 x는 'inner'로, 블록 외부의 x는 'outer'로 각각 독립적인 변수입니다. 블록 내의 console.log는 가장 가까운 스코프의 x인 'inner'를, 블록 밖에서는 외부의 x인 'outer'를 참조합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/const"
+  },
+  {
+    "id": "scope-008",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 의도와 달리 for 루프 외부에서 i에 접근할 수 있는 이유는?",
+    "code": "for (var i = 0; i < 5; i++) {\n  // do something\n}\nconsole.log(i); // 5",
+    "options": [
+      "for 루프는 항상 전역 변수를 생성하기 때문",
+      "console.log가 for 루프 내부에서 실행되기 때문",
+      "var는 블록 스코프가 아닌 함수 스코프를 가지므로 블록 밖에서도 접근 가능하다",
+      "i가 호이스팅되어 루프 이전에 선언되기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "var로 선언된 변수는 함수 스코프를 가집니다. for 루프의 블록({})은 var에 대해 스코프를 생성하지 않으므로, 루프가 끝난 후에도 i에 접근할 수 있고 값은 5입니다. let을 사용하면 블록 스코프가 적용되어 외부에서 접근할 수 없습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/var"
+  },
+  {
+    "id": "scope-009",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "var, let, const의 스코프 차이로 올바른 것은?",
+    "options": [
+      "셋 모두 블록 스코프를 가진다",
+      "셋 모두 함수 스코프를 가진다",
+      "var는 블록 스코프, let과 const는 함수 스코프를 가진다",
+      "var는 함수 스코프, let과 const는 블록 스코프를 가진다"
+    ],
+    "correctIndex": 3,
+    "explanation": "var는 함수 스코프를 가지며 블록({}) 내에서 선언해도 함수 전체에서 접근 가능합니다. let과 const는 블록 스코프를 가지며 선언된 블록 내에서만 접근 가능합니다. 이 차이는 for 루프, if문 등에서 변수 접근 범위에 직접적인 영향을 줍니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/let"
+  },
+  {
+    "id": "scope-010",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "let x = 1;\nfunction foo() {\n  console.log(x);\n  let x = 2;\n}\nfoo();",
+    "options": [
+      "ReferenceError",
+      "undefined",
+      "1",
+      "2"
+    ],
+    "correctIndex": 0,
+    "explanation": "foo 함수 내부에 let x = 2가 있으므로 함수 블록 전체에서 x의 TDZ(Temporal Dead Zone)가 형성됩니다. console.log(x)가 실행되는 시점에는 아직 let x의 선언에 도달하지 않아 TDZ 내에 있으므로 ReferenceError가 발생합니다. 외부의 x = 1은 내부 선언에 의해 가려집니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/let#temporal_dead_zone"
+  },
+  {
+    "id": "scope-011",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 ReferenceError가 발생합니다. 원인은 무엇인가요?",
+    "code": "function example() {\n  console.log(value);\n  const value = 'hello';\n}\nexample();",
+    "options": [
+      "const는 호이스팅되지 않기 때문",
+      "const로 선언된 변수가 TDZ에 있어 초기화 전에 접근할 수 없기 때문",
+      "value가 문자열이라 console.log에서 처리할 수 없기 때문",
+      "function 키워드와 const가 충돌하기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "const로 선언된 변수도 호이스팅됩니다. 하지만 var와 달리 초기화 단계가 분리되어 있어, 선언문에 도달하기 전까지 TDZ(Temporal Dead Zone)에 놓입니다. TDZ 내에서 변수에 접근하면 ReferenceError가 발생합니다. var였다면 undefined가 출력되었을 것입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/const"
+  },
+  {
+    "id": "scope-012",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "var x = 'global';\n(function() {\n  var x = 'local';\n  console.log(x);\n})();\nconsole.log(x);",
+    "options": [
+      "global, global",
+      "local, local",
+      "local, global",
+      "global, local"
+    ],
+    "correctIndex": 2,
+    "explanation": "IIFE(즉시 실행 함수 표현식) 내부의 var x는 함수 스코프를 가지므로 외부의 x와 독립적입니다. IIFE 내부에서는 'local'이 출력되고, 외부에서는 'global'이 출력됩니다. IIFE는 이렇게 스코프를 격리하여 전역 오염을 방지하는 패턴으로 자주 사용됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/IIFE"
+  },
+  {
+    "id": "scope-013",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "함수 선언문과 함수 표현식의 호이스팅 차이로 올바른 것은?",
+    "options": [
+      "둘 다 완전히 호이스팅되어 선언 전에 호출 가능하다",
+      "둘 다 호이스팅되지 않아 선언 전에 호출할 수 없다",
+      "함수 표현식만 호이스팅되어 선언 전에 호출 가능하다",
+      "함수 선언문은 전체가 호이스팅되지만, 함수 표현식은 변수 선언만 호이스팅된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "함수 선언문(function foo() {})은 선언과 함수 본문 전체가 호이스팅되어 코드 어디서든 호출 가능합니다. 함수 표현식(const foo = function() {})은 변수 선언만 호이스팅되고, 함수 할당은 해당 줄에서 실행됩니다. 따라서 함수 표현식은 선언 전에 호출하면 TypeError가 발생합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Functions#function_hoisting"
+  },
+  {
+    "id": "scope-014",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "JavaScript에서 전역 스코프 오염(Global Scope Pollution)을 방지하는 방법이 아닌 것은?",
+    "options": [
+      "모든 변수를 var로 최상위에 선언하기",
+      "IIFE(즉시 실행 함수)로 코드를 감싸기",
+      "ES6 모듈(import/export)을 사용하기",
+      "블록 스코프(let/const)를 활용하기"
+    ],
+    "correctIndex": 0,
+    "explanation": "var는 함수 스코프만 생성하므로 최상위에서 선언하면 전역 변수가 됩니다. 오히려 전역 오염의 원인이 될 수 있습니다. IIFE, ES6 모듈, let/const 블록 스코프는 모두 변수의 접근 범위를 제한하여 전역 오염을 방지하는 효과적인 방법입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Global_scope"
+  },
+  {
+    "id": "scope-015",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 전역 변수 value가 의도치 않게 20으로 변경됩니다. 원인은 무엇인가요?",
+    "code": "var value = 10;\nfunction update() {\n  value = 20;\n}\nupdate();\nconsole.log(value); // 20",
+    "options": [
+      "update 함수가 비동기적으로 실행되기 때문",
+      "함수 내부에서 선언 키워드 없이 할당하여 스코프 체인을 따라 전역 변수를 변경했기 때문",
+      "var는 함수 내부에서 재선언이 불가능하기 때문",
+      "console.log가 update보다 먼저 실행되기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "update 함수 내부의 value = 20은 var/let/const 키워드 없이 할당만 하고 있어, 새로운 지역 변수를 생성하지 않고 스코프 체인을 따라 올라가 전역의 value를 직접 변경합니다. var value = 20으로 선언했다면 지역 변수가 되어 전역 value에 영향을 주지 않았을 것입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/var"
+  },
+  {
+    "id": "scope-016",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "var a = 1;\nfunction foo() {\n  var a = 2;\n  function bar() {\n    console.log(a);\n  }\n  return bar;\n}\nfunction baz() {\n  var a = 3;\n  foo()();\n}\nbaz();",
+    "options": [
+      "1",
+      "3",
+      "2",
+      "undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "bar 함수는 foo 내부에서 정의되었으므로 렉시컬 스코프에 의해 foo의 변수 a = 2를 참조합니다. baz 내부에서 호출되더라도 호출 위치는 스코프에 영향을 주지 않습니다. JavaScript의 렉시컬 스코프 규칙에 의해 정의된 위치의 스코프 체인만 따르므로 2가 출력됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "scope-017",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(typeof foo);\nconsole.log(typeof bar);\nfunction foo() {}\nvar bar = function() {};",
+    "options": [
+      "undefined, undefined",
+      "function, function",
+      "undefined, function",
+      "function, undefined"
+    ],
+    "correctIndex": 3,
+    "explanation": "함수 선언문(function foo)은 전체가 호이스팅되므로 typeof foo는 'function'입니다. 함수 표현식(var bar = function)은 var bar 선언만 호이스팅되고 함수 할당은 나중에 실행됩니다. 따라서 해당 시점에서 bar는 undefined이며 typeof bar는 'undefined'입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Functions#function_hoisting"
+  },
+  {
+    "id": "scope-018",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "다음 두 코드의 동작 차이에 대한 설명으로 올바른 것은?\n\nA: console.log(x); var x = 5;\nB: console.log(y); let y = 5;",
+    "options": [
+      "A는 undefined를 출력하고, B는 ReferenceError가 발생한다",
+      "A는 5를 출력하고, B는 undefined를 출력한다",
+      "둘 다 undefined를 출력한다",
+      "둘 다 ReferenceError가 발생한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "var는 호이스팅 시 선언과 함께 undefined로 초기화되므로 선언 전에 접근해도 undefined가 됩니다. let은 호이스팅되지만 초기화되지 않아 TDZ(Temporal Dead Zone)에 놓이며, 선언문 전에 접근하면 ReferenceError가 발생합니다. 이 차이가 let/const 도입의 핵심 이유 중 하나입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/let#temporal_dead_zone"
+  },
+  {
+    "id": "scope-019",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 의도한 결과는 'inner'지만 'outer'가 출력됩니다. 원인은 무엇인가요?",
+    "code": "var name = 'outer';\nfunction printName() {\n  console.log(name);\n}\nfunction wrapper() {\n  var name = 'inner';\n  printName();\n}\nwrapper();",
+    "options": [
+      "wrapper 함수에서 name을 var로 선언하면 호이스팅 때문에 무시된다",
+      "JavaScript는 렉시컬 스코프를 따르므로 printName은 정의된 위치의 name을 참조한다",
+      "var는 함수 간에 스코프를 공유하기 때문",
+      "printName이 wrapper보다 먼저 실행되기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "JavaScript는 렉시컬(정적) 스코프를 사용합니다. printName 함수는 전역에서 정의되었으므로, 호출 위치(wrapper 내부)가 아닌 정의 위치(전역)의 스코프 체인을 따릅니다. 따라서 wrapper 내부의 name = 'inner'가 아닌 전역의 name = 'outer'를 참조합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "scope-020",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "ES6 모듈 스코프에 대한 설명으로 올바른 것은?",
+    "options": [
+      "모듈 내 모든 변수는 자동으로 전역 스코프에 등록된다",
+      "모듈 스코프는 함수 스코프와 동일하게 동작한다",
+      "모듈은 자체 스코프를 가지며 export하지 않은 변수는 외부에서 접근할 수 없다",
+      "모듈 스코프에서는 let과 const를 사용할 수 없다"
+    ],
+    "correctIndex": 2,
+    "explanation": "ES6 모듈은 파일 단위로 독립된 스코프를 생성합니다. 모듈 최상위에서 선언된 변수는 전역이 아닌 모듈 스코프에 속하며, export 키워드로 명시적으로 내보내지 않는 한 다른 모듈에서 접근할 수 없습니다. 이로써 전역 스코프 오염 문제를 근본적으로 해결합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Modules"
   }
 ]
