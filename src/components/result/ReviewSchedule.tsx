@@ -24,7 +24,7 @@ export function ReviewSchedule({ incorrectCount }: ReviewScheduleProps) {
         <h3 className="font-semibold text-amber-800">복습 예정</h3>
       </div>
       <p className="text-sm text-amber-700">
-        틀린 {incorrectCount}문제가 내일 복습 목록에 추가되었습니다.
+        틀린 {incorrectCount}문제가 다음 학습의 복습 목록에 추가되었습니다.
         반복 학습으로 기억을 강화하세요!
       </p>
     </div>
