@@ -62,7 +62,7 @@
       "42 | 'hello'"
     ],
     "correctIndex": 2,
-    "explanation": "TypeScript는 함수의 모든 return 문을 분석하여 반환 타입을 추론합니다. getValue 함수는 number(42)를 반환하거나 string('hello')을 반환하므로, 반환 타입은 number | string으로 추론됩니다. 호출 시 인자가 true여도 컴파일러는 런타임 값을 추적하지 않습니다.",
+    "explanation": "TypeScript의 제어 흐름 분석(Control Flow Analysis)은 함수 본문의 모든 return 경로를 수집하여 반환 타입을 추론합니다. getValue는 number(42)와 string('hello') 두 경로가 있으므로 number | string이 됩니다. getValue(true)로 호출해도 컴파일러는 인자의 런타임 값에 따른 분기를 추적하지 않습니다. 이를 좁히려면 함수 오버로드 시그니처를 사용하거나, as const로 리터럴 타입을 반환하고 제네릭 조건부 타입으로 분기해야 합니다. TypeScript 5.x에서도 매개변수 값 기반 반환 타입 좁히기(narrowing)는 지원되지 않습니다.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/functions.html#return-type"
   },
   {
@@ -95,7 +95,7 @@
       "제네릭은 any와 동일한 역할을 한다"
     ],
     "correctIndex": 2,
-    "explanation": "제네릭은 타입을 매개변수로 받아 다양한 타입에 대해 동작하는 재사용 가능한 컴포넌트를 만들 수 있게 합니다. any와 달리 타입 안전성을 유지하면서도 유연한 코드를 작성할 수 있습니다. 제네릭은 함수, 인터페이스, 클래스, 타입 별칭 등에 사용 가능합니다.",
+    "explanation": "제네릭은 타입을 매개변수로 받아 다양한 타입에 대해 동작하는 재사용 가능한 컴포넌트를 만들 수 있게 합니다. any와 달리 입력과 출력 간 타입 관계를 보존하므로 타입 안전성이 유지됩니다. 예를 들어 function identity<T>(arg: T): T에서 T는 호출 시점에 구체적 타입으로 바인딩되어 반환 타입도 동일하게 추론됩니다. extends 키워드로 제약 조건(constraints)을 걸 수 있고(예: T extends { length: number }), 기본값도 지정 가능합니다(예: T = string). 제네릭 타입 정보는 컴파일 후 지워지므로(type erasure) 런타임에는 존재하지 않습니다.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/generics.html"
   },
   {
@@ -145,7 +145,7 @@
       "반환 타입이 number | undefined여야 한다"
     ],
     "correctIndex": 1,
-    "explanation": "radius와 sideLength가 optional(?)이므로 undefined일 수 있고, undefined에 대해 ** 연산을 수행할 수 없습니다. 해결 방법은 Circle과 Square를 별도 인터페이스로 분리하고 kind를 판별자로 사용하는 판별 유니온(discriminated union) 패턴을 적용하는 것입니다.",
+    "explanation": "radius와 sideLength가 optional(?)이므로 number | undefined 타입이 되고, undefined에 대해 ** 연산을 수행할 수 없어 'Object is possibly undefined' 에러가 발생합니다. 근본적인 해결 방법은 판별 유니온(discriminated union) 패턴입니다: interface Circle { kind: 'circle'; radius: number }와 interface Square { kind: 'square'; sideLength: number }로 분리하고 type Shape = Circle | Square로 정의하면, kind로 분기할 때 TypeScript의 제어 흐름 분석이 자동으로 타입을 좁혀 각 속성이 반드시 존재함을 보장합니다. 이 패턴은 React의 props 설계에서도 널리 사용되며, 불가능한 상태를 타입 수준에서 제거하는 핵심 기법입니다.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions"
   },
   {
@@ -161,7 +161,7 @@
       "함수가 값을 반환하지 않고 정상 종료될 때"
     ],
     "correctIndex": 3,
-    "explanation": "never 타입은 절대 발생하지 않는 값의 타입입니다. 항상 예외를 던지거나 무한 루프로 종료되지 않는 함수의 반환 타입, 그리고 exhaustive check에 사용됩니다. 값을 반환하지 않고 정상 종료되는 함수는 void 타입입니다.",
+    "explanation": "never는 타입 이론에서 '바닥 타입(bottom type)'에 해당하며, 어떤 값도 가질 수 없는 타입입니다. 모든 타입의 하위 타입(subtype)이므로 never는 string에 할당 가능하지만 그 반대는 불가능합니다. 주요 사용처: 1) 항상 throw하거나 무한 루프인 함수의 반환 타입 2) switch의 default에서 exhaustive check — 모든 케이스를 처리하면 남은 타입이 never가 되므로, const _exhaustive: never = value로 누락된 케이스를 컴파일 타임에 잡을 수 있습니다 3) 조건부 타입에서 필터링 — T extends U ? T : never에서 never는 유니온에서 제거됩니다. void는 값을 반환하지 않는 함수(정상 종료)에 사용되며 never와 다릅니다.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html#the-never-type"
   },
   {
@@ -228,7 +228,7 @@
       "조건부 타입은 제네릭 없이만 사용할 수 있다"
     ],
     "correctIndex": 2,
-    "explanation": "조건부 타입은 T extends U ? X : Y 형태로, 타입 수준에서 삼항 연산자처럼 동작합니다. T가 U에 할당 가능하면 X 타입, 아니면 Y 타입이 됩니다. 이는 컴파일 타임에 평가되며, 제네릭과 함께 사용하여 유연한 타입 변환을 구현할 수 있습니다.",
+    "explanation": "조건부 타입은 T extends U ? X : Y 형태로, 타입 수준에서 삼항 연산자처럼 동작합니다. T가 U에 할당 가능(assignable)하면 X, 아니면 Y 타입이 됩니다. 핵심 특성은 분배(distributive) 동작입니다: T가 naked 타입 매개변수이고 유니온 타입이 전달되면 각 멤버에 대해 개별 평가됩니다(예: IsString<string | number>는 IsString<string> | IsString<number>로 분배). 분배를 방지하려면 [T] extends [U] ? X : Y처럼 튜플로 감쌉니다. 조건부 타입은 infer 키워드와 결합하여 Extract, ReturnType, Parameters 등 내장 유틸리티 타입의 기반이 됩니다.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/conditional-types.html"
   },
   {

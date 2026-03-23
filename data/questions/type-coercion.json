@@ -47,7 +47,7 @@
       "NaN, NaN, NaN"
     ],
     "correctIndex": 2,
-    "explanation": "배열과 객체의 + 연산은 먼저 원시값으로 변환합니다. [].toString()은 빈 문자열 ''입니다. '' + '' = ''입니다. [] + {}는 '' + '[object Object]' = '[object Object]'입니다. {} + []도 표현식 컨텍스트에서는 '[object Object]'가 됩니다.",
+    "explanation": "배열과 객체의 + 연산은 ECMAScript의 ToPrimitive 추상 연산을 통해 원시값으로 변환합니다. ToPrimitive는 hint가 'default'일 때 valueOf()를 먼저 호출하고, 원시값이 아니면 toString()을 호출합니다. [].valueOf()는 배열 자체(원시값 아님)이므로 [].toString()이 호출되어 빈 문자열 ''이 됩니다. ({}).toString()은 '[object Object]'입니다. 따라서 [] + []는 '' + '' = '', [] + {}는 '' + '[object Object]' = '[object Object]'입니다. {} + []는 console.log 안이나 괄호로 감싸면 표현식으로 해석되어 '[object Object]'가 되지만, 문(statement) 위치에서는 {}가 빈 블록으로 파싱되어 +[]가 0이 될 수 있습니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Addition"
   },
   {
@@ -80,7 +80,7 @@
       "true, false, false, true"
     ],
     "correctIndex": 3,
-    "explanation": "null == undefined은 특별한 규칙으로 true입니다. null === undefined은 타입이 다르므로 false입니다. null == 0에서 null은 숫자로 변환되지 않아 false입니다. 하지만 null >= 0에서는 null이 0으로 변환되어 0 >= 0은 true입니다. 이는 ==와 비교 연산자의 변환 규칙이 다르기 때문입니다.",
+    "explanation": "ECMAScript 사양의 Abstract Equality Comparison 알고리즘(7.2.14)에 따라 null == undefined은 명시적으로 true를 반환하는 특별 규칙입니다. null === undefined은 Strict Equality에서 타입이 다르므로 false입니다. null == 0이 false인 이유는 null의 == 비교가 undefined와만 true이고 다른 타입으로 변환되지 않기 때문입니다. 반면 null >= 0은 Abstract Relational Comparison 알고리즘(7.2.13)을 사용하는데, 이 알고리즘은 ToNumber(null)을 호출하여 0으로 변환합니다. 즉, ==와 관계 연산자(>=, <=, >, <)는 서로 다른 추상 연산을 사용하여 타입 변환 규칙이 다릅니다. 이 비대칭성은 실무에서 흔한 버그 원인입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Equality"
   },
   {
@@ -179,7 +179,7 @@
       "암시적 변환은 === 연산자에서도 발생한다"
     ],
     "correctIndex": 0,
-    "explanation": "암시적 타입 변환은 +, -, ==, if 등의 연산자와 구문에서 JavaScript 엔진이 자동으로 수행합니다. 문자열, 숫자, 불리언 등 다양한 타입으로 변환될 수 있습니다. strict mode에서도 암시적 변환은 동일하게 발생하며, === 연산자만 타입 변환을 수행하지 않습니다.",
+    "explanation": "암시적 타입 변환은 ECMAScript 사양의 추상 연산(ToNumber, ToString, ToBoolean, ToPrimitive)을 통해 수행됩니다. + 연산자는 피연산자에 따라 ToString 또는 ToNumber를, - 연산자는 항상 ToNumber를 호출합니다. == 연산자는 Abstract Equality Comparison 알고리즘에 따라 여러 단계의 변환을 거칩니다. if/while 등 조건문은 ToBoolean을 사용합니다. ES2015에서 추가된 Symbol.toPrimitive를 정의하면 객체의 ToPrimitive 변환 동작을 커스터마이징할 수 있습니다. strict mode('use strict')는 변수 선언, this 바인딩 등에 영향을 주지만 타입 변환 규칙은 변경하지 않습니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Type_coercion"
   },
   {
@@ -279,7 +279,7 @@
       "false, false, false, false"
     ],
     "correctIndex": 2,
-    "explanation": "[] == ![]: ![]는 false(배열은 truthy)이므로 [] == false가 됩니다. []는 ''로, false는 0으로, ''도 0으로 변환되어 0 == 0은 true입니다. '' == 0: ''은 0으로 변환되어 true입니다. null == 0과 undefined == 0: null과 undefined는 == 비교에서 서로만 같고 다른 값과는 같지 않으므로 둘 다 false입니다.",
+    "explanation": "[] == ![]의 변환 체인을 단계별로 추적하면: 1) ![]에서 ToBoolean([])은 true(모든 객체는 truthy)이므로 ![]는 false 2) [] == false에서 불리언이 있으면 ToNumber(false) = 0으로 변환 → [] == 0 3) 객체와 숫자 비교이므로 ToPrimitive([]) 호출 → [].valueOf()는 배열 자체이므로 [].toString() = '' → '' == 0 4) ToNumber('') = 0 → 0 == 0 = true. '' == 0도 동일하게 ToNumber('') = 0으로 true입니다. null == 0과 undefined == 0은 Abstract Equality 사양(7.2.14)에서 null/undefined는 서로와만 등가이고 다른 타입과 비교 시 false를 반환하도록 명시되어 있으므로 둘 다 false입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Equality"
   },
   {
@@ -295,7 +295,7 @@
       "Object.is(NaN, NaN)은 true, Object.is(+0, -0)은 false이며 ===와 다르게 동작한다"
     ],
     "correctIndex": 3,
-    "explanation": "Object.is()와 ===는 대부분 동일하게 동작하지만 두 가지 경우에서 다릅니다. 1) NaN === NaN은 false이지만 Object.is(NaN, NaN)은 true입니다. 2) +0 === -0은 true이지만 Object.is(+0, -0)은 false입니다. Object.is()는 Same-value equality 알고리즘을 사용하여 더 정밀한 비교를 제공합니다.",
+    "explanation": "ECMAScript는 네 가지 동등성 알고리즘을 정의합니다: Abstract Equality(==), Strict Equality(===), SameValue, SameValueZero. Object.is()는 SameValue 알고리즘(7.2.10)을 사용합니다. ===와의 차이점은 정확히 두 가지입니다: 1) NaN === NaN은 false이지만 Object.is(NaN, NaN)은 true — IEEE 754 표준에서 NaN ≠ NaN이지만 SameValue는 이를 보정합니다. 2) +0 === -0은 true이지만 Object.is(+0, -0)은 false — 부동소수점에서 +0과 -0은 다른 비트 표현을 가집니다. 참고로 Map과 Set은 SameValueZero 알고리즘을 사용하는데, 이는 SameValue와 동일하되 +0과 -0을 같게 취급합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/is"
   },
   {
