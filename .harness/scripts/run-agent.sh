@@ -256,6 +256,20 @@ main() {
   log "Project: ${PROJECT_DIR}"
 
   # ------------------------------------------
+  # Sync with remote
+  # ------------------------------------------
+  log "Syncing with remote..."
+  git pull --rebase 2>&1 | tee -a "${LOG_FILE}" || {
+    log "Pull failed. Continuing with local state."
+  }
+
+  # Install dependencies if package-lock.json changed
+  if git diff --name-only HEAD~1 2>/dev/null | grep -q 'package-lock.json'; then
+    log "Dependencies changed. Running npm install..."
+    npm install --silent 2>&1 | tee -a "${LOG_FILE}" || log "npm install failed (continuing)"
+  fi
+
+  # ------------------------------------------
   # Agent Selection
   # ------------------------------------------
   local AGENT_TYPE="${1:-}"
@@ -406,13 +420,16 @@ main() {
   # Phase 2: Guardrails (validate)
   # ------------------------------------------
   log "Phase 2: Running guardrails..."
-  if ! bash "${HARNESS_DIR}/scripts/validate.sh" "${AGENT_TYPE}" 2>&1 | tee -a "${LOG_FILE}"; then
+  local guardrail_output
+  guardrail_output="$(bash "${HARNESS_DIR}/scripts/validate.sh" "${AGENT_TYPE}" 2>&1 | tee -a "${LOG_FILE}")" || {
+    local fail_lines
+    fail_lines="$(echo "${guardrail_output}" | grep -iE 'FAIL|ERROR|error' | head -5)"
     log_error "Guardrails failed."
     rollback
-    write_state "${AGENT_TYPE}" "rejected" "Guardrails failed"
-    record_history "${AGENT_TYPE}" "rejected" "Guardrails failed: ${SUMMARY}"
+    write_state "${AGENT_TYPE}" "rejected" "Guardrails failed:\n${fail_lines}"
+    record_history "${AGENT_TYPE}" "rejected" "Guardrails failed: ${fail_lines}"
     exit 1
-  fi
+  }
 
   # ------------------------------------------
   # Phase 3: Review with Retry
@@ -422,6 +439,7 @@ main() {
   local max_review_attempts=3
   local review_attempt=0
   local approved=false
+  local last_reject_reason=""
 
   while [ "${review_attempt}" -lt "${max_review_attempts}" ]; do
     review_attempt=$((review_attempt + 1))
@@ -488,6 +506,7 @@ If APPROVE, also output: SUMMARY: {one-line description of what was changed}"
       if [ "${reject_reason}" = "REJECT" ] || [ -z "${reject_reason}" ]; then
         reject_reason="No specific reason provided. Review the changes carefully and fix any quality issues."
       fi
+      last_reject_reason="${reject_reason}"
       log "Review: REJECTED — ${reject_reason}"
 
       if [ "${review_attempt}" -lt "${max_review_attempts}" ]; then
@@ -523,13 +542,16 @@ Your very last line of output must be SUMMARY: followed by a brief description o
 
         # Re-run guardrails after fix
         log "Re-running guardrails after fix..."
-        if ! bash "${HARNESS_DIR}/scripts/validate.sh" "${AGENT_TYPE}" 2>&1 | tee -a "${LOG_FILE}"; then
+        local fix_guardrail_output
+        fix_guardrail_output="$(bash "${HARNESS_DIR}/scripts/validate.sh" "${AGENT_TYPE}" 2>&1 | tee -a "${LOG_FILE}")" || {
+          local fix_fail_lines
+          fix_fail_lines="$(echo "${fix_guardrail_output}" | grep -iE 'FAIL|ERROR|error' | head -5)"
           log_error "Guardrails failed after fix."
           rollback
-          write_state "${AGENT_TYPE}" "rejected" "Guardrails failed after fix"
-          record_history "${AGENT_TYPE}" "rejected" "Guardrails failed after fix: ${SUMMARY}"
+          write_state "${AGENT_TYPE}" "rejected" "Guardrails failed after fix:\n${fix_fail_lines}"
+          record_history "${AGENT_TYPE}" "rejected" "Guardrails failed after fix: ${fix_fail_lines}"
           exit 1
-        fi
+        }
 
         # Check protected files again after fix
         changed_files="$(git diff --name-only 2>/dev/null; git ls-files --others --exclude-standard 2>/dev/null)"
@@ -554,8 +576,8 @@ Your very last line of output must be SUMMARY: followed by a brief description o
   if [ "${approved}" = false ]; then
     log_error "Max review attempts reached. Rolling back."
     rollback
-    write_state "${AGENT_TYPE}" "rejected" "Max review attempts exceeded"
-    record_history "${AGENT_TYPE}" "rejected" "Max review attempts exceeded: ${SUMMARY}"
+    write_state "${AGENT_TYPE}" "rejected" "Review rejected (${max_review_attempts}x):\n${last_reject_reason}"
+    record_history "${AGENT_TYPE}" "rejected" "Review rejected: ${last_reject_reason}"
     exit 1
   fi
 
@@ -615,10 +637,13 @@ Your very last line of output must be SUMMARY: followed by a brief description o
     commit_body="$(printf '\n%b' "${DETAILS}")"
   fi
 
-  git commit -m "${commit_title}${commit_body}" 2>&1 | tee -a "${LOG_FILE}" || {
+  local commit_output
+  commit_output="$(git commit -m "${commit_title}${commit_body}" 2>&1 | tee -a "${LOG_FILE}")" || {
+    local commit_err
+    commit_err="$(echo "${commit_output}" | tail -3)"
     log_error "Commit failed."
     rollback
-    write_state "${AGENT_TYPE}" "error" "Commit failed"
+    write_state "${AGENT_TYPE}" "error" "Commit failed:\n${commit_err}"
     record_history "${AGENT_TYPE}" "error" "Commit failed: ${SUMMARY}"
     exit 1
   }
