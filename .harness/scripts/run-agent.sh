@@ -137,10 +137,27 @@ build_history_context() {
 extract_summary() {
   local output="$1"
   local summary
+
+  # Try extracting from agent output
   summary="$(echo "${output}" | grep -o 'SUMMARY: .*' | tail -1 | sed 's/^SUMMARY: //')"
+
+  # Fallback: generate from git diff stat
   if [ -z "${summary}" ]; then
-    summary="Agent run completed (no summary provided)"
+    local changed_files new_files
+    changed_files="$(git diff --name-only 2>/dev/null | wc -l | tr -d ' ')"
+    new_files="$(git ls-files --others --exclude-standard -- src/ data/ __tests__/ 2>/dev/null | wc -l | tr -d ' ')"
+    local diff_stat
+    diff_stat="$(git diff --stat 2>/dev/null | tail -1 | sed 's/^ *//')"
+
+    if [ -n "${diff_stat}" ]; then
+      summary="${diff_stat}"
+    elif [ "${new_files}" -gt 0 ]; then
+      summary="${new_files} new files created"
+    else
+      summary="auto-update"
+    fi
   fi
+
   echo "${summary}"
 }
 
@@ -229,7 +246,7 @@ main() {
   agent_output="$(claude -p "${full_prompt}" \
     --allowedTools 'Bash(git diff:*),Bash(git log:*),Bash(git status:*),Bash(git ls-files:*),Bash(cat:*),Bash(ls:*),Bash(find:*),Bash(wc:*),Bash(mkdir:*),Bash(head:*),Bash(tail:*),Read,Write,Edit,Glob,Grep' \
     --dangerously-skip-permissions \
-    --max-turns 30 2>&1)" || true
+    --max-turns 50 2>&1)" || true
 
   log "Agent execution complete."
 
@@ -343,7 +360,8 @@ main() {
 ${diff_content}
 \`\`\`
 
-Review these changes and output APPROVE or REJECT with reason."
+Review these changes and output APPROVE or REJECT with reason.
+If APPROVE, also output: SUMMARY: {one-line description of what was changed}"
 
     local review_output
     review_output="$(claude -p "${review_prompt}" \
@@ -365,6 +383,12 @@ Review these changes and output APPROVE or REJECT with reason."
     # Extract verdict
     if echo "${review_output}" | grep -q '^APPROVE'; then
       log "Review: APPROVED"
+      # If work agent didn't provide SUMMARY, try extracting from review
+      local review_summary
+      review_summary="$(echo "${review_output}" | grep -o 'SUMMARY: .*' | tail -1 | sed 's/^SUMMARY: //')"
+      if [ -n "${review_summary}" ]; then
+        SUMMARY="${review_summary}"
+      fi
       approved=true
       break
     elif echo "${review_output}" | grep -q '^REJECT'; then
