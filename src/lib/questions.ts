@@ -1,3 +1,7 @@
+/**
+ * Question loader — statically imports all topic JSON files at build time.
+ * Provides indexed access by ID and topic. No runtime I/O.
+ */
 import type { Question, Topic } from '@/types'
 
 import scopeQuestions from '../../data/questions/scope.json'

@@ -1,3 +1,8 @@
+/**
+ * Session store — manages the active quiz session.
+ * Tracks current question index, user answers, and completion state.
+ * Persisted to sessionStorage (survives refresh, clears on tab close).
+ */
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import type { SessionQuestion, SessionAnswer, Topic } from '@/types'

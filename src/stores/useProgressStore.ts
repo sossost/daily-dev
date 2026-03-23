@@ -1,3 +1,9 @@
+/**
+ * Progress store — persistent user learning data.
+ * Stores SRS records, topic accuracy stats, streak counts, and session history.
+ * Persisted to localStorage (permanent across sessions).
+ * updateAfterSession() recalculates SRS intervals, topic stats, and streaks.
+ */
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { SessionAnswer, SessionRecord, Topic, UserProgress } from '@/types'

@@ -1,3 +1,8 @@
+/**
+ * Session generator — builds a quiz session using SRS (spaced repetition).
+ * Each session = up to 5 review questions (due today) + new questions to fill 10 total.
+ * Options are shuffled per question to prevent answer memorization.
+ */
 import type { Question, SessionQuestion, SRSRecord } from '@/types'
 import { SESSION_TOTAL_QUESTIONS, SESSION_REVIEW_QUESTIONS } from '@/types'
 import { getToday, isBeforeOrEqual } from '@/lib/date'

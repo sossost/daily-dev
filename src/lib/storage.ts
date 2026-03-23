@@ -1,3 +1,5 @@
+/** Generic localStorage wrapper with SSR safety and JSON serialization. */
+
 export function loadFromStorage<T>(key: string): T | null {
   if (typeof window === 'undefined') {
     return null

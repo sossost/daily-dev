@@ -1,3 +1,4 @@
+/** Theme store — user preference for light/dark/system mode. Persisted to localStorage. */
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
