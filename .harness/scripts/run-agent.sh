@@ -336,9 +336,16 @@ main() {
   local agent_prompt
   agent_prompt="$(cat "${agent_prompt_file}")"
 
+  local agent_principles="
+## Agent Rules (applies to ALL agents)
+1. Read existing files before writing. Never guess what exists — verify first.
+2. Your changes must not crash for existing users with old localStorage data. New fields need defaults. New stores need useHydration registration.
+3. If you fail, explain WHY in your SUMMARY — not just 'failed'.
+4. Only modify files within your allowed scope. Anything outside will be rejected and rolled back."
+
   local full_prompt
-  full_prompt="$(printf '%s\n%s\n\nWork directory: %s\n\nIMPORTANT: End your output with:\nSUMMARY: <short title, max 50 chars>\nDETAILS:\n<structured body: what changed, counts, stats>' \
-    "${agent_prompt}" "${history_context}" "${PROJECT_DIR}")"
+  full_prompt="$(printf '%s\n%s\n%s\n\nWork directory: %s\n\nIMPORTANT: End your output with:\nSUMMARY: <short title, max 50 chars>\nDETAILS:\n<structured body: what changed, counts, stats>' \
+    "${agent_prompt}" "${agent_principles}" "${history_context}" "${PROJECT_DIR}")"
 
   local agent_output=""
   agent_output="$(claude -p "${full_prompt}" \

@@ -33,10 +33,6 @@ Write code at the level of a senior engineer at a top-tier tech company. Every l
 - No `console.log` in production code.
 - Tests run in jsdom. Browser APIs (matchMedia, IntersectionObserver, etc.) are mocked in `__tests__/setup.ts`. Use the existing mocks, don't add new global mocks inline.
 
-## Deployment Safety (CRITICAL)
-
-This app runs in users' browsers with persisted data in localStorage. Every change you make must work for BOTH new users AND existing users with old data. If your change can crash a deployed app, it is a production incident. Before committing, verify your changes are safe against all existing client state.
-
 ## Content Rules
 
 - Question IDs follow the pattern: `{topic}-{NNN}` (3-digit zero-padded number)
