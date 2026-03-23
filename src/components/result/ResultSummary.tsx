@@ -17,16 +17,16 @@ export function ResultSummary({ correct, incorrect, total }: ResultSummaryProps)
   const strokeDashoffset = FULL_CIRCUMFERENCE - (FULL_CIRCUMFERENCE * scorePercentage) / PERCENTAGE_MULTIPLIER
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center">
-      <h2 className="text-xl font-bold text-gray-900 mb-6">학습 결과</h2>
+    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-8 text-center">
+      <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">학습 결과</h2>
 
-      <div className="relative w-40 h-40 mx-auto mb-6">
+      <div className="relative w-40 h-40 mx-auto mb-6" aria-label={`정답률 ${scorePercentage}%`}>
         <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
           <circle
             cx="50"
             cy="50"
             r="40"
-            stroke="#e5e7eb"
+            className="stroke-gray-200 dark:stroke-gray-700"
             strokeWidth="8"
             fill="none"
           />
@@ -46,7 +46,7 @@ export function ResultSummary({ correct, incorrect, total }: ResultSummaryProps)
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
           <motion.span
-            className="text-3xl font-bold text-gray-900"
+            className="text-3xl font-bold text-gray-900 dark:text-gray-100"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
@@ -58,16 +58,16 @@ export function ResultSummary({ correct, incorrect, total }: ResultSummaryProps)
 
       <div className="flex justify-center gap-8">
         <div className="text-center">
-          <p className="text-2xl font-bold text-green-600">{correct}</p>
-          <p className="text-sm text-gray-500">정답</p>
+          <p className="text-2xl font-bold text-green-600 dark:text-green-400">{correct}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">정답</p>
         </div>
         <div className="text-center">
-          <p className="text-2xl font-bold text-red-500">{incorrect}</p>
-          <p className="text-sm text-gray-500">오답</p>
+          <p className="text-2xl font-bold text-red-500 dark:text-red-400">{incorrect}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">오답</p>
         </div>
         <div className="text-center">
-          <p className="text-2xl font-bold text-gray-700">{total}</p>
-          <p className="text-sm text-gray-500">전체</p>
+          <p className="text-2xl font-bold text-gray-700 dark:text-gray-300">{total}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">전체</p>
         </div>
       </div>
     </div>

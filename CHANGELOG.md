@@ -6,6 +6,7 @@
 
 ### Features
 
+- **feature**: add statistics dashboard page (`08f38b1`)
 - **expansion**: add web-performance topic with 20 questions (`1e267bf`)
 - **feature**: add quiz keyboard shortcuts (`2845556`)
 

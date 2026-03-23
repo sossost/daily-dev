@@ -19,7 +19,14 @@ export function ProgressBar({ current, total }: ProgressBarProps) {
           {Math.round(percentage)}%
         </span>
       </div>
-      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+      <div
+        className="w-full h-2 bg-gray-200 rounded-full overflow-hidden"
+        role="progressbar"
+        aria-valuenow={current}
+        aria-valuemin={0}
+        aria-valuemax={total}
+        aria-label={`진행률: ${current} / ${total}`}
+      >
         <div
           className="h-full bg-blue-500 rounded-full transition-all duration-300"
           style={{ width: `${percentage}%` }}

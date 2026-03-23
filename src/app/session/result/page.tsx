@@ -38,10 +38,10 @@ export default function ResultPage() {
   if (answers.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">세션 데이터가 없습니다.</p>
+        <p className="text-gray-500 dark:text-gray-400">세션 데이터가 없습니다.</p>
         <Link
           href="/"
-          className="inline-block mt-4 text-blue-500 hover:underline"
+          className="inline-block mt-4 text-blue-500 dark:text-blue-400 hover:underline"
         >
           홈으로 돌아가기
         </Link>
@@ -59,7 +59,7 @@ export default function ResultPage() {
       <ReviewSchedule incorrectCount={incorrectCount} />
       <Link
         href="/"
-        className="block mt-6 text-center py-3 rounded-xl bg-gray-900 text-white font-semibold hover:bg-gray-800 transition-colors"
+        className="block mt-6 text-center py-3 rounded-xl bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
       >
         홈으로 돌아가기
       </Link>
