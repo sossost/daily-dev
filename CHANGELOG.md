@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: Added 5 new TypeScript questions (016-020) covering array inference, Omit/Pick, ... (`475388f`)
 - **expansion**: add typescript topic with 15 questions (`6c5408a`)
 - auto-generated CHANGELOG.md from git history (`92f2ddd`)
 - add Discord webhook notifications to harness (`f14eddb`)
@@ -20,6 +21,9 @@
 
 ### Bug Fixes
 
+- use npm ci instead of npm install in pipeline (`a067eec`)
+- auto-sync, auto-install, and detailed error notifications (`8ceb00c`)
+- add error boundary, Sentry tracking, and localStorage migration (`de76239`)
 - detect ghost runs where agent reports work but no files change (`975d736`)
 - exclude .harness/docs/ from protected pattern (`1cfb2b1`)
 - update review schedule text for unlimited sessions (`2649ee1`)
@@ -37,6 +41,7 @@
 
 ### Documentation
 
+- add deployment safety rules for agents (`95ed078`)
 - add domain JSDoc to core modules (`1bd597b`)
 
 ### Chores

@@ -156,12 +156,12 @@
     "difficulty": "easy",
     "question": "Object.getPrototypeOf() 메서드의 역할은?",
     "options": [
-      "객체의 모든 프로퍼티를 반환한다",
-      "객체의 프로토타입 체인을 삭제한다",
       "객체의 [[Prototype]](내부 프로토타입)을 반환한다",
+      "객체의 프로토타입 체인을 삭제한다",
+      "객체의 모든 프로퍼티를 반환한다",
       "생성자 함수의 prototype 프로퍼티를 설정한다"
     ],
-    "correctIndex": 2,
+    "correctIndex": 0,
     "explanation": "Object.getPrototypeOf()는 지정된 객체의 내부 [[Prototype]] 링크, 즉 해당 객체의 프로토타입을 반환합니다. __proto__에 접근하는 것과 동일한 결과를 제공하지만 표준화된 방법입니다. __proto__는 비표준(레거시)이므로 Object.getPrototypeOf() 사용이 권장됩니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/getPrototypeOf"
   },
@@ -191,10 +191,10 @@
     "options": [
       "class는 프로토타입과 무관한 새로운 상속 메커니즘이다",
       "class를 사용하면 [[Prototype]] 체인이 생성되지 않는다",
-      "class는 프로토타입 기반 상속의 문법적 설탕(syntactic sugar)이다",
-      "class로 만든 객체는 instanceof 연산자를 지원하지 않는다"
+      "class로 만든 객체는 instanceof 연산자를 지원하지 않는다",
+      "class는 프로토타입 기반 상속의 문법적 설탕(syntactic sugar)이다"
     ],
-    "correctIndex": 2,
+    "correctIndex": 3,
     "explanation": "ES6 class는 기존 프로토타입 기반 상속을 더 읽기 쉽게 표현하는 문법적 설탕입니다. class로 작성해도 내부적으로는 동일한 프로토타입 체인이 생성됩니다. class A extends B를 하면 A.prototype의 [[Prototype]]이 B.prototype을 가리키도록 설정됩니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Classes"
   },

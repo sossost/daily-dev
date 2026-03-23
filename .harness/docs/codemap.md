@@ -94,6 +94,10 @@
 - `getTopicQuestionCounts` () → Record<Topic, number>
 - *deps*: types
 
+#### `sentry.ts`
+- `initSentry` ()
+- `captureError` (error: Error, context?: Record<string, unknown>)
+
 #### `session.ts` — Session generator — builds a quiz session using SRS (spaced repetition). Each session = up to 5 review questions (due today) + new questions to fill 10 total. Options are shuffled per question to prevent answer memorization.
 - `shuffleOptions` (question: Question) → Question — Shuffle the options of a question and remap the correctIndex. Returns a new Question with shuffled options.
 - `selectReviewQuestions` (srsRecords: Record<string, SRSRecord>, today: string,) → Question[] — Select questions due for review today, sorted by nextReview date (oldest first).
@@ -133,6 +137,7 @@
 #### `layout.tsx`
 - `metadata` Metadata
 - `viewport` Viewport
+- *deps*: components/ErrorBoundary, components/SentryProvider
 
 #### `page.tsx`
 - *deps*: stores/useProgressStore, stores/useBookmarkStore, hooks/useHydration, components/dashboard/SessionStartCard, components/dashboard/TopicProgressList, components/ThemeToggle
@@ -153,6 +158,13 @@
 - *deps*: stores/useProgressStore, components/dashboard/TopicProgressList
 
 ### src/components/
+
+#### `ErrorBoundary.tsx`
+- *deps*: lib/sentry
+
+#### `SentryProvider.tsx`
+- `SentryProvider` ({ children }: { children: React.ReactNode })
+- *deps*: lib/sentry
 
 #### `ThemeToggle.tsx`
 - `ThemeToggle` ()

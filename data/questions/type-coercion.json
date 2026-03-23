@@ -323,11 +323,11 @@
     "question": "JavaScript의 추상적 동등 비교(==) 알고리즘에서 타입이 다를 때의 변환 규칙으로 올바른 것은?",
     "options": [
       "항상 왼쪽 피연산자의 타입으로 변환한다",
-      "문자열과 숫자 비교 시 문자열을 숫자로 변환하고, 불리언이 있으면 먼저 숫자로 변환한다",
       "항상 문자열로 변환한 후 비교한다",
+      "문자열과 숫자 비교 시 문자열을 숫자로 변환하고, 불리언이 있으면 먼저 숫자로 변환한다",
       "불리언이 있으면 먼저 문자열로 변환한다"
     ],
-    "correctIndex": 1,
+    "correctIndex": 2,
     "explanation": "== 알고리즘은 정해진 규칙을 따릅니다: 1) 불리언이 있으면 먼저 숫자로 변환합니다(true→1, false→0). 2) 문자열과 숫자 비교 시 문자열을 숫자로 변환합니다. 3) 객체와 원시값 비교 시 객체를 원시값으로 변환합니다(ToPrimitive). 4) null과 undefined는 서로만 같습니다. 이 복잡한 규칙 때문에 ===를 사용하는 것이 권장됩니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Equality"
   }

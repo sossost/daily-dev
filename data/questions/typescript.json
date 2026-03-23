@@ -23,12 +23,12 @@
     "question": "다음 TypeScript 코드에서 컴파일 에러가 발생하는 줄은?",
     "code": "interface User {\n  name: string;\n  age: number;\n}\n\nconst user: User = { name: 'Kim', age: 25 };\nuser.age = 30;          // Line A\nuser.email = 'a@b.com'; // Line B",
     "options": [
-      "Line A에서 에러 발생",
       "Line B에서 에러 발생",
+      "Line A에서 에러 발생",
       "Line A와 Line B 모두 에러 발생",
       "에러 없이 정상 컴파일"
     ],
-    "correctIndex": 1,
+    "correctIndex": 0,
     "explanation": "User 인터페이스에 email 속성이 정의되어 있지 않으므로 Line B에서 'Property email does not exist on type User' 컴파일 에러가 발생합니다. Line A는 age가 number 타입이고 30도 number이므로 정상입니다. const는 변수 재할당을 막지만 객체 속성 변경은 허용합니다.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/objects.html"
   },
@@ -74,11 +74,11 @@
     "code": "function processInput(input: string | number) {\n  return input.toUpperCase();\n}",
     "options": [
       "input을 any로 캐스팅한다",
-      "typeof input === 'string' 타입 가드를 추가한다",
+      "함수 반환 타입을 string으로 명시한다",
       "input을 unknown으로 변경한다",
-      "함수 반환 타입을 string으로 명시한다"
+      "typeof input === 'string' 타입 가드를 추가한다"
     ],
-    "correctIndex": 1,
+    "correctIndex": 3,
     "explanation": "input이 string | number 유니온 타입이므로 toUpperCase()를 바로 호출할 수 없습니다. typeof input === 'string'으로 타입을 좁히면 해당 블록 안에서 input이 string으로 인식되어 toUpperCase()를 안전하게 호출할 수 있습니다.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html"
   },
@@ -122,12 +122,12 @@
     "difficulty": "easy",
     "question": "`readonly`와 `const`의 차이점은?",
     "options": [
-      "readonly는 변수에, const는 속성에 사용된다",
       "readonly는 객체 속성의 재할당을 막고, const는 변수의 재할당을 막는다",
+      "readonly는 변수에, const는 속성에 사용된다",
       "const는 깊은 불변성을 보장하지만, readonly는 그렇지 않다",
       "둘은 동일하며 상호 교환 가능하다"
     ],
-    "correctIndex": 1,
+    "correctIndex": 0,
     "explanation": "const는 변수 바인딩의 재할당을 막는 JavaScript 키워드이고, readonly는 TypeScript에서 객체 속성이나 배열의 변경을 막는 타입 수정자입니다. 둘 다 얕은(shallow) 불변성만 제공하며, 서로 다른 수준에서 동작합니다.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/objects.html#readonly-properties"
   },
@@ -189,11 +189,11 @@
     "question": "TypeScript에서 `Partial<T>`와 `Required<T>`의 관계는?",
     "options": [
       "Partial은 모든 속성을 필수로, Required는 모든 속성을 선택적으로 만든다",
-      "Partial은 모든 속성을 선택적으로, Required는 모든 속성을 필수로 만든다",
       "Partial은 속성을 제거하고, Required는 속성을 추가한다",
-      "둘 다 동일한 동작을 수행한다"
+      "둘 다 동일한 동작을 수행한다",
+      "Partial은 모든 속성을 선택적으로, Required는 모든 속성을 필수로 만든다"
     ],
-    "correctIndex": 1,
+    "correctIndex": 3,
     "explanation": "Partial<T>는 타입 T의 모든 속성을 선택적(optional)으로 만들고, Required<T>는 모든 속성을 필수(required)로 만듭니다. 이 두 유틸리티 타입은 서로 반대 역할을 하며, 기존 타입을 변형하여 새 타입을 만들 때 유용합니다.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype"
   },

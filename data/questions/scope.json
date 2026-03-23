@@ -289,12 +289,12 @@
     "difficulty": "hard",
     "question": "다음 두 코드의 동작 차이에 대한 설명으로 올바른 것은?\n\nA: console.log(x); var x = 5;\nB: console.log(y); let y = 5;",
     "options": [
-      "A는 undefined를 출력하고, B는 ReferenceError가 발생한다",
+      "둘 다 ReferenceError가 발생한다",
       "A는 5를 출력하고, B는 undefined를 출력한다",
       "둘 다 undefined를 출력한다",
-      "둘 다 ReferenceError가 발생한다"
+      "A는 undefined를 출력하고, B는 ReferenceError가 발생한다"
     ],
-    "correctIndex": 0,
+    "correctIndex": 3,
     "explanation": "var는 호이스팅 시 선언과 함께 undefined로 초기화되므로 선언 전에 접근해도 undefined가 됩니다. let은 호이스팅되지만 초기화되지 않아 TDZ(Temporal Dead Zone)에 놓이며, 선언문 전에 접근하면 ReferenceError가 발생합니다. 이 차이가 let/const 도입의 핵심 이유 중 하나입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/let#temporal_dead_zone"
   },
