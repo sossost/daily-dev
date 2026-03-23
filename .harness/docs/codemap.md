@@ -5,6 +5,11 @@
 ## Constants
 
 - `PERCENTAGE_MULTIPLIER` = `100`
+- `DISMISS_STORAGE_KEY` = `'daily-dev-keyboard-hint-dismissed'`
+- `HINT_DISPLAY_COUNT_KEY` = `'daily-dev-keyboard-hint-count'`
+- `MAX_DISPLAY_COUNT` = `3`
+- `OPTION_COUNT` = `4`
+- `DIGIT_KEY_OFFSET` = `1`
 - `MS_PER_SECOND` = `1000`
 - `SECONDS_PER_MINUTE` = `60`
 - `MIN_EASINESS_FACTOR` = `1.3`
@@ -158,7 +163,7 @@
 ### src/app/session/
 
 #### `page.tsx`
-- *deps*: stores/useSessionStore, stores/useProgressStore, hooks/useHydration, lib/session, components/quiz/ProgressBar, components/quiz/QuizCard
+- *deps*: stores/useSessionStore, stores/useProgressStore, hooks/useHydration, hooks/useQuizKeyboard, lib/session, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
 
 ### src/app/session/result/
 
@@ -204,6 +209,9 @@
 #### `Explanation.tsx`
 - `Explanation` ({ isCorrect, explanation, sourceUrl }: ExplanationProps)
 
+#### `KeyboardHint.tsx`
+- `KeyboardHint` ()
+
 #### `OptionList.tsx`
 - `OptionList` ({ options, correctIndex, selectedIndex, isAnswered, onSelect, }: OptionListProps)
 
@@ -228,6 +236,9 @@
 #### `useHydration.ts`
 - `useHydration` () → boolean
 - *deps*: stores/useProgressStore, stores/useSessionStore, stores/useThemeStore, stores/useBookmarkStore
+
+#### `useQuizKeyboard.ts` — Keyboard shortcuts for quiz sessions. - Press 1–4 to select an answer option - Press Enter or Space to advance to the next question (after answering)
+- `useQuizKeyboard` ({ isAnswered, onSelect, onNext, }: UseQuizKeyboardOptions) → void — Keyboard shortcuts for quiz sessions. - Press 1–4 to select an answer option - Press Enter or Space to advance to the next question (after answering)
 
 ### src/app/bookmarks/
 

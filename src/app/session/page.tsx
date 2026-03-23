@@ -6,9 +6,11 @@ import { AnimatePresence } from 'framer-motion'
 import { useSessionStore } from '@/stores/useSessionStore'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useHydration } from '@/hooks/useHydration'
+import { useQuizKeyboard } from '@/hooks/useQuizKeyboard'
 import { generateSession } from '@/lib/session'
 import { ProgressBar } from '@/components/quiz/ProgressBar'
 import { QuizCard, NextButton } from '@/components/quiz/QuizCard'
+import { KeyboardHint } from '@/components/quiz/KeyboardHint'
 
 export default function SessionPage() {
   const router = useRouter()
@@ -23,6 +25,12 @@ export default function SessionPage() {
   const startSession = useSessionStore((s) => s.startSession)
   const selectAnswer = useSessionStore((s) => s.selectAnswer)
   const nextQuestion = useSessionStore((s) => s.nextQuestion)
+
+  useQuizKeyboard({
+    isAnswered,
+    onSelect: selectAnswer,
+    onNext: nextQuestion,
+  })
 
   const sessionQuestions = useMemo(
     () => generateSession(srsRecords),
@@ -56,6 +64,7 @@ export default function SessionPage() {
 
   return (
     <div>
+      <KeyboardHint />
       <ProgressBar current={currentIndex + 1} total={questions.length} />
       <AnimatePresence mode="wait">
         <QuizCard

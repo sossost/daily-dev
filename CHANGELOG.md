@@ -6,6 +6,7 @@
 
 ### Features
 
+- **expansion**: add css-layout topic with 20 questions (`09e8d17`)
 - **feature**: add session history page with details (`78a576d`)
 - **expansion**: add dom-manipulation topic with 20 questions (`bae2660`)
 - **expansion**: add promise topic with 20 questions (`d12b190`)
@@ -58,6 +59,8 @@
 
 ### Chores
 
+- merge status update into single commit, switch to English (`66ba263`)
+- update status.md (`2fa83d8`)
 - add status.md for harness manager context (`9aeac7f`)
 - change scheduler interval from 1 hour to 30 minutes (`86cc410`)
 - project setup + AI harness system (`ecdb9b0`)

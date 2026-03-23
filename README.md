@@ -12,6 +12,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 - Mobile-responsive design
 - Dark mode with system preference detection
 - Streak tracking for daily sessions
+- Keyboard shortcuts for navigation
 - Session history with past results
 - Export/Import progress data
 - Bookmark questions for review
