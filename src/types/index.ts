@@ -14,6 +14,7 @@ export const TOPICS = [
   'web-performance',
   'react-basics',
   'data-structures',
+  'design-patterns',
 ] as const
 
 export type Topic = (typeof TOPICS)[number]
@@ -34,6 +35,7 @@ export const TOPIC_LABELS: Record<Topic, string> = {
   'web-performance': '웹 성능 최적화',
   'react-basics': 'React 기초',
   'data-structures': '자료구조',
+  'design-patterns': '디자인 패턴',
 }
 
 // Question schema
