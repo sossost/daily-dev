@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Bookmark } from 'lucide-react'
+import { Bookmark, History } from 'lucide-react'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useBookmarkStore } from '@/stores/useBookmarkStore'
 import { useHydration } from '@/hooks/useHydration'
@@ -43,20 +43,36 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {bookmarkCount > 0 && (
-        <Link
-          href="/bookmarks"
-          className="flex items-center gap-3 mb-6 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
-        >
-          <Bookmark size={18} className="text-blue-500 fill-blue-500" />
-          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            북마크
-          </span>
-          <span className="ml-auto text-sm text-gray-500 dark:text-gray-400">
-            {bookmarkCount}개
-          </span>
-        </Link>
-      )}
+      <div className="flex flex-col gap-2 mb-6">
+        {totalSessions > 0 && (
+          <Link
+            href="/history"
+            className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
+          >
+            <History size={18} className="text-blue-500" />
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              학습 기록
+            </span>
+            <span className="ml-auto text-sm text-gray-500 dark:text-gray-400">
+              {totalSessions}개 세션
+            </span>
+          </Link>
+        )}
+        {bookmarkCount > 0 && (
+          <Link
+            href="/bookmarks"
+            className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
+          >
+            <Bookmark size={18} className="text-blue-500 fill-blue-500" />
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              북마크
+            </span>
+            <span className="ml-auto text-sm text-gray-500 dark:text-gray-400">
+              {bookmarkCount}개
+            </span>
+          </Link>
+        )}
+      </div>
 
       <SessionStartCard />
       <TopicProgressList topicStats={topicStats} />
