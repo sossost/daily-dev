@@ -7,7 +7,7 @@ import { useSessionStore } from '@/stores/useSessionStore'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { generateSession } from '@/lib/session'
 import { ProgressBar } from '@/components/quiz/ProgressBar'
-import { QuizCard } from '@/components/quiz/QuizCard'
+import { QuizCard, NextButton } from '@/components/quiz/QuizCard'
 
 export default function SessionPage() {
   const router = useRouter()
@@ -72,10 +72,9 @@ export default function SessionPage() {
           selectedIndex={selectedIndex}
           isAnswered={isAnswered}
           onSelect={selectAnswer}
-          onNext={nextQuestion}
-          isLast={isLast}
         />
       </AnimatePresence>
+      <NextButton isAnswered={isAnswered} isLast={isLast} onNext={nextQuestion} />
     </div>
   )
 }

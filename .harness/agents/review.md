@@ -29,15 +29,16 @@ When reviewing changes to `data/questions/`:
 
 When reviewing changes to `src/` or `__tests__/`:
 
+- [ ] Would a senior engineer at a top-tier company approve this? If not, REJECT.
 - [ ] Change is necessary — solves a real problem or adds real value
-- [ ] Consistent with existing code patterns and conventions
+- [ ] Follows SRP, DRY, declarative patterns, immutability, composition
 - [ ] Does not increase complexity without justification
 - [ ] Has appropriate test coverage
 - [ ] Does not introduce breaking changes to existing functionality
 - [ ] No hardcoded secrets, API keys, or sensitive data
-- [ ] No `console.log` in production code
-- [ ] Proper TypeScript types (no `any`)
 - [ ] Explicit null checks (no implicit falsy coercion)
+- [ ] Proper TypeScript types (no `any`)
+- [ ] No `console.log` in production code
 
 ## Review Criteria — Feature Changes
 

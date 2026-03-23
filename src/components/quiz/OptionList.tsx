@@ -37,11 +37,11 @@ export function OptionList({
             className={clsx(
               'flex items-start gap-3 p-4 rounded-lg border-2 text-left transition-colors',
               {
-                'border-gray-200 hover:border-blue-300 hover:bg-blue-50 cursor-pointer':
+                'border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 cursor-pointer':
                   !isAnswered,
-                'border-green-500 bg-green-50': showCorrect,
-                'border-red-500 bg-red-50': showIncorrect,
-                'border-gray-200 opacity-60':
+                'border-green-500 bg-green-50 dark:border-green-400 dark:bg-green-900/40': showCorrect,
+                'border-red-500 bg-red-50 dark:border-red-400 dark:bg-red-900/40': showIncorrect,
+                'border-gray-200 dark:border-gray-700 opacity-60':
                   isAnswered && !isCorrect && !isSelected,
                 'cursor-not-allowed': isAnswered,
               },
@@ -51,17 +51,17 @@ export function OptionList({
               className={clsx(
                 'flex items-center justify-center w-7 h-7 rounded-full text-sm font-semibold shrink-0',
                 {
-                  'bg-gray-100 text-gray-600': !isAnswered,
+                  'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300': !isAnswered,
                   'bg-green-500 text-white': showCorrect,
                   'bg-red-500 text-white': showIncorrect,
-                  'bg-gray-100 text-gray-400':
+                  'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500':
                     isAnswered && !isCorrect && !isSelected,
                 },
               )}
             >
               {OPTION_LABELS[index]}
             </span>
-            <span className="text-sm leading-relaxed pt-0.5">{option}</span>
+            <span className="text-sm leading-relaxed pt-0.5 text-gray-900 dark:text-gray-100">{option}</span>
           </motion.button>
         )
       })}

@@ -13,6 +13,10 @@ The following files and directories must NEVER be modified by agents:
 
 `GOALS.md` and `README.md` are NOT protected — harness scripts update them automatically.
 
+## Code Quality Standard
+
+Write code at the level of a senior engineer at a top-tier tech company. Every line must express clear intent. Follow SRP, DRY, composition over inheritance, declarative patterns, and immutability. If a senior would reject it in code review, don't write it.
+
 ## Code Rules
 
 - Language: TypeScript (strict mode)

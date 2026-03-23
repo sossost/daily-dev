@@ -18,8 +18,6 @@ interface QuizCardProps {
   selectedIndex: number | null
   isAnswered: boolean
   onSelect: (index: number) => void
-  onNext: () => void
-  isLast: boolean
 }
 
 export function QuizCard({
@@ -27,8 +25,6 @@ export function QuizCard({
   selectedIndex,
   isAnswered,
   onSelect,
-  onNext,
-  isLast,
 }: QuizCardProps) {
   const { question, isReview } = sessionQuestion
   const isCorrect = selectedIndex === question.correctIndex
@@ -71,20 +67,40 @@ export function QuizCard({
       />
 
       {isAnswered && (
-        <>
-          <Explanation
-            isCorrect={isCorrect}
-            explanation={question.explanation}
-            sourceUrl={question.sourceUrl}
-          />
-          <button
-            onClick={onNext}
-            className="mt-6 w-full py-3 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors"
-          >
-            {isLast ? '결과 보기' : '다음 문제'}
-          </button>
-        </>
+        <Explanation
+          isCorrect={isCorrect}
+          explanation={question.explanation}
+          sourceUrl={question.sourceUrl}
+        />
       )}
+
+      {/* Bottom padding so content isn't hidden behind floating button */}
+      {isAnswered && <div className="h-24" />}
     </motion.div>
+  )
+}
+
+export function NextButton({
+  isAnswered,
+  isLast,
+  onNext,
+}: {
+  isAnswered: boolean
+  isLast: boolean
+  onNext: () => void
+}) {
+  if (isAnswered === false) return null
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 z-50">
+      <div className="max-w-lg mx-auto">
+        <button
+          onClick={onNext}
+          className="w-full py-3 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 active:scale-[0.98] transition-all"
+        >
+          {isLast ? '결과 보기' : '다음 문제'}
+        </button>
+      </div>
+    </div>
   )
 }
