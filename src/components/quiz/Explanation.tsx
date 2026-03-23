@@ -33,6 +33,7 @@ export function Explanation({ isCorrect, explanation, sourceUrl }: ExplanationPr
         href={sourceUrl}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="참고 자료 보기 (새 탭에서 열림)"
         className="inline-block mt-3 text-xs text-blue-600 dark:text-blue-400 hover:underline"
       >
         참고 자료 보기

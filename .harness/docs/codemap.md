@@ -118,7 +118,7 @@
 - `generatePracticeSession` (options: PracticeSessionOptions,) → SessionQuestion[] — Generate a practice session from the given filter options. Returns up to SESSION_TOTAL_QUESTIONS questions, prioritizing unattempted ones.
 - `countAvailableQuestions` (topics: readonly Topic[], difficulty: Difficulty | 'all',) → number — Count available questions matching the given filter options (ignoring SRS).
 - `PracticeSessionOptions`
-- *deps*: types, types, lib/questions, lib/session
+- *deps*: types, types, lib/questions, lib/session, lib/shuffle
 
 #### `questions.ts` — Question loader — statically imports all topic JSON files at build time. Provides indexed access by ID and topic. No runtime I/O.
 - `getAllQuestions` () → Question[]
@@ -143,7 +143,10 @@
 - `selectReviewQuestions` (srsRecords: Record<string, SRSRecord>, today: string,) → Question[] — Select questions due for review today, sorted by nextReview date (oldest first).
 - `selectNewQuestions` (srsRecords: Record<string, SRSRecord>,) → Question[] — Select new (unattempted) questions, ordered easy → medium → hard. Within the same difficulty, questions are shuffled randomly.
 - `generateSession` (srsRecords: Record<string, SRSRecord>,) → SessionQuestion[] — Generate a session of questions: up to SESSION_REVIEW_QUESTIONS reviews, filled with new questions to reach SESSION_TOTAL_QUESTIONS.
-- *deps*: types, types, lib/date, lib/questions
+- *deps*: types, types, lib/date, lib/questions, lib/shuffle
+
+#### `shuffle.ts` — Fisher-Yates shuffle algorithm. Returns a new shuffled array without mutating the original.
+- `shuffle` (array: readonly T[]) → T[] — Fisher-Yates shuffle algorithm. Returns a new shuffled array without mutating the original.
 
 #### `srs.ts` — SM-2 spaced repetition algorithm. Calculates the next review state based on whether the answer was correct.
 - `calculateSRS` (current: SRSRecord, isCorrect: boolean, today: string,) → SRSRecord — SM-2 spaced repetition algorithm. Calculates the next review state based on whether the answer was correct.

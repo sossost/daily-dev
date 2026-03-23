@@ -7,21 +7,7 @@ import type { Question, SessionQuestion, SRSRecord } from '@/types'
 import { SESSION_TOTAL_QUESTIONS, SESSION_REVIEW_QUESTIONS } from '@/types'
 import { getToday, isBeforeOrEqual } from '@/lib/date'
 import { getAllQuestions } from '@/lib/questions'
-
-/**
- * Fisher-Yates shuffle algorithm.
- * Returns a new shuffled array without mutating the original.
- */
-function shuffle<T>(array: T[]): T[] {
-  const result = [...array]
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    const temp = result[i]
-    result[i] = result[j]
-    result[j] = temp
-  }
-  return result
-}
+import { shuffle } from '@/lib/shuffle'
 
 /**
  * Shuffle the options of a question and remap the correctIndex.

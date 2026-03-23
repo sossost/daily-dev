@@ -6,20 +6,7 @@ import type { Difficulty, Question, SessionQuestion, SRSRecord, Topic } from '@/
 import { SESSION_TOTAL_QUESTIONS } from '@/types'
 import { getAllQuestions } from '@/lib/questions'
 import { shuffleOptions } from '@/lib/session'
-
-/**
- * Fisher-Yates shuffle. Returns a new shuffled array.
- */
-function shuffle<T>(array: readonly T[]): T[] {
-  const result = [...array]
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    const temp = result[i]
-    result[i] = result[j]
-    result[j] = temp
-  }
-  return result
-}
+import { shuffle } from '@/lib/shuffle'
 
 export interface PracticeSessionOptions {
   readonly topics: readonly Topic[]

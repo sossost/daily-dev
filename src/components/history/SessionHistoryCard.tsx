@@ -62,9 +62,9 @@ export function SessionHistoryCard({ session, index }: SessionHistoryCardProps) 
         </span>
 
         {isExpanded ? (
-          <ChevronUp size={16} className="text-gray-400 shrink-0" />
+          <ChevronUp size={16} className="text-gray-400 dark:text-gray-500 shrink-0" />
         ) : (
-          <ChevronDown size={16} className="text-gray-400 shrink-0" />
+          <ChevronDown size={16} className="text-gray-400 dark:text-gray-500 shrink-0" />
         )}
       </button>
 
@@ -92,7 +92,7 @@ export function SessionHistoryCard({ session, index }: SessionHistoryCardProps) 
                     </span>
                     <span className="flex items-center gap-1.5">
                       <span className="text-green-600 dark:text-green-400 font-medium">{correct}</span>
-                      <span className="text-gray-400">/</span>
+                      <span className="text-gray-400 dark:text-gray-500">/</span>
                       <span className="text-gray-600 dark:text-gray-400">{total}</span>
                     </span>
                   </div>

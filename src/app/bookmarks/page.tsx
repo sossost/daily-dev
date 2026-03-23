@@ -45,9 +45,9 @@ function BookmarkedQuestionCard({ question }: { question: Question }) {
         <div className="flex items-center gap-1 shrink-0">
           <BookmarkButton questionId={question.id} />
           {isExpanded ? (
-            <ChevronUp size={16} className="text-gray-400" />
+            <ChevronUp size={16} className="text-gray-400 dark:text-gray-500" />
           ) : (
-            <ChevronDown size={16} className="text-gray-400" />
+            <ChevronDown size={16} className="text-gray-400 dark:text-gray-500" />
           )}
         </div>
       </button>
@@ -87,6 +87,7 @@ function BookmarkedQuestionCard({ question }: { question: Question }) {
                 href={question.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="참고 자료 보기 (새 탭에서 열림)"
                 className="inline-block text-xs text-blue-600 dark:text-blue-400 hover:underline"
               >
                 참고 자료 보기
