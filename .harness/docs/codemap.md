@@ -65,6 +65,7 @@
 - this.json — 20 questions
 - type-coercion.json — 20 questions
 - typescript.json — 20 questions
+- web-performance.json — 20 questions
 
 ## Modules
 

@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-03-24
+
+### Features
+
+- **feature**: add quiz keyboard shortcuts (`2845556`)
+
 ## 2026-03-23
 
 ### Features

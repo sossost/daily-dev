@@ -1,0 +1,325 @@
+[
+  {
+    "id": "web-performance-001",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Core Web Vitals에 포함되지 않는 지표는?",
+    "options": [
+      "Largest Contentful Paint (LCP)",
+      "Interaction to Next Paint (INP)",
+      "Cumulative Layout Shift (CLS)",
+      "Time to First Byte (TTFB)"
+    ],
+    "correctIndex": 3,
+    "explanation": "Core Web Vitals는 LCP(로딩 성능), INP(상호작용 응답성), CLS(시각적 안정성) 세 가지로 구성됩니다. TTFB는 중요한 성능 지표이지만 Core Web Vitals에는 포함되지 않습니다.",
+    "sourceUrl": "https://web.dev/articles/vitals"
+  },
+  {
+    "id": "web-performance-002",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Largest Contentful Paint(LCP)의 권장 기준값은?",
+    "options": [
+      "100ms 이하",
+      "1.0초 이하",
+      "2.5초 이하",
+      "4.0초 이하"
+    ],
+    "correctIndex": 2,
+    "explanation": "Google은 LCP가 2.5초 이하일 때 좋은(Good) 사용자 경험으로 간주합니다. 2.5~4.0초는 개선 필요(Needs Improvement), 4.0초 초과는 나쁨(Poor)으로 분류됩니다.",
+    "sourceUrl": "https://web.dev/articles/lcp"
+  },
+  {
+    "id": "web-performance-003",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "브라우저에서 리소스 로딩 우선순위를 높이기 위해 사용하는 링크 힌트는?",
+    "options": [
+      "<link rel=\"prefetch\">",
+      "<link rel=\"dns-prefetch\">",
+      "<link rel=\"prerender\">",
+      "<link rel=\"preload\">"
+    ],
+    "correctIndex": 3,
+    "explanation": "preload는 현재 페이지에서 곧 필요한 리소스를 높은 우선순위로 미리 가져옵니다. prefetch는 다음 페이지 탐색을 위한 낮은 우선순위 요청이고, dns-prefetch는 DNS 조회만 미리 수행합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload"
+  },
+  {
+    "id": "web-performance-004",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Critical Rendering Path에서 렌더 트리 생성 순서로 올바른 것은?",
+    "options": [
+      "HTML 파싱 → CSSOM → DOM → 렌더 트리",
+      "DOM → CSSOM → 렌더 트리 → 레이아웃 → 페인트",
+      "CSSOM → DOM → 레이아웃 → 렌더 트리 → 페인트",
+      "DOM → 레이아웃 → CSSOM → 렌더 트리 → 페인트"
+    ],
+    "correctIndex": 1,
+    "explanation": "브라우저는 HTML을 파싱하여 DOM을 생성하고, CSS를 파싱하여 CSSOM을 만든 후, 둘을 결합하여 렌더 트리를 구성합니다. 이후 레이아웃(위치/크기 계산)과 페인트(픽셀 렌더링) 단계를 거칩니다.",
+    "sourceUrl": "https://web.dev/articles/critical-rendering-path"
+  },
+  {
+    "id": "web-performance-005",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "layout thrashing(강제 리플로우)을 유발하는 패턴은?",
+    "options": [
+      "requestAnimationFrame 안에서 스타일 변경",
+      "CSS transform을 사용한 애니메이션",
+      "DOM 읽기와 쓰기를 번갈아 반복하는 것",
+      "will-change 속성을 미리 설정하는 것"
+    ],
+    "correctIndex": 2,
+    "explanation": "DOM 속성 읽기(offsetHeight 등)와 스타일 변경을 번갈아 하면 브라우저가 매번 레이아웃을 다시 계산해야 합니다. 이를 피하려면 읽기를 먼저 모아서 하고, 쓰기를 나중에 일괄 처리해야 합니다.",
+    "sourceUrl": "https://web.dev/articles/avoid-large-complex-layouts-and-layout-thrashing"
+  },
+  {
+    "id": "web-performance-006",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 성능 문제가 발생하는 이유는?",
+    "code": "const elements = document.querySelectorAll('.item');\nfor (const el of elements) {\n  el.style.width = el.offsetWidth + 10 + 'px';\n}",
+    "options": [
+      "querySelectorAll이 라이브 컬렉션을 반환하기 때문",
+      "for...of 루프가 forEach보다 느리기 때문",
+      "style.width에 문자열을 할당하는 것이 비효율적이기 때문",
+      "매 반복마다 offsetWidth 읽기로 강제 리플로우가 발생하기 때문"
+    ],
+    "correctIndex": 3,
+    "explanation": "offsetWidth를 읽으면 브라우저가 현재 레이아웃을 계산해야 하고, 바로 다음에 style.width를 변경하면 레이아웃이 무효화됩니다. 다음 반복에서 다시 offsetWidth를 읽으면 또 레이아웃이 강제 실행되어 layout thrashing이 발생합니다.",
+    "sourceUrl": "https://gist.github.com/paulirish/5d52fb081b3570c81e3a"
+  },
+  {
+    "id": "web-performance-007",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "이미지 최적화에서 loading=\"lazy\" 속성의 동작은?",
+    "options": [
+      "뷰포트에 가까워질 때까지 이미지 로딩을 지연시킨다",
+      "이미지를 WebP 형식으로 자동 변환한다",
+      "이미지를 낮은 해상도로 먼저 로드한 후 고해상도로 교체한다",
+      "이미지를 Service Worker 캐시에 저장한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "loading=\"lazy\"는 네이티브 지연 로딩으로, 이미지가 뷰포트에 가까워질 때까지 네트워크 요청을 보내지 않습니다. 초기 로드 시 필요하지 않은 이미지의 대역폭을 절약하여 LCP와 전체 페이지 로딩 속도를 개선합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#loading"
+  },
+  {
+    "id": "web-performance-008",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "CSS 애니메이션에서 transform과 top/left 속성의 성능 차이는?",
+    "options": [
+      "차이가 없다 — 둘 다 GPU에서 처리된다",
+      "transform은 컴포지터 스레드에서 처리되어 리플로우를 유발하지 않지만, top/left는 레이아웃 재계산을 유발한다",
+      "top/left가 더 빠르다 — 브라우저가 기본적으로 최적화하기 때문",
+      "transform은 메인 스레드에서만 실행되므로 더 느리다"
+    ],
+    "correctIndex": 1,
+    "explanation": "transform과 opacity는 컴포지터(compositor) 레이어에서 처리되어 메인 스레드를 차단하지 않고 리플로우/리페인트를 유발하지 않습니다. 반면 top/left 변경은 레이아웃 단계부터 다시 실행되어 성능이 크게 저하됩니다.",
+    "sourceUrl": "https://web.dev/articles/animations-guide"
+  },
+  {
+    "id": "web-performance-009",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Tree shaking이 효과적으로 작동하기 위해 필요한 조건은?",
+    "options": [
+      "CommonJS 모듈 시스템을 사용해야 한다",
+      "webpack의 mode를 development로 설정해야 한다",
+      "ES Module의 정적 import/export를 사용해야 한다",
+      "모든 함수를 default export해야 한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Tree shaking은 ES Module의 정적 구조(import/export)를 기반으로 사용되지 않는 코드를 제거합니다. CommonJS의 require()는 동적이라 빌드 시점에 분석이 어렵습니다. named export를 사용하면 번들러가 각 export의 사용 여부를 추적할 수 있습니다.",
+    "sourceUrl": "https://webpack.js.org/guides/tree-shaking/"
+  },
+  {
+    "id": "web-performance-010",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Code splitting에서 dynamic import의 역할은?",
+    "options": [
+      "모든 모듈을 한 번에 로드하여 캐시 효율을 높인다",
+      "CSS 파일만 별도로 분리하여 로드한다",
+      "서버에서 모듈을 미리 컴파일한다",
+      "필요한 시점에 모듈을 비동기로 로드하여 초기 번들 크기를 줄인다"
+    ],
+    "correctIndex": 3,
+    "explanation": "dynamic import(import())를 사용하면 해당 모듈이 실제로 필요할 때까지 로딩을 지연시킵니다. 이를 통해 초기 JavaScript 번들 크기를 줄이고 첫 로딩 성능을 개선할 수 있습니다. React.lazy()도 내부적으로 dynamic import를 사용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import"
+  },
+  {
+    "id": "web-performance-011",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "CLS(Cumulative Layout Shift) 점수가 높을 때 가장 효과적인 해결책은?",
+    "options": [
+      "JavaScript를 defer로 로드한다",
+      "모든 CSS를 인라인으로 삽입한다",
+      "이미지와 광고에 명시적인 width/height 또는 aspect-ratio를 지정한다",
+      "Service Worker를 사용하여 캐싱한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "CLS는 콘텐츠가 예기치 않게 이동할 때 발생합니다. 이미지, 비디오, 광고 등에 크기를 미리 지정하면 브라우저가 로딩 전에 공간을 확보하여 레이아웃 이동을 방지합니다. aspect-ratio CSS 속성도 같은 목적으로 사용할 수 있습니다.",
+    "sourceUrl": "https://web.dev/articles/cls"
+  },
+  {
+    "id": "web-performance-012",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드에서 requestIdleCallback의 동작은?",
+    "code": "requestIdleCallback((deadline) => {\n  while (deadline.timeRemaining() > 0) {\n    processNextItem();\n  }\n});",
+    "options": [
+      "브라우저가 바쁠 때 즉시 실행된다",
+      "다음 프레임 렌더링 직전에 실행된다",
+      "Web Worker에서 백그라운드로 실행된다",
+      "브라우저의 유휴 시간에 실행되며, 남은 시간 동안만 작업을 수행한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "requestIdleCallback은 브라우저가 유휴 상태일 때 콜백을 실행합니다. deadline.timeRemaining()은 현재 유휴 기간에서 남은 시간(ms)을 반환하므로, 프레임 드롭 없이 낮은 우선순위 작업을 안전하게 처리할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback"
+  },
+  {
+    "id": "web-performance-013",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "script 태그에 defer 속성을 추가하면 어떤 효과가 있는가?",
+    "options": [
+      "스크립트가 병렬로 다운로드되지만, HTML 파싱 완료 후 순서대로 실행된다",
+      "스크립트가 다운로드되는 동안 HTML 파싱이 중단된다",
+      "스크립트가 즉시 실행되고 나머지 HTML을 무시한다",
+      "스크립트가 Web Worker에서 실행된다"
+    ],
+    "correctIndex": 0,
+    "explanation": "defer는 HTML 파싱과 병렬로 스크립트를 다운로드하되, 실행은 HTML 파싱이 끝난 후 DOMContentLoaded 이벤트 직전에 순서대로 합니다. async와 달리 선언 순서가 보장되어 의존성이 있는 스크립트에 적합합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#defer"
+  },
+  {
+    "id": "web-performance-014",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "HTTP 캐싱에서 Cache-Control: no-cache와 no-store의 차이는?",
+    "options": [
+      "no-cache는 재검증 후 캐시를 사용하고, no-store는 응답을 캐시에 저장하지 않는다",
+      "둘 다 캐시를 완전히 비활성화한다",
+      "no-cache는 CDN에만 적용되고, no-store는 브라우저에만 적용된다",
+      "no-store는 재검증 후 캐시를 사용하고, no-cache는 응답을 캐시에 저장하지 않는다"
+    ],
+    "correctIndex": 0,
+    "explanation": "no-cache는 캐시에 저장하되 사용하기 전에 반드시 서버에 유효성을 확인(ETag/Last-Modified)합니다. no-store는 응답을 캐시에 저장하지 않아 매번 완전한 요청을 보냅니다. 민감한 데이터에는 no-store를 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control"
+  },
+  {
+    "id": "web-performance-015",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "React에서 불필요한 리렌더링을 방지하기 위한 가장 적절한 방법은?",
+    "options": [
+      "모든 컴포넌트를 class 컴포넌트로 변환한다",
+      "상태를 모두 전역 변수에 저장한다",
+      "shouldComponentUpdate에서 항상 false를 반환한다",
+      "React.memo, useMemo, useCallback을 적절히 사용하여 참조 안정성을 유지한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "React.memo는 props가 변경되지 않으면 리렌더링을 건너뛰고, useMemo와 useCallback은 연산 결과와 함수의 참조를 안정적으로 유지합니다. 하지만 모든 곳에 적용하면 오히려 메모이제이션 비용이 발생하므로, 실제로 성능 문제가 있는 곳에 선별적으로 사용해야 합니다.",
+    "sourceUrl": "https://react.dev/reference/react/memo"
+  },
+  {
+    "id": "web-performance-016",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "웹 폰트 로딩 시 FOIT(Flash of Invisible Text)를 방지하는 방법은?",
+    "options": [
+      "@font-face에서 font-weight를 제거한다",
+      "font-display: swap을 사용하여 시스템 폰트를 먼저 보여준다",
+      "폰트 파일 크기를 2MB 이상으로 유지한다",
+      "모든 폰트를 base64로 인코딩하여 CSS에 인라인한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "font-display: swap은 폰트가 로드될 때까지 시스템 폰트(fallback)를 사용하여 텍스트를 즉시 표시합니다. 이를 통해 사용자가 폰트 로딩 중에도 콘텐츠를 읽을 수 있어 FOIT를 방지하고 LCP를 개선할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display"
+  },
+  {
+    "id": "web-performance-017",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 중 Performance API를 사용하여 코드 실행 시간을 측정하는 올바른 방법은?",
+    "code": "performance.mark('start');\ndoSomething();\nperformance.mark('end');\nperformance.measure('task', 'start', 'end');",
+    "options": [
+      "performance.measure()가 에러를 발생시킨다",
+      "performance.mark()는 현재 시각을 콘솔에 출력한다",
+      "mark와 measure로 정밀한 시간 측정이 가능하며, Performance 탭에서 확인할 수 있다",
+      "measure는 마크 이름이 아닌 타임스탬프만 받을 수 있다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Performance API의 mark()는 타임스탬프를 기록하고, measure()는 두 마크 사이의 시간을 측정합니다. 이 결과는 DevTools Performance 탭에서 시각적으로 확인할 수 있으며, Date.now()보다 정밀한 고해상도 시간을 제공합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Performance/measure"
+  },
+  {
+    "id": "web-performance-018",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Server-Side Rendering(SSR)과 Static Site Generation(SSG)의 성능 특성 차이는?",
+    "options": [
+      "SSR이 항상 SSG보다 빠르다",
+      "SSG는 클라이언트에서 JavaScript로 렌더링한다",
+      "SSG는 빌드 시 HTML을 생성하여 CDN에서 서빙하므로 TTFB가 빠르고, SSR은 요청마다 서버에서 렌더링하므로 동적 데이터에 적합하다",
+      "SSR과 SSG의 성능 차이는 없으며 SEO에만 영향을 미친다"
+    ],
+    "correctIndex": 2,
+    "explanation": "SSG는 빌드 타임에 HTML을 미리 생성하여 CDN에서 서빙할 수 있으므로 TTFB가 매우 빠릅니다. SSR은 각 요청마다 서버에서 HTML을 생성하므로 최신 데이터를 반영할 수 있지만, 서버 응답 시간이 TTFB에 직접 영향을 줍니다.",
+    "sourceUrl": "https://nextjs.org/docs/app/building-your-application/rendering"
+  },
+  {
+    "id": "web-performance-019",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "번들 사이즈가 예상보다 클 때 가장 먼저 확인해야 할 것은?",
+    "options": [
+      "번들 분석 도구(webpack-bundle-analyzer 등)로 각 모듈의 크기를 확인한다",
+      "TypeScript 컴파일러 버전을 업그레이드한다",
+      "모든 import를 require()로 변경한다",
+      "소스맵을 프로덕션 빌드에 포함시킨다"
+    ],
+    "correctIndex": 0,
+    "explanation": "번들 분석 도구는 각 모듈이 최종 번들에서 차지하는 크기를 시각적으로 보여줍니다. 이를 통해 불필요하게 큰 라이브러리, 중복 의존성, tree-shaking이 되지 않는 모듈을 식별하고 최적화 전략을 수립할 수 있습니다.",
+    "sourceUrl": "https://www.npmjs.com/package/webpack-bundle-analyzer"
+  },
+  {
+    "id": "web-performance-020",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Intersection Observer API를 사용한 지연 로딩의 장점은?",
+    "options": [
+      "scroll 이벤트 리스너보다 정확한 타이밍을 제공한다",
+      "메인 스레드에서 비동기적으로 동작하여 scroll 이벤트 리스너 대비 성능 오버헤드가 적다",
+      "모든 브라우저에서 scroll 이벤트보다 먼저 지원되었다",
+      "CSS만으로 구현할 수 있어 JavaScript가 필요 없다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Intersection Observer는 브라우저가 내부적으로 요소의 가시성을 비동기적으로 감시합니다. scroll 이벤트는 스크롤할 때마다 메인 스레드에서 콜백이 실행되어 jank를 유발할 수 있지만, Intersection Observer는 이를 브라우저에 위임하여 효율적으로 처리합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API"
+  }
+]

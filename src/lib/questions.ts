@@ -15,6 +15,7 @@ import typescriptQuestions from '../../data/questions/typescript.json'
 import promiseQuestions from '../../data/questions/promise.json'
 import domManipulationQuestions from '../../data/questions/dom-manipulation.json'
 import cssLayoutQuestions from '../../data/questions/css-layout.json'
+import webPerformanceQuestions from '../../data/questions/web-performance.json'
 
 const ALL_QUESTIONS: Question[] = [
   ...scopeQuestions,
@@ -28,6 +29,7 @@ const ALL_QUESTIONS: Question[] = [
   ...promiseQuestions,
   ...domManipulationQuestions,
   ...cssLayoutQuestions,
+  ...webPerformanceQuestions,
 ] as Question[]
 
 const QUESTIONS_BY_ID = new Map<string, Question>(

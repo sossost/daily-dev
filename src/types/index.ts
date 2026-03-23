@@ -11,6 +11,7 @@ export const TOPICS = [
   'promise',
   'dom-manipulation',
   'css-layout',
+  'web-performance',
 ] as const
 
 export type Topic = (typeof TOPICS)[number]
@@ -28,6 +29,7 @@ export const TOPIC_LABELS: Record<Topic, string> = {
   promise: '프로미스',
   'dom-manipulation': 'DOM 조작',
   'css-layout': 'CSS 레이아웃',
+  'web-performance': '웹 성능 최적화',
 }
 
 // Question schema
