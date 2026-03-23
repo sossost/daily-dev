@@ -11,12 +11,13 @@ const stores = [
 ]
 
 export function useHydration(): boolean {
-  const [isHydrated, setIsHydrated] = useState(() =>
-    stores.every((s) => s.hasHydrated()),
-  )
+  const [isHydrated, setIsHydrated] = useState(false)
 
   useEffect(() => {
-    if (isHydrated) return
+    if (stores.every((s) => s.hasHydrated())) {
+      setIsHydrated(true)
+      return
+    }
 
     const unsubs = stores.map((s) =>
       s.onFinishHydration(() => {
@@ -27,7 +28,7 @@ export function useHydration(): boolean {
     )
 
     return () => unsubs.forEach((unsub) => unsub())
-  }, [isHydrated])
+  }, [])
 
   return isHydrated
 }
