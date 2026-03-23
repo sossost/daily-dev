@@ -266,7 +266,7 @@ main() {
   # Install dependencies if package-lock.json changed
   if git diff --name-only HEAD~1 2>/dev/null | grep -q 'package-lock.json'; then
     log "Dependencies changed. Running npm install..."
-    npm install --silent 2>&1 | tee -a "${LOG_FILE}" || log "npm install failed (continuing)"
+    npm ci --silent 2>&1 | tee -a "${LOG_FILE}" || log "npm install failed (continuing)"
   fi
 
   # ------------------------------------------
