@@ -14,7 +14,7 @@ LOCK_FILE="${STATE_DIR}/runner.lock"
 HISTORY_DIR="${STATE_DIR}/history"
 RUN_COUNT_DIR="${STATE_DIR}/run-counts"
 
-PROTECTED_PATTERN='\.harness/|CLAUDE\.md|jest\.config\.ts|next\.config\.ts|tsconfig\.json|package\.json|^package-lock\.json$'
+PROTECTED_PATTERN='\.harness/(agents|scripts|launchd|state)/|CLAUDE\.md|jest\.config\.ts|next\.config\.ts|tsconfig\.json|package\.json|^package-lock\.json$'
 
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 TODAY="$(date +%Y-%m-%d)"
