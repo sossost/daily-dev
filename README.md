@@ -22,13 +22,14 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Async | 20 |
 | Closure | 20 |
 | Event Loop | 20 |
+| Promise | 20 |
 | Prototype | 20 |
 | Scope | 20 |
 | this Keyword | 20 |
 | Type Coercion | 20 |
 | TypeScript | 20 |
 
-**Total: 160 questions across 8 topics**
+**Total: 180 questions across 9 topics**
 
 ## Getting Started
 

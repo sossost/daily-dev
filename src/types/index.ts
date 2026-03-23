@@ -8,6 +8,7 @@ export const TOPICS = [
   'async',
   'type-coercion',
   'typescript',
+  'promise',
 ] as const
 
 export type Topic = (typeof TOPICS)[number]
@@ -22,6 +23,7 @@ export const TOPIC_LABELS: Record<Topic, string> = {
   async: '비동기',
   'type-coercion': '타입 변환',
   typescript: '타입스크립트',
+  promise: '프로미스',
 }
 
 // Question schema

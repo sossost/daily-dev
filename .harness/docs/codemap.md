@@ -49,6 +49,7 @@
 - async.json — 20 questions
 - closure.json — 20 questions
 - event-loop.json — 20 questions
+- promise.json — 20 questions
 - prototype.json — 20 questions
 - scope.json — 20 questions
 - this.json — 20 questions
