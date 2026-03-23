@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { BarChart3, Bookmark, History } from 'lucide-react'
+import { BarChart3, Bookmark, Dumbbell, History } from 'lucide-react'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useBookmarkStore } from '@/stores/useBookmarkStore'
 import { useHydration } from '@/hooks/useHydration'
@@ -84,6 +84,19 @@ export default function DashboardPage() {
           </Link>
         )}
       </div>
+
+      <Link
+        href="/practice"
+        className="flex items-center gap-3 p-4 mb-2 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
+      >
+        <Dumbbell size={18} className="text-blue-500" />
+        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+          연습 모드
+        </span>
+        <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
+          토픽 · 난이도 선택
+        </span>
+      </Link>
 
       <SessionStartCard />
       <TopicProgressList topicStats={topicStats} />

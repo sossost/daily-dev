@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: rebalance promise & web-perf question types (`f094fd4`)
 - **expansion**: add react-basics topic with 20 questions (`6f430b3`)
 - **code**: Fix dark mode & a11y, add hook tests (`7e2c0f6`)
 - **feature**: add statistics dashboard page (`08f38b1`)

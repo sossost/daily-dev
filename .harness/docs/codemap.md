@@ -5,6 +5,7 @@
 ## Constants
 
 - `PERCENTAGE_MULTIPLIER` = `100`
+- `ANIMATION_DELAY_STEP` = `0.03`
 - `DISMISS_STORAGE_KEY` = `'daily-dev-keyboard-hint-dismissed'`
 - `HINT_DISPLAY_COUNT_KEY` = `'daily-dev-keyboard-hint-count'`
 - `MAX_DISPLAY_COUNT` = `3`
@@ -111,6 +112,13 @@
 - `addDays` (dateStr: string, days: number) → string — Add days to a YYYY-MM-DD date string. Parses in local time, not UTC.
 - `isBeforeOrEqual` (dateA: string, dateB: string) → boolean — Check if dateA is before or equal to dateB (both YYYY-MM-DD strings).
 - `isValidDateString` (value: string) → boolean — Validate that a string is in YYYY-MM-DD format and represents a real date.
+
+#### `practice-session.ts` — Practice session generator — builds a quiz session filtered by topics and difficulty. Unlike the standard SRS-driven session, practice mode lets users choose what to study.
+- `filterQuestions` (options: PracticeSessionOptions) → Question[] — Filter questions by selected topics and difficulty.
+- `generatePracticeSession` (options: PracticeSessionOptions,) → SessionQuestion[] — Generate a practice session from the given filter options. Returns up to SESSION_TOTAL_QUESTIONS questions, prioritizing unattempted ones.
+- `countAvailableQuestions` (topics: readonly Topic[], difficulty: Difficulty | 'all',) → number — Count available questions matching the given filter options (ignoring SRS).
+- `PracticeSessionOptions`
+- *deps*: types, types, lib/questions, lib/session
 
 #### `questions.ts` — Question loader — statically imports all topic JSON files at build time. Provides indexed access by ID and topic. No runtime I/O.
 - `getAllQuestions` () → Question[]
@@ -274,6 +282,11 @@
 #### `page.tsx`
 - *deps*: stores/useProgressStore, hooks/useHydration, components/history/SessionHistoryCard
 
+### src/app/practice/
+
+#### `page.tsx`
+- *deps*: types, stores/useSessionStore, stores/useProgressStore, hooks/useHydration, hooks/useQuizKeyboard, lib/practice-session, components/practice/TopicSelector, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
+
 ### src/app/stats/
 
 #### `page.tsx`
@@ -284,6 +297,12 @@
 #### `SessionHistoryCard.tsx`
 - `SessionHistoryCard` ({ session, index }: SessionHistoryCardProps)
 - *deps*: types, types, lib/session-history
+
+### src/components/practice/
+
+#### `TopicSelector.tsx`
+- `TopicSelector` ({ selectedTopics, difficulty, onToggleTopic, onSelectAll, onDeselectAll, onDifficultyChange, }: TopicSelectorProps)
+- *deps*: types, lib/questions
 
 ### src/components/stats/
 
