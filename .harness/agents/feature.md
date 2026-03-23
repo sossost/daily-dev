@@ -1,5 +1,9 @@
 # Feature Agent
 
+## Context
+
+Read `.harness/docs/codemap.md` first for project structure, types, store interfaces, and module dependencies.
+
 ## Goal Reference
 
 Read `GOALS.md` for current targets and progress. Your job is to move the Features metric forward.

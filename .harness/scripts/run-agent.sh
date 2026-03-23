@@ -474,6 +474,7 @@ Your very last line of output must be SUMMARY: followed by a brief description o
   log "Updating documentation..."
   npm run --silent generate-readme 2>/dev/null || log "README generation skipped (script error)"
   npm run --silent update-goals 2>/dev/null || log "GOALS update skipped (script error)"
+  npx tsx .harness/scripts/generate-codemap.ts 2>/dev/null || log "Codemap generation skipped (script error)"
 
   # ------------------------------------------
   # Targeted Git Add
@@ -487,6 +488,7 @@ Your very last line of output must be SUMMARY: followed by a brief description o
   git add __tests__/ 2>/dev/null || true
   git add README.md 2>/dev/null || true
   git add GOALS.md 2>/dev/null || true
+  git add .harness/docs/codemap.md 2>/dev/null || true
 
   # Stage tracked file modifications/deletions
   git add -u 2>/dev/null || true

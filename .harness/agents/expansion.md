@@ -1,5 +1,9 @@
 # Expansion Agent
 
+## Context
+
+Read `.harness/docs/codemap.md` first for project structure, types, store interfaces, and module dependencies.
+
 ## Goal Reference
 
 Read `GOALS.md` for current targets and progress. Your job is to add new topics to the platform.
