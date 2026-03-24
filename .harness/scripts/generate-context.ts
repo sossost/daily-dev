@@ -203,6 +203,80 @@ function getAppRoutes(): string[] {
 }
 
 // ---------------------------------------------------------------------------
+// 6. Copy Text Audit — detect stale descriptions vs actual content
+// ---------------------------------------------------------------------------
+
+function generateCopyGuidance(topics: TopicInfo[]): string[] {
+  const topicNames = topics.map((t) => t.name)
+  const totalQuestions = topics.reduce((sum, t) => sum + t.count, 0)
+
+  // Scope word: simple heuristic — if more than one category exists, use "개발"
+  // Not hardcoding topic-to-category mappings. Just check if topics go beyond
+  // the original JS core set by comparing against the first 7 original topics.
+  const ORIGINAL_JS_TOPICS = 7 // scope, closure, this, event-loop, async, type-coercion, prototype
+  const scopeWord = topicNames.length > ORIGINAL_JS_TOPICS ? '개발' : 'JavaScript'
+
+  // Recommended copy
+  const recommended: Record<string, string> = {
+    SITE_DESCRIPTION: `매일 5분, ${scopeWord} 핵심 개념을 학습하고 실력을 키워보세요.`,
+    SITE_TAGLINE: `매일 5분, ${scopeWord} 핵심 개념 학습`,
+    REPORT_TITLE: `${scopeWord} 학습 리포트`,
+  }
+
+  // Scan src/ for user-facing strings that don't match recommended text
+  const staleFindings: string[] = []
+  const IGNORE_LINE = /^\s*(import |\/\/|.*from\s+['"]|.*prism-)/
+
+  function scanDir(dir: string): void {
+    if (!fs.existsSync(dir)) return
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name)
+      if (entry.isDirectory()) {
+        scanDir(fullPath)
+      } else if (/\.(ts|tsx)$/.test(entry.name)) {
+        const fileLines = fs.readFileSync(fullPath, 'utf-8').split('\n')
+        for (let i = 0; i < fileLines.length; i++) {
+          const line = fileLines[i]
+          if (IGNORE_LINE.test(line)) continue
+
+          // Find user-facing description strings that use a narrower scope than recommended
+          if (scopeWord !== 'JavaScript' && /JavaScript/i.test(line) && /핵심|학습|개념|리포트|report/i.test(line)) {
+            const rel = path.relative(PROJECT_DIR, fullPath)
+            staleFindings.push(`\`${rel}:${i + 1}\` — contains "JavaScript" but scope is now "${scopeWord}"`)
+          }
+        }
+      }
+    }
+  }
+
+  scanDir(SRC_DIR)
+
+  // Build output
+  const lines: string[] = []
+  lines.push(`Current scope: **${topicNames.length} topics, ${totalQuestions} questions** → scope word: **"${scopeWord}"**`)
+  lines.push('')
+  lines.push('Recommended copy (from actual content):')
+  for (const [key, value] of Object.entries(recommended)) {
+    lines.push(`- ${key}: "${value}"`)
+  }
+  lines.push('')
+
+  if (staleFindings.length > 0) {
+    lines.push('### ACTION REQUIRED: Stale text found')
+    lines.push('')
+    for (const finding of staleFindings) {
+      lines.push(`- ${finding}`)
+    }
+    lines.push('')
+    lines.push('**Fix:** Update these to use constants from `src/lib/constants.ts`. If the string is hardcoded, replace it with an import. If `constants.ts` itself is stale, update it first.')
+  } else {
+    lines.push('No stale text found.')
+  }
+
+  return lines
+}
+
+// ---------------------------------------------------------------------------
 // Generate context.md
 // ---------------------------------------------------------------------------
 
@@ -308,6 +382,15 @@ function generate(): string {
     lines.push('Avoid repeating the same agent+approach that recently failed or produced no changes.')
     lines.push('')
   }
+
+  // --- Copy Text Guidance ---
+  const copyGuidance = generateCopyGuidance(topics)
+  lines.push('## Copy Text Guidance')
+  lines.push('')
+  for (const line of copyGuidance) {
+    lines.push(line)
+  }
+  lines.push('')
 
   // --- Feature Agent Guidance ---
   lines.push('## Feature Agent Guidance')

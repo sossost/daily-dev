@@ -23,12 +23,13 @@ Improve code quality, add missing tests, fix bugs, improve type safety, enhance 
 
 Work on issues in this order:
 
-1. **Bugs** — Fix runtime errors, incorrect behavior, broken UI
-2. **Missing tests** — Add unit tests for untested functions, hooks, and components
-3. **Type safety** — Replace `any` with proper types, add missing type annotations
-4. **Code quality** — Reduce complexity, extract functions, improve naming
-5. **Accessibility** — Add ARIA attributes, keyboard navigation, focus management
-6. **Performance** — Optimize re-renders, lazy load components, reduce bundle size
+1. **Dynamic Context issues** — Check the Dynamic Context for any "ACTION REQUIRED" sections. Fix these FIRST.
+2. **Bugs** — Fix runtime errors, incorrect behavior, broken UI
+3. **Missing tests** — Add unit tests for untested functions, hooks, and components
+4. **Type safety** — Replace `any` with proper types, add missing type annotations
+5. **Code quality** — Reduce complexity, extract functions, improve naming
+6. **Accessibility** — Add ARIA attributes, keyboard navigation, focus management
+7. **Performance** — Optimize re-renders, lazy load components, reduce bundle size
 
 ## Beyond the Checklist
 
