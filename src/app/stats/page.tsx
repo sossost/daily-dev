@@ -21,7 +21,7 @@ import { ShareProgressButton } from '@/components/stats/ShareProgressButton'
 
 export default function StatsPage() {
   const isHydrated = useHydration()
-  const totalSessions = useProgressStore((s) => s.totalSessions)
+  const totalSessions = useProgressStore((s) => s.sessions.length)
   const totalCorrect = useProgressStore((s) => s.totalCorrect)
   const totalAnswered = useProgressStore((s) => s.totalAnswered)
   const currentStreak = useProgressStore((s) => s.currentStreak)

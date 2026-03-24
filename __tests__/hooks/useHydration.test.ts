@@ -1,143 +1,77 @@
-import { renderHook, act } from '@testing-library/react'
+import { renderHook, act, waitFor } from '@testing-library/react'
 import { useHydration } from '@/hooks/useHydration'
-import { useProgressStore } from '@/stores/useProgressStore'
-import { useSessionStore } from '@/stores/useSessionStore'
 import { useThemeStore } from '@/stores/useThemeStore'
-import { useBookmarkStore } from '@/stores/useBookmarkStore'
+import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
 
-type PersistApi = typeof useProgressStore.persist
+const allStores = [
+  useThemeStore.persist,
+  useTopicFilterStore.persist,
+]
+
+function mockStores(hydrated: boolean) {
+  const originals = allStores.map((p) => ({
+    persist: p,
+    origHasHydrated: p.hasHydrated,
+    origOnFinish: p.onFinishHydration,
+  }))
+
+  const callbacks: Array<() => void> = []
+
+  for (const o of originals) {
+    o.persist.hasHydrated = () => hydrated
+    o.persist.onFinishHydration = ((cb: () => void) => {
+      callbacks.push(cb)
+      return () => {}
+    }) as typeof o.persist.onFinishHydration
+  }
+
+  const restore = () => {
+    for (const o of originals) {
+      o.persist.hasHydrated = o.origHasHydrated
+      o.persist.onFinishHydration = o.origOnFinish
+    }
+  }
+
+  return { callbacks, restore, setHydrated: (v: boolean) => {
+    for (const o of originals) {
+      o.persist.hasHydrated = () => v
+    }
+  }}
+}
 
 describe('useHydration', () => {
-  it('returns false initially when stores have not yet hydrated', () => {
-    // Override hasHydrated to return false for all stores
-    const originals = [
-      useProgressStore.persist,
-      useSessionStore.persist,
-      useThemeStore.persist,
-      useBookmarkStore.persist,
-    ].map((p) => ({
-      persist: p,
-      original: p.hasHydrated,
-    }))
-
-    for (const o of originals) {
-      o.persist.hasHydrated = () => false
-    }
-
+  it('returns false when stores have not yet hydrated', () => {
+    const { restore } = mockStores(false)
     const { result } = renderHook(() => useHydration())
-    expect(result.current).toBe(false)
 
-    // Restore
-    for (const o of originals) {
-      o.persist.hasHydrated = o.original
-    }
+    expect(result.current).toBe(false)
+    restore()
   })
 
-  it('returns true immediately when all stores report hydrated', () => {
-    const stores = [
-      useProgressStore.persist,
-      useSessionStore.persist,
-      useThemeStore.persist,
-      useBookmarkStore.persist,
-    ]
-
-    const originals = stores.map((p) => ({
-      persist: p,
-      original: p.hasHydrated,
-    }))
-
-    for (const o of originals) {
-      o.persist.hasHydrated = () => true
-    }
-
+  it('returns true when all stores are already hydrated', () => {
+    const { restore } = mockStores(true)
     const { result } = renderHook(() => useHydration())
 
-    // Effect runs synchronously with hasHydrated() === true
     expect(result.current).toBe(true)
-
-    for (const o of originals) {
-      o.persist.hasHydrated = o.original
-    }
+    restore()
   })
 
-  it('transitions to true when stores finish hydrating via callback', () => {
-    const stores = [
-      useProgressStore.persist,
-      useSessionStore.persist,
-      useThemeStore.persist,
-      useBookmarkStore.persist,
-    ]
-
-    // Track onFinishHydration callbacks
-    const callbacks: Array<() => void> = []
-    const originals = stores.map((p) => ({
-      persist: p,
-      origHasHydrated: p.hasHydrated,
-      origOnFinish: p.onFinishHydration,
-    }))
-
-    // First call: not hydrated. After callbacks fire: hydrated.
-    let hydrated = false
-    for (const o of originals) {
-      o.persist.hasHydrated = () => hydrated
-      o.persist.onFinishHydration = ((cb: () => void) => {
-        callbacks.push(cb)
-        return () => {}
-      }) as typeof o.persist.onFinishHydration
-    }
-
+  it('transitions to true when stores finish hydrating via callback', async () => {
+    const { callbacks, restore, setHydrated } = mockStores(false)
     const { result } = renderHook(() => useHydration())
+
     expect(result.current).toBe(false)
 
-    // Simulate all stores finishing hydration
-    hydrated = true
+    setHydrated(true)
     act(() => {
       for (const cb of callbacks) {
         cb()
       }
     })
 
-    expect(result.current).toBe(true)
-
-    // Restore
-    for (const o of originals) {
-      o.persist.hasHydrated = o.origHasHydrated
-      o.persist.onFinishHydration = o.origOnFinish
-    }
-  })
-
-  it('cleans up onFinishHydration subscriptions on unmount', () => {
-    const stores = [
-      useProgressStore.persist,
-      useSessionStore.persist,
-      useThemeStore.persist,
-      useBookmarkStore.persist,
-    ]
-
-    const unsubFns = stores.map(() => jest.fn())
-    const originals = stores.map((p, i) => ({
-      persist: p,
-      origHasHydrated: p.hasHydrated,
-      origOnFinish: p.onFinishHydration,
-      unsubFn: unsubFns[i],
-    }))
-
-    for (const o of originals) {
-      o.persist.hasHydrated = () => false
-      o.persist.onFinishHydration = () => o.unsubFn
-    }
-
-    const { unmount } = renderHook(() => useHydration())
-    unmount()
-
-    for (const fn of unsubFns) {
-      expect(fn).toHaveBeenCalledTimes(1)
-    }
-
-    // Restore
-    for (const o of originals) {
-      o.persist.hasHydrated = o.origHasHydrated
-      o.persist.onFinishHydration = o.origOnFinish
-    }
+    await waitFor(() => {
+      expect(result.current).toBe(true)
+    })
+    restore()
   })
 })

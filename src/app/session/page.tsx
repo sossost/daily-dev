@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo } from 'react'
+import { useEffect, useRef, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { AnimatePresence } from 'framer-motion'
 import { TOPICS } from '@/types'
@@ -23,11 +23,20 @@ export default function SessionPage() {
   const questions = useSessionStore((s) => s.questions)
   const currentIndex = useSessionStore((s) => s.currentIndex)
   const selectedIndex = useSessionStore((s) => s.selectedIndex)
+  const answers = useSessionStore((s) => s.answers)
   const isAnswered = useSessionStore((s) => s.isAnswered)
   const isComplete = useSessionStore((s) => s.isComplete)
   const startSession = useSessionStore((s) => s.startSession)
   const selectAnswer = useSessionStore((s) => s.selectAnswer)
   const nextQuestion = useSessionStore((s) => s.nextQuestion)
+
+  // Clear stale session state synchronously on mount.
+  // Prevents redirect to result page from previous session's isComplete=true.
+  const cleared = useRef(false)
+  if (!cleared.current) {
+    cleared.current = true
+    useSessionStore.getState().reset()
+  }
 
   useQuizKeyboard({
     isAnswered,
@@ -42,18 +51,18 @@ export default function SessionPage() {
     [],
   )
 
+  // Start fresh session once topicFilter store is hydrated
   useEffect(() => {
     if (!isHydrated) return
-    if (questions.length === 0) {
-      startSession(sessionQuestions)
-    }
-  }, [isHydrated, questions.length, startSession, sessionQuestions])
+    startSession(sessionQuestions)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once when hydrated
+  }, [isHydrated])
 
   useEffect(() => {
-    if (isComplete === true) {
+    if (isComplete === true && answers.length > 0) {
       router.push('/session/result')
     }
-  }, [isComplete, router])
+  }, [isComplete, answers.length, router])
 
   if (!isHydrated || questions.length === 0) {
     return null

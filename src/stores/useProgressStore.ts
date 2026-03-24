@@ -1,119 +1,121 @@
 /**
- * Progress store — persistent user learning data.
- * Stores SRS records, topic accuracy stats, streak counts, and session history.
- * Persisted to localStorage (permanent across sessions).
+ * Progress store — user learning data.
+ * No localStorage persist — data is loaded from Supabase via server injection.
+ * Zustand serves as an in-memory cache only.
  * updateAfterSession() recalculates SRS intervals, topic stats, and streaks.
  */
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 import type { SessionAnswer, SessionRecord, Topic, UserProgress } from '@/types'
 import { DEFAULT_USER_PROGRESS, TOPICS } from '@/types'
 import { calculateSRS, createInitialSRS } from '@/lib/srs'
 import { getToday } from '@/lib/date'
+import { getCurrentUserId } from '@/lib/supabase/currentUser'
+import { syncAfterSession } from '@/lib/supabase/syncSession'
 
 interface ProgressState extends UserProgress {
   updateAfterSession: (answers: SessionAnswer[]) => void
+  reset: () => void
 }
 
-export const useProgressStore = create<ProgressState>()(
-  persist(
-    (set, get) => ({
-      ...DEFAULT_USER_PROGRESS,
+export const useProgressStore = create<ProgressState>()((set, get) => ({
+  ...DEFAULT_USER_PROGRESS,
 
-      updateAfterSession: (answers) => {
-        const state = get()
-        const today = getToday()
+  reset: () => {
+    set({ ...DEFAULT_USER_PROGRESS })
+  },
 
-        const correctCount = answers.filter((a) => a.isCorrect).length
+  updateAfterSession: (answers) => {
+    const state = get()
+    const today = getToday()
 
-        // Update SRS records
-        const updatedSrsRecords = { ...state.srsRecords }
-        for (const answer of answers) {
-          const existing = updatedSrsRecords[answer.questionId]
-          if (existing != null) {
-            updatedSrsRecords[answer.questionId] = calculateSRS(
-              existing,
-              answer.isCorrect,
-              today,
-            )
-          } else {
-            const initial = createInitialSRS(answer.questionId, today)
-            updatedSrsRecords[answer.questionId] = answer.isCorrect
-              ? calculateSRS(initial, true, today)
-              : initial
-          }
-        }
+    const correctCount = answers.filter((a) => a.isCorrect).length
 
-        // Update topic stats
-        const updatedTopicStats = { ...state.topicStats }
-        for (const topic of TOPICS) {
-          updatedTopicStats[topic] = { ...state.topicStats[topic] }
-        }
+    // Update SRS records
+    const updatedSrsRecords = { ...state.srsRecords }
+    for (const answer of answers) {
+      const existing = updatedSrsRecords[answer.questionId]
+      if (existing != null) {
+        updatedSrsRecords[answer.questionId] = calculateSRS(
+          existing,
+          answer.isCorrect,
+          today,
+        )
+      } else {
+        const initial = createInitialSRS(answer.questionId, today)
+        updatedSrsRecords[answer.questionId] = answer.isCorrect
+          ? calculateSRS(initial, true, today)
+          : initial
+      }
+    }
 
-        for (const answer of answers) {
-          const topic: Topic = answer.topic
-          const stat = updatedTopicStats[topic]
-          const totalAnswered = stat.totalAnswered + 1
-          const correctAnswers = stat.correctAnswers + (answer.isCorrect ? 1 : 0)
-          const PERCENTAGE_MULTIPLIER = 100
+    // Update topic stats
+    const updatedTopicStats = { ...state.topicStats }
+    for (const topic of TOPICS) {
+      updatedTopicStats[topic] = { ...state.topicStats[topic] }
+    }
 
-          updatedTopicStats[topic] = {
-            ...stat,
-            totalAnswered,
-            correctAnswers,
-            accuracy: Math.round((correctAnswers / totalAnswered) * PERCENTAGE_MULTIPLIER),
-          }
-        }
+    for (const answer of answers) {
+      const topic: Topic = answer.topic
+      const stat = updatedTopicStats[topic]
+      const totalAnswered = stat.totalAnswered + 1
+      const correctAnswers = stat.correctAnswers + (answer.isCorrect ? 1 : 0)
+      const PERCENTAGE_MULTIPLIER = 100
 
-        // Update streak
-        const isConsecutiveDay =
-          state.lastSessionDate === today ||
-          state.lastSessionDate === getYesterday(today)
-        const currentStreak = isConsecutiveDay
-          ? state.currentStreak + (state.lastSessionDate === today ? 0 : 1)
-          : 1
-        const longestStreak = Math.max(state.longestStreak, currentStreak)
+      updatedTopicStats[topic] = {
+        ...stat,
+        totalAnswered,
+        correctAnswers,
+        accuracy: Math.round((correctAnswers / totalAnswered) * PERCENTAGE_MULTIPLIER),
+      }
+    }
 
-        // Create session record
-        const totalTimeSpent = answers.reduce((sum, a) => sum + a.timeSpent, 0)
-        const sessionRecord: SessionRecord = {
-          id: `session-${Date.now()}`,
-          date: today,
-          answers,
-          score: correctCount,
-          totalQuestions: answers.length,
-          duration: totalTimeSpent,
-        }
+    // Update streak
+    const isConsecutiveDay =
+      state.lastSessionDate === today ||
+      state.lastSessionDate === getYesterday(today)
+    const currentStreak = isConsecutiveDay
+      ? state.currentStreak + (state.lastSessionDate === today ? 0 : 1)
+      : 1
+    const longestStreak = Math.max(state.longestStreak, currentStreak)
 
-        set({
-          totalSessions: state.totalSessions + 1,
-          totalCorrect: state.totalCorrect + correctCount,
-          totalAnswered: state.totalAnswered + answers.length,
-          currentStreak,
-          longestStreak,
-          lastSessionDate: today,
-          topicStats: updatedTopicStats,
-          srsRecords: updatedSrsRecords,
-          sessions: [...state.sessions, sessionRecord],
-        })
-      },
+    // Create session record
+    const totalTimeSpent = answers.reduce((sum, a) => sum + a.timeSpent, 0)
+    const sessionRecord: SessionRecord = {
+      id: crypto.randomUUID(),
+      date: today,
+      answers,
+      score: correctCount,
+      totalQuestions: answers.length,
+      duration: totalTimeSpent,
+    }
 
-    }),
-    {
-      name: 'daily-dev-progress',
-      merge: (persisted, current) => {
-        const merged = { ...current, ...(persisted as object) }
-        // Ensure new topics added after initial storage are included
-        const currentState = current as ProgressState
-        const persistedState = persisted as Partial<ProgressState>
-        if (persistedState.topicStats != null) {
-          merged.topicStats = { ...currentState.topicStats, ...persistedState.topicStats }
-        }
-        return merged
-      },
-    },
-  ),
-)
+    set({
+      totalSessions: state.totalSessions + 1,
+      totalCorrect: state.totalCorrect + correctCount,
+      totalAnswered: state.totalAnswered + answers.length,
+      currentStreak,
+      longestStreak,
+      lastSessionDate: today,
+      topicStats: updatedTopicStats,
+      srsRecords: updatedSrsRecords,
+      sessions: [...state.sessions, sessionRecord],
+    })
+
+    // Fire-and-forget sync to Supabase (both auth and anonymous)
+    const userId = getCurrentUserId()
+    if (userId != null) {
+      syncAfterSession(
+        sessionRecord,
+        answers,
+        updatedSrsRecords,
+        updatedTopicStats,
+        { correct: correctCount, answered: answers.length, current_streak: currentStreak, date: today },
+      ).catch(() => {
+        // Sync failed — data persists in Zustand, will retry on next session
+      })
+    }
+  },
+}))
 
 function getYesterday(today: string): string {
   const [year, month, day] = today.split('-').map(Number)

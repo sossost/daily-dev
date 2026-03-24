@@ -1,20 +1,14 @@
 /**
- * Waits for all persisted Zustand stores to finish hydrating from storage.
- * Falls back to default state after HYDRATION_TIMEOUT_MS if storage is
- * blocked (e.g. KakaoTalk in-app browser, private browsing).
+ * Waits for persisted Zustand stores to finish hydrating from localStorage.
+ * Only theme and topic filter stores still use persist.
+ * Progress, bookmark, and session stores are server-injected (no hydration).
  */
 import { useEffect, useState } from 'react'
-import { useProgressStore } from '@/stores/useProgressStore'
-import { useSessionStore } from '@/stores/useSessionStore'
 import { useThemeStore } from '@/stores/useThemeStore'
-import { useBookmarkStore } from '@/stores/useBookmarkStore'
 import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
 
 const stores = [
-  useProgressStore.persist,
-  useSessionStore.persist,
   useThemeStore.persist,
-  useBookmarkStore.persist,
   useTopicFilterStore.persist,
 ]
 
