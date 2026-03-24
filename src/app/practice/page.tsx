@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { AnimatePresence } from 'framer-motion'
@@ -22,6 +22,14 @@ export default function PracticePage() {
   const router = useRouter()
   const isHydrated = useHydration()
   const srsRecords = useProgressStore((s) => s.srsRecords)
+
+  // Clear stale session state synchronously on mount.
+  // Prevents redirect to result page from previous session's isComplete=true.
+  const cleared = useRef(false)
+  if (!cleared.current) {
+    cleared.current = true
+    useSessionStore.getState().reset()
+  }
 
   const [phase, setPhase] = useState<PracticePhase>('setup')
   const [selectedTopics, setSelectedTopics] = useState<readonly Topic[]>([...TOPICS])

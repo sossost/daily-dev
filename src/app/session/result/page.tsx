@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useSessionStore } from '@/stores/useSessionStore'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useHydration } from '@/hooks/useHydration'
@@ -15,6 +16,7 @@ import { LoginNudge } from '@/components/result/LoginNudge'
 const UPDATED_SESSION_KEY = 'daily-dev-last-updated-session'
 
 export default function ResultPage() {
+  const router = useRouter()
   const isHydrated = useHydration()
   const questions = useSessionStore((s) => s.questions)
   const answers = useSessionStore((s) => s.answers)
@@ -43,8 +45,10 @@ export default function ResultPage() {
       // sessionStorage unavailable — proceed (worst case: double update on remount)
     }
 
-    updateAfterSession(answers)
-  }, [isHydrated, answers, startTime, updateAfterSession])
+    updateAfterSession(answers).then(() => {
+      router.refresh()
+    })
+  }, [isHydrated, answers, startTime, updateAfterSession, router])
 
   if (isHydrated === false) {
     return null

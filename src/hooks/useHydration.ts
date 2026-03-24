@@ -14,14 +14,15 @@ const stores = [
 
 const HYDRATION_TIMEOUT_MS = 500
 
+function checkAllHydrated(): boolean {
+  return stores.every((s) => s.hasHydrated())
+}
+
 export function useHydration(): boolean {
-  const [isHydrated, setIsHydrated] = useState(false)
+  const [isHydrated, setIsHydrated] = useState(checkAllHydrated)
 
   useEffect(() => {
-    if (stores.every((s) => s.hasHydrated())) {
-      setIsHydrated(true)
-      return
-    }
+    if (isHydrated) return
 
     const unsubs = stores.map((s) =>
       s.onFinishHydration(() => {

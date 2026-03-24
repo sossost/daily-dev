@@ -13,7 +13,7 @@ import { getCurrentUserId } from '@/lib/supabase/currentUser'
 import { syncAfterSession } from '@/lib/supabase/syncSession'
 
 interface ProgressState extends UserProgress {
-  updateAfterSession: (answers: SessionAnswer[]) => void
+  updateAfterSession: (answers: SessionAnswer[]) => Promise<void>
   reset: () => void
 }
 
@@ -24,7 +24,7 @@ export const useProgressStore = create<ProgressState>()((set, get) => ({
     set({ ...DEFAULT_USER_PROGRESS })
   },
 
-  updateAfterSession: (answers) => {
+  updateAfterSession: async (answers) => {
     const state = get()
     const today = getToday()
 
@@ -101,10 +101,10 @@ export const useProgressStore = create<ProgressState>()((set, get) => ({
       sessions: [...state.sessions, sessionRecord],
     })
 
-    // Fire-and-forget sync to Supabase (both auth and anonymous)
+    // Sync to Supabase — caller can await to ensure server is up-to-date
     const userId = getCurrentUserId()
     if (userId != null) {
-      syncAfterSession(
+      await syncAfterSession(
         sessionRecord,
         answers,
         updatedSrsRecords,
