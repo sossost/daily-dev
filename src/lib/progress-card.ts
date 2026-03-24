@@ -6,16 +6,25 @@ import type { Topic, TopicStat } from '@/types'
 import { TOPIC_LABELS } from '@/types'
 import { REPORT_TITLE } from '@/lib/constants'
 
-const CARD_WIDTH = 600
-const CARD_HEIGHT = 400
-const PADDING = 32
+const CARD_WIDTH = 1200
+const CARD_HEIGHT = 800
+const PADDING = 64
 const PERCENTAGE_MULTIPLIER = 100
-const FULL_CIRCLE_DEGREES = 360
 const CIRCLE_START_ANGLE = -Math.PI / 2
-const ACCURACY_RING_RADIUS = 44
-const ACCURACY_RING_LINE_WIDTH = 8
+const ACCURACY_RING_RADIUS = 88
+const ACCURACY_RING_LINE_WIDTH = 16
 const MAX_TOP_TOPICS = 3
 const FONT_FAMILY = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+
+// Layout offsets (2x scale)
+const RING_PERCENT_OFFSET_Y = -12
+const RING_LABEL_OFFSET_Y = 28
+const STAT_VALUE_OFFSET_Y = 44
+const STAT_SUBLABEL_OFFSET_Y = 88
+const SECTION_HEADER_OFFSET_Y = 8
+const FIRST_BAR_OFFSET_Y = 32
+const BAR_LABEL_INSET = 16
+const BAR_LABEL_GAP = 12
 
 export interface ProgressCardData {
   readonly overallAccuracy: number
@@ -86,12 +95,16 @@ function drawAccuracyRing(
   ctx.lineCap = 'round'
   ctx.stroke()
 
-  // Percentage text
+  // Percentage text + label inside ring
   ctx.fillStyle = '#1F2937'
-  ctx.font = `bold 20px ${FONT_FAMILY}`
+  ctx.font = `bold 40px ${FONT_FAMILY}`
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  ctx.fillText(`${accuracy}%`, centerX, centerY)
+  ctx.fillText(`${accuracy}%`, centerX, centerY + RING_PERCENT_OFFSET_Y)
+
+  ctx.fillStyle = '#9CA3AF'
+  ctx.font = `20px ${FONT_FAMILY}`
+  ctx.fillText('정답률', centerX, centerY + RING_LABEL_OFFSET_Y)
 }
 
 function drawStatItem(
@@ -101,14 +114,15 @@ function drawStatItem(
   label: string,
   value: string,
 ): void {
+  ctx.textBaseline = 'alphabetic'
   ctx.fillStyle = '#6B7280'
-  ctx.font = `11px ${FONT_FAMILY}`
+  ctx.font = `22px ${FONT_FAMILY}`
   ctx.textAlign = 'center'
   ctx.fillText(label, x, y)
 
   ctx.fillStyle = '#1F2937'
-  ctx.font = `bold 18px ${FONT_FAMILY}`
-  ctx.fillText(value, x, y + 22)
+  ctx.font = `bold 36px ${FONT_FAMILY}`
+  ctx.fillText(value, x, y + STAT_VALUE_OFFSET_Y)
 }
 
 export function renderProgressCard(
@@ -122,124 +136,141 @@ export function renderProgressCard(
   canvas.height = CARD_HEIGHT
 
   // Background
-  drawRoundedRect(ctx, 0, 0, CARD_WIDTH, CARD_HEIGHT, 16)
+  drawRoundedRect(ctx, 0, 0, CARD_WIDTH, CARD_HEIGHT, 32)
   ctx.fillStyle = '#FFFFFF'
   ctx.fill()
 
   // Subtle border
-  drawRoundedRect(ctx, 0, 0, CARD_WIDTH, CARD_HEIGHT, 16)
+  drawRoundedRect(ctx, 0, 0, CARD_WIDTH, CARD_HEIGHT, 32)
   ctx.strokeStyle = '#E5E7EB'
-  ctx.lineWidth = 1
+  ctx.lineWidth = 2
   ctx.stroke()
 
   // Header
   ctx.fillStyle = '#1F2937'
-  ctx.font = `bold 22px ${FONT_FAMILY}`
+  ctx.font = `bold 44px ${FONT_FAMILY}`
   ctx.textAlign = 'left'
-  ctx.fillText('DailyDev', PADDING, PADDING + 20)
+  ctx.textBaseline = 'alphabetic'
+  ctx.fillText('DailyDev', PADDING, PADDING + 40)
 
   ctx.fillStyle = '#9CA3AF'
-  ctx.font = `12px ${FONT_FAMILY}`
-  ctx.fillText(REPORT_TITLE, PADDING, PADDING + 40)
+  ctx.font = `24px ${FONT_FAMILY}`
+  ctx.fillText(REPORT_TITLE, PADDING, PADDING + 76)
 
   // Divider
-  const dividerY = PADDING + 56
+  const dividerY = PADDING + 108
   ctx.beginPath()
   ctx.moveTo(PADDING, dividerY)
   ctx.lineTo(CARD_WIDTH - PADDING, dividerY)
   ctx.strokeStyle = '#F3F4F6'
-  ctx.lineWidth = 1
+  ctx.lineWidth = 2
   ctx.stroke()
 
   // Accuracy ring - left section
-  const ringCenterX = PADDING + ACCURACY_RING_RADIUS + 16
-  const ringCenterY = dividerY + 72
+  const ringCenterX = PADDING + ACCURACY_RING_RADIUS + 32
+  const ringCenterY = dividerY + 144
   drawAccuracyRing(ctx, ringCenterX, ringCenterY, data.overallAccuracy)
 
-  // Label under ring
-  ctx.fillStyle = '#9CA3AF'
-  ctx.font = `11px ${FONT_FAMILY}`
-  ctx.textAlign = 'center'
-  ctx.fillText('정답률', ringCenterX, ringCenterY + ACCURACY_RING_RADIUS + 20)
-
   // Stats section - right of ring
-  const statsStartX = ringCenterX + ACCURACY_RING_RADIUS + 56
-  const statsY = dividerY + 48
-  const statSpacing = 100
+  const statsStartX = ringCenterX + ACCURACY_RING_RADIUS + 112
+  const statsY = dividerY + 96
+  const statSpacing = 200
 
   drawStatItem(ctx, statsStartX, statsY, '세션', `${data.totalSessions}`)
   drawStatItem(ctx, statsStartX + statSpacing, statsY, '연속 학습', `${data.currentStreak}일`)
   drawStatItem(ctx, statsStartX + statSpacing * 2, statsY, '총 문제', `${data.totalAnswered}`)
 
   // Longest streak sub-info
-  ctx.fillStyle = '#D1D5DB'
-  ctx.font = `10px ${FONT_FAMILY}`
+  ctx.fillStyle = '#9CA3AF'
+  ctx.font = `18px ${FONT_FAMILY}`
   ctx.textAlign = 'center'
-  ctx.fillText(`최장 ${data.longestStreak}일`, statsStartX + statSpacing, statsY + 40)
+  ctx.textBaseline = 'alphabetic'
+  ctx.fillText(`최장 ${data.longestStreak}일`, statsStartX + statSpacing, statsY + STAT_SUBLABEL_OFFSET_Y)
 
   // Top topics section
   const topTopics = getTopTopics(data.topicStats)
-  const topicsY = dividerY + 140
+  const secondDividerY = ringCenterY + ACCURACY_RING_RADIUS + 56
+  const topicsY = secondDividerY + 40
 
   // Divider before topics
   ctx.beginPath()
-  ctx.moveTo(PADDING, topicsY - 16)
-  ctx.lineTo(CARD_WIDTH - PADDING, topicsY - 16)
+  ctx.moveTo(PADDING, secondDividerY)
+  ctx.lineTo(CARD_WIDTH - PADDING, secondDividerY)
   ctx.strokeStyle = '#F3F4F6'
-  ctx.lineWidth = 1
+  ctx.lineWidth = 2
   ctx.stroke()
 
   if (topTopics.length > 0) {
     ctx.fillStyle = '#9CA3AF'
-    ctx.font = `11px ${FONT_FAMILY}`
+    ctx.font = `22px ${FONT_FAMILY}`
     ctx.textAlign = 'left'
-    ctx.fillText('TOP 토픽', PADDING, topicsY + 4)
+    ctx.textBaseline = 'alphabetic'
+    ctx.fillText('토픽별 정답률 TOP 3', PADDING, topicsY + SECTION_HEADER_OFFSET_Y)
 
-    const barStartX = PADDING + 80
+    const barStartX = PADDING + 180
     const barWidth = CARD_WIDTH - barStartX - PADDING
-    const barHeight = 20
-    const barSpacing = 30
+    const barHeight = 36
+    const barSpacing = 56
+    const firstBarY = topicsY + FIRST_BAR_OFFSET_Y
 
     for (let i = 0; i < topTopics.length; i++) {
       const topic = topTopics[i]
-      const y = topicsY + i * barSpacing
+      const y = firstBarY + i * barSpacing
 
-      // Topic label
+      // Topic label — vertically centered with bar
       ctx.fillStyle = '#4B5563'
-      ctx.font = `12px ${FONT_FAMILY}`
+      ctx.font = `24px ${FONT_FAMILY}`
       ctx.textAlign = 'left'
-      ctx.fillText(topic.label, PADDING, y + 14)
+      ctx.textBaseline = 'middle'
+      ctx.fillText(topic.label, PADDING, y + barHeight / 2)
 
       // Bar background
-      drawRoundedRect(ctx, barStartX, y, barWidth, barHeight, 4)
+      drawRoundedRect(ctx, barStartX, y, barWidth, barHeight, 8)
       ctx.fillStyle = '#F3F4F6'
       ctx.fill()
 
       // Bar fill
-      const fillWidth = Math.max((topic.accuracy / PERCENTAGE_MULTIPLIER) * barWidth, 8)
-      drawRoundedRect(ctx, barStartX, y, fillWidth, barHeight, 4)
-      ctx.fillStyle = '#3B82F6'
-      ctx.fill()
+      const fillWidth = topic.accuracy > 0
+        ? Math.max((topic.accuracy / PERCENTAGE_MULTIPLIER) * barWidth, 16)
+        : 0
+      if (fillWidth > 0) {
+        drawRoundedRect(ctx, barStartX, y, fillWidth, barHeight, 8)
+        ctx.fillStyle = '#3B82F6'
+        ctx.fill()
+      }
 
-      // Accuracy label on bar
-      ctx.fillStyle = topic.accuracy > 30 ? '#FFFFFF' : '#3B82F6'
-      ctx.font = `bold 10px ${FONT_FAMILY}`
-      ctx.textAlign = topic.accuracy > 30 ? 'right' : 'left'
-      const textX = topic.accuracy > 30 ? barStartX + fillWidth - 8 : barStartX + fillWidth + 6
-      ctx.fillText(`${topic.accuracy}%`, textX, y + 14)
+      // Accuracy label — vertically centered
+      ctx.font = `bold 20px ${FONT_FAMILY}`
+      ctx.textBaseline = 'middle'
+      const barCenterY = y + barHeight / 2
+      if (topic.accuracy === 0) {
+        ctx.fillStyle = '#9CA3AF'
+        ctx.textAlign = 'right'
+        ctx.fillText('0%', barStartX + barWidth - BAR_LABEL_GAP, barCenterY)
+      } else if (topic.accuracy > 30) {
+        ctx.fillStyle = '#FFFFFF'
+        ctx.textAlign = 'right'
+        ctx.fillText(`${topic.accuracy}%`, barStartX + fillWidth - BAR_LABEL_INSET, barCenterY)
+      } else {
+        ctx.fillStyle = '#3B82F6'
+        ctx.textAlign = 'left'
+        ctx.fillText(`${topic.accuracy}%`, barStartX + fillWidth + BAR_LABEL_GAP, barCenterY)
+      }
     }
   } else {
     ctx.fillStyle = '#D1D5DB'
-    ctx.font = `12px ${FONT_FAMILY}`
+    ctx.font = `24px ${FONT_FAMILY}`
     ctx.textAlign = 'center'
-    ctx.fillText('아직 학습한 토픽이 없습니다', CARD_WIDTH / 2, topicsY + 20)
+    ctx.textBaseline = 'alphabetic'
+    ctx.fillText('아직 학습한 토픽이 없습니다', CARD_WIDTH / 2, topicsY + 40)
   }
 
   // Footer
-  const footerY = CARD_HEIGHT - 20
+  const footerY = CARD_HEIGHT - 40
   ctx.fillStyle = '#D1D5DB'
-  ctx.font = `10px ${FONT_FAMILY}`
+  ctx.font = `20px ${FONT_FAMILY}`
   ctx.textAlign = 'right'
+  ctx.textBaseline = 'alphabetic'
   const today = new Date()
   const dateStr = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`
   ctx.fillText(`${dateStr} 기준`, CARD_WIDTH - PADDING, footerY)

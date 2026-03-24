@@ -64,8 +64,8 @@ describe('renderProgressCard', () => {
 
     renderProgressCard(canvas, makeCardData())
 
-    expect(canvas.width).toBe(600)
-    expect(canvas.height).toBe(400)
+    expect(canvas.width).toBe(1200)
+    expect(canvas.height).toBe(800)
   })
 
   it('draws DailyDev title', () => {
