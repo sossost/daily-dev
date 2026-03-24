@@ -82,27 +82,5 @@ export function DataProvider({
 }
 
 function DataProviderSkeleton() {
-  return (
-    <main className="max-w-lg mx-auto px-4 py-8">
-      <div className="animate-pulse">
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <div className="h-8 w-32 bg-gray-200 dark:bg-gray-700 rounded" />
-            <div className="h-4 w-48 bg-gray-200 dark:bg-gray-700 rounded mt-2" />
-          </div>
-          <div className="h-9 w-24 bg-gray-200 dark:bg-gray-700 rounded-lg" />
-        </div>
-        <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded-2xl mb-6" />
-        <div className="flex gap-4 mb-6">
-          <div className="flex-1 h-20 bg-gray-200 dark:bg-gray-700 rounded-xl" />
-          <div className="flex-1 h-20 bg-gray-200 dark:bg-gray-700 rounded-xl" />
-        </div>
-        <div className="space-y-3">
-          {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="h-14 bg-gray-200 dark:bg-gray-700 rounded-xl" />
-          ))}
-        </div>
-      </div>
-    </main>
-  );
+  return <main className="max-w-lg mx-auto px-4 py-8" />;
 }
