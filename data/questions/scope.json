@@ -330,5 +330,170 @@
     "correctIndex": 2,
     "explanation": "ES6 모듈은 파일 단위로 독립된 스코프를 생성합니다. 모듈 최상위에서 선언된 변수는 전역이 아닌 모듈 스코프에 속하며, export 키워드로 명시적으로 내보내지 않는 한 다른 모듈에서 접근할 수 없습니다. 이로써 전역 스코프 오염 문제를 근본적으로 해결합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Modules"
+  },
+  {
+    "id": "scope-021",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function foo(a) {\n  var a = 10;\n  console.log(a);\n}\nfoo(5);",
+    "options": [
+      "5",
+      "10",
+      "undefined",
+      "SyntaxError"
+    ],
+    "correctIndex": 1,
+    "explanation": "함수 매개변수와 동일한 이름의 var 변수를 선언하면, 같은 함수 스코프 내에서 동일 변수로 취급됩니다. var a의 호이스팅은 이미 존재하는 매개변수 a와 합쳐지고, 이후 a = 10 할당이 실행되어 최종적으로 10이 출력됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions#description"
+  },
+  {
+    "id": "scope-022",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "JavaScript의 스코프 체인(Scope Chain)에 대한 설명으로 올바른 것은?",
+    "options": [
+      "변수를 찾을 때 전역 스코프에서 시작하여 지역 스코프로 내려간다",
+      "변수를 찾을 때 현재 스코프에서 시작하여 상위 스코프로 올라간다",
+      "스코프 체인은 동적으로 호출 순서에 따라 결정된다",
+      "스코프 체인은 블록 스코프에서만 동작한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "스코프 체인은 변수를 참조할 때 현재 스코프에서 먼저 찾고, 없으면 바로 상위 스코프로 올라가며 탐색합니다. 이 과정은 전역 스코프에 도달할 때까지 반복되며, 전역에서도 찾지 못하면 ReferenceError가 발생합니다. 탐색 방향은 항상 안쪽에서 바깥쪽입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Scope"
+  },
+  {
+    "id": "scope-023",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "for (let i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}",
+    "options": [
+      "3, 3, 3",
+      "0, 1, 2",
+      "undefined, undefined, undefined",
+      "ReferenceError"
+    ],
+    "correctIndex": 1,
+    "explanation": "let은 블록 스코프를 가지므로 for 루프의 각 반복마다 새로운 i 바인딩이 생성됩니다. 각 setTimeout 콜백은 자신의 반복에서 생성된 고유한 i를 캡처합니다. 따라서 var를 사용한 경우(모두 3)와 달리 0, 1, 2가 순서대로 출력됩니다. 이것이 let이 루프에서 권장되는 핵심 이유입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/let#description"
+  },
+  {
+    "id": "scope-024",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 switch 문의 두 case가 변수 충돌로 SyntaxError를 발생시킵니다. 원인은 무엇인가요?",
+    "code": "switch (action) {\n  case 'add':\n    let result = x + y;\n    break;\n  case 'sub':\n    let result = x - y;\n    break;\n}",
+    "options": [
+      "switch 문 내에서 let을 사용할 수 없기 때문",
+      "case 절은 별도의 블록 스코프를 생성하지 않아 같은 스코프에서 result가 중복 선언되기 때문",
+      "break 문이 let 선언을 무효화하기 때문",
+      "switch 문에서는 const만 사용 가능하기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "switch 문의 case 절은 별도의 블록 스코프를 생성하지 않습니다. 모든 case가 하나의 switch 블록 스코프를 공유하므로, let result가 두 번 선언되어 SyntaxError가 발생합니다. 해결하려면 각 case를 중괄호({})로 감싸 독립적인 블록 스코프를 만들어야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/switch#lexical_scoping"
+  },
+  {
+    "id": "scope-025",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "다음 중 JavaScript에서 새로운 스코프를 생성하는 것은?",
+    "options": [
+      "if 문의 블록({})",
+      "for 루프의 블록({})",
+      "함수 선언",
+      "위 모두 새로운 스코프를 생성한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "ES6 이후 모든 블록({})은 let/const에 대해 블록 스코프를 생성합니다. if 문, for 루프, 함수 선언 모두 블록을 가지므로 새로운 스코프를 형성합니다. 다만 var는 함수 스코프만 인식하므로, var에 대해서는 함수 선언만 새로운 스코프를 생성합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/block"
+  },
+  {
+    "id": "scope-026",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function outer() {\n  let x = 10;\n  function middle() {\n    let y = 20;\n    function inner() {\n      let z = 30;\n      console.log(x + y + z);\n    }\n    inner();\n  }\n  middle();\n}\nouter();",
+    "options": [
+      "NaN",
+      "30",
+      "60",
+      "ReferenceError"
+    ],
+    "correctIndex": 2,
+    "explanation": "inner 함수는 스코프 체인을 통해 자신의 지역 변수 z(30), 상위 middle의 y(20), 그리고 outer의 x(10)에 모두 접근할 수 있습니다. 스코프 체인은 중첩 깊이에 관계없이 모든 상위 스코프의 변수를 참조할 수 있으므로, x + y + z = 10 + 20 + 30 = 60이 출력됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "scope-027",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "변수 섀도잉(Variable Shadowing)에 대한 설명으로 올바른 것은?",
+    "options": [
+      "하위 스코프에서 상위 스코프의 변수를 삭제하는 것이다",
+      "하위 스코프에서 상위 스코프와 동일한 이름의 변수를 선언하여 상위 변수에 대한 접근을 가리는 것이다",
+      "두 변수가 같은 메모리 주소를 공유하는 것이다",
+      "strict mode에서만 발생하는 현상이다"
+    ],
+    "correctIndex": 1,
+    "explanation": "변수 섀도잉은 하위 스코프에서 상위 스코프와 동일한 이름의 변수를 선언할 때 발생합니다. 하위 스코프에서는 자신의 변수만 참조하게 되어 상위 변수가 '가려집니다'. 상위 변수가 삭제되거나 변경되는 것이 아니라, 해당 스코프에서의 접근만 차단됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Scope"
+  },
+  {
+    "id": "scope-028",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 ReferenceError가 발생하는 이유는 무엇인가요?",
+    "code": "{\n  console.log(count);\n  let count = 0;\n}",
+    "options": [
+      "블록 안에서는 변수를 선언할 수 없기 때문",
+      "let 변수가 TDZ에 있어 선언문 이전에 접근할 수 없기 때문",
+      "count가 숫자 0으로 초기화되어 falsy하기 때문",
+      "블록 스코프 내에서는 console.log를 사용할 수 없기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "let으로 선언된 count는 블록 시작부터 선언문까지 TDZ(Temporal Dead Zone)에 놓입니다. console.log(count)는 선언문 이전이므로 TDZ 내에서 접근을 시도하게 되어 ReferenceError가 발생합니다. 블록 스코프 내에서도 TDZ 규칙은 동일하게 적용됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/let#temporal_dead_zone"
+  },
+  {
+    "id": "scope-029",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "try-catch 문의 catch 블록 스코프에 대한 설명으로 올바른 것은?",
+    "options": [
+      "catch의 에러 매개변수는 전역 스코프에 등록된다",
+      "catch 블록은 스코프를 생성하지 않는다",
+      "catch의 에러 매개변수는 catch 블록 내에서만 접근 가능하다",
+      "catch 블록 내의 var 변수도 catch 블록 스코프에 제한된다"
+    ],
+    "correctIndex": 2,
+    "explanation": "catch 블록의 에러 매개변수(예: catch(e)의 e)는 catch 블록 내에서만 접근할 수 있는 블록 스코프 변수입니다. 하지만 catch 블록 내에서 var로 선언한 변수는 함수 스코프를 따르므로 catch 블록 외부에서도 접근 가능합니다. let/const는 catch 블록에 제한됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/try...catch"
+  },
+  {
+    "id": "scope-030",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "strict mode('use strict')가 스코프 동작에 미치는 영향으로 올바른 것은?",
+    "options": [
+      "let과 const가 함수 스코프로 변경된다",
+      "모든 변수가 자동으로 전역 스코프에 등록된다",
+      "var의 호이스팅이 비활성화된다",
+      "선언 키워드 없이 변수에 값을 할당하면 ReferenceError가 발생한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "strict mode에서는 var, let, const 등의 선언 키워드 없이 변수에 값을 할당하면 암묵적 전역 변수가 생성되지 않고 ReferenceError가 발생합니다. 비엄격 모드에서는 선언 없이 x = 10이라고 쓰면 전역 변수가 되지만, strict mode는 이런 실수를 방지합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Strict_mode"
   }
 ]

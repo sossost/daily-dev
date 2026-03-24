@@ -137,7 +137,7 @@
 - promise.json — 20 questions
 - prototype.json — 20 questions
 - react-basics.json — 20 questions
-- scope.json — 20 questions
+- scope.json — 30 questions
 - this.json — 20 questions
 - type-coercion.json — 20 questions
 - typescript.json — 20 questions
