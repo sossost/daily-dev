@@ -3,8 +3,8 @@ import type { SessionAnswer } from '@/types'
 
 describe('formatDuration', () => {
   it('formats seconds only when under a minute', () => {
-    expect(formatDuration(5000)).toBe('5초')
-    expect(formatDuration(45000)).toBe('45초')
+    expect(formatDuration(5)).toBe('5초')
+    expect(formatDuration(45)).toBe('45초')
   })
 
   it('formats zero seconds', () => {
@@ -12,13 +12,8 @@ describe('formatDuration', () => {
   })
 
   it('formats minutes and seconds', () => {
-    expect(formatDuration(90000)).toBe('1분 30초')
-    expect(formatDuration(125000)).toBe('2분 5초')
-  })
-
-  it('rounds to nearest second', () => {
-    expect(formatDuration(5499)).toBe('5초')
-    expect(formatDuration(5500)).toBe('6초')
+    expect(formatDuration(90)).toBe('1분 30초')
+    expect(formatDuration(125)).toBe('2분 5초')
   })
 })
 

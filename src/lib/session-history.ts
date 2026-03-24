@@ -1,10 +1,8 @@
 import type { SessionAnswer, Topic } from '@/types'
 
-const MS_PER_SECOND = 1000
 const SECONDS_PER_MINUTE = 60
 
-export function formatDuration(ms: number): string {
-  const totalSeconds = Math.round(ms / MS_PER_SECOND)
+export function formatDuration(totalSeconds: number): string {
   const minutes = Math.floor(totalSeconds / SECONDS_PER_MINUTE)
   const seconds = totalSeconds % SECONDS_PER_MINUTE
 
