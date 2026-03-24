@@ -17,6 +17,7 @@ import { AccuracyTrendChart } from '@/components/stats/AccuracyTrendChart'
 import { WeakTopicsList } from '@/components/stats/WeakTopicsList'
 import { StatCard } from '@/components/stats/StatCard'
 import { TopicAccuracyBars } from '@/components/stats/TopicAccuracyBars'
+import { ShareProgressButton } from '@/components/stats/ShareProgressButton'
 
 export default function StatsPage() {
   const isHydrated = useHydration()
@@ -48,12 +49,22 @@ export default function StatsPage() {
         >
           <ArrowLeft size={20} className="text-gray-600 dark:text-gray-400" />
         </Link>
-        <div>
+        <div className="flex-1">
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">학습 통계</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             나의 학습 성과를 확인하세요
           </p>
         </div>
+        {totalSessions > 0 && (
+          <ShareProgressButton
+            overallAccuracy={overallAccuracy}
+            totalSessions={totalSessions}
+            currentStreak={currentStreak}
+            longestStreak={longestStreak}
+            totalAnswered={totalAnswered}
+            topicStats={topicStats}
+          />
+        )}
       </header>
 
       {totalSessions === 0 ? (

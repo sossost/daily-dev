@@ -17,6 +17,7 @@
 - `BAR_MAX_HEIGHT` = `120`
 - `PERCENTAGE_MULTIPLIER` = `100`
 - `ANIMATION_DELAY_STEP` = `0.05`
+- `FEEDBACK_DURATION_MS` = `2000`
 - `ANIMATION_DELAY_STEP` = `0.08`
 - `ANIMATION_DELAY_STEP` = `0.04`
 - `HIGH_ACCURACY` = `80`
@@ -25,6 +26,15 @@
 - `HYDRATION_TIMEOUT_MS` = `500`
 - `OPTION_COUNT` = `4`
 - `DIGIT_KEY_OFFSET` = `1`
+- `CARD_WIDTH` = `600`
+- `CARD_HEIGHT` = `400`
+- `PADDING` = `32`
+- `PERCENTAGE_MULTIPLIER` = `100`
+- `FULL_CIRCLE_DEGREES` = `360`
+- `ACCURACY_RING_RADIUS` = `44`
+- `ACCURACY_RING_LINE_WIDTH` = `8`
+- `MAX_TOP_TOPICS` = `3`
+- `FONT_FAMILY` = `'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'`
 - `MS_PER_SECOND` = `1000`
 - `SECONDS_PER_MINUTE` = `60`
 - `SCHEDULE_DAYS` = `14`
@@ -131,6 +141,13 @@
 - `countAvailableQuestions` (topics: readonly Topic[], difficulty: Difficulty | 'all',) → number — Count available questions matching the given filter options (ignoring SRS).
 - `PracticeSessionOptions`
 - *deps*: types, types, lib/questions, lib/session, lib/shuffle
+
+#### `progress-card.ts` — Progress card renderer — generates a shareable canvas image showing the user's learning progress summary.
+- `renderProgressCard` (canvas: HTMLCanvasElement, data: ProgressCardData,) → void
+- `downloadCanvasAsImage` (canvas: HTMLCanvasElement, filename: string) → void
+- `shareCanvasImage` (canvas: HTMLCanvasElement) → Promise<boolean>
+- `ProgressCardData`
+- *deps*: types, types
 
 #### `questions.ts` — Question loader — statically imports all topic JSON files at build time. Provides indexed access by ID and topic. No runtime I/O.
 - `getAllQuestions` () → Question[]
@@ -323,7 +340,7 @@
 ### src/app/stats/
 
 #### `page.tsx`
-- *deps*: stores/useProgressStore, hooks/useHydration, lib/stats, components/stats/AccuracyTrendChart, components/stats/WeakTopicsList, components/stats/StatCard, components/stats/TopicAccuracyBars
+- *deps*: stores/useProgressStore, hooks/useHydration, lib/stats, components/stats/AccuracyTrendChart, components/stats/WeakTopicsList, components/stats/StatCard, components/stats/TopicAccuracyBars, components/stats/ShareProgressButton
 
 ### src/components/history/
 
@@ -352,6 +369,10 @@
 #### `AccuracyTrendChart.tsx`
 - `AccuracyTrendChart` ({ trend }: AccuracyTrendChartProps)
 - *deps*: lib/stats
+
+#### `ShareProgressButton.tsx`
+- `ShareProgressButton` ({ overallAccuracy, totalSessions, currentStreak, longestStreak, totalAnswered, topicStats, }: ShareProgressButtonProps)
+- *deps*: types
 
 #### `StatCard.tsx`
 - `StatCard` ({ icon: Icon, label, value, subtext, index }: StatCardProps)

@@ -6,6 +6,7 @@
 
 ### Features
 
+- **feature**: Add SRS review schedule visualization (`54fb223`)
 - **content**: Add 5 network questions to reach 20 (`214c6d5`)
 - **harness**: set content agent target to 30-50 questions per topic (`5147ff0`)
 - **harness**: add dynamic context injection for self-sustaining agent decisions (`ea239c9`)
