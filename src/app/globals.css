@@ -2,6 +2,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Prevent overscroll bounce on mobile Chrome */
+html, body {
+  overscroll-behavior-y: none;
+}
+
 /* Prism.js Tomorrow Night theme */
 code[class*="language-"], pre[class*="language-"] {
   color: #ccc; background: none;
