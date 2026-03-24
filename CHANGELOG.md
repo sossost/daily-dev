@@ -6,6 +6,7 @@
 
 ### Features
 
+- **code**: Fix stale JavaScript text to 개발 (`143c313`)
 - **harness**: auto-detect stale copy text from actual topic scope (`c19f1a0`)
 - add OG meta tags, favicon, and result share button (`f72f962`)
 - **feature**: Add shareable progress card feature (`cb0e6ac`)
@@ -31,6 +32,7 @@
 
 ### Bug Fixes
 
+- progress card 2x resolution, layout fixes, and copy text (`098195a`)
 - resolve infinite loading in KakaoTalk in-app browser (`c900a6e`)
 
 ## 2026-03-23

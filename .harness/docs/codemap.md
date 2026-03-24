@@ -5,6 +5,7 @@
 ## Constants
 
 - `UPDATED_SESSION_KEY` = `'daily-dev-last-updated-session'`
+- `ANIMATION_DELAY_STEP` = `0.02`
 - `PERCENTAGE_MULTIPLIER` = `100`
 - `ANIMATION_DELAY_STEP` = `0.03`
 - `DISMISS_STORAGE_KEY` = `'daily-dev-keyboard-hint-dismissed'`
@@ -32,15 +33,21 @@
 - `SITE_DESCRIPTION` = `"매일 5분, 개발 핵심 개념을 학습하고 실력을 키워보세요."`
 - `SITE_TAGLINE` = `"매일 5분, 개발 핵심 개념 학습"`
 - `REPORT_TITLE` = `"개발 학습 리포트"`
-- `CARD_WIDTH` = `600`
-- `CARD_HEIGHT` = `400`
-- `PADDING` = `32`
+- `CARD_WIDTH` = `1200`
+- `CARD_HEIGHT` = `800`
+- `PADDING` = `64`
 - `PERCENTAGE_MULTIPLIER` = `100`
-- `FULL_CIRCLE_DEGREES` = `360`
-- `ACCURACY_RING_RADIUS` = `44`
-- `ACCURACY_RING_LINE_WIDTH` = `8`
+- `ACCURACY_RING_RADIUS` = `88`
+- `ACCURACY_RING_LINE_WIDTH` = `16`
 - `MAX_TOP_TOPICS` = `3`
 - `FONT_FAMILY` = `'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'`
+- `RING_LABEL_OFFSET_Y` = `28`
+- `STAT_VALUE_OFFSET_Y` = `44`
+- `STAT_SUBLABEL_OFFSET_Y` = `88`
+- `SECTION_HEADER_OFFSET_Y` = `8`
+- `FIRST_BAR_OFFSET_Y` = `32`
+- `BAR_LABEL_INSET` = `16`
+- `BAR_LABEL_GAP` = `12`
 - `MS_PER_SECOND` = `1000`
 - `SECONDS_PER_MINUTE` = `60`
 - `SCHEDULE_DAYS` = `14`
@@ -88,6 +95,16 @@
 ```
   mode: ThemeMode
   setMode: (mode: ThemeMode) => void
+```
+
+### TopicFilterState (`src/stores/useTopicFilterStore.ts`)
+```
+  readonly enabledTopics: readonly Topic[]
+  toggleTopic: (topic: Topic) => void
+  enableAll: () => void
+  disableAll: () => void
+  isEnabled: (topic: Topic) => boolean
+  isAllEnabled: () => boolean
 ```
 
 ## Data
@@ -182,9 +199,9 @@
 
 #### `session.ts` — Session generator — builds a quiz session using SRS (spaced repetition). Each session = up to 5 review questions (due today) + new questions to fill 10 total. Options are shuffled per question to prevent answer memorization.
 - `shuffleOptions` (question: Question) → Question — Shuffle the options of a question and remap the correctIndex. Returns a new Question with shuffled options.
-- `selectReviewQuestions` (srsRecords: Record<string, SRSRecord>, today: string,) → Question[] — Select questions due for review today, sorted by nextReview date (oldest first).
-- `selectNewQuestions` (srsRecords: Record<string, SRSRecord>,) → Question[] — Select new (unattempted) questions, ordered easy → medium → hard. Within the same difficulty, questions are shuffled randomly.
-- `generateSession` (srsRecords: Record<string, SRSRecord>,) → SessionQuestion[] — Generate a session of questions: up to SESSION_REVIEW_QUESTIONS reviews, filled with new questions to reach SESSION_TOTAL_QUESTIONS.
+- `selectReviewQuestions` (srsRecords: Record<string, SRSRecord>, today: string, topicFilter?: readonly Topic[],) → Question[] — Select questions due for review today, sorted by nextReview date (oldest first). When topicFilter is provided, only questions from those topics are included.
+- `selectNewQuestions` (srsRecords: Record<string, SRSRecord>, topicFilter?: readonly Topic[],) → Question[] — Select new (unattempted) questions, ordered easy → medium → hard. Within the same difficulty, questions are shuffled randomly. When topicFilter is provided, only questions from those topics are included.
+- `generateSession` (srsRecords: Record<string, SRSRecord>, topicFilter?: readonly Topic[],) → SessionQuestion[] — Generate a session of questions: up to SESSION_REVIEW_QUESTIONS reviews, filled with new questions to reach SESSION_TOTAL_QUESTIONS. When topicFilter is provided, only questions from those topics are included.
 - *deps*: types, types, lib/date, lib/questions, lib/shuffle
 
 #### `share.ts`
@@ -242,6 +259,10 @@
 - `resolveTheme` (mode: ThemeMode) → 'light' | 'dark'
 - `useThemeStore`
 
+#### `useTopicFilterStore.ts` — Topic filter store — controls which topics appear in SRS sessions. Persisted to localStorage so filter preferences survive across sessions. When all topics are enabled (default), the SRS session works as before.
+- `useTopicFilterStore`
+- *deps*: types
+
 ### src/app/
 
 #### `layout.tsx`
@@ -255,7 +276,7 @@
 ### src/app/session/
 
 #### `page.tsx`
-- *deps*: stores/useSessionStore, stores/useProgressStore, hooks/useHydration, hooks/useQuizKeyboard, lib/session, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
+- *deps*: types, stores/useSessionStore, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, hooks/useQuizKeyboard, lib/session, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
 
 ### src/app/session/result/
 
@@ -287,6 +308,11 @@
 
 #### `SessionStartCard.tsx`
 - `SessionStartCard` ()
+- *deps*: types, stores/useTopicFilterStore, components/dashboard/TopicFilterModal
+
+#### `TopicFilterModal.tsx`
+- `TopicFilterModal` ({ isOpen, onClose }: TopicFilterModalProps)
+- *deps*: types, stores/useTopicFilterStore
 
 #### `TopicProgressList.tsx`
 - `TopicProgressList` ({ topicStats }: TopicProgressListProps)
@@ -338,7 +364,7 @@
 
 #### `useHydration.ts` — Waits for all persisted Zustand stores to finish hydrating from storage. Falls back to default state after HYDRATION_TIMEOUT_MS if storage is blocked (e.g. KakaoTalk in-app browser, private browsing).
 - `useHydration` () → boolean
-- *deps*: stores/useProgressStore, stores/useSessionStore, stores/useThemeStore, stores/useBookmarkStore
+- *deps*: stores/useProgressStore, stores/useSessionStore, stores/useThemeStore, stores/useBookmarkStore, stores/useTopicFilterStore
 
 #### `useQuizKeyboard.ts` — Keyboard shortcuts for quiz sessions. - Press 1–4 to select an answer option - Press Enter or Space to advance to the next question (after answering)
 - `useQuizKeyboard` ({ isAnswered, onSelect, onNext, }: UseQuizKeyboardOptions) → void — Keyboard shortcuts for quiz sessions. - Press 1–4 to select an answer option - Press Enter or Space to advance to the next question (after answering)

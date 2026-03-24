@@ -14,6 +14,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 - Streak tracking for daily sessions
 - Keyboard shortcuts for navigation
 - Session history with past results
+- Topic filter for focused practice
 - Export/Import progress data
 - Bookmark questions for review
 

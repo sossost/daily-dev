@@ -8,12 +8,14 @@ import { useProgressStore } from '@/stores/useProgressStore'
 import { useSessionStore } from '@/stores/useSessionStore'
 import { useThemeStore } from '@/stores/useThemeStore'
 import { useBookmarkStore } from '@/stores/useBookmarkStore'
+import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
 
 const stores = [
   useProgressStore.persist,
   useSessionStore.persist,
   useThemeStore.persist,
   useBookmarkStore.persist,
+  useTopicFilterStore.persist,
 ]
 
 const HYDRATION_TIMEOUT_MS = 500

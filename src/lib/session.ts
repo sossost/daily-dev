@@ -3,7 +3,7 @@
  * Each session = up to 5 review questions (due today) + new questions to fill 10 total.
  * Options are shuffled per question to prevent answer memorization.
  */
-import type { Question, SessionQuestion, SRSRecord } from '@/types'
+import type { Question, SessionQuestion, SRSRecord, Topic } from '@/types'
 import { SESSION_TOTAL_QUESTIONS, SESSION_REVIEW_QUESTIONS } from '@/types'
 import { getToday, isBeforeOrEqual } from '@/lib/date'
 import { getAllQuestions } from '@/lib/questions'
@@ -35,13 +35,16 @@ export function shuffleOptions(question: Question): Question {
 
 /**
  * Select questions due for review today, sorted by nextReview date (oldest first).
+ * When topicFilter is provided, only questions from those topics are included.
  */
 export function selectReviewQuestions(
   srsRecords: Record<string, SRSRecord>,
   today: string,
+  topicFilter?: readonly Topic[],
 ): Question[] {
   const allQuestions = getAllQuestions()
   const questionsById = new Map(allQuestions.map((q) => [q.id, q]))
+  const topicSet = topicFilter != null ? new Set(topicFilter) : null
 
   const dueRecords = Object.values(srsRecords)
     .filter((record) => isBeforeOrEqual(record.nextReview, today))
@@ -50,7 +53,7 @@ export function selectReviewQuestions(
   const reviewQuestions: Question[] = []
   for (const record of dueRecords) {
     const question = questionsById.get(record.questionId)
-    if (question != null) {
+    if (question != null && (topicSet == null || topicSet.has(question.topic))) {
       reviewQuestions.push(question)
     }
   }
@@ -61,14 +64,19 @@ export function selectReviewQuestions(
 /**
  * Select new (unattempted) questions, ordered easy → medium → hard.
  * Within the same difficulty, questions are shuffled randomly.
+ * When topicFilter is provided, only questions from those topics are included.
  */
 export function selectNewQuestions(
   srsRecords: Record<string, SRSRecord>,
+  topicFilter?: readonly Topic[],
 ): Question[] {
   const allQuestions = getAllQuestions()
   const attemptedIds = new Set(Object.keys(srsRecords))
+  const topicSet = topicFilter != null ? new Set(topicFilter) : null
 
-  const unattempted = allQuestions.filter((q) => !attemptedIds.has(q.id))
+  const unattempted = allQuestions.filter(
+    (q) => !attemptedIds.has(q.id) && (topicSet == null || topicSet.has(q.topic)),
+  )
 
   const byDifficulty = new Map<string, Question[]>()
   for (const q of unattempted) {
@@ -83,17 +91,19 @@ export function selectNewQuestions(
 /**
  * Generate a session of questions: up to SESSION_REVIEW_QUESTIONS reviews,
  * filled with new questions to reach SESSION_TOTAL_QUESTIONS.
+ * When topicFilter is provided, only questions from those topics are included.
  */
 export function generateSession(
   srsRecords: Record<string, SRSRecord>,
+  topicFilter?: readonly Topic[],
 ): SessionQuestion[] {
   const today = getToday()
 
-  const reviewQuestions = selectReviewQuestions(srsRecords, today)
+  const reviewQuestions = selectReviewQuestions(srsRecords, today, topicFilter)
   const limitedReviews = reviewQuestions.slice(0, SESSION_REVIEW_QUESTIONS)
 
   const remainingCount = SESSION_TOTAL_QUESTIONS - limitedReviews.length
-  const newQuestions = selectNewQuestions(srsRecords).slice(0, remainingCount)
+  const newQuestions = selectNewQuestions(srsRecords, topicFilter).slice(0, remainingCount)
 
   const sessionQuestions: SessionQuestion[] = [
     ...limitedReviews.map((question) => ({

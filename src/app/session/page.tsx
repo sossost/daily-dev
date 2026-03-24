@@ -3,8 +3,10 @@
 import { useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { AnimatePresence } from 'framer-motion'
+import { TOPICS } from '@/types'
 import { useSessionStore } from '@/stores/useSessionStore'
 import { useProgressStore } from '@/stores/useProgressStore'
+import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
 import { useHydration } from '@/hooks/useHydration'
 import { useQuizKeyboard } from '@/hooks/useQuizKeyboard'
 import { generateSession } from '@/lib/session'
@@ -15,6 +17,7 @@ import { KeyboardHint } from '@/components/quiz/KeyboardHint'
 export default function SessionPage() {
   const router = useRouter()
   const srsRecords = useProgressStore((s) => s.srsRecords)
+  const enabledTopics = useTopicFilterStore((s) => s.enabledTopics)
   const isHydrated = useHydration()
 
   const questions = useSessionStore((s) => s.questions)
@@ -32,8 +35,9 @@ export default function SessionPage() {
     onNext: nextQuestion,
   })
 
+  const topicFilter = enabledTopics.length < TOPICS.length ? enabledTopics : undefined
   const sessionQuestions = useMemo(
-    () => generateSession(srsRecords),
+    () => generateSession(srsRecords, topicFilter),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
