@@ -11,13 +11,13 @@ HOOKS_DIR="${PROJECT_DIR}/.git/hooks"
 mkdir -p "${HOOKS_DIR}"
 
 # Protected pattern — MUST match run-agent.sh PROTECTED_PATTERN exactly
-PROTECTED_PATTERN='\.harness/|CLAUDE\.md|jest\.config\.ts|next\.config\.ts|tsconfig\.json|package\.json|^package-lock\.json$'
+PROTECTED_PATTERN='\.harness/(agents|scripts|launchd)/|CLAUDE\.md|jest\.config\.ts|next\.config\.ts|tsconfig\.json|package\.json|^package-lock\.json$'
 
 cat > "${HOOKS_DIR}/pre-commit" << 'HOOKEOF'
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROTECTED_PATTERN='\.harness/|CLAUDE\.md|jest\.config\.ts|next\.config\.ts|tsconfig\.json|package\.json|^package-lock\.json$'
+PROTECTED_PATTERN='\.harness/(agents|scripts|launchd)/|CLAUDE\.md|jest\.config\.ts|next\.config\.ts|tsconfig\.json|package\.json|^package-lock\.json$'
 
 staged_files="$(git diff --cached --name-only 2>/dev/null || echo "")"
 
