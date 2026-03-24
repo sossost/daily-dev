@@ -23,6 +23,7 @@ const TOPIC_COLORS: Record<Topic, string> = {
   'design-patterns': 'bg-yellow-500',
   network: 'bg-slate-500',
   algorithms: 'bg-purple-500',
+  nodejs: 'bg-green-500',
 }
 
 const PERCENTAGE_MULTIPLIER = 100

@@ -17,6 +17,7 @@ export const TOPICS = [
   'design-patterns',
   'network',
   'algorithms',
+  'nodejs',
 ] as const
 
 export type Topic = (typeof TOPICS)[number]
@@ -40,6 +41,7 @@ export const TOPIC_LABELS: Record<Topic, string> = {
   'design-patterns': '디자인 패턴',
   network: '네트워크',
   algorithms: '알고리즘',
+  nodejs: 'Node.js',
 }
 
 // Category definitions
@@ -102,6 +104,13 @@ export const CATEGORIES: readonly CategoryDefinition[] = [
     icon: '🌍',
     topics: ['network'],
     positions: ['frontend', 'backend', 'fullstack', 'devops'],
+  },
+  {
+    id: 'backend',
+    label: 'Backend',
+    icon: '🖥️',
+    topics: ['nodejs'],
+    positions: ['backend', 'fullstack'],
   },
 ] as const
 

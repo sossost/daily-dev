@@ -8,6 +8,7 @@
 - `LOCAL_STORAGE_PROGRESS_KEY` = `"daily-dev-progress"`
 - `ANIMATION_DELAY_STEP` = `0.02`
 - `PERCENTAGE_MULTIPLIER` = `100`
+- `PERCENTAGE_MULTIPLIER` = `100`
 - `ANIMATION_DELAY_STEP` = `0.03`
 - `DISMISS_STORAGE_KEY` = `'daily-dev-keyboard-hint-dismissed'`
 - `HINT_DISPLAY_COUNT_KEY` = `'daily-dev-keyboard-hint-count'`
@@ -85,7 +86,7 @@
 
 ### ProgressState (`src/stores/useProgressStore.ts`)
 ```
-  updateAfterSession: (answers: SessionAnswer[]) => void
+  updateAfterSession: (answers: SessionAnswer[]) => Promise<void>
   reset: () => void
 ```
 
@@ -114,6 +115,7 @@
 ```
   readonly enabledTopics: readonly Topic[]
   toggleTopic: (topic: Topic) => void
+  toggleCategory: (topics: readonly Topic[]) => void
   enableAll: () => void
   disableAll: () => void
   isEnabled: (topic: Topic) => boolean
@@ -131,6 +133,7 @@
 - dom-manipulation.json — 20 questions
 - event-loop.json — 20 questions
 - network.json — 20 questions
+- nodejs.json — 20 questions
 - promise.json — 20 questions
 - prototype.json — 20 questions
 - react-basics.json — 20 questions
@@ -147,12 +150,16 @@
 #### `index.ts`
 - `TOPICS`
 - `TOPIC_LABELS` Record<Topic, string>
+- `CATEGORIES` readonly CategoryDefinition[]
+- `CATEGORIES_WITH_FALLBACK` readonly CategoryDefinition[] — CATEGORIES with uncategorized topics appended as "기타" if any exist.
 - `DEFAULT_SRS_RECORD` Omit<SRSRecord, 'questionId' | 'nextReview' | 'lastReview'>
 - `DEFAULT_USER_PROGRESS` UserProgress
 - `SESSION_TOTAL_QUESTIONS`
 - `SESSION_REVIEW_QUESTIONS`
 - `SESSION_NEW_QUESTIONS`
 - `Topic`
+- `Position`
+- `CategoryDefinition`
 - `QuestionType`
 - `Difficulty`
 - `Question`
@@ -283,7 +290,7 @@
 #### `layout.tsx`
 - `metadata` Metadata
 - `viewport` Viewport
-- *deps*: components/ErrorBoundary, components/SentryProvider, components/ToastProvider, components/DataProvider, lib/supabase/getUserId, lib/supabase/loadUserData, lib/constants
+- *deps*: components/ErrorBoundary, components/SentryProvider, components/ToastProvider, components/DataProvider, components/ScrollToTop, lib/supabase/getUserId, lib/supabase/loadUserData, lib/constants
 
 #### `loading.tsx`
 
@@ -295,7 +302,6 @@
 #### `loading.tsx`
 
 #### `page.tsx`
-- *deps*: types, stores/useSessionStore, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, hooks/useQuizKeyboard, lib/session, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
 
 ### src/app/session/result/
 
@@ -327,6 +333,9 @@
 #### `LoginModal.tsx`
 - `LoginModal` ({ isOpen, onClose, onGoogle, onGitHub, }: LoginModalProps)
 
+#### `ScrollToTop.tsx`
+- `ScrollToTop` ()
+
 #### `SentryProvider.tsx`
 - `SentryProvider` ({ children }: { children: React.ReactNode })
 - *deps*: lib/sentry
@@ -346,11 +355,11 @@
 
 #### `TopicFilterModal.tsx`
 - `TopicFilterModal` ({ isOpen, onClose }: TopicFilterModalProps)
-- *deps*: types, stores/useTopicFilterStore
+- *deps*: types, stores/useTopicFilterStore, components/common/CategoryAccordion
 
 #### `TopicProgressList.tsx`
 - `TopicProgressList` ({ topicStats }: TopicProgressListProps)
-- *deps*: types, types, lib/questions
+- *deps*: types, types, lib/questions, components/common/CategoryAccordion
 
 ### src/components/quiz/
 
@@ -377,6 +386,9 @@
 - `QuizCard` ({ sessionQuestion, selectedIndex, isAnswered, onSelect, }: QuizCardProps)
 - `NextButton` ({ isAnswered, isLast, onNext, }: { isAnswered: boolean isLast: boolean onNext: ()
 - *deps*: types, types, components/quiz/CodeBlock, components/quiz/OptionList, components/quiz/Explanation, components/quiz/BookmarkButton
+
+#### `SessionContent.tsx`
+- *deps*: types, stores/useSessionStore, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, hooks/useQuizKeyboard, lib/session, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
 
 ### src/components/result/
 
@@ -456,6 +468,12 @@
 #### `page.tsx`
 - *deps*: stores/useProgressStore, hooks/useHydration, lib/stats, components/stats/AccuracyTrendChart, components/stats/WeakTopicsList, components/stats/StatCard, components/stats/TopicAccuracyBars, components/stats/ShareProgressButton
 
+### src/components/common/
+
+#### `CategoryAccordion.tsx`
+- `CategoryAccordion` ({ category, defaultOpen = true, headerRight, children, }: CategoryAccordionProps)
+- *deps*: types
+
 ### src/components/history/
 
 #### `SessionHistoryCard.tsx`
@@ -465,8 +483,8 @@
 ### src/components/practice/
 
 #### `TopicSelector.tsx`
-- `TopicSelector` ({ selectedTopics, difficulty, onToggleTopic, onSelectAll, onDeselectAll, onDifficultyChange, }: TopicSelectorProps)
-- *deps*: types, lib/questions
+- `TopicSelector` ({ selectedTopics, difficulty, onToggleTopic, onToggleCategory, onSelectAll, onDeselectAll, onDifficultyChange, }: TopicSelectorProps)
+- *deps*: types, lib/questions, components/common/CategoryAccordion
 
 ### src/components/schedule/
 

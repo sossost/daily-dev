@@ -6,6 +6,9 @@
 
 ### Features
 
+- add topic category system with accordion grouping (`4ac67a6`)
+- **code**: Add tests, fix bug, improve a11y (`4e2f086`)
+- scroll to top on page navigation (`10fd318`)
 - add loading.tsx skeletons for instant page transitions (`51bc420`)
 - add Supabase auth with Google/GitHub login and data sync (`c9aad07`)
 - **feature**: Add retry wrong answers button (`57ef0bb`)
@@ -38,6 +41,8 @@
 
 ### Bug Fixes
 
+- improve session page loading skeleton UX (`977498a`)
+- improve page transition UX and session state management (`b98198f`)
 - use --no-verify in runner commit to bypass hook for codemap.md (`0974de1`)
 - progress card 2x resolution, layout fixes, and copy text (`098195a`)
 - resolve infinite loading in KakaoTalk in-app browser (`c900a6e`)
