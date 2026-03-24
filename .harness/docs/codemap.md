@@ -10,6 +10,10 @@
 - `HINT_DISPLAY_COUNT_KEY` = `'daily-dev-keyboard-hint-count'`
 - `MAX_DISPLAY_COUNT` = `3`
 - `ANIMATION_DELAY_STEP` = `0.05`
+- `ANIMATION_DELAY_STEP` = `0.04`
+- `BAR_MAX_HEIGHT` = `100`
+- `PERCENTAGE_MULTIPLIER` = `100`
+- `ANIMATION_DELAY_STEP` = `0.05`
 - `BAR_MAX_HEIGHT` = `120`
 - `PERCENTAGE_MULTIPLIER` = `100`
 - `ANIMATION_DELAY_STEP` = `0.05`
@@ -23,6 +27,9 @@
 - `DIGIT_KEY_OFFSET` = `1`
 - `MS_PER_SECOND` = `1000`
 - `SECONDS_PER_MINUTE` = `60`
+- `SCHEDULE_DAYS` = `14`
+- `PERCENTAGE_MULTIPLIER` = `100`
+- `MASTERED_INTERVAL_THRESHOLD` = `21`
 - `MIN_EASINESS_FACTOR` = `1.3`
 - `PERCENTAGE_MULTIPLIER` = `100`
 - `RECENT_SESSIONS_LIMIT` = `10`
@@ -152,6 +159,15 @@
 
 #### `shuffle.ts` — Fisher-Yates shuffle algorithm. Returns a new shuffled array without mutating the original.
 - `shuffle` (array: readonly T[]) → T[] — Fisher-Yates shuffle algorithm. Returns a new shuffled array without mutating the original.
+
+#### `srs-schedule.ts` — SRS schedule utilities — compute upcoming review distribution from SRS records for visualization.
+- `getUpcomingReviews` (srsRecords: Record<string, SRSRecord>,) → readonly DayReviewCount[] — Get the number of reviews due each day for the next SCHEDULE_DAYS days.
+- `getDueByTopic` (srsRecords: Record<string, SRSRecord>,) → readonly TopicReviewCount[] — Get review counts grouped by topic for questions due today or overdue.
+- `getScheduleSummary` (srsRecords: Record<string, SRSRecord>,) → ScheduleSummary — Compute summary statistics for the SRS schedule.
+- `DayReviewCount`
+- `TopicReviewCount`
+- `ScheduleSummary`
+- *deps*: types, types, lib/date, lib/questions
 
 #### `srs.ts` — SM-2 spaced repetition algorithm. Calculates the next review state based on whether the answer was correct.
 - `calculateSRS` (current: SRSRecord, isCorrect: boolean, today: string,) → SRSRecord — SM-2 spaced repetition algorithm. Calculates the next review state based on whether the answer was correct.
@@ -299,6 +315,11 @@
 #### `page.tsx`
 - *deps*: types, stores/useSessionStore, stores/useProgressStore, hooks/useHydration, hooks/useQuizKeyboard, lib/practice-session, components/practice/TopicSelector, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
 
+### src/app/schedule/
+
+#### `page.tsx`
+- *deps*: stores/useProgressStore, hooks/useHydration, lib/srs-schedule, components/stats/StatCard, components/schedule/ReviewTimeline, components/schedule/TopicDueList
+
 ### src/app/stats/
 
 #### `page.tsx`
@@ -315,6 +336,16 @@
 #### `TopicSelector.tsx`
 - `TopicSelector` ({ selectedTopics, difficulty, onToggleTopic, onSelectAll, onDeselectAll, onDifficultyChange, }: TopicSelectorProps)
 - *deps*: types, lib/questions
+
+### src/components/schedule/
+
+#### `ReviewTimeline.tsx`
+- `ReviewTimeline` ({ reviews }: ReviewTimelineProps)
+- *deps*: lib/srs-schedule
+
+#### `TopicDueList.tsx`
+- `TopicDueList` ({ topics }: TopicDueListProps)
+- *deps*: lib/srs-schedule
 
 ### src/components/stats/
 
