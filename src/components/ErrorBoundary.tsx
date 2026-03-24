@@ -54,12 +54,14 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="flex flex-col gap-3">
             <button
               onClick={this.handleReset}
+              aria-label="다시 시도"
               className="w-full py-3 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors"
             >
               다시 시도
             </button>
             <button
               onClick={this.handleClearData}
+              aria-label="데이터 초기화"
               className="w-full py-3 rounded-xl bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
             >
               데이터 초기화

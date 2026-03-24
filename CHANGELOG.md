@@ -6,6 +6,7 @@
 
 ### Features
 
+- **feature**: Add topic filter for SRS sessions (`b008fce`)
 - **code**: Fix stale JavaScript text to 개발 (`143c313`)
 - **harness**: auto-detect stale copy text from actual topic scope (`c19f1a0`)
 - add OG meta tags, favicon, and result share button (`f72f962`)

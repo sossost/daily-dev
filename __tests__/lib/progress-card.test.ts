@@ -144,6 +144,34 @@ describe('renderProgressCard', () => {
 
     expect(() => renderProgressCard(canvas, makeCardData())).not.toThrow()
   })
+
+  it('renders accuracy label outside bar when accuracy is between 1 and 30', () => {
+    const ctx = createMockContext()
+    const canvas = createMockCanvas(ctx)
+
+    renderProgressCard(canvas, makeCardData({
+      topicStats: makeTopicStats({
+        scope: { totalAnswered: 10, correctAnswers: 2, accuracy: 20 },
+      }),
+    }))
+
+    const calls = (ctx.fillText as jest.Mock).mock.calls.map((c: unknown[]) => c[0])
+    expect(calls).toContain('20%')
+  })
+
+  it('renders 0% label for topic with zero accuracy', () => {
+    const ctx = createMockContext()
+    const canvas = createMockCanvas(ctx)
+
+    renderProgressCard(canvas, makeCardData({
+      topicStats: makeTopicStats({
+        scope: { totalAnswered: 10, correctAnswers: 0, accuracy: 0 },
+      }),
+    }))
+
+    const calls = (ctx.fillText as jest.Mock).mock.calls.map((c: unknown[]) => c[0])
+    expect(calls).toContain('0%')
+  })
 })
 
 describe('downloadCanvasAsImage', () => {
@@ -172,5 +200,93 @@ describe('shareCanvasImage', () => {
     const result = await shareCanvasImage(canvas)
 
     expect(result).toBe(false)
+  })
+
+  it('returns true when share succeeds', async () => {
+    const ctx = createMockContext()
+    const canvas = createMockCanvas(ctx)
+
+    const mockShare = jest.fn().mockResolvedValue(undefined)
+    const mockCanShare = jest.fn().mockReturnValue(true)
+    Object.defineProperty(navigator, 'share', { value: mockShare, writable: true, configurable: true })
+    Object.defineProperty(navigator, 'canShare', { value: mockCanShare, writable: true, configurable: true })
+
+    const mockBlob = new Blob(['test'], { type: 'image/png' })
+    jest.spyOn(canvas, 'toBlob').mockImplementation((callback) => {
+      callback(mockBlob)
+    })
+
+    const result = await shareCanvasImage(canvas)
+
+    expect(result).toBe(true)
+    expect(mockShare).toHaveBeenCalled()
+
+    Object.defineProperty(navigator, 'share', { value: undefined, writable: true, configurable: true })
+    Object.defineProperty(navigator, 'canShare', { value: undefined, writable: true, configurable: true })
+  })
+
+  it('returns false when canShare returns false', async () => {
+    const ctx = createMockContext()
+    const canvas = createMockCanvas(ctx)
+
+    const mockShare = jest.fn()
+    const mockCanShare = jest.fn().mockReturnValue(false)
+    Object.defineProperty(navigator, 'share', { value: mockShare, writable: true, configurable: true })
+    Object.defineProperty(navigator, 'canShare', { value: mockCanShare, writable: true, configurable: true })
+
+    const mockBlob = new Blob(['test'], { type: 'image/png' })
+    jest.spyOn(canvas, 'toBlob').mockImplementation((callback) => {
+      callback(mockBlob)
+    })
+
+    const result = await shareCanvasImage(canvas)
+
+    expect(result).toBe(false)
+
+    Object.defineProperty(navigator, 'share', { value: undefined, writable: true, configurable: true })
+    Object.defineProperty(navigator, 'canShare', { value: undefined, writable: true, configurable: true })
+  })
+
+  it('returns false when toBlob produces null', async () => {
+    const ctx = createMockContext()
+    const canvas = createMockCanvas(ctx)
+
+    const mockShare = jest.fn()
+    const mockCanShare = jest.fn()
+    Object.defineProperty(navigator, 'share', { value: mockShare, writable: true, configurable: true })
+    Object.defineProperty(navigator, 'canShare', { value: mockCanShare, writable: true, configurable: true })
+
+    jest.spyOn(canvas, 'toBlob').mockImplementation((callback) => {
+      callback(null)
+    })
+
+    const result = await shareCanvasImage(canvas)
+
+    expect(result).toBe(false)
+
+    Object.defineProperty(navigator, 'share', { value: undefined, writable: true, configurable: true })
+    Object.defineProperty(navigator, 'canShare', { value: undefined, writable: true, configurable: true })
+  })
+
+  it('returns false when share rejects', async () => {
+    const ctx = createMockContext()
+    const canvas = createMockCanvas(ctx)
+
+    const mockShare = jest.fn().mockRejectedValue(new Error('User cancelled'))
+    const mockCanShare = jest.fn().mockReturnValue(true)
+    Object.defineProperty(navigator, 'share', { value: mockShare, writable: true, configurable: true })
+    Object.defineProperty(navigator, 'canShare', { value: mockCanShare, writable: true, configurable: true })
+
+    const mockBlob = new Blob(['test'], { type: 'image/png' })
+    jest.spyOn(canvas, 'toBlob').mockImplementation((callback) => {
+      callback(mockBlob)
+    })
+
+    const result = await shareCanvasImage(canvas)
+
+    expect(result).toBe(false)
+
+    Object.defineProperty(navigator, 'share', { value: undefined, writable: true, configurable: true })
+    Object.defineProperty(navigator, 'canShare', { value: undefined, writable: true, configurable: true })
   })
 })

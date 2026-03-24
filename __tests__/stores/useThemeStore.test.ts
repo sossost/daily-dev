@@ -38,6 +38,14 @@ describe('resolveTheme', () => {
 
     expect(resolveTheme('system')).toBe('dark')
   })
+
+  it('returns "light" for system mode when matchMedia throws', () => {
+    ;(window.matchMedia as jest.Mock).mockImplementation(() => {
+      throw new Error('matchMedia not supported')
+    })
+
+    expect(resolveTheme('system')).toBe('light')
+  })
 })
 
 describe('useThemeStore', () => {

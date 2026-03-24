@@ -100,6 +100,7 @@ export function NextButton({
       <div className="max-w-lg mx-auto">
         <button
           onClick={onNext}
+          aria-label={isLast ? '결과 보기' : '다음 문제'}
           className="w-full py-3 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 active:scale-[0.98] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
         >
           {isLast ? '결과 보기' : '다음 문제'}
