@@ -3,6 +3,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SentryProvider } from "@/components/SentryProvider";
 import { ToastProvider } from "@/components/ToastProvider";
 import { DataProvider } from "@/components/DataProvider";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { getUserId } from "@/lib/supabase/getUserId";
 import { loadServerUserData } from "@/lib/supabase/loadUserData";
 import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION } from "@/lib/constants";
@@ -78,6 +79,7 @@ export default async function RootLayout({
       <body className="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen antialiased transition-colors">
         <SentryProvider>
           <ErrorBoundary>
+            <ScrollToTop />
             <DataProvider userId={userId} isAuthenticated={isAuthenticated} initialData={initialData}>
               <main className="max-w-lg mx-auto px-4 py-8">{children}</main>
               <ToastProvider />
