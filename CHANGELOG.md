@@ -6,6 +6,7 @@
 
 ### Features
 
+- **expansion**: Add nodejs topic with 20 questions (`1f3393e`)
 - add topic category system with accordion grouping (`4ac67a6`)
 - **code**: Add tests, fix bug, improve a11y (`4e2f086`)
 - scroll to top on page navigation (`10fd318`)
