@@ -496,6 +496,33 @@ describe('useProgressStore', () => {
     })
   })
 
+  describe('reset', () => {
+    it('resets all state to defaults after a session', () => {
+      act(() => {
+        useProgressStore.getState().updateAfterSession([
+          createAnswer({ questionId: 'scope-001', isCorrect: true }),
+        ])
+      })
+
+      // Verify state changed
+      expect(useProgressStore.getState().totalSessions).toBe(1)
+
+      act(() => {
+        useProgressStore.getState().reset()
+      })
+
+      const state = useProgressStore.getState()
+      expect(state.totalSessions).toBe(0)
+      expect(state.totalCorrect).toBe(0)
+      expect(state.totalAnswered).toBe(0)
+      expect(state.currentStreak).toBe(0)
+      expect(state.longestStreak).toBe(0)
+      expect(state.lastSessionDate).toBeNull()
+      expect(state.srsRecords).toEqual({})
+      expect(state.sessions).toEqual([])
+    })
+  })
+
   describe('persist merge — backward compatibility', () => {
     it('merges persisted topic stats with current defaults', () => {
       // Simulate persisted state that might be missing new topics

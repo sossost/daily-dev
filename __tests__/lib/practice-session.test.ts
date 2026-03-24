@@ -5,15 +5,15 @@ import {
 } from '@/lib/practice-session'
 import type { SRSRecord } from '@/types'
 import { SESSION_TOTAL_QUESTIONS } from '@/types'
+import { getTopicQuestionCounts } from '@/lib/questions'
 
 describe('countAvailableQuestions', () => {
   it('returns count for all topics and all difficulties', () => {
-    const count = countAvailableQuestions(
-      ['scope', 'closure', 'prototype'],
-      'all',
-    )
-    // Each topic has 20 questions = 60 total
-    expect(count).toBe(60)
+    const topics = ['scope', 'closure', 'prototype'] as const
+    const count = countAvailableQuestions(topics, 'all')
+    const topicCounts = getTopicQuestionCounts()
+    const expectedTotal = topics.reduce((sum, t) => sum + topicCounts[t], 0)
+    expect(count).toBe(expectedTotal)
   })
 
   it('returns count filtered by difficulty', () => {

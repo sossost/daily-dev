@@ -6,6 +6,9 @@
 
 ### Features
 
+- add loading.tsx skeletons for instant page transitions (`51bc420`)
+- add Supabase auth with Google/GitHub login and data sync (`c9aad07`)
+- **feature**: Add retry wrong answers button (`57ef0bb`)
 - **expansion**: Add algorithms topic with 20 questions (`01a2ab5`)
 - **code**: Accessibility and test coverage improvements (`81a1efa`)
 - **feature**: Add topic filter for SRS sessions (`b008fce`)
@@ -35,8 +38,13 @@
 
 ### Bug Fixes
 
+- use --no-verify in runner commit to bypass hook for codemap.md (`0974de1`)
 - progress card 2x resolution, layout fixes, and copy text (`098195a`)
 - resolve infinite loading in KakaoTalk in-app browser (`c900a6e`)
+
+### Chores
+
+- add validation fix retry and change interval to 1h (`de36029`)
 
 ## 2026-03-23
 

@@ -5,6 +5,7 @@
 ## Constants
 
 - `UPDATED_SESSION_KEY` = `'daily-dev-last-updated-session'`
+- `LOCAL_STORAGE_PROGRESS_KEY` = `"daily-dev-progress"`
 - `ANIMATION_DELAY_STEP` = `0.02`
 - `PERCENTAGE_MULTIPLIER` = `100`
 - `ANIMATION_DELAY_STEP` = `0.03`
@@ -12,6 +13,9 @@
 - `HINT_DISPLAY_COUNT_KEY` = `'daily-dev-keyboard-hint-count'`
 - `MAX_DISPLAY_COUNT` = `3`
 - `ANIMATION_DELAY_STEP` = `0.05`
+- `DISMISS_KEY` = `'daily-dev-login-nudge-dismissed'`
+- `COUNT_KEY` = `'daily-dev-login-nudge-count'`
+- `MAX_DISPLAY_COUNT` = `3`
 - `ANIMATION_DELAY_STEP` = `0.04`
 - `BAR_MAX_HEIGHT` = `100`
 - `PERCENTAGE_MULTIPLIER` = `100`
@@ -58,22 +62,31 @@
 - `RECENT_SESSIONS_LIMIT` = `10`
 - `WEAK_TOPIC_THRESHOLD` = `70`
 - `MIN_ATTEMPTS_FOR_WEAK` = `1`
+- `DEBOUNCE_MS` = `300`
 - `SESSION_TOTAL_QUESTIONS` = `10`
 - `SESSION_REVIEW_QUESTIONS` = `5`
 - `SESSION_NEW_QUESTIONS` = `5`
 
 ## Store Interfaces
 
+### AuthState (`src/hooks/useAuth.ts`)
+```
+  user: User | null;
+  isLoading: boolean;
+```
+
 ### BookmarkState (`src/stores/useBookmarkStore.ts`)
 ```
   bookmarkedIds: readonly string[]
   toggleBookmark: (questionId: string) => void
   isBookmarked: (questionId: string) => boolean
+  reset: () => void
 ```
 
 ### ProgressState (`src/stores/useProgressStore.ts`)
 ```
   updateAfterSession: (answers: SessionAnswer[]) => void
+  reset: () => void
 ```
 
 ### SessionState (`src/stores/useSessionStore.ts`)
@@ -111,7 +124,7 @@
 
 - algorithms.json — 20 questions
 - async.json — 20 questions
-- closure.json — 20 questions
+- closure.json — 30 questions
 - css-layout.json — 20 questions
 - data-structures.json — 20 questions
 - design-patterns.json — 20 questions
@@ -245,14 +258,15 @@
 
 ### src/stores/
 
-#### `useBookmarkStore.ts` — Bookmark store — tracks bookmarked question IDs. Persisted to localStorage so bookmarks survive across sessions.
+#### `useBookmarkStore.ts` — Bookmark store — tracks bookmarked question IDs. No localStorage persist — data is loaded from Supabase via server injection.
 - `useBookmarkStore`
+- *deps*: lib/supabase/currentUser, lib/supabase/syncBookmark
 
-#### `useProgressStore.ts` — Progress store — persistent user learning data. Stores SRS records, topic accuracy stats, streak counts, and session history. Persisted to localStorage (permanent across sessions). updateAfterSession() recalculates SRS intervals, topic stats, and streaks.
+#### `useProgressStore.ts` — Progress store — user learning data. No localStorage persist — data is loaded from Supabase via server injection. Zustand serves as an in-memory cache only. updateAfterSession() recalculates SRS intervals, topic stats, and streaks.
 - `useProgressStore`
-- *deps*: types, types, lib/srs, lib/date
+- *deps*: types, types, lib/srs, lib/date, lib/supabase/currentUser, lib/supabase/syncSession
 
-#### `useSessionStore.ts` — Session store — manages the active quiz session. Tracks current question index, user answers, and completion state. Persisted to sessionStorage (survives refresh, clears on tab close).
+#### `useSessionStore.ts` — Session store — manages the active quiz session. Tracks current question index, user answers, and completion state. In-memory only — session is lost on refresh (by design).
 - `useSessionStore`
 - *deps*: types
 
@@ -269,30 +283,49 @@
 #### `layout.tsx`
 - `metadata` Metadata
 - `viewport` Viewport
-- *deps*: components/ErrorBoundary, components/SentryProvider, components/ToastProvider, lib/constants
+- *deps*: components/ErrorBoundary, components/SentryProvider, components/ToastProvider, components/DataProvider, lib/supabase/getUserId, lib/supabase/loadUserData, lib/constants
+
+#### `loading.tsx`
 
 #### `page.tsx`
-- *deps*: stores/useProgressStore, stores/useBookmarkStore, hooks/useHydration, components/dashboard/SessionStartCard, components/dashboard/TopicProgressList, components/ThemeToggle, lib/constants
+- *deps*: stores/useProgressStore, stores/useBookmarkStore, components/dashboard/SessionStartCard, components/dashboard/TopicProgressList, components/ThemeToggle, components/AuthButton, lib/constants
 
 ### src/app/session/
+
+#### `loading.tsx`
 
 #### `page.tsx`
 - *deps*: types, stores/useSessionStore, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, hooks/useQuizKeyboard, lib/session, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
 
 ### src/app/session/result/
 
+#### `loading.tsx`
+
 #### `page.tsx`
-- *deps*: stores/useSessionStore, stores/useProgressStore, hooks/useHydration, components/result/ResultSummary, components/result/ReviewSchedule, components/result/AnswerReviewList, components/result/ShareButton, components/result/RetryWrongButton
+- *deps*: stores/useSessionStore, stores/useProgressStore, hooks/useHydration, components/result/ResultSummary, components/result/ReviewSchedule, components/result/AnswerReviewList, components/result/ShareButton, components/result/RetryWrongButton, components/result/LoginNudge
 
 ### src/app/topics/
+
+#### `loading.tsx`
 
 #### `page.tsx`
 - *deps*: stores/useProgressStore, components/dashboard/TopicProgressList
 
 ### src/components/
 
+#### `AuthButton.tsx`
+- `AuthButton` ()
+- *deps*: hooks/useAuth, lib/supabase/currentUser, components/LoginModal
+
+#### `DataProvider.tsx` — Injects server-fetched user data into Zustand stores. Defers child rendering until client-side injection is complete, preventing flash of default values during hydration.
+- `DataProvider` ({ userId, isAuthenticated, initialData, children, }: DataProviderProps) — Injects server-fetched user data into Zustand stores. Defers child rendering until client-side injection is complete, preventing flash of default values during hydration.
+- *deps*: stores/useProgressStore, stores/useBookmarkStore, lib/supabase/currentUser, lib/supabase/migrate, lib/supabase/loadUserData
+
 #### `ErrorBoundary.tsx`
 - *deps*: lib/sentry
+
+#### `LoginModal.tsx`
+- `LoginModal` ({ isOpen, onClose, onGoogle, onGitHub, }: LoginModalProps)
 
 #### `SentryProvider.tsx`
 - `SentryProvider` ({ children }: { children: React.ReactNode })
@@ -351,6 +384,10 @@
 - `AnswerReviewList` ({ questions, answers }: AnswerReviewListProps)
 - *deps*: types, types, components/quiz/CodeBlock, components/quiz/BookmarkButton
 
+#### `LoginNudge.tsx`
+- `LoginNudge` ()
+- *deps*: lib/supabase/currentUser, components/LoginModal, hooks/useAuth
+
 #### `ResultSummary.tsx`
 - `ResultSummary` ({ correct, incorrect, total }: ResultSummaryProps)
 
@@ -367,34 +404,54 @@
 
 ### src/hooks/
 
-#### `useHydration.ts` — Waits for all persisted Zustand stores to finish hydrating from storage. Falls back to default state after HYDRATION_TIMEOUT_MS if storage is blocked (e.g. KakaoTalk in-app browser, private browsing).
+#### `useAuth.ts`
+- `useAuth` ()
+- *deps*: lib/supabase/client, lib/supabase/currentUser, lib/supabase/migrate, stores/useProgressStore, stores/useBookmarkStore
+
+#### `useHydration.ts` — Waits for persisted Zustand stores to finish hydrating from localStorage. Only theme and topic filter stores still use persist. Progress, bookmark, and session stores are server-injected (no hydration).
 - `useHydration` () → boolean
-- *deps*: stores/useProgressStore, stores/useSessionStore, stores/useThemeStore, stores/useBookmarkStore, stores/useTopicFilterStore
+- *deps*: stores/useThemeStore, stores/useTopicFilterStore
 
 #### `useQuizKeyboard.ts` — Keyboard shortcuts for quiz sessions. - Press 1–4 to select an answer option - Press Enter or Space to advance to the next question (after answering)
 - `useQuizKeyboard` ({ isAnswered, onSelect, onNext, }: UseQuizKeyboardOptions) → void — Keyboard shortcuts for quiz sessions. - Press 1–4 to select an answer option - Press Enter or Space to advance to the next question (after answering)
 
+### src/app/auth/callback/
+
+#### `route.ts`
+- `GET` (request: Request)
+- *deps*: lib/supabase/server, lib/supabase/admin
+
 ### src/app/bookmarks/
+
+#### `loading.tsx`
 
 #### `page.tsx`
 - *deps*: stores/useBookmarkStore, hooks/useHydration, lib/questions, types, types, components/quiz/BookmarkButton, components/quiz/CodeBlock
 
 ### src/app/history/
 
+#### `loading.tsx`
+
 #### `page.tsx`
 - *deps*: stores/useProgressStore, hooks/useHydration, components/history/SessionHistoryCard
 
 ### src/app/practice/
+
+#### `loading.tsx`
 
 #### `page.tsx`
 - *deps*: types, stores/useSessionStore, stores/useProgressStore, hooks/useHydration, hooks/useQuizKeyboard, lib/practice-session, components/practice/TopicSelector, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
 
 ### src/app/schedule/
 
+#### `loading.tsx`
+
 #### `page.tsx`
 - *deps*: stores/useProgressStore, hooks/useHydration, lib/srs-schedule, components/stats/StatCard, components/schedule/ReviewTimeline, components/schedule/TopicDueList
 
 ### src/app/stats/
+
+#### `loading.tsx`
 
 #### `page.tsx`
 - *deps*: stores/useProgressStore, hooks/useHydration, lib/stats, components/stats/AccuracyTrendChart, components/stats/WeakTopicsList, components/stats/StatCard, components/stats/TopicAccuracyBars, components/stats/ShareProgressButton
@@ -441,3 +498,60 @@
 #### `WeakTopicsList.tsx`
 - `WeakTopicsList` ({ weakTopics }: WeakTopicsListProps)
 - *deps*: lib/stats
+
+### src/lib/supabase/
+
+#### `admin.ts` — Server-only admin Supabase client (singleton, shared across requests). Uses service role key to bypass RLS — NEVER expose to the browser. The client is stateless (no per-request headers or session), so sharing is safe. Lazy-initialized to avoid build-time errors when env vars are missing.
+- `getSupabaseAdmin` () → SupabaseClient
+
+#### `client.ts`
+- `createClient` ()
+
+#### `currentUser.ts` — Module-level user identity for client-side sync functions. Set by DataProvider on mount, read by syncSession/syncBookmark. NOT a React context — accessible from store actions and utility functions.
+- `setCurrentUser` (id: string | null, isAuth: boolean,) → void
+- `getCurrentUserId` () → string | null
+- `getIsAuthenticated` () → boolean
+
+#### `getUserId.ts` — Server-side: extract user identity from auth session or anonymous cookie. Returns auth.uid for authenticated users, anon_id cookie for anonymous users.
+- `getUserId` () → Promise<UserIdentity | null> — Server-side: extract user identity from auth session or anonymous cookie. Returns auth.uid for authenticated users, anon_id cookie for anonymous users.
+- `UserIdentity`
+- *deps*: lib/supabase/server
+
+#### `loadUserData.ts` — Server-side: load user data from Supabase using admin client (RLS bypass). Works for both authenticated and anonymous users. Called in layout.tsx (server component) — no client-side fetch needed.
+- `loadServerUserData` (userId: string,) → Promise<ServerUserData | null> — Server-side: load user data from Supabase using admin client (RLS bypass). Works for both authenticated and anonymous users. Called in layout.tsx (server component) — no client-side fetch needed.
+- `ServerUserData`
+- *deps*: lib/supabase/admin, types
+
+#### `migrate.ts` — Migrate localStorage data for anonymous users (no auth session). Called from DataProvider when server has no data but localStorage has data.
+- `migrateFromLocalStorage` () → Promise<boolean>
+- `migrateAnonymousData` (userId: string,) → Promise<boolean> — Migrate localStorage data for anonymous users (no auth session). Called from DataProvider when server has no data but localStorage has data.
+- *deps*: lib/supabase/client, types, types
+
+#### `server.ts`
+- `createClient` ()
+
+#### `syncBookmark.ts`
+- `syncBookmark` (questionId: string, isBookmarked: boolean,) → Promise<void>
+- *deps*: lib/supabase/client, lib/supabase/currentUser
+
+#### `syncSchemas.ts` — Zod schemas for Supabase RPC payloads. Keys MUST match the snake_case keys that SQL reads via ->> operator. If a key mismatch exists, validation fails BEFORE the RPC call.
+- `streakDataSchema` — Zod schemas for Supabase RPC payloads. Keys MUST match the snake_case keys that SQL reads via ->> operator. If a key mismatch exists, validation fails BEFORE the RPC call.
+- `sessionDataSchema`
+- `srsUpdateSchema`
+- `topicUpdateSchema`
+- `sessionAnswerSchema`
+- `StreakData`
+- `SessionData`
+- `SrsUpdate`
+- `TopicUpdate`
+- `SessionAnswerData`
+
+#### `syncSession.ts`
+- `syncAfterSession` (sessionRecord: SessionRecord, answers: SessionAnswer[], srsRecords: Record<string, SRSRecord>, topicStats: Record<Topic, TopicStat>, streakData: { correct: number; answered: number; current_streak: number; date: string; },) → Promise<void>
+- *deps*: lib/supabase/client, lib/supabase/currentUser, types
+
+### src/
+
+#### `middleware.ts`
+- `middleware` (request: NextRequest)
+- `config`

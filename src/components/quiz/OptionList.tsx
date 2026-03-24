@@ -21,7 +21,7 @@ export function OptionList({
   onSelect,
 }: OptionListProps) {
   return (
-    <div className="flex flex-col gap-3 mt-4" role="group" aria-label="답변 선택지">
+    <div className="flex flex-col gap-3 mt-4" role="radiogroup" aria-label="답변 선택지">
       {options.map((option, index) => {
         const isSelected = selectedIndex === index
         const isCorrect = index === correctIndex
@@ -31,6 +31,9 @@ export function OptionList({
         return (
           <motion.button
             key={index}
+            role="radio"
+            aria-checked={isSelected}
+            aria-label={`${OPTION_LABELS[index]}. ${option}`}
             whileTap={isAnswered ? undefined : { scale: 0.98 }}
             onClick={() => onSelect(index)}
             disabled={isAnswered}
