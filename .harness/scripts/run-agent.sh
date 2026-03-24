@@ -109,11 +109,28 @@ main() {
   fi
 
   # ----------------------------------------
+  # Step 0: Generate dynamic context
+  # ----------------------------------------
+  log "Step 0: Generating dynamic context..."
+  npx tsx "${HARNESS_DIR}/scripts/generate-context.ts" 2>&1 | tee -a "${LOG_FILE}" || log "Context generation failed (continuing)"
+
+  local context_content=""
+  if [ -f "${HARNESS_DIR}/docs/context.md" ]; then
+    context_content="$(cat "${HARNESS_DIR}/docs/context.md")"
+  fi
+
+  # ----------------------------------------
   # Step 1: Manager decides (lightweight)
   # ----------------------------------------
   log "Step 1: Manager deciding..."
   local decision
-  decision="$(claude -p "Read .harness/docs/status.md and .harness/docs/codemap.md. Based on current project state, decide which ONE agent to run: content, code, expansion, or feature. Consider what was done recently and what adds most value. Output ONLY the agent name, nothing else." \
+  decision="$(claude -p "Read .harness/docs/status.md and .harness/docs/codemap.md.
+
+## Dynamic Context
+
+${context_content}
+
+Based on current project state AND the dynamic context above, decide which ONE agent to run: content, code, expansion, or feature. Pay attention to the Avoid Directives — do not pick an agent+approach that recently produced no changes or failed. Output ONLY the agent name, nothing else." \
     --dangerously-skip-permissions \
     --max-turns 5 2>&1)"
 
@@ -135,11 +152,16 @@ main() {
   local agent_prompt
   agent_prompt="$(cat "${HARNESS_DIR}/agents/${agent}.md")
 
+## Dynamic Context
+
+${context_content}
+
 ## Agent Rules
 1. Read existing files before writing. Never guess — verify first.
 2. Changes must not crash for existing users with old localStorage data.
 3. If you fail, explain WHY in your SUMMARY.
 4. Only modify files within src/, data/questions/, __tests__/.
+5. Check the Dynamic Context above — do not duplicate existing features or repeat failed approaches.
 
 Work directory: ${PROJECT_DIR}
 
