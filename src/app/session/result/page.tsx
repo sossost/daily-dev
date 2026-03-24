@@ -1,41 +1,52 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { useSessionStore } from '@/stores/useSessionStore'
 import { useProgressStore } from '@/stores/useProgressStore'
+import { useHydration } from '@/hooks/useHydration'
 import { ResultSummary } from '@/components/result/ResultSummary'
 import { ReviewSchedule } from '@/components/result/ReviewSchedule'
 import { AnswerReviewList } from '@/components/result/AnswerReviewList'
+import { ShareButton } from '@/components/result/ShareButton'
+
+const UPDATED_SESSION_KEY = 'daily-dev-last-updated-session'
 
 export default function ResultPage() {
+  const isHydrated = useHydration()
   const questions = useSessionStore((s) => s.questions)
   const answers = useSessionStore((s) => s.answers)
-  const reset = useSessionStore((s) => s.reset)
+  const startTime = useSessionStore((s) => s.startTime)
   const updateAfterSession = useProgressStore((s) => s.updateAfterSession)
-  const hasUpdated = useRef(false)
 
   const correctCount = answers.filter((a) => a.isCorrect === true).length
   const incorrectCount = answers.filter((a) => a.isCorrect === false).length
   const totalCount = answers.length
 
   useEffect(() => {
-    if (answers.length === 0) {
-      return
-    }
-    if (hasUpdated.current === true) {
+    if (!isHydrated || answers.length === 0 || startTime == null) {
       return
     }
 
-    hasUpdated.current = true
+    // Idempotency guard: prevent double-update in React Strict Mode
+    // Uses startTime as a unique session identifier
+    const sessionId = String(startTime)
+    try {
+      const lastUpdated = sessionStorage.getItem(UPDATED_SESSION_KEY)
+      if (lastUpdated === sessionId) {
+        return
+      }
+      sessionStorage.setItem(UPDATED_SESSION_KEY, sessionId)
+    } catch {
+      // sessionStorage unavailable — proceed (worst case: double update on remount)
+    }
+
     updateAfterSession(answers)
-  }, [answers, updateAfterSession])
+  }, [isHydrated, answers, startTime, updateAfterSession])
 
-  useEffect(() => {
-    return () => {
-      reset()
-    }
-  }, [reset])
+  if (isHydrated === false) {
+    return null
+  }
 
   if (answers.length === 0) {
     return (
@@ -60,6 +71,7 @@ export default function ResultPage() {
       />
       <ReviewSchedule incorrectCount={incorrectCount} />
       <AnswerReviewList questions={questions} answers={answers} />
+      <ShareButton correct={correctCount} total={totalCount} />
       <Link
         href="/"
         className="block mt-6 text-center py-3 rounded-xl bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
