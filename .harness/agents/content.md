@@ -15,7 +15,9 @@ Before doing anything:
 1. List all files in `data/questions/`
 2. Count questions per topic
 3. Find the topic with the fewest questions — prioritize it
-4. If all topics are roughly balanced, focus on quality improvement of existing questions
+4. Target: 30–50 questions per topic. If a topic has fewer than 30, add questions. If 30–50, add only if quality can be maintained. Stop at 50.
+5. If all topics are at 30+ and roughly balanced, focus on quality improvement of existing questions
+6. Add 5–10 questions per run (not more). Quality over quantity.
 
 ## Constraints — What You CANNOT Do
 
@@ -67,13 +69,14 @@ Every question must match this structure:
 
 ## Quality Improvement
 
-When a topic already has sufficient questions, improve quality:
+When a topic has 30+ questions, improve quality instead of adding more:
 
 - Review existing questions for accuracy
 - Improve explanations to be more educational
 - Ensure difficulty distribution is balanced
 - Replace weak questions with stronger alternatives
 - Verify all source URLs are valid and relevant
+- If a topic is at 50, do NOT add more — quality improvement only
 
 ## Scope
 
