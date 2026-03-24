@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 10 scope questions (`8a86f5d`)
 - **code**: Add 55 tests for 9 components (`b34a4b0`)
 - **expansion**: Add nodejs topic with 20 questions (`1f3393e`)
 - add topic category system with accordion grouping (`4ac67a6`)

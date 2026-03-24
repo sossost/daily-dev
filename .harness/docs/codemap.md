@@ -4,6 +4,7 @@
 
 ## Constants
 
+- `ANIMATION_DELAY_STEP` = `0.06`
 - `UPDATED_SESSION_KEY` = `'daily-dev-last-updated-session'`
 - `LOCAL_STORAGE_PROGRESS_KEY` = `"daily-dev-progress"`
 - `ANIMATION_DELAY_STEP` = `0.02`
@@ -38,6 +39,9 @@
 - `SITE_DESCRIPTION` = `"매일 5분, 개발 핵심 개념을 학습하고 실력을 키워보세요."`
 - `SITE_TAGLINE` = `"매일 5분, 개발 핵심 개념 학습"`
 - `REPORT_TITLE` = `"개발 학습 리포트"`
+- `WEAK_ACCURACY_THRESHOLD` = `70`
+- `LOW_EASE_THRESHOLD` = `2.0`
+- `MIN_ATTEMPTS_FOR_WEAK` = `1`
 - `CARD_WIDTH` = `1200`
 - `CARD_HEIGHT` = `800`
 - `PADDING` = `64`
@@ -185,6 +189,14 @@
 - `addDays` (dateStr: string, days: number) → string — Add days to a YYYY-MM-DD date string. Parses in local time, not UTC.
 - `isBeforeOrEqual` (dateA: string, dateB: string) → boolean — Check if dateA is before or equal to dateB (both YYYY-MM-DD strings).
 - `isValidDateString` (value: string) → boolean — Validate that a string is in YYYY-MM-DD format and represents a real date.
+
+#### `focus-session.ts` — Focus session generator — builds a quiz session targeting the user's weakest areas. Unlike manual practice mode, focus mode auto-selects questions based on performance data: 1. Questions from weak topics (accuracy < 70%) 2. Questions with low SRS ease (frequently answered wrong) 3. Fills remaining slots with questions from least-practiced topics
+- `analyzeFocusAreas` (topicStats: Record<Topic, TopicStat>, srsRecords: Record<string, SRSRecord>,) → FocusAnalysis — Analyze user progress to determine focus areas. Returns weak topics and count of available focus questions.
+- `selectFocusQuestions` (topicStats: Record<Topic, TopicStat>, srsRecords: Record<string, SRSRecord>,) → Question[] — Select questions for a focus session, prioritized by weakness. Priority: low-ease questions > weak-topic questions > least-practiced topics.
+- `generateFocusSession` (topicStats: Record<Topic, TopicStat>, srsRecords: Record<string, SRSRecord>,) → SessionQuestion[] — Generate a focus session targeting the user's weakest areas. Returns up to SESSION_TOTAL_QUESTIONS questions with options shuffled.
+- `FocusAnalysis`
+- `FocusTopicInfo`
+- *deps*: types, types, lib/questions, lib/session, lib/shuffle
 
 #### `practice-session.ts` — Practice session generator — builds a quiz session filtered by topics and difficulty. Unlike the standard SRS-driven session, practice mode lets users choose what to study.
 - `filterQuestions` (options: PracticeSessionOptions) → Question[] — Filter questions by selected topics and difficulty.
@@ -439,6 +451,13 @@
 
 #### `page.tsx`
 - *deps*: stores/useBookmarkStore, hooks/useHydration, lib/questions, types, types, components/quiz/BookmarkButton, components/quiz/CodeBlock
+
+### src/app/focus/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: stores/useSessionStore, stores/useProgressStore, hooks/useHydration, hooks/useQuizKeyboard, lib/focus-session, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
 
 ### src/app/history/
 

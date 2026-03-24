@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { BarChart3, Bookmark, CalendarClock, Dumbbell, History } from 'lucide-react'
+import { BarChart3, Bookmark, CalendarClock, Dumbbell, History, Target } from 'lucide-react'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useBookmarkStore } from '@/stores/useBookmarkStore'
 import { SessionStartCard } from '@/components/dashboard/SessionStartCard'
@@ -127,6 +127,18 @@ function DashboardContent({
           </span>
           <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
             토픽 · 난이도 선택
+          </span>
+        </Link>
+        <Link
+          href="/focus"
+          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-orange-200 dark:hover:border-orange-800 transition-colors"
+        >
+          <Target size={18} className="text-orange-500" />
+          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            집중 연습
+          </span>
+          <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
+            약점 자동 분석
           </span>
         </Link>
       </div>

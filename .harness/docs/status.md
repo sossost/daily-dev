@@ -1,11 +1,11 @@
 # DailyDev Status
 
-**Last Updated:** 2026-03-24T24:14:00Z
+**Last Updated:** 2026-03-24T24:15:00Z
 
 ## Last Run
-- Agent: content
+- Agent: feature
 - Result: success
-- Summary: Add 10 scope questions
+- Summary: Add focus practice mode
 
 ## Project Health
 
@@ -14,11 +14,13 @@
 | Questions | 330 (16 topics) | 10 scope questions added |
 | Tests | 200+ | 55 new tests for 9 components |
 | Build | passing | |
+| Features | 9 major features | Focus practice mode added |
 
 ## Recent Runs (last 10)
 
 | Date | Agent | Result | Summary |
 |------|-------|--------|---------|
+| 2026-03-24 24:15 | feature | success | Add focus practice mode |
 | 2026-03-24 24:14 | content | success | Add 10 scope questions |
 | 2026-03-24 24:13 | code | success | Add 55 tests for 9 components |
 | 2026-03-24 24:12 | expansion | success | Add nodejs topic with 20 questions |
@@ -28,11 +30,10 @@
 | 2026-03-24 24:08 | code | success | Accessibility and test coverage improvements |
 | 2026-03-24 24:07 | feature | success | Add topic filter for SRS sessions |
 | 2026-03-24 24:06 | code | success | Fix stale JavaScript text to 개발 |
-| 2026-03-24 24:05 | feature | success | Add shareable progress card feature |
 
 ## Notes
 
 - content: All topics at 20 questions. Explanations enhanced. Promise & web-perf question types rebalanced. data-structures, design-patterns, and network expanded to 20. Added 10 scope questions.
 - code: A11y focus styles and error safety improved. Shuffle utility extracted. Dark mode and accessibility fixes applied. Hook tests added. 200+ tests. Fixed stale JavaScript text to 개발. Accessibility and test coverage improvements. Added tests, fixed bug, improved a11y. Added 55 tests for 9 components.
-- feature: Practice mode with topic/difficulty filter added. Statistics dashboard page added. Quiz keyboard shortcuts added. Question review on result page added. SRS review schedule visualization added. Shareable progress card feature added. Topic filter for SRS sessions added. Retry wrong answers button added.
+- feature: Practice mode with topic/difficulty filter added. Statistics dashboard page added. Quiz keyboard shortcuts added. Question review on result page added. SRS review schedule visualization added. Shareable progress card feature added. Topic filter for SRS sessions added. Retry wrong answers button added. Focus practice mode added.
 - expansion: network topic added. algorithms topic added. nodejs topic added. 16 topics, 320 questions total.
