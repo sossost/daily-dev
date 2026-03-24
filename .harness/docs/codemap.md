@@ -8,6 +8,8 @@
 - `DEFAULT_DURATION` = `60`
 - `ANIMATION_DELAY_STEP` = `0.06`
 - `UPDATED_SESSION_KEY` = `'daily-dev-last-updated-session'`
+- `ANIMATION_DELAY_STEP` = `0.04`
+- `SESSION_LIMIT` = `10`
 - `LOCAL_STORAGE_PROGRESS_KEY` = `"daily-dev-progress"`
 - `ANIMATION_DELAY_STEP` = `0.08`
 - `HIGH_ACCURACY` = `80`
@@ -297,6 +299,14 @@
 - `saveToStorage` (key: string, value: T) → void
 - `clearStorage` (key: string) → void
 
+#### `wrong-answers.ts` — Wrong answer analysis — extracts and groups wrong answers from session history. Used by the wrong answer notebook (오답 노트) to help users review mistakes.
+- `extractWrongAnswers` (sessions: readonly SessionRecord[],) → readonly WrongAnswerEntry[] — Extract unique wrong answers from session history. Counts how many times each question was answered incorrectly. Only includes questions that exist in the current question bank.
+- `groupWrongAnswersByTopic` (entries: readonly WrongAnswerEntry[],) → readonly WrongAnswerTopicGroup[] — Group wrong answer entries by topic, sorted by total wrong count descending.
+- `generateWrongAnswerSession` (entries: readonly WrongAnswerEntry[],) → readonly SessionQuestion[] — Generate a retry session from wrong answer entries. Returns SessionQuestion[] ready for the session store.
+- `WrongAnswerEntry`
+- `WrongAnswerTopicGroup`
+- *deps*: types, types, lib/questions, lib/session
+
 ### src/stores/
 
 #### `useBookmarkStore.ts` — Bookmark store — tracks bookmarked question IDs. No localStorage persist — data is loaded from Supabase via server injection.
@@ -515,6 +525,13 @@
 
 #### `page.tsx`
 - *deps*: stores/useProgressStore, hooks/useHydration, lib/stats, components/stats/AccuracyTrendChart, components/stats/WeakTopicsList, components/stats/StatCard, components/stats/TopicAccuracyBars, components/stats/ShareProgressButton
+
+### src/app/wrong-answers/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: stores/useProgressStore, stores/useSessionStore, hooks/useHydration, lib/wrong-answers, types, components/quiz/CodeBlock, components/quiz/BookmarkButton
 
 ### src/components/challenge/
 

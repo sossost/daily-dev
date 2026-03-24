@@ -6,6 +6,7 @@
 
 ### Features
 
+- **feature**: Add timed challenge mode (`efe5e8f`)
 - **content**: add 10 api-design questions (`67f5821`)
 - **expansion**: Add api-design topic (15 questions) (`2814b6e`)
 - **code**: Fix timer leak, a11y, button types (`1677b90`)

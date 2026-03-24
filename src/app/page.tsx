@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { BarChart3, Bookmark, CalendarClock, Dumbbell, History, Target, Timer } from 'lucide-react'
+import { BarChart3, Bookmark, CalendarClock, Dumbbell, FileX2, History, Target, Timer } from 'lucide-react'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useBookmarkStore } from '@/stores/useBookmarkStore'
 import { SessionStartCard } from '@/components/dashboard/SessionStartCard'
@@ -116,6 +116,18 @@ function DashboardContent({
               {bookmarkCount}개
             </span>
           )}
+        </Link>
+        <Link
+          href="/wrong-answers"
+          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-red-200 dark:hover:border-red-800 transition-colors"
+        >
+          <FileX2 size={18} className="text-red-500" />
+          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            오답 노트
+          </span>
+          <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
+            틀린 문제 복습
+          </span>
         </Link>
         <Link
           href="/practice"
