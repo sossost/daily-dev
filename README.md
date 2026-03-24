@@ -22,6 +22,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 
 | Topic | Questions |
 |-------|-----------|
+| Algorithms | 20 |
 | Async | 20 |
 | Closure | 20 |
 | CSS Layout | 20 |
@@ -39,7 +40,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | TypeScript | 20 |
 | Web Performance | 20 |
 
-**Total: 320 questions across 16 topics**
+**Total: 340 questions across 17 topics**
 
 ## Getting Started
 

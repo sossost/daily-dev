@@ -6,6 +6,7 @@
 
 ### Features
 
+- **code**: Accessibility and test coverage improvements (`81a1efa`)
 - **feature**: Add topic filter for SRS sessions (`b008fce`)
 - **code**: Fix stale JavaScript text to 개발 (`143c313`)
 - **harness**: auto-detect stale copy text from actual topic scope (`c19f1a0`)

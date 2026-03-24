@@ -109,6 +109,7 @@
 
 ## Data
 
+- algorithms.json — 20 questions
 - async.json — 20 questions
 - closure.json — 20 questions
 - css-layout.json — 20 questions

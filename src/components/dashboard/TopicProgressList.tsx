@@ -21,6 +21,7 @@ const TOPIC_COLORS: Record<Topic, string> = {
   'data-structures': 'bg-fuchsia-500',
   'design-patterns': 'bg-yellow-500',
   network: 'bg-slate-500',
+  algorithms: 'bg-purple-500',
 }
 
 interface TopicProgressListProps {
