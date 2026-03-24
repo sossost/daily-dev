@@ -222,13 +222,53 @@ DETAILS:
   fi
 
   # ----------------------------------------
-  # Step 4: Validate
+  # Step 4: Validate (with fix retry)
   # ----------------------------------------
   log "Step 4: Validating..."
-  if ! bash "${HARNESS_DIR}/scripts/validate.sh" "${agent}" 2>&1 | tee -a "${LOG_FILE}"; then
-    log "Validation failed."
+  local validate_output
+  local MAX_FIX_ATTEMPTS=2
+  local fix_attempt=0
+  local validation_passed=false
+
+  validate_output="$(bash "${HARNESS_DIR}/scripts/validate.sh" "${agent}" 2>&1)" && validation_passed=true
+  echo "${validate_output}" | tee -a "${LOG_FILE}"
+
+  while [ "${validation_passed}" = false ] && [ "${fix_attempt}" -lt "${MAX_FIX_ATTEMPTS}" ]; do
+    fix_attempt=$((fix_attempt + 1))
+    log "Validation failed. Fix attempt ${fix_attempt}/${MAX_FIX_ATTEMPTS}..."
+
+    # Send errors to a fix agent
+    local fix_output
+    fix_output="$(claude -p "You are a build-error fixer. Fix the errors below with MINIMAL changes. Do NOT refactor, add features, or change architecture. Only fix the exact errors shown.
+
+## Errors
+
+\`\`\`
+${validate_output}
+\`\`\`
+
+Rules:
+- Only modify files within src/, data/questions/, __tests__/.
+- Make the smallest possible change to fix each error.
+- Do NOT add new files unless absolutely necessary.
+
+Work directory: ${PROJECT_DIR}" \
+      --allowedTools 'Bash(cat:*),Bash(ls:*),Read,Write,Edit,Glob,Grep' \
+      --dangerously-skip-permissions \
+      --max-turns 15 2>&1)" || true
+
+    log "Fix agent complete."
+
+    # Re-validate
+    validation_passed=false
+    validate_output="$(bash "${HARNESS_DIR}/scripts/validate.sh" "${agent}" 2>&1)" && validation_passed=true
+    echo "${validate_output}" | tee -a "${LOG_FILE}"
+  done
+
+  if [ "${validation_passed}" = false ]; then
+    log "Validation still failing after ${MAX_FIX_ATTEMPTS} fix attempts."
     rollback
-    notify "error" "❌ ${agent} 실패" "Validation failed: ${summary}"
+    notify "error" "❌ ${agent} 실패" "Validation failed after fix attempts: ${summary}"
     exit 1
   fi
 
