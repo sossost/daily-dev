@@ -4,6 +4,7 @@
 
 ## Constants
 
+- `UPDATED_SESSION_KEY` = `'daily-dev-last-updated-session'`
 - `PERCENTAGE_MULTIPLIER` = `100`
 - `ANIMATION_DELAY_STEP` = `0.03`
 - `DISMISS_STORAGE_KEY` = `'daily-dev-keyboard-hint-dismissed'`
@@ -26,6 +27,11 @@
 - `HYDRATION_TIMEOUT_MS` = `500`
 - `OPTION_COUNT` = `4`
 - `DIGIT_KEY_OFFSET` = `1`
+- `SITE_URL` = `"https://daily5.dev"`
+- `SITE_TITLE` = `"DailyDev - 매일 5분 개발 학습"`
+- `SITE_DESCRIPTION` = `"매일 5분, 개발 핵심 개념을 학습하고 실력을 키워보세요."`
+- `SITE_TAGLINE` = `"매일 5분, 개발 핵심 개념 학습"`
+- `REPORT_TITLE` = `"개발 학습 리포트"`
 - `CARD_WIDTH` = `600`
 - `CARD_HEIGHT` = `400`
 - `PADDING` = `32`
@@ -128,6 +134,13 @@
 
 ### src/lib/
 
+#### `constants.ts`
+- `SITE_URL`
+- `SITE_TITLE`
+- `SITE_DESCRIPTION`
+- `SITE_TAGLINE`
+- `REPORT_TITLE`
+
 #### `date.ts` — Get today's date as YYYY-MM-DD string in local time.
 - `getToday` () → string — Get today's date as YYYY-MM-DD string in local time.
 - `formatDate` (date: Date) → string — Format a Date object as YYYY-MM-DD string in local time.
@@ -147,7 +160,7 @@
 - `downloadCanvasAsImage` (canvas: HTMLCanvasElement, filename: string) → void
 - `shareCanvasImage` (canvas: HTMLCanvasElement) → Promise<boolean>
 - `ProgressCardData`
-- *deps*: types, types
+- *deps*: types, types, lib/constants
 
 #### `questions.ts` — Question loader — statically imports all topic JSON files at build time. Provides indexed access by ID and topic. No runtime I/O.
 - `getAllQuestions` () → Question[]
@@ -173,6 +186,12 @@
 - `selectNewQuestions` (srsRecords: Record<string, SRSRecord>,) → Question[] — Select new (unattempted) questions, ordered easy → medium → hard. Within the same difficulty, questions are shuffled randomly.
 - `generateSession` (srsRecords: Record<string, SRSRecord>,) → SessionQuestion[] — Generate a session of questions: up to SESSION_REVIEW_QUESTIONS reviews, filled with new questions to reach SESSION_TOTAL_QUESTIONS.
 - *deps*: types, types, lib/date, lib/questions, lib/shuffle
+
+#### `share.ts`
+- `buildShareText` (correct: number, total: number) → string
+- `shareResult` (correct: number, total: number,) → Promise<ShareResult>
+- `ShareResult`
+- *deps*: lib/constants
 
 #### `shuffle.ts` — Fisher-Yates shuffle algorithm. Returns a new shuffled array without mutating the original.
 - `shuffle` (array: readonly T[]) → T[] — Fisher-Yates shuffle algorithm. Returns a new shuffled array without mutating the original.
@@ -228,10 +247,10 @@
 #### `layout.tsx`
 - `metadata` Metadata
 - `viewport` Viewport
-- *deps*: components/ErrorBoundary, components/SentryProvider
+- *deps*: components/ErrorBoundary, components/SentryProvider, components/ToastProvider, lib/constants
 
 #### `page.tsx`
-- *deps*: stores/useProgressStore, stores/useBookmarkStore, hooks/useHydration, components/dashboard/SessionStartCard, components/dashboard/TopicProgressList, components/ThemeToggle
+- *deps*: stores/useProgressStore, stores/useBookmarkStore, hooks/useHydration, components/dashboard/SessionStartCard, components/dashboard/TopicProgressList, components/ThemeToggle, lib/constants
 
 ### src/app/session/
 
@@ -241,7 +260,7 @@
 ### src/app/session/result/
 
 #### `page.tsx`
-- *deps*: stores/useSessionStore, stores/useProgressStore, components/result/ResultSummary, components/result/ReviewSchedule, components/result/AnswerReviewList
+- *deps*: stores/useSessionStore, stores/useProgressStore, hooks/useHydration, components/result/ResultSummary, components/result/ReviewSchedule, components/result/AnswerReviewList, components/result/ShareButton
 
 ### src/app/topics/
 
@@ -260,6 +279,9 @@
 #### `ThemeToggle.tsx`
 - `ThemeToggle` ()
 - *deps*: stores/useThemeStore
+
+#### `ToastProvider.tsx`
+- `ToastProvider` ()
 
 ### src/components/dashboard/
 
@@ -307,6 +329,10 @@
 
 #### `ReviewSchedule.tsx`
 - `ReviewSchedule` ({ incorrectCount }: ReviewScheduleProps)
+
+#### `ShareButton.tsx`
+- `ShareButton` ({ correct, total }: ShareButtonProps)
+- *deps*: lib/share
 
 ### src/hooks/
 

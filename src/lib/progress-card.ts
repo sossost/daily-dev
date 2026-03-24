@@ -4,6 +4,7 @@
  */
 import type { Topic, TopicStat } from '@/types'
 import { TOPIC_LABELS } from '@/types'
+import { REPORT_TITLE } from '@/lib/constants'
 
 const CARD_WIDTH = 600
 const CARD_HEIGHT = 400
@@ -139,7 +140,7 @@ export function renderProgressCard(
 
   ctx.fillStyle = '#9CA3AF'
   ctx.font = `12px ${FONT_FAMILY}`
-  ctx.fillText('JavaScript 학습 리포트', PADDING, PADDING + 40)
+  ctx.fillText(REPORT_TITLE, PADDING, PADDING + 40)
 
   // Divider
   const dividerY = PADDING + 56

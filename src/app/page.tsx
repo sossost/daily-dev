@@ -8,6 +8,7 @@ import { useHydration } from '@/hooks/useHydration'
 import { SessionStartCard } from '@/components/dashboard/SessionStartCard'
 import { TopicProgressList } from '@/components/dashboard/TopicProgressList'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { SITE_TAGLINE } from '@/lib/constants'
 
 export default function DashboardPage() {
   const isHydrated = useHydration()
@@ -26,7 +27,7 @@ export default function DashboardPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">DailyDev</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            매일 5분, JavaScript 핵심 개념 학습
+            {SITE_TAGLINE}
           </p>
         </div>
         <ThemeToggle />

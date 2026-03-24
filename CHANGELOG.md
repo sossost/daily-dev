@@ -6,6 +6,9 @@
 
 ### Features
 
+- **harness**: auto-detect stale copy text from actual topic scope (`c19f1a0`)
+- add OG meta tags, favicon, and result share button (`f72f962`)
+- **feature**: Add shareable progress card feature (`cb0e6ac`)
 - **feature**: Add SRS review schedule visualization (`54fb223`)
 - **content**: Add 5 network questions to reach 20 (`214c6d5`)
 - **harness**: set content agent target to 30-50 questions per topic (`5147ff0`)
