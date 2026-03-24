@@ -282,7 +282,7 @@
 ### src/app/session/result/
 
 #### `page.tsx`
-- *deps*: stores/useSessionStore, stores/useProgressStore, hooks/useHydration, components/result/ResultSummary, components/result/ReviewSchedule, components/result/AnswerReviewList, components/result/ShareButton
+- *deps*: stores/useSessionStore, stores/useProgressStore, hooks/useHydration, components/result/ResultSummary, components/result/ReviewSchedule, components/result/AnswerReviewList, components/result/ShareButton, components/result/RetryWrongButton
 
 ### src/app/topics/
 
@@ -353,6 +353,10 @@
 
 #### `ResultSummary.tsx`
 - `ResultSummary` ({ correct, incorrect, total }: ResultSummaryProps)
+
+#### `RetryWrongButton.tsx`
+- `RetryWrongButton` ({ questions, answers }: RetryWrongButtonProps)
+- *deps*: types, stores/useSessionStore, lib/session
 
 #### `ReviewSchedule.tsx`
 - `ReviewSchedule` ({ incorrectCount }: ReviewScheduleProps)

@@ -9,6 +9,7 @@ import { ResultSummary } from '@/components/result/ResultSummary'
 import { ReviewSchedule } from '@/components/result/ReviewSchedule'
 import { AnswerReviewList } from '@/components/result/AnswerReviewList'
 import { ShareButton } from '@/components/result/ShareButton'
+import { RetryWrongButton } from '@/components/result/RetryWrongButton'
 
 const UPDATED_SESSION_KEY = 'daily-dev-last-updated-session'
 
@@ -72,6 +73,7 @@ export default function ResultPage() {
       <ReviewSchedule incorrectCount={incorrectCount} />
       <AnswerReviewList questions={questions} answers={answers} />
       <ShareButton correct={correctCount} total={totalCount} />
+      <RetryWrongButton questions={questions} answers={answers} />
       <Link
         href="/"
         className="block mt-6 text-center py-3 rounded-xl bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"

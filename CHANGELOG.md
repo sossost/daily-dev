@@ -6,6 +6,7 @@
 
 ### Features
 
+- **expansion**: Add algorithms topic with 20 questions (`01a2ab5`)
 - **code**: Accessibility and test coverage improvements (`81a1efa`)
 - **feature**: Add topic filter for SRS sessions (`b008fce`)
 - **code**: Fix stale JavaScript text to 개발 (`143c313`)
