@@ -41,8 +41,12 @@ export function KeyboardHint() {
 
   useEffect(() => {
     // Only show on devices likely to have a keyboard
-    const hasPointer = window.matchMedia('(pointer: fine)').matches
-    if (!hasPointer) return
+    try {
+      const hasPointer = window.matchMedia('(pointer: fine)').matches
+      if (!hasPointer) return
+    } catch {
+      return
+    }
 
     if (isDismissed()) return
     if (getDisplayCount() >= MAX_DISPLAY_COUNT) return

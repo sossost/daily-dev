@@ -1,4 +1,8 @@
-/** Waits for all persisted Zustand stores to finish hydrating from storage. */
+/**
+ * Waits for all persisted Zustand stores to finish hydrating from storage.
+ * Falls back to default state after HYDRATION_TIMEOUT_MS if storage is
+ * blocked (e.g. KakaoTalk in-app browser, private browsing).
+ */
 import { useEffect, useState } from 'react'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useSessionStore } from '@/stores/useSessionStore'
@@ -11,6 +15,8 @@ const stores = [
   useThemeStore.persist,
   useBookmarkStore.persist,
 ]
+
+const HYDRATION_TIMEOUT_MS = 500
 
 export function useHydration(): boolean {
   const [isHydrated, setIsHydrated] = useState(false)
@@ -29,7 +35,14 @@ export function useHydration(): boolean {
       }),
     )
 
-    return () => unsubs.forEach((unsub) => unsub())
+    const timeout = setTimeout(() => {
+      setIsHydrated(true)
+    }, HYDRATION_TIMEOUT_MS)
+
+    return () => {
+      unsubs.forEach((unsub) => unsub())
+      clearTimeout(timeout)
+    }
   }, [])
 
   return isHydrated

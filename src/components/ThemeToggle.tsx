@@ -27,15 +27,19 @@ export function ThemeToggle() {
       return
     }
 
-    const mql = window.matchMedia('(prefers-color-scheme: dark)')
-    const handler = () => {
-      const resolved = resolveTheme('system')
-      document.documentElement.classList.toggle('dark', resolved === 'dark')
-    }
+    try {
+      const mql = window.matchMedia('(prefers-color-scheme: dark)')
+      const handler = () => {
+        const resolved = resolveTheme('system')
+        document.documentElement.classList.toggle('dark', resolved === 'dark')
+      }
 
-    mql.addEventListener('change', handler)
-    return () => {
-      mql.removeEventListener('change', handler)
+      mql.addEventListener('change', handler)
+      return () => {
+        mql.removeEventListener('change', handler)
+      }
+    } catch {
+      // matchMedia unavailable (e.g. KakaoTalk in-app browser)
     }
   }, [mode])
 
