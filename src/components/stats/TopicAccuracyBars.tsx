@@ -36,7 +36,14 @@ export function TopicAccuracyBars({ topicStats }: TopicAccuracyBarsProps) {
           <span className="text-xs text-gray-600 dark:text-gray-400 w-24 shrink-0 truncate text-right">
             {item.label}
           </span>
-          <div className="flex-1 h-5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden relative">
+          <div
+            className="flex-1 h-5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden relative"
+            role="progressbar"
+            aria-label={`${item.label} 정답률`}
+            aria-valuenow={item.accuracy}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
             <motion.div
               className={`h-full rounded-full ${getBarColor(item.accuracy)}`}
               initial={{ width: 0 }}

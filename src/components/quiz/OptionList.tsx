@@ -31,6 +31,7 @@ export function OptionList({
         return (
           <motion.button
             key={index}
+            type="button"
             role="radio"
             aria-checked={isSelected}
             aria-label={`${OPTION_LABELS[index]}. ${option}`}

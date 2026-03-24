@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Share2, Download, X, Check } from 'lucide-react'
 import type { Topic, TopicStat } from '@/types'
@@ -35,6 +35,7 @@ export function ShareProgressButton({
   const [isOpen, setIsOpen] = useState(false)
   const [feedback, setFeedback] = useState<FeedbackState>('idle')
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const cardData: ProgressCardData = {
     overallAccuracy,
@@ -62,8 +63,30 @@ export function ShareProgressButton({
   }, [])
 
   const showFeedback = useCallback((state: FeedbackState) => {
+    if (feedbackTimerRef.current != null) {
+      clearTimeout(feedbackTimerRef.current)
+    }
     setFeedback(state)
-    setTimeout(() => setFeedback('idle'), FEEDBACK_DURATION_MS)
+    feedbackTimerRef.current = setTimeout(() => setFeedback('idle'), FEEDBACK_DURATION_MS)
+  }, [])
+
+  useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose()
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, handleClose])
+
+  useEffect(() => {
+    return () => {
+      if (feedbackTimerRef.current != null) {
+        clearTimeout(feedbackTimerRef.current)
+      }
+    }
   }, [])
 
   const handleDownload = useCallback(() => {

@@ -65,6 +65,7 @@ export function LoginModal({
                   로그인
                 </h2>
                 <button
+                  type="button"
                   onClick={onClose}
                   className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg"
                   aria-label="닫기"
@@ -75,6 +76,7 @@ export function LoginModal({
 
               <div className="space-y-3">
                 <button
+                  type="button"
                   onClick={onGoogle}
                   className="flex items-center justify-center gap-3 w-full py-3 px-4 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
                 >
@@ -82,6 +84,7 @@ export function LoginModal({
                   Google로 계속하기
                 </button>
                 <button
+                  type="button"
                   onClick={onGitHub}
                   className="flex items-center justify-center gap-3 w-full py-3 px-4 rounded-xl bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
                 >
