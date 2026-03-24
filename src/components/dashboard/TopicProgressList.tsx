@@ -24,6 +24,7 @@ const TOPIC_COLORS: Record<Topic, string> = {
   network: 'bg-slate-500',
   algorithms: 'bg-purple-500',
   nodejs: 'bg-green-500',
+  'browser-api': 'bg-orange-600',
 }
 
 const PERCENTAGE_MULTIPLIER = 100

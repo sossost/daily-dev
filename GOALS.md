@@ -10,10 +10,10 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 
 | Area | Metric | Status |
 |------|--------|--------|
-| Content | Topics | 18 topics |
-| Content | Questions | 380 questions |
+| Content | Topics | 19 topics |
+| Content | Questions | 395 questions |
 | Features | Implemented | Dark mode, Streak, Keyboard shortcuts, Session history, Topic filter, Export/Import, Bookmark |
-| Code | Tests | 354 tests |
+| Code | Tests | 353 tests |
 | Deploy | Status | Deployed |
 
 > Auto-updated by `update-goals-progress.ts` on every harness run.

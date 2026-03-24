@@ -18,6 +18,7 @@ export const TOPICS = [
   'network',
   'algorithms',
   'nodejs',
+  'browser-api',
 ] as const
 
 export type Topic = (typeof TOPICS)[number]
@@ -42,6 +43,7 @@ export const TOPIC_LABELS: Record<Topic, string> = {
   network: '네트워크',
   algorithms: '알고리즘',
   nodejs: 'Node.js',
+  'browser-api': '브라우저 API',
 }
 
 // Category definitions
@@ -81,7 +83,7 @@ export const CATEGORIES: readonly CategoryDefinition[] = [
     id: 'web-platform',
     label: 'Web Platform',
     icon: '🌐',
-    topics: ['dom-manipulation', 'css-layout', 'web-performance'],
+    topics: ['dom-manipulation', 'css-layout', 'web-performance', 'browser-api'],
     positions: ['frontend', 'fullstack'],
   },
   {

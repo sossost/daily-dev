@@ -57,7 +57,6 @@
 - `FIRST_BAR_OFFSET_Y` = `32`
 - `BAR_LABEL_INSET` = `16`
 - `BAR_LABEL_GAP` = `12`
-- `MS_PER_SECOND` = `1000`
 - `SECONDS_PER_MINUTE` = `60`
 - `SCHEDULE_DAYS` = `14`
 - `PERCENTAGE_MULTIPLIER` = `100`
@@ -130,6 +129,7 @@
 
 - algorithms.json — 20 questions
 - async.json — 20 questions
+- browser-api.json — 15 questions
 - closure.json — 30 questions
 - css-layout.json — 20 questions
 - data-structures.json — 20 questions
@@ -224,7 +224,7 @@
 - `captureError` (error: Error, context?: Record<string, unknown>)
 
 #### `session-history.ts`
-- `formatDuration` (ms: number) → string
+- `formatDuration` (totalSeconds: number) → string
 - `formatSessionDate` (dateStr: string) → string
 - `getTopicBreakdown` (answers: readonly SessionAnswer[]) → readonly TopicBreakdownEntry[]
 - `TopicBreakdownEntry`

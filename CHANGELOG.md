@@ -6,6 +6,7 @@
 
 ### Features
 
+- **feature**: Add focus practice mode (`a6e922c`)
 - **content**: add 10 scope questions (`8a86f5d`)
 - **code**: Add 55 tests for 9 components (`b34a4b0`)
 - **expansion**: Add nodejs topic with 20 questions (`1f3393e`)
@@ -44,6 +45,8 @@
 
 ### Bug Fixes
 
+- correct duration display showing 0초 in history (`6c8b227`)
+- disable overscroll bounce on mobile Chrome (`0a4018b`)
 - improve session page loading skeleton UX (`977498a`)
 - improve page transition UX and session state management (`b98198f`)
 - use --no-verify in runner commit to bypass hook for codemap.md (`0974de1`)
