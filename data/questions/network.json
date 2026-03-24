@@ -1,0 +1,244 @@
+[
+  {
+    "id": "network-001",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "HTTP 메서드 중 서버의 리소스를 수정하지 않고 데이터를 조회할 때 사용하는 메서드는 무엇인가요?",
+    "options": [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE"
+    ],
+    "correctIndex": 0,
+    "explanation": "GET 메서드는 서버에서 리소스를 조회할 때 사용하는 안전한(safe) 메서드입니다. 서버의 상태를 변경하지 않으며, 동일한 요청을 여러 번 보내도 같은 결과를 반환하는 멱등성(idempotent)을 가집니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Methods/GET"
+  },
+  {
+    "id": "network-002",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "HTTP 상태 코드 404는 어떤 상황을 나타내나요?",
+    "options": [
+      "서버 내부 오류",
+      "요청 성공",
+      "요청한 리소스를 찾을 수 없음",
+      "인증 필요"
+    ],
+    "correctIndex": 2,
+    "explanation": "404 Not Found는 서버가 요청한 리소스를 찾을 수 없을 때 반환하는 상태 코드입니다. 200은 성공, 401은 인증 필요, 500은 서버 내부 오류를 나타냅니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Status/404"
+  },
+  {
+    "id": "network-003",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "CORS(Cross-Origin Resource Sharing)가 필요한 이유는 무엇인가요?",
+    "options": [
+      "서버의 응답 속도를 높이기 위해",
+      "HTTPS 암호화를 적용하기 위해",
+      "쿠키의 크기를 줄이기 위해",
+      "브라우저의 동일 출처 정책을 우회하여 다른 도메인의 리소스에 접근하기 위해"
+    ],
+    "correctIndex": 3,
+    "explanation": "CORS는 브라우저의 동일 출처 정책(Same-Origin Policy)에 의해 차단되는 교차 출처 요청을 서버가 허용할 수 있게 해주는 메커니즘입니다. 서버가 응답 헤더에 Access-Control-Allow-Origin을 설정하여 특정 출처의 접근을 허용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/CORS"
+  },
+  {
+    "id": "network-004",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 fetch 코드의 실행 결과로 콘솔에 출력되는 순서는 무엇인가요?",
+    "code": "console.log('1');\nfetch('https://api.example.com/data')\n  .then(() => console.log('2'))\n  .catch(() => console.log('3'));\nconsole.log('4');",
+    "options": [
+      "1 → 2 → 4",
+      "1 → 4 → 2 → 3",
+      "4 → 1 → 2",
+      "1 → 4 → 2 또는 1 → 4 → 3"
+    ],
+    "correctIndex": 3,
+    "explanation": "fetch는 비동기로 동작하므로 '1' 출력 후 fetch가 시작되지만, 즉시 '4'가 출력됩니다. 이후 네트워크 응답에 따라 성공 시 '2', 실패 시 '3'이 출력됩니다. 따라서 결과는 1 → 4 → 2 또는 1 → 4 → 3입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Fetch_API/Using_Fetch"
+  },
+  {
+    "id": "network-005",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "HTTP/2의 주요 개선 사항이 아닌 것은 무엇인가요?",
+    "options": [
+      "멀티플렉싱을 통한 동시 요청 처리",
+      "헤더 압축 (HPACK)",
+      "서버 푸시",
+      "JSON 기반 요청 형식 도입"
+    ],
+    "correctIndex": 3,
+    "explanation": "HTTP/2는 멀티플렉싱(하나의 연결에서 여러 요청/응답을 동시에 처리), HPACK 헤더 압축, 서버 푸시 등을 도입했습니다. 하지만 요청 형식을 JSON으로 변경하지는 않았으며, HTTP/2는 바이너리 프레이밍 계층을 사용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/HTTP_2"
+  },
+  {
+    "id": "network-006",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "localStorage와 쿠키(Cookie)의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "쿠키는 모든 HTTP 요청에 자동으로 포함되지만, localStorage는 포함되지 않는다",
+      "localStorage는 서버에서 설정할 수 있지만, 쿠키는 클라이언트에서만 설정 가능하다",
+      "쿠키의 용량 제한이 localStorage보다 크다",
+      "localStorage는 만료 기간을 설정할 수 있지만, 쿠키는 영구적이다"
+    ],
+    "correctIndex": 0,
+    "explanation": "쿠키는 HTTP 요청 시 Cookie 헤더에 자동으로 포함되어 서버로 전송되지만, localStorage의 데이터는 자동으로 서버에 전송되지 않습니다. 쿠키는 약 4KB, localStorage는 약 5-10MB의 용량 제한이 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Document/cookie"
+  },
+  {
+    "id": "network-007",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "CORS preflight 요청에서 사용되는 HTTP 메서드는 무엇인가요?",
+    "options": [
+      "GET",
+      "HEAD",
+      "OPTIONS",
+      "TRACE"
+    ],
+    "correctIndex": 2,
+    "explanation": "CORS preflight 요청은 OPTIONS 메서드를 사용합니다. 브라우저가 실제 요청을 보내기 전에 서버에 OPTIONS 요청을 보내 해당 교차 출처 요청이 허용되는지 확인합니다. 서버는 Access-Control-Allow-Methods 등의 헤더로 응답합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Preflight_request"
+  },
+  {
+    "id": "network-008",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 CORS 오류가 발생하는 이유는 무엇인가요?\n\nfetch('https://api.other-domain.com/data', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({ name: 'test' })\n});",
+    "options": [
+      "POST 메서드는 CORS에서 허용되지 않는다",
+      "JSON 형식의 body를 보낼 수 없다",
+      "Content-Type이 application/json이면 단순 요청이 아니므로 서버에서 CORS 헤더를 설정해야 한다",
+      "fetch API는 교차 출처 요청을 지원하지 않는다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Content-Type이 application/json인 요청은 CORS 단순 요청(simple request) 조건을 만족하지 않아 preflight 요청이 발생합니다. 서버가 Access-Control-Allow-Origin과 Access-Control-Allow-Headers 헤더를 올바르게 반환하지 않으면 CORS 오류가 발생합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/CORS#simple_requests"
+  },
+  {
+    "id": "network-009",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Cache-Control 헤더에서 'no-cache'와 'no-store'의 차이점은 무엇인가요?",
+    "options": [
+      "no-cache는 캐시는 저장하되 사용 전 서버에 재검증을 요청하고, no-store는 캐시 저장 자체를 금지한다",
+      "no-cache는 캐시를 완전히 금지하고, no-store는 재검증 후 사용을 허용한다",
+      "no-cache는 브라우저 캐시만 금지하고, no-store는 CDN 캐시도 금지한다",
+      "둘은 동일한 의미이며, no-store가 더 최신 표준이다"
+    ],
+    "correctIndex": 0,
+    "explanation": "no-cache는 캐시에 응답을 저장할 수 있지만, 사용하기 전에 반드시 서버에 재검증(revalidation)을 요청해야 합니다. 반면 no-store는 응답을 캐시에 저장하는 것 자체를 금지합니다. 민감한 데이터에는 no-store를 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Cache-Control"
+  },
+  {
+    "id": "network-010",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "WebSocket과 HTTP 롱 폴링(Long Polling)의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "롱 폴링이 WebSocket보다 실시간 통신에 더 적합하다",
+      "WebSocket은 텍스트 데이터만 전송할 수 있지만, 롱 폴링은 바이너리 데이터도 전송 가능하다",
+      "롱 폴링은 서버에서 클라이언트로만 데이터를 보낼 수 있다",
+      "WebSocket은 초기 HTTP 핸드셰이크 후 양방향 통신 채널을 유지하지만, 롱 폴링은 매번 새로운 HTTP 연결을 생성한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "WebSocket은 초기 HTTP 핸드셰이크 이후 지속적인 양방향 통신 채널을 유지하여 오버헤드가 적습니다. 반면 롱 폴링은 클라이언트가 서버에 요청을 보내고, 서버가 새 데이터가 있을 때까지 응답을 지연시키며, 응답 후 다시 새 요청을 보내는 방식으로 매번 HTTP 연결이 필요합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/WebSockets_API"
+  },
+  {
+    "id": "network-011",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "HTTPS와 HTTP의 가장 큰 차이점은 무엇인가요?",
+    "options": [
+      "HTTPS는 더 빠른 데이터 전송 속도를 제공한다",
+      "HTTPS는 더 큰 파일을 전송할 수 있다",
+      "HTTPS는 TLS/SSL을 통해 데이터를 암호화하여 전송한다",
+      "HTTPS는 HTTP/2만 지원한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "HTTPS(HTTP Secure)는 HTTP에 TLS(Transport Layer Security)/SSL 암호화 계층을 추가한 프로토콜입니다. 클라이언트와 서버 간의 데이터가 암호화되어 중간자 공격(MITM)이나 도청을 방지합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/HTTPS"
+  },
+  {
+    "id": "network-012",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드에서 AbortController를 사용한 요청 취소 시 catch 블록에서 출력되는 에러 이름은 무엇인가요?",
+    "code": "const controller = new AbortController();\nfetch('https://api.example.com/data', {\n  signal: controller.signal\n}).catch(err => console.log(err.name));\ncontroller.abort();",
+    "options": [
+      "TypeError",
+      "NetworkError",
+      "AbortError",
+      "CancelError"
+    ],
+    "correctIndex": 2,
+    "explanation": "AbortController.abort()를 호출하면 해당 signal과 연결된 fetch 요청이 취소되고, AbortError라는 이름의 DOMException이 발생합니다. 이를 통해 요청 타임아웃이나 사용자가 페이지를 떠날 때 불필요한 요청을 정리할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/AbortController"
+  },
+  {
+    "id": "network-013",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 쿠키가 서버로 전송되지 않는 이유는 무엇인가요?\n\nfetch('https://api.other-domain.com/user', {\n  method: 'GET',\n  headers: { 'Content-Type': 'application/json' }\n});",
+    "options": [
+      "GET 메서드로는 쿠키를 전송할 수 없다",
+      "Content-Type 헤더가 잘못 설정되어 있다",
+      "교차 출처 요청에서 쿠키를 포함하려면 credentials: 'include' 옵션이 필요하다",
+      "쿠키는 fetch API에서 지원되지 않는다"
+    ],
+    "correctIndex": 2,
+    "explanation": "기본적으로 fetch의 credentials 옵션은 'same-origin'으로 설정되어 동일 출처 요청에서만 쿠키를 포함합니다. 교차 출처 요청에서 쿠키를 전송하려면 credentials: 'include'를 명시해야 하며, 서버도 Access-Control-Allow-Credentials: true 헤더를 반환해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Fetch_API/Using_Fetch#sending_a_request_with_credentials_included"
+  },
+  {
+    "id": "network-014",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "REST API에서 PUT과 PATCH 메서드의 차이점은 무엇인가요?",
+    "options": [
+      "PUT은 리소스 전체를 대체하고, PATCH는 리소스의 일부만 수정한다",
+      "PUT은 생성, PATCH는 삭제에 사용된다",
+      "PATCH는 멱등성을 보장하지만, PUT은 보장하지 않는다",
+      "PUT은 요청 body가 필요 없지만, PATCH는 필수이다"
+    ],
+    "correctIndex": 0,
+    "explanation": "PUT은 리소스의 전체 표현을 서버에 보내 기존 리소스를 완전히 대체합니다. PATCH는 리소스의 일부분만 수정할 때 사용하며, 변경할 필드만 요청 body에 포함합니다. PUT은 멱등하지만, PATCH는 구현에 따라 멱등하지 않을 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Methods/PATCH"
+  },
+  {
+    "id": "network-015",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "ETag 헤더의 역할은 무엇인가요?",
+    "options": [
+      "응답 데이터를 압축하는 알고리즘을 지정한다",
+      "리소스의 특정 버전에 대한 식별자로, 캐시 재검증에 사용된다",
+      "서버의 응답 시간을 측정하기 위한 타임스탬프이다",
+      "클라이언트의 인증 토큰을 저장하는 헤더이다"
+    ],
+    "correctIndex": 1,
+    "explanation": "ETag(Entity Tag)는 특정 버전의 리소스를 식별하는 고유 문자열입니다. 클라이언트는 If-None-Match 헤더에 ETag 값을 포함하여 조건부 요청을 보내고, 리소스가 변경되지 않았으면 서버는 304 Not Modified를 반환하여 불필요한 데이터 전송을 방지합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/ETag"
+  }
+]

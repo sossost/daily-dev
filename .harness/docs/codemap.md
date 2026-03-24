@@ -75,6 +75,7 @@
 - design-patterns.json — 20 questions
 - dom-manipulation.json — 20 questions
 - event-loop.json — 20 questions
+- network.json — 15 questions
 - promise.json — 20 questions
 - prototype.json — 20 questions
 - react-basics.json — 20 questions

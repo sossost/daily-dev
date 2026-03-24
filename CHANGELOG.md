@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: Add 5 design-patterns questions to 20 (`202508b`)
 - **expansion**: Add design-patterns topic with 15 questions (`9ce297a`)
 - **feature**: Add question review to result page (`27c01b5`)
 - **code**: Improve a11y focus styles & error safety (`8e136de`)

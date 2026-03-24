@@ -28,6 +28,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Design Patterns | 20 |
 | Dom Manipulation | 20 |
 | Event Loop | 20 |
+| Network | 15 |
 | Promise | 20 |
 | Prototype | 20 |
 | React Basics | 20 |
@@ -37,7 +38,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | TypeScript | 20 |
 | Web Performance | 20 |
 
-**Total: 300 questions across 15 topics**
+**Total: 315 questions across 16 topics**
 
 ## Getting Started
 

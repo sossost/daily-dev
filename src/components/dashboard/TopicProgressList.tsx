@@ -20,6 +20,7 @@ const TOPIC_COLORS: Record<Topic, string> = {
   'react-basics': 'bg-red-500',
   'data-structures': 'bg-fuchsia-500',
   'design-patterns': 'bg-yellow-500',
+  network: 'bg-slate-500',
 }
 
 interface TopicProgressListProps {

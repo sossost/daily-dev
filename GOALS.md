@@ -10,8 +10,8 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 
 | Area | Metric | Status |
 |------|--------|--------|
-| Content | Topics | 15 topics |
-| Content | Questions | 300 questions |
+| Content | Topics | 16 topics |
+| Content | Questions | 315 questions |
 | Features | Implemented | Dark mode, Streak, Keyboard shortcuts, Session history, Export/Import, Bookmark |
 | Code | Tests | 210 tests |
 | Deploy | Status | Deployed |

@@ -19,6 +19,7 @@ import webPerformanceQuestions from '../../data/questions/web-performance.json'
 import reactBasicsQuestions from '../../data/questions/react-basics.json'
 import dataStructuresQuestions from '../../data/questions/data-structures.json'
 import designPatternsQuestions from '../../data/questions/design-patterns.json'
+import networkQuestions from '../../data/questions/network.json'
 
 const ALL_QUESTIONS: Question[] = [
   ...scopeQuestions,
@@ -36,6 +37,7 @@ const ALL_QUESTIONS: Question[] = [
   ...reactBasicsQuestions,
   ...dataStructuresQuestions,
   ...designPatternsQuestions,
+  ...networkQuestions,
 ] as Question[]
 
 const QUESTIONS_BY_ID = new Map<string, Question>(
