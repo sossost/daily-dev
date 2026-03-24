@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { BarChart3, Bookmark, CalendarClock, Dumbbell, History, Target } from 'lucide-react'
+import { BarChart3, Bookmark, CalendarClock, Dumbbell, History, Target, Timer } from 'lucide-react'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useBookmarkStore } from '@/stores/useBookmarkStore'
 import { SessionStartCard } from '@/components/dashboard/SessionStartCard'
@@ -139,6 +139,18 @@ function DashboardContent({
           </span>
           <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
             약점 자동 분석
+          </span>
+        </Link>
+        <Link
+          href="/challenge"
+          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-purple-200 dark:hover:border-purple-800 transition-colors"
+        >
+          <Timer size={18} className="text-purple-500" />
+          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            타임 챌린지
+          </span>
+          <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
+            스피드 퀴즈
           </span>
         </Link>
       </div>

@@ -4,9 +4,18 @@
 
 ## Constants
 
+- `ANIMATION_DELAY_STEP` = `0.05`
+- `DEFAULT_DURATION` = `60`
 - `ANIMATION_DELAY_STEP` = `0.06`
 - `UPDATED_SESSION_KEY` = `'daily-dev-last-updated-session'`
 - `LOCAL_STORAGE_PROGRESS_KEY` = `"daily-dev-progress"`
+- `ANIMATION_DELAY_STEP` = `0.08`
+- `HIGH_ACCURACY` = `80`
+- `MEDIUM_ACCURACY` = `60`
+- `TIMER_INTERVAL_MS` = `100`
+- `MILLISECONDS_PER_SECOND` = `1000`
+- `LOW_TIME_THRESHOLD` = `10`
+- `PERCENTAGE_MULTIPLIER` = `100`
 - `ANIMATION_DELAY_STEP` = `0.02`
 - `PERCENTAGE_MULTIPLIER` = `100`
 - `PERCENTAGE_MULTIPLIER` = `100`
@@ -34,6 +43,9 @@
 - `HYDRATION_TIMEOUT_MS` = `500`
 - `OPTION_COUNT` = `4`
 - `DIGIT_KEY_OFFSET` = `1`
+- `CHALLENGE_POOL_SIZE` = `50`
+- `SECONDS_PER_MINUTE` = `60`
+- `PERCENTAGE_MULTIPLIER` = `100`
 - `SITE_URL` = `"https://daily5.dev"`
 - `SITE_TITLE` = `"DailyDev - 매일 5분 개발 학습"`
 - `SITE_DESCRIPTION` = `"매일 5분, 개발 핵심 개념을 학습하고 실력을 키워보세요."`
@@ -176,6 +188,15 @@
 - `UserProgress`
 
 ### src/lib/
+
+#### `challenge-session.ts` — Challenge session generator — builds a large pool of random questions for timed challenge mode. Unlike SRS sessions, challenge mode is purely for speed practice and does not affect spaced repetition scheduling.
+- `generateChallengeSession` () → SessionQuestion[] — Generate a large pool of shuffled questions for challenge mode. Returns up to CHALLENGE_POOL_SIZE questions with shuffled options.
+- `computeChallengeResult` (answers: readonly { readonly isCorrect: boolean }[], duration: ChallengeDuration,) → ChallengeResult — Compute challenge result statistics from answers.
+- `CHALLENGE_DURATIONS` readonly ChallengeDuration[]
+- `CHALLENGE_DURATION_LABELS` Record<ChallengeDuration, string>
+- `ChallengeDuration`
+- `ChallengeResult`
+- *deps*: types, lib/questions, lib/session, lib/shuffle
 
 #### `constants.ts`
 - `SITE_URL`
@@ -453,6 +474,13 @@
 #### `page.tsx`
 - *deps*: stores/useBookmarkStore, hooks/useHydration, lib/questions, types, types, components/quiz/BookmarkButton, components/quiz/CodeBlock
 
+### src/app/challenge/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: hooks/useHydration, hooks/useQuizKeyboard, types, components/challenge/ChallengeTimer, components/challenge/ChallengeResult, components/quiz/QuizCard
+
 ### src/app/focus/
 
 #### `loading.tsx`
@@ -487,6 +515,15 @@
 
 #### `page.tsx`
 - *deps*: stores/useProgressStore, hooks/useHydration, lib/stats, components/stats/AccuracyTrendChart, components/stats/WeakTopicsList, components/stats/StatCard, components/stats/TopicAccuracyBars, components/stats/ShareProgressButton
+
+### src/components/challenge/
+
+#### `ChallengeResult.tsx`
+- `ChallengeResult` ({ result, onRetry, onHome }: ChallengeResultProps)
+- *deps*: lib/challenge-session, lib/challenge-session
+
+#### `ChallengeTimer.tsx`
+- `ChallengeTimer` ({ durationSeconds, isRunning, onTimeUp }: ChallengeTimerProps)
 
 ### src/components/common/
 
