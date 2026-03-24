@@ -6,6 +6,9 @@
 
 ### Features
 
+- **harness**: set content agent target to 30-50 questions per topic (`5147ff0`)
+- **harness**: add dynamic context injection for self-sustaining agent decisions (`ea239c9`)
+- **expansion**: Add network topic with 15 questions (`8d0a4b2`)
 - **content**: Add 5 design-patterns questions to 20 (`202508b`)
 - **expansion**: Add design-patterns topic with 15 questions (`9ce297a`)
 - **feature**: Add question review to result page (`27c01b5`)
@@ -20,6 +23,10 @@
 - **feature**: add statistics dashboard page (`08f38b1`)
 - **expansion**: add web-performance topic with 20 questions (`1e267bf`)
 - **feature**: add quiz keyboard shortcuts (`2845556`)
+
+### Bug Fixes
+
+- resolve infinite loading in KakaoTalk in-app browser (`c900a6e`)
 
 ## 2026-03-23
 

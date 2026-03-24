@@ -18,6 +18,7 @@
 - `HIGH_ACCURACY` = `80`
 - `MEDIUM_ACCURACY` = `60`
 - `ANIMATION_DELAY_STEP` = `0.08`
+- `HYDRATION_TIMEOUT_MS` = `500`
 - `OPTION_COUNT` = `4`
 - `DIGIT_KEY_OFFSET` = `1`
 - `MS_PER_SECOND` = `1000`
@@ -75,7 +76,7 @@
 - design-patterns.json — 20 questions
 - dom-manipulation.json — 20 questions
 - event-loop.json — 20 questions
-- network.json — 15 questions
+- network.json — 20 questions
 - promise.json — 20 questions
 - prototype.json — 20 questions
 - react-basics.json — 20 questions
@@ -276,7 +277,7 @@
 
 ### src/hooks/
 
-#### `useHydration.ts`
+#### `useHydration.ts` — Waits for all persisted Zustand stores to finish hydrating from storage. Falls back to default state after HYDRATION_TIMEOUT_MS if storage is blocked (e.g. KakaoTalk in-app browser, private browsing).
 - `useHydration` () → boolean
 - *deps*: stores/useProgressStore, stores/useSessionStore, stores/useThemeStore, stores/useBookmarkStore
 
