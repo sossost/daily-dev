@@ -23,6 +23,7 @@ import networkQuestions from '../../data/questions/network.json'
 import algorithmsQuestions from '../../data/questions/algorithms.json'
 import nodejsQuestions from '../../data/questions/nodejs.json'
 import browserApiQuestions from '../../data/questions/browser-api.json'
+import apiDesignQuestions from '../../data/questions/api-design.json'
 
 const ALL_QUESTIONS: Question[] = [
   ...scopeQuestions,
@@ -44,6 +45,7 @@ const ALL_QUESTIONS: Question[] = [
   ...algorithmsQuestions,
   ...nodejsQuestions,
   ...browserApiQuestions,
+  ...apiDesignQuestions,
 ] as Question[]
 
 const QUESTIONS_BY_ID = new Map<string, Question>(

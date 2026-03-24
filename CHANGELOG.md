@@ -6,6 +6,7 @@
 
 ### Features
 
+- **code**: Fix timer leak, a11y, button types (`1677b90`)
 - **content**: add 10 browser-api questions (`e40d30e`)
 - **expansion**: Add browser-api topic (15 questions) (`6367825`)
 
