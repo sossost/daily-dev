@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-03-25
+
+### Features
+
+- **expansion**: Add browser-api topic (15 questions) (`6367825`)
+
 ## 2026-03-24
 
 ### Features

@@ -129,7 +129,7 @@
 
 - algorithms.json — 20 questions
 - async.json — 20 questions
-- browser-api.json — 15 questions
+- browser-api.json — 25 questions
 - closure.json — 30 questions
 - css-layout.json — 20 questions
 - data-structures.json — 20 questions
