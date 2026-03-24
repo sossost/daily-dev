@@ -10,6 +10,7 @@ import { TOPICS, type Topic } from '@/types'
 interface TopicFilterState {
   readonly enabledTopics: readonly Topic[]
   toggleTopic: (topic: Topic) => void
+  toggleCategory: (topics: readonly Topic[]) => void
   enableAll: () => void
   disableAll: () => void
   isEnabled: (topic: Topic) => boolean
@@ -28,6 +29,19 @@ export const useTopicFilterStore = create<TopicFilterState>()(
           enabledTopics: exists
             ? enabledTopics.filter((t) => t !== topic)
             : [...enabledTopics, topic],
+        })
+      },
+
+      toggleCategory: (topics) => {
+        const { enabledTopics } = get()
+        const enabledSet = new Set(enabledTopics)
+        const topicsSet = new Set(topics)
+        const allEnabled = topics.every((t) => enabledSet.has(t))
+
+        set({
+          enabledTopics: allEnabled
+            ? enabledTopics.filter((t) => !topicsSet.has(t))
+            : [...enabledTopics, ...topics.filter((t) => !enabledSet.has(t))],
         })
       },
 

@@ -3,8 +3,9 @@
 import { useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Check } from 'lucide-react'
-import { TOPICS, TOPIC_LABELS, type Topic } from '@/types'
+import { CATEGORIES_WITH_FALLBACK, TOPICS, TOPIC_LABELS, type Topic } from '@/types'
 import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
+import { CategoryAccordion } from '@/components/common/CategoryAccordion'
 
 const ANIMATION_DELAY_STEP = 0.02
 
@@ -15,10 +16,12 @@ interface TopicFilterModalProps {
 
 export function TopicFilterModal({ isOpen, onClose }: TopicFilterModalProps) {
   const enabledTopics = useTopicFilterStore((s) => s.enabledTopics)
-  const toggleTopic = useTopicFilterStore((s) => s.toggleTopic)
   const enableAll = useTopicFilterStore((s) => s.enableAll)
   const disableAll = useTopicFilterStore((s) => s.disableAll)
+  const toggleTopic = useTopicFilterStore((s) => s.toggleTopic)
+  const toggleCategory = useTopicFilterStore((s) => s.toggleCategory)
 
+  const categories = CATEGORIES_WITH_FALLBACK
   const enabledSet = new Set(enabledTopics)
   const allEnabled = enabledTopics.length === TOPICS.length
 
@@ -79,7 +82,7 @@ export function TopicFilterModal({ isOpen, onClose }: TopicFilterModalProps) {
               선택한 토픽만 학습 세션에 포함됩니다
             </p>
 
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-4">
               <span className="text-sm text-gray-600 dark:text-gray-300">
                 {enabledTopics.length}/{TOPICS.length}개 선택됨
               </span>
@@ -92,16 +95,39 @@ export function TopicFilterModal({ isOpen, onClose }: TopicFilterModalProps) {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
-              {TOPICS.map((topic, index) => (
-                <TopicFilterItem
-                  key={topic}
-                  topic={topic}
-                  isEnabled={enabledSet.has(topic)}
-                  index={index}
-                  onToggle={toggleTopic}
-                />
-              ))}
+            <div className="flex flex-col gap-4">
+              {categories.map((category) => {
+                const allCategoryEnabled = category.topics.every((t) => enabledSet.has(t))
+
+                return (
+                  <CategoryAccordion
+                    key={category.id}
+                    category={category}
+                    headerRight={
+                      <button
+                        type="button"
+                        onClick={() => toggleCategory(category.topics)}
+                        className="text-xs text-blue-500 dark:text-blue-400 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded px-1"
+                        aria-label={`${category.label} 카테고리 ${allCategoryEnabled ? '전체 해제' : '전체 선택'}`}
+                      >
+                        {allCategoryEnabled ? '해제' : '전체'}
+                      </button>
+                    }
+                  >
+                    <div className="grid grid-cols-2 gap-2">
+                      {category.topics.map((topic, index) => (
+                        <TopicFilterItem
+                          key={topic}
+                          topic={topic}
+                          isEnabled={enabledSet.has(topic)}
+                          index={index}
+                          onToggle={toggleTopic}
+                        />
+                      ))}
+                    </div>
+                  </CategoryAccordion>
+                )
+              })}
             </div>
 
             {enabledTopics.length === 0 && (

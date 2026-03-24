@@ -42,8 +42,9 @@ When adding a new topic:
 
 1. **`data/questions/{topic}.json`** — Generate at least 10 questions following the Question schema
 2. **`src/types/index.ts`** — Add to `TOPICS` array and `TOPIC_LABELS`
-3. **`src/lib/questions.ts`** — Add the JSON import and register
-4. **`src/components/dashboard/TopicProgressList.tsx`** — Add a color to `TOPIC_COLORS`
+3. **`src/types/index.ts`** — Add the topic to the appropriate category in `CATEGORIES`. If no existing category fits, create a new category entry with `id`, `label`, `icon`, `topics`, and `positions` fields.
+4. **`src/lib/questions.ts`** — Add the JSON import and register
+5. **`src/components/dashboard/TopicProgressList.tsx`** — Add a color to `TOPIC_COLORS`
 
 ## Constraints
 

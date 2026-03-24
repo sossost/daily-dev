@@ -42,6 +42,88 @@ export const TOPIC_LABELS: Record<Topic, string> = {
   algorithms: '알고리즘',
 }
 
+// Category definitions
+export type Position = 'frontend' | 'backend' | 'fullstack' | 'devops'
+
+export interface CategoryDefinition {
+  readonly id: string
+  readonly label: string
+  readonly icon: string
+  readonly topics: readonly Topic[]
+  readonly positions: readonly Position[]
+}
+
+export const CATEGORIES: readonly CategoryDefinition[] = [
+  {
+    id: 'js-core',
+    label: 'JS Core',
+    icon: '💻',
+    topics: ['scope', 'closure', 'prototype', 'this', 'type-coercion'],
+    positions: ['frontend', 'fullstack'],
+  },
+  {
+    id: 'async',
+    label: 'Async',
+    icon: '⚡',
+    topics: ['event-loop', 'async', 'promise'],
+    positions: ['frontend', 'backend', 'fullstack'],
+  },
+  {
+    id: 'typescript',
+    label: 'TypeScript',
+    icon: '⌨️',
+    topics: ['typescript'],
+    positions: ['frontend', 'backend', 'fullstack'],
+  },
+  {
+    id: 'web-platform',
+    label: 'Web Platform',
+    icon: '🌐',
+    topics: ['dom-manipulation', 'css-layout', 'web-performance'],
+    positions: ['frontend', 'fullstack'],
+  },
+  {
+    id: 'react',
+    label: 'React',
+    icon: '⚛️',
+    topics: ['react-basics'],
+    positions: ['frontend', 'fullstack'],
+  },
+  {
+    id: 'cs-fundamentals',
+    label: 'CS Fundamentals',
+    icon: '📚',
+    topics: ['data-structures', 'algorithms', 'design-patterns'],
+    positions: ['frontend', 'backend', 'fullstack', 'devops'],
+  },
+  {
+    id: 'network',
+    label: 'Network',
+    icon: '🌍',
+    topics: ['network'],
+    positions: ['frontend', 'backend', 'fullstack', 'devops'],
+  },
+] as const
+
+/** CATEGORIES with uncategorized topics appended as "기타" if any exist. */
+export const CATEGORIES_WITH_FALLBACK: readonly CategoryDefinition[] = (() => {
+  const categorizedTopics = new Set(CATEGORIES.flatMap((c) => c.topics))
+  const uncategorized = TOPICS.filter((t) => !categorizedTopics.has(t))
+
+  if (uncategorized.length === 0) return CATEGORIES
+
+  return [
+    ...CATEGORIES,
+    {
+      id: 'uncategorized',
+      label: '기타',
+      icon: '📦',
+      topics: uncategorized,
+      positions: ['frontend', 'backend', 'fullstack', 'devops'] satisfies readonly Position[],
+    },
+  ]
+})()
+
 // Question schema
 export type QuestionType = 'concept' | 'output-prediction' | 'debugging' | 'comparison'
 export type Difficulty = 'easy' | 'medium' | 'hard'

@@ -73,6 +73,19 @@ export default function PracticePage() {
     setSelectedTopics([])
   }, [])
 
+  const handleToggleCategory = useCallback((topics: readonly Topic[]) => {
+    setSelectedTopics((prev) => {
+      const prevSet = new Set(prev)
+      const topicsSet = new Set(topics)
+      const allSelected = topics.every((t) => prevSet.has(t))
+
+      if (allSelected) {
+        return prev.filter((t) => !topicsSet.has(t))
+      }
+      return [...prev, ...topics.filter((t) => !prevSet.has(t))]
+    })
+  }, [])
+
   const handleDifficultyChange = useCallback((d: Difficulty | 'all') => {
     setDifficulty(d)
   }, [])
@@ -145,6 +158,7 @@ export default function PracticePage() {
         selectedTopics={selectedTopics}
         difficulty={difficulty}
         onToggleTopic={handleToggleTopic}
+        onToggleCategory={handleToggleCategory}
         onSelectAll={handleSelectAll}
         onDeselectAll={handleDeselectAll}
         onDifficultyChange={handleDifficultyChange}

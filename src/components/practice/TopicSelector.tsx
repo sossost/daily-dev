@@ -2,8 +2,9 @@
 
 import { motion } from 'framer-motion'
 import { Check } from 'lucide-react'
-import { TOPICS, TOPIC_LABELS, type Topic, type Difficulty } from '@/types'
+import { CATEGORIES_WITH_FALLBACK, TOPICS, TOPIC_LABELS, type Topic, type Difficulty } from '@/types'
 import { getTopicQuestionCounts } from '@/lib/questions'
+import { CategoryAccordion } from '@/components/common/CategoryAccordion'
 
 const ANIMATION_DELAY_STEP = 0.03
 
@@ -18,6 +19,7 @@ interface TopicSelectorProps {
   readonly selectedTopics: readonly Topic[]
   readonly difficulty: Difficulty | 'all'
   readonly onToggleTopic: (topic: Topic) => void
+  readonly onToggleCategory: (topics: readonly Topic[]) => void
   readonly onSelectAll: () => void
   readonly onDeselectAll: () => void
   readonly onDifficultyChange: (difficulty: Difficulty | 'all') => void
@@ -27,11 +29,13 @@ export function TopicSelector({
   selectedTopics,
   difficulty,
   onToggleTopic,
+  onToggleCategory,
   onSelectAll,
   onDeselectAll,
   onDifficultyChange,
 }: TopicSelectorProps) {
   const topicCounts = getTopicQuestionCounts()
+  const categories = CATEGORIES_WITH_FALLBACK
   const selectedSet = new Set(selectedTopics)
   const allSelected = selectedTopics.length === TOPICS.length
 
@@ -50,43 +54,66 @@ export function TopicSelector({
             {allSelected ? '전체 해제' : '전체 선택'}
           </button>
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          {TOPICS.map((topic, index) => {
-            const isSelected = selectedSet.has(topic)
+        <div className="flex flex-col gap-4">
+          {categories.map((category) => {
+            const allCategorySelected = category.topics.every((t) => selectedSet.has(t))
+
             return (
-              <motion.button
-                key={topic}
-                type="button"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * ANIMATION_DELAY_STEP }}
-                onClick={() => onToggleTopic(topic)}
-                className={`flex items-center gap-2 p-3 rounded-xl border text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900 ${
-                  isSelected
-                    ? 'border-blue-300 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/30'
-                    : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
-                }`}
-                aria-pressed={isSelected}
-                aria-label={`${TOPIC_LABELS[topic]} 토픽 ${isSelected ? '선택됨' : '선택 안됨'}`}
+              <CategoryAccordion
+                key={category.id}
+                category={category}
+                headerRight={
+                  <button
+                    type="button"
+                    onClick={() => onToggleCategory(category.topics)}
+                    className="text-xs text-blue-500 dark:text-blue-400 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded px-1"
+                    aria-label={`${category.label} 카테고리 ${allCategorySelected ? '전체 해제' : '전체 선택'}`}
+                  >
+                    {allCategorySelected ? '해제' : '전체'}
+                  </button>
+                }
               >
-                <div
-                  className={`flex-shrink-0 w-5 h-5 rounded flex items-center justify-center ${
-                    isSelected
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700'
-                  }`}
-                >
-                  {isSelected && <Check size={14} />}
+                <div className="grid grid-cols-2 gap-2">
+                  {category.topics.map((topic, index) => {
+                    const isSelected = selectedSet.has(topic)
+                    return (
+                      <motion.button
+                        key={topic}
+                        type="button"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * ANIMATION_DELAY_STEP }}
+                        onClick={() => onToggleTopic(topic)}
+                        className={`flex items-center gap-2 p-3 rounded-xl border text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900 ${
+                          isSelected
+                            ? 'border-blue-300 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/30'
+                            : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
+                        }`}
+                        aria-pressed={isSelected}
+                        aria-label={`${TOPIC_LABELS[topic]} 토픽 ${isSelected ? '선택됨' : '선택 안됨'}`}
+                      >
+                        <div
+                          className={`flex-shrink-0 w-5 h-5 rounded flex items-center justify-center ${
+                            isSelected
+                              ? 'bg-blue-500 text-white'
+                              : 'bg-gray-100 dark:bg-gray-700'
+                          }`}
+                        >
+                          {isSelected && <Check size={14} />}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                            {TOPIC_LABELS[topic]}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            {topicCounts[topic]}문제
+                          </p>
+                        </div>
+                      </motion.button>
+                    )
+                  })}
                 </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                    {TOPIC_LABELS[topic]}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {topicCounts[topic]}문제
-                  </p>
-                </div>
-              </motion.button>
+              </CategoryAccordion>
             )
           })}
         </div>
