@@ -128,7 +128,7 @@
 ## Data
 
 - algorithms.json — 20 questions
-- api-design.json — 15 questions
+- api-design.json — 25 questions
 - async.json — 20 questions
 - browser-api.json — 25 questions
 - closure.json — 30 questions

@@ -23,7 +23,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Topic | Questions |
 |-------|-----------|
 | Algorithms | 20 |
-| API Design | 15 |
+| API Design | 25 |
 | Async | 20 |
 | Browser API | 25 |
 | Closure | 30 |
@@ -43,7 +43,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | TypeScript | 20 |
 | Web Performance | 20 |
 
-**Total: 420 questions across 20 topics**
+**Total: 430 questions across 20 topics**
 
 ## Getting Started
 
