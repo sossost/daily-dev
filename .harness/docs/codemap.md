@@ -44,6 +44,7 @@
 - `MEDIUM_ACCURACY` = `60`
 - `ANIMATION_DELAY_STEP` = `0.08`
 - `HYDRATION_TIMEOUT_MS` = `500`
+- `FCM_TOKEN_KEY` = `'daily-dev-fcm-token'`
 - `OPTION_COUNT` = `4`
 - `DIGIT_KEY_OFFSET` = `1`
 - `CHALLENGE_POOL_SIZE` = `50`
@@ -92,6 +93,34 @@
 ```
   user: User | null;
   isLoading: boolean;
+```
+
+### InstallPromptState (`src/hooks/useInstallPrompt.ts`)
+```
+  /** Whether the browser supports installation (beforeinstallprompt fired) */
+  isInstallable: boolean
+  /** Whether the app is already running in standalone mode */
+  isInstalled: boolean
+  /** Whether this is iOS (needs manual install instructions) */
+  isIOS: boolean
+  /** Trigger the install prompt */
+  install: () => Promise<void>
+```
+
+### PushNotificationState (`src/hooks/usePushNotification.ts`)
+```
+  /** Whether the browser supports push notifications */
+  isSupported: boolean
+  /** Whether push notifications are currently enabled */
+  isEnabled: boolean
+  /** Whether an enable/disable operation is in progress */
+  isLoading: boolean
+  /** Whether the user has denied notification permission in browser settings */
+  isDenied: boolean
+  /** Enable push notifications (requests permission + saves token) */
+  enable: () => Promise<'granted' | 'denied' | 'failed'>
+  /** Disable push notifications (deactivates token) */
+  disable: () => Promise<void>
 ```
 
 ### BookmarkState (`src/stores/useBookmarkStore.ts`)
@@ -160,7 +189,7 @@
 - event-loop.json — 28 questions
 - network.json — 20 questions
 - nodejs.json — 20 questions
-- promise.json — 20 questions
+- promise.json — 28 questions
 - prototype.json — 20 questions
 - react-basics.json — 20 questions
 - scope.json — 30 questions
@@ -182,7 +211,7 @@
 - event-loop.json — 28 questions
 - network.json — 20 questions
 - nodejs.json — 20 questions
-- promise.json — 20 questions
+- promise.json — 28 questions
 - prototype.json — 20 questions
 - react-basics.json — 20 questions
 - scope.json — 30 questions
@@ -243,6 +272,10 @@
 - `addDays` (dateStr: string, days: number) → string — Add days to a YYYY-MM-DD date string. Parses in local time, not UTC.
 - `isBeforeOrEqual` (dateA: string, dateB: string) → boolean — Check if dateA is before or equal to dateB (both YYYY-MM-DD strings).
 - `isValidDateString` (value: string) → boolean — Validate that a string is in YYYY-MM-DD format and represents a real date.
+
+#### `firebase.ts` — Request FCM push token from the browser. Returns the token string or null if unavailable/denied.
+- `requestFCMToken` () → Promise<string | null> — Request FCM push token from the browser. Returns the token string or null if unavailable/denied.
+- `isPushSupported` () → boolean — Check if the browser supports push notifications.
 
 #### `focus-session.ts` — Focus session generator — builds a quiz session targeting the user's weakest areas. Unlike manual practice mode, focus mode auto-selects questions based on performance data: 1. Questions from weak topics (accuracy < 70%) 2. Questions with low SRS ease (frequently answered wrong) 3. Fills remaining slots with questions from least-practiced topics
 - `analyzeFocusAreas` (topicStats: Record<Topic, TopicStat>, srsRecords: Record<string, SRSRecord>, locale?: Locale, topicFilter?: readonly Topic[],) → FocusAnalysis — Analyze user progress to determine focus areas. Returns weak topics and count of available focus questions.
@@ -407,7 +440,7 @@
 
 #### `SettingsDropdown.tsx`
 - `SettingsDropdown` ()
-- *deps*: stores/useThemeStore, stores/useTopicFilterStore, hooks/useAuth, lib/supabase/currentUser, components/LoginModal, components/TopicFilterModal, i18n/navigation, i18n/routing, types
+- *deps*: stores/useThemeStore, stores/useTopicFilterStore, hooks/useAuth, lib/supabase/currentUser, components/LoginModal, components/TopicFilterModal, i18n/navigation, i18n/routing, types, hooks/useInstallPrompt, hooks/usePushNotification
 
 #### `ThemeToggle.tsx`
 - `ThemeToggle` ()
@@ -487,11 +520,19 @@
 
 #### `useAuth.ts`
 - `useAuth` ()
-- *deps*: lib/supabase/client, lib/supabase/currentUser, lib/supabase/migrate, stores/useProgressStore, stores/useBookmarkStore
+- *deps*: lib/supabase/client, lib/supabase/currentUser, lib/supabase/migrate, stores/useProgressStore, stores/useBookmarkStore, lib/supabase/push, hooks/usePushNotification
 
 #### `useHydration.ts` — Waits for persisted Zustand stores to finish hydrating from localStorage. Only theme and topic filter stores still use persist. Progress, bookmark, and session stores are server-injected (no hydration).
 - `useHydration` () → boolean
 - *deps*: stores/useThemeStore, stores/useTopicFilterStore
+
+#### `useInstallPrompt.ts`
+- `useInstallPrompt` () → InstallPromptState
+
+#### `usePushNotification.ts`
+- `usePushNotification` () → PushNotificationState
+- `FCM_TOKEN_KEY`
+- *deps*: lib/firebase, lib/supabase/push, lib/supabase/currentUser
 
 #### `useQuizKeyboard.ts` — Keyboard shortcuts for quiz sessions. - Press 1–4 to select an answer option - Press Enter or Space to advance to the next question (after answering)
 - `useQuizKeyboard` ({ isAnswered, onSelect, onNext, }: UseQuizKeyboardOptions) → void — Keyboard shortcuts for quiz sessions. - Press 1–4 to select an answer option - Press Enter or Space to advance to the next question (after answering)
@@ -687,6 +728,13 @@
 - `migrateFromLocalStorage` () → Promise<boolean>
 - `migrateAnonymousData` (userId: string,) → Promise<boolean> — Migrate localStorage data for anonymous users (no auth session). Called from DataProvider when server has no data but localStorage has data.
 - *deps*: lib/supabase/client, types, types
+
+#### `push.ts` — Save an FCM push token to Supabase. Creates a new record or reactivates an existing one.
+- `savePushToken` (fcmToken: string, locale: string = 'en') → Promise<boolean> — Save an FCM push token to Supabase. Creates a new record or reactivates an existing one.
+- `deactivatePushToken` (fcmToken: string) → Promise<boolean> — Deactivate a push token (soft delete).
+- `deactivateAllPushTokens` () → Promise<void> — Deactivate all push tokens for the current user (e.g. on logout).
+- `getPushStatus` () → Promise<boolean> — Check if the current user has an active push subscription.
+- *deps*: lib/supabase/client, lib/supabase/currentUser
 
 #### `server.ts`
 - `createClient` ()

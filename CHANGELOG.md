@@ -6,6 +6,8 @@
 
 ### Features
 
+- add PWA support with install prompt and push notifications (`add6052`)
+- **content**: add 8 database questions (013-020) (`28001c8`)
 - **expansion**: Add database topic with 12 questions (`534ea8b`)
 - **content**: add 8 event-loop questions (021-028) (`c53b1c6`)
 - **code**: Add tests for low-coverage modules (`6b1df36`)

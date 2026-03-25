@@ -328,5 +328,138 @@
     "correctIndex": 3,
     "explanation": "fetch() already returns a Promise, so wrapping it with new Promise is unnecessary. This is known as the 'explicit construction anti-pattern' or 'Promise constructor anti-pattern'. The correct code is simply return fetch(url).then(res => res.json()). Unnecessary wrapping makes code more complex, increases the risk of missed error handling, and creates unnecessarily deep stack traces during debugging.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises#common_mistakes"
+  },
+  {
+    "id": "promise-021",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "Promise.resolve('hello')\n  .then(v => {\n    return new Promise(resolve => {\n      setTimeout(() => resolve(v + ' world'), 100);\n    });\n  })\n  .then(v => console.log(v));",
+    "options": [
+      "hello world",
+      "hello",
+      "undefined",
+      "[object Promise]"
+    ],
+    "correctIndex": 0,
+    "explanation": "When a then callback returns a Promise, the next then waits for that Promise to settle. The first then returns a new Promise that resolves with 'hello world' after 100ms. The second then receives this resolved value and outputs it. When a Promise is returned from then, the chain automatically 'flattens' it — the final resolved value is passed, not a nested Promise.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "promise-022",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "When does the window's 'unhandledrejection' event fire?",
+    "options": [
+      "When all Promises are fulfilled",
+      "When a Promise is rejected but no .catch() or rejection handler is attached",
+      "When an error occurs inside a try/catch block",
+      "Only when Promise.all() fails"
+    ],
+    "correctIndex": 1,
+    "explanation": "The unhandledrejection event fires when a Promise is rejected but no rejection handler (.catch() or then's second argument) is attached. The event's event.reason property provides access to the rejection reason, and calling event.preventDefault() suppresses the console error. In Node.js, process.on('unhandledRejection') detects the same situation.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/unhandledrejection_event"
+  },
+  {
+    "id": "promise-023",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the difference between Promise.any() and Promise.race() is correct?",
+    "options": [
+      "Promise.any() only accepts async iterables while Promise.race() only accepts arrays",
+      "Promise.race() ignores rejections and only returns fulfilled results",
+      "Both return the first fulfilled Promise but differ only in error handling",
+      "Promise.any() returns the first fulfilled Promise, while Promise.race() returns the result of the first settled Promise whether fulfilled or rejected"
+    ],
+    "correctIndex": 3,
+    "explanation": "Promise.any() returns the result of the first fulfilled Promise, ignoring rejected ones. If all Promises reject, it throws an AggregateError. Promise.race() returns the result of the first settled Promise regardless of whether it fulfilled or rejected. In other words, race returns the fastest 'result', while any returns the fastest 'success'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/any"
+  },
+  {
+    "id": "promise-024",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What causes the unintended behavior in the following code?",
+    "code": "async function getData() {\n  const result = await fetch('/api/data');\n  return result;\n}\n\nconst data = getData();\nconsole.log(data.status);",
+    "options": [
+      "fetch does not return a Response object to result",
+      "async functions always return a Promise, so calling without await means data is a Promise object without a status property",
+      "await fails to unwrap the fetch Promise",
+      "Return values from async functions cannot be used outside"
+    ],
+    "correctIndex": 1,
+    "explanation": "async functions always return a Promise. Calling getData() without await assigns a Promise object to the data variable. The Promise object does not have an HTTP status property, so data.status is undefined. The correct approach is const data = await getData(), or getData().then(data => console.log(data.status)).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "promise-025",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "Promise.resolve(1)\n  .then(v => { throw new Error('oops'); })\n  .then(v => console.log('A:', v))\n  .catch(e => {\n    console.log('B:', e.message);\n    return 42;\n  })\n  .then(v => console.log('C:', v));",
+    "options": [
+      "A: 1, C: 42",
+      "B: oops",
+      "B: oops, C: 42",
+      "B: oops, A: undefined, C: 42"
+    ],
+    "correctIndex": 2,
+    "explanation": "Throwing an error in the first then rejects that Promise. The second then's fulfillment handler (A output) is skipped, and catch catches the error, outputting 'B: oops'. Returning 42 from catch recovers the error into a fulfilled Promise, so the final then outputs 'C: 42'. In Promise chains, errors propagate to the nearest rejection handler.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises#chaining_after_a_catch"
+  },
+  {
+    "id": "promise-026",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What happens when a thenable object is passed to Promise.resolve()?",
+    "code": "const thenable = {\n  then(resolve) {\n    resolve(42);\n  }\n};\nPromise.resolve(thenable).then(v => console.log(v));",
+    "options": [
+      "The thenable object itself is passed as the argument to then",
+      "A TypeError is thrown",
+      "42 is output",
+      "undefined is output"
+    ],
+    "correctIndex": 2,
+    "explanation": "When Promise.resolve() receives a thenable (an object with a then method), it calls the object's then method to convert it into a Promise. Since the thenable's then calls resolve(42), the resulting Promise fulfills with 42. This behavior is used to make third-party library Promise-like objects compatible with native Promises.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "promise-027",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the problem in the following code?",
+    "code": "const promises = urls.map(url => fetch(url));\n\nfor (const p of promises) {\n  const res = await p;\n  const data = await res.json();\n  process(data);\n}",
+    "options": [
+      "fetch cannot be called inside a map callback",
+      "await cannot be used in a for...of loop, causing a syntax error",
+      "All fetches start concurrently but results are processed sequentially, so if one fails, remaining Promise rejections may go unhandled",
+      "The promises array is not iterable so for...of does not work"
+    ],
+    "correctIndex": 2,
+    "explanation": "urls.map(url => fetch(url)) starts all fetches concurrently. Sequentially awaiting in for...of means if one Promise rejects and throws an error, the remaining already-started fetch Promises' rejections go unhandled, potentially causing unhandled rejection errors. The safe approach is to use Promise.allSettled(promises) to handle all results at once, or attach .catch() to each Promise beforehand.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises#error_handling"
+  },
+  {
+    "id": "promise-028",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between Promise.resolve(value) and new Promise(resolve => resolve(value))?",
+    "options": [
+      "The two expressions are completely identical with no differences",
+      "Promise.resolve returns the value as-is if it is already a Promise, while new Promise always creates a new Promise",
+      "new Promise executes faster",
+      "Promise.resolve returns the value synchronously while new Promise returns it asynchronously"
+    ],
+    "correctIndex": 1,
+    "explanation": "Promise.resolve() returns the argument as-is if it is already a Promise (specifically, a Promise from the same constructor). new Promise(resolve => resolve(value)) always creates a new Promise object. When the value is a plain non-Promise value, both expressions behave identically. This difference matters for avoiding unnecessary Promise wrapping and optimizing performance.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
   }
 ]
