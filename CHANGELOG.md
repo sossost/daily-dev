@@ -6,6 +6,7 @@
 
 ### Features
 
+- **code**: Add tests for low-coverage modules (`6b1df36`)
 - add onboarding flow, topic filter, and position-based topic system (`dd4400a`)
 - **content**: add 10 web-security questions (016-025) (`c4d346a`)
 - add onboarding flow, topic filter, and position-based topic system (`8b16631`)

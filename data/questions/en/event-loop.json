@@ -330,5 +330,137 @@
     "correctIndex": 1,
     "explanation": "The event loop drains the entire microtask queue before executing any macrotask. If microtasks continuously generate new microtasks, the microtask queue never empties, and macrotasks (setTimeout, I/O, etc.) are starved and never execute. UI rendering is also blocked.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop"
+  },
+  {
+    "id": "event-loop-021",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output order of the following code?",
+    "code": "setTimeout(() => console.log('A'), 0);\nsetTimeout(() => {\n  console.log('B');\n  Promise.resolve().then(() => console.log('C'));\n}, 0);\nsetTimeout(() => console.log('D'), 0);",
+    "options": [
+      "A, B, C, D",
+      "A, B, D, C",
+      "A, D, B, C",
+      "B, C, A, D"
+    ],
+    "correctIndex": 0,
+    "explanation": "The three setTimeout callbacks enter the macrotask queue in registration order. 'A' executes first, then 'B'. During B's execution, the Promise.then callback ('C') is registered in the microtask queue. The event loop drains the microtask queue after each macrotask, so 'C' executes before the next macrotask 'D'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop"
+  },
+  {
+    "id": "event-loop-022",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about setInterval is correct?",
+    "options": [
+      "If the callback takes longer than the interval, callbacks overlap and run simultaneously",
+      "Callbacks are registered in the macrotask queue and only execute when the call stack is empty",
+      "setInterval is classified as a microtask",
+      "It stops automatically without clearInterval"
+    ],
+    "correctIndex": 1,
+    "explanation": "setInterval registers callbacks in the macrotask queue at specified intervals. Since JavaScript is single-threaded, callbacks never run simultaneously — they only execute when the call stack is empty. If a callback takes longer than the interval, subsequent callbacks queue up but never overlap. You must explicitly stop it with clearInterval.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/setInterval"
+  },
+  {
+    "id": "event-loop-023",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between setTimeout(fn, 0) and Promise.resolve().then(fn)?",
+    "options": [
+      "Promise.then executes first as a microtask, while setTimeout executes later as a macrotask after microtasks are drained",
+      "Both are registered in the macrotask queue",
+      "setTimeout always executes before Promise",
+      "Both behave identically"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise.resolve().then(fn) registers the callback in the microtask queue, while setTimeout(fn, 0) registers it in the macrotask queue. The event loop drains the entire microtask queue before processing any macrotask when the call stack is empty. So even when registered at the same time, the Promise.then callback always executes before the setTimeout callback.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "event-loop-024",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output order of the following code?",
+    "code": "console.log('1');\nsetTimeout(() => {\n  console.log('2');\n  Promise.resolve().then(() => console.log('3'));\n}, 0);\nPromise.resolve().then(() => {\n  console.log('4');\n  setTimeout(() => console.log('5'), 0);\n});\nconsole.log('6');",
+    "options": [
+      "1, 6, 4, 2, 3, 5",
+      "1, 6, 4, 2, 5, 3",
+      "1, 6, 2, 4, 3, 5",
+      "1, 4, 6, 2, 3, 5"
+    ],
+    "correctIndex": 0,
+    "explanation": "Synchronous code '1' and '6' execute first. When the call stack empties, microtask '4' executes, which registers setTimeout for '5' in the macrotask queue. The microtask queue is now empty, so the first macrotask '2' executes. The microtask '3' created during '2' runs before the next macrotask, and finally '5' executes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop"
+  },
+  {
+    "id": "event-loop-025",
+    "topic": "event-loop",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why might 'tick' be output one extra time even after clearInterval is called in the following code?",
+    "code": "const id = setInterval(() => {\n  console.log('tick');\n}, 100);\nsetTimeout(() => clearInterval(id), 250);",
+    "options": [
+      "clearInterval executes asynchronously",
+      "If the setInterval callback is already in the macrotask queue, clearInterval stops future registrations but may not cancel already-queued callbacks",
+      "setInterval cannot be stopped with clearInterval",
+      "The setTimeout delay is imprecise so clearInterval never executes"
+    ],
+    "correctIndex": 1,
+    "explanation": "setInterval registers callbacks in the macrotask queue at specified intervals. When clearInterval is called at 250ms, it stops future callback registrations, but a callback already queued (e.g., the one registered at ~200ms) may still execute. Depending on timing, the third 'tick' may have already been queued, causing one extra output.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/setInterval"
+  },
+  {
+    "id": "event-loop-026",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "When does rendering (repaint) occur in the browser event loop?",
+    "options": [
+      "Only once after all macrotasks complete",
+      "Before microtasks",
+      "After each macrotask and microtask processing, rendering occurs if needed",
+      "Rendering runs in a separate process independent of the event loop"
+    ],
+    "correctIndex": 2,
+    "explanation": "One cycle of the browser event loop is: 'execute 1 macrotask → drain microtask queue → render if needed'. Rendering happens when the browser determines a screen update is necessary (typically at 60fps). This is why heavy synchronous work blocks the UI, and why requestAnimationFrame runs just before the render step.",
+    "sourceUrl": "https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model"
+  },
+  {
+    "id": "event-loop-027",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output order of the following code?",
+    "code": "const p = new Promise((resolve) => {\n  console.log('A');\n  resolve();\n  console.log('B');\n});\np.then(() => console.log('C'));\nconsole.log('D');",
+    "options": [
+      "A, D, B, C",
+      "A, B, D, C",
+      "A, B, C, D",
+      "D, A, B, C"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Promise constructor's executor function runs synchronously. So 'A' is output, resolve() is called, and the remaining executor code continues to output 'B'. The then callback ('C') is registered in the microtask queue. Synchronous code 'D' executes next, then microtask 'C' runs.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
+  },
+  {
+    "id": "event-loop-028",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the relationship between Web Workers and the event loop is correct?",
+    "options": [
+      "Web Workers share the main thread's event loop",
+      "Web Workers can directly access the DOM",
+      "Web Workers have their own event loop and communicate with the main thread via message passing",
+      "Web Worker tasks are classified as microtasks"
+    ],
+    "correctIndex": 2,
+    "explanation": "Web Workers run in separate threads with their own event loops. Communication between the main thread and Workers happens via message passing through postMessage/onmessage. Workers cannot access the DOM. Offloading heavy computation to Workers keeps the main thread's event loop unblocked, maintaining smooth UI.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"
   }
 ]

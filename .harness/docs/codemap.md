@@ -156,7 +156,7 @@
 - data-structures.json — 20 questions
 - design-patterns.json — 20 questions
 - dom-manipulation.json — 20 questions
-- event-loop.json — 20 questions
+- event-loop.json — 28 questions
 - network.json — 20 questions
 - nodejs.json — 20 questions
 - promise.json — 20 questions
@@ -177,7 +177,7 @@
 - data-structures.json — 20 questions
 - design-patterns.json — 20 questions
 - dom-manipulation.json — 20 questions
-- event-loop.json — 20 questions
+- event-loop.json — 28 questions
 - network.json — 20 questions
 - nodejs.json — 20 questions
 - promise.json — 20 questions
