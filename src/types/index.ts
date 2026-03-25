@@ -21,6 +21,7 @@ export const TOPICS = [
   'browser-api',
   'api-design',
   'web-security',
+  'database',
 ] as const
 
 export type Topic = (typeof TOPICS)[number]
@@ -48,6 +49,7 @@ export const TOPIC_LABELS: Record<Topic, string> = {
   'browser-api': '브라우저 API',
   'api-design': 'API 설계',
   'web-security': '웹 보안',
+  database: '데이터베이스',
 }
 
 // Category definitions
@@ -115,7 +117,7 @@ export const CATEGORIES: readonly CategoryDefinition[] = [
     id: 'backend',
     label: 'Backend',
     icon: '🖥️',
-    topics: ['nodejs'],
+    topics: ['nodejs', 'database'],
     positions: ['backend', 'fullstack'],
   },
   {

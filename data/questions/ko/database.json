@@ -1,0 +1,196 @@
+[
+  {
+    "id": "database-001",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "관계형 데이터베이스(RDBMS)에서 기본 키(Primary Key)의 역할은 무엇인가요?",
+    "options": [
+      "데이터를 암호화하여 보안을 강화하는 역할",
+      "테이블 간의 관계를 정의하는 외래 키 역할",
+      "쿼리 실행 속도를 자동으로 최적화하는 역할",
+      "테이블의 각 행을 고유하게 식별하는 역할"
+    ],
+    "correctIndex": 3,
+    "explanation": "기본 키(Primary Key)는 테이블의 각 행(row)을 고유하게 식별하는 컬럼 또는 컬럼 조합입니다. NULL 값을 허용하지 않으며, 테이블 내에서 중복될 수 없습니다. 이를 통해 데이터 무결성을 보장합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/SQL"
+  },
+  {
+    "id": "database-002",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "데이터베이스 인덱스(Index)의 주요 목적은 무엇인가요?",
+    "options": [
+      "데이터를 자동으로 백업하기 위해",
+      "테이블의 데이터를 정렬된 상태로 유지하기 위해",
+      "데이터 조회 속도를 향상시키기 위해",
+      "테이블 간의 관계를 설정하기 위해"
+    ],
+    "correctIndex": 2,
+    "explanation": "인덱스는 데이터베이스 테이블의 검색 속도를 향상시키기 위한 자료 구조입니다. 책의 색인처럼 특정 데이터를 빠르게 찾을 수 있게 해주지만, 삽입/수정/삭제 시 인덱스 유지 비용이 발생합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Database_index"
+  },
+  {
+    "id": "database-003",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "SQL에서 JOIN의 역할은 무엇인가요?",
+    "options": [
+      "테이블의 데이터를 삭제하는 명령",
+      "두 개 이상의 테이블에서 관련된 데이터를 결합하는 연산",
+      "테이블에 새로운 컬럼을 추가하는 명령",
+      "데이터베이스의 스키마를 변경하는 명령"
+    ],
+    "correctIndex": 1,
+    "explanation": "JOIN은 두 개 이상의 테이블에서 관련된 컬럼을 기준으로 행을 결합하는 SQL 연산입니다. INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL OUTER JOIN 등 다양한 유형이 있으며, 정규화된 데이터를 효율적으로 조회할 수 있게 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/SQL"
+  },
+  {
+    "id": "database-004",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "데이터베이스 정규화(Normalization)의 주요 목적은 무엇인가요?",
+    "options": [
+      "쿼리 실행 속도를 최대화하기 위해",
+      "데이터 중복을 최소화하고 데이터 무결성을 보장하기 위해",
+      "테이블의 크기를 줄여 저장 공간을 절약하기 위해",
+      "모든 데이터를 하나의 테이블에 저장하기 위해"
+    ],
+    "correctIndex": 1,
+    "explanation": "정규화는 데이터베이스 설계에서 데이터 중복을 최소화하고 데이터 무결성을 보장하기 위해 테이블을 분리하는 과정입니다. 1NF, 2NF, 3NF 등의 정규형을 통해 삽입/수정/삭제 이상 현상을 방지합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Database_normalization"
+  },
+  {
+    "id": "database-005",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "ACID 속성 중 '원자성(Atomicity)'이 의미하는 것은 무엇인가요?",
+    "options": [
+      "여러 트랜잭션이 동시에 실행되어도 서로 간섭하지 않음",
+      "트랜잭션이 완료되면 그 결과가 영구적으로 반영됨",
+      "트랜잭션의 모든 연산이 완전히 수행되거나 전혀 수행되지 않음",
+      "트랜잭션 전후로 데이터베이스의 무결성 제약이 유지됨"
+    ],
+    "correctIndex": 2,
+    "explanation": "원자성(Atomicity)은 트랜잭션 내의 모든 연산이 하나의 단위로 처리되어, 모두 성공하거나 모두 실패(롤백)해야 함을 의미합니다. 부분적인 완료는 허용되지 않아 데이터 일관성을 유지합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/ACID"
+  },
+  {
+    "id": "database-006",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "SQL 데이터베이스와 NoSQL 데이터베이스의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "SQL은 고정된 스키마를 사용하고, NoSQL은 유연한 스키마를 지원한다",
+      "SQL은 수평적 확장이 쉽고, NoSQL은 수직적 확장에 적합하다",
+      "SQL은 비정형 데이터에 최적화되어 있고, NoSQL은 정형 데이터에 최적화되어 있다",
+      "SQL은 BASE를 따르고, NoSQL은 ACID를 따른다"
+    ],
+    "correctIndex": 0,
+    "explanation": "SQL(관계형) 데이터베이스는 테이블과 고정된 스키마를 사용하여 구조화된 데이터를 저장합니다. NoSQL은 문서형, 키-값, 그래프 등 다양한 모델을 지원하며 유연한 스키마로 빠른 개발과 수평적 확장에 유리합니다.",
+    "sourceUrl": "https://www.mongodb.com/nosql-explained/nosql-vs-sql"
+  },
+  {
+    "id": "database-007",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 SQL 쿼리의 결과로 올바른 것은 무엇인가요?\n\nusers 테이블: id(1,2,3), name('Alice','Bob','Charlie'), age(25,30,25)\n\nSELECT age, COUNT(*) as count FROM users GROUP BY age HAVING count > 1;",
+    "code": "SELECT age, COUNT(*) as count\nFROM users\nGROUP BY age\nHAVING count > 1;",
+    "options": [
+      "age: 25, count: 2",
+      "age: 30, count: 1",
+      "age: 25, count: 2 와 age: 30, count: 1",
+      "결과 없음 (빈 테이블)"
+    ],
+    "correctIndex": 0,
+    "explanation": "GROUP BY age로 같은 나이를 그룹화하면 25(2명), 30(1명)이 됩니다. HAVING count > 1 조건은 그룹의 행 수가 1보다 큰 그룹만 필터링하므로, age 25인 그룹(count: 2)만 결과에 포함됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/SQL"
+  },
+  {
+    "id": "database-008",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "데이터베이스에서 '데드락(Deadlock)'이 발생하는 상황은 무엇인가요?",
+    "options": [
+      "하나의 트랜잭션이 너무 많은 데이터를 조회할 때",
+      "인덱스가 없는 테이블에서 전체 테이블 스캔이 발생할 때",
+      "두 개 이상의 트랜잭션이 서로가 점유한 자원의 잠금을 기다리며 무한 대기하는 상태",
+      "데이터베이스 연결 풀이 모두 소진되었을 때"
+    ],
+    "correctIndex": 2,
+    "explanation": "데드락은 두 개 이상의 트랜잭션이 각각 상대방이 보유한 잠금(lock)을 기다리면서 어느 쪽도 진행할 수 없는 교착 상태입니다. DBMS는 데드락 감지(detection) 알고리즘을 통해 이를 해결하며, 보통 하나의 트랜잭션을 롤백합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Deadlock"
+  },
+  {
+    "id": "database-009",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "B-Tree 인덱스와 Hash 인덱스의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "Hash 인덱스는 범위 검색에 효율적이고, B-Tree는 동등 비교에만 사용된다",
+      "B-Tree 인덱스는 범위 검색과 정렬에 효율적이고, Hash 인덱스는 동등 비교에 최적화되어 있다",
+      "두 인덱스 모두 동일한 성능을 제공하며 차이가 없다",
+      "Hash 인덱스는 디스크 기반이고, B-Tree 인덱스는 메모리에서만 동작한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "B-Tree 인덱스는 데이터를 정렬된 트리 구조로 유지하여 범위 검색(>, <, BETWEEN)과 ORDER BY에 효율적입니다. Hash 인덱스는 해시 함수를 사용하여 정확한 일치 검색(=)에 O(1)에 가까운 성능을 제공하지만 범위 검색은 지원하지 않습니다.",
+    "sourceUrl": "https://dev.mysql.com/doc/refman/8.0/en/index-btree-hash.html"
+  },
+  {
+    "id": "database-010",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "데이터베이스 샤딩(Sharding)의 주요 목적은 무엇인가요?",
+    "options": [
+      "데이터를 암호화하여 보안을 강화하기 위해",
+      "데이터를 여러 서버에 분산 저장하여 수평적 확장을 달성하기 위해",
+      "데이터베이스의 백업을 자동화하기 위해",
+      "쿼리 결과를 캐싱하여 응답 속도를 개선하기 위해"
+    ],
+    "correctIndex": 1,
+    "explanation": "샤딩은 대규모 데이터를 여러 데이터베이스 서버(샤드)에 수평적으로 분산 저장하는 기법입니다. 각 샤드는 전체 데이터의 일부만 보유하여 단일 서버의 부하와 저장 한계를 극복하고, 읽기/쓰기 성능을 향상시킵니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Shard_(database_architecture)"
+  },
+  {
+    "id": "database-011",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 SQL 쿼리의 결과는 무엇인가요?\n\nproducts 테이블: id(1,2,3), name('A','B','C'), price(100, NULL, 300)\n\nSELECT COUNT(price) FROM products;",
+    "code": "SELECT COUNT(price) FROM products;",
+    "options": [
+      "3",
+      "2",
+      "NULL",
+      "오류 발생"
+    ],
+    "correctIndex": 1,
+    "explanation": "COUNT(컬럼명)은 해당 컬럼에서 NULL이 아닌 값의 개수를 셉니다. price 컬럼에서 NULL이 아닌 값은 100과 300으로 2개입니다. 모든 행을 세려면 COUNT(*)를 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/SQL"
+  },
+  {
+    "id": "database-012",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "데이터베이스에서 '트랜잭션 격리 수준(Isolation Level)' 중 가장 높은 격리 수준은 무엇인가요?",
+    "options": [
+      "Read Uncommitted",
+      "Read Committed",
+      "Repeatable Read",
+      "Serializable"
+    ],
+    "correctIndex": 3,
+    "explanation": "Serializable은 가장 높은 격리 수준으로, 트랜잭션들이 마치 순차적으로 실행되는 것처럼 동작합니다. 팬텀 리드를 포함한 모든 동시성 문제를 방지하지만, 동시성이 크게 제한되어 성능 저하가 발생할 수 있습니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Isolation_(database_systems)"
+  }
+]

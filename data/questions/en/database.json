@@ -1,0 +1,196 @@
+[
+  {
+    "id": "database-001",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of a Primary Key in a relational database (RDBMS)?",
+    "options": [
+      "It encrypts data to enhance security",
+      "It acts as a foreign key defining relationships between tables",
+      "It automatically optimizes query execution speed",
+      "It uniquely identifies each row in a table"
+    ],
+    "correctIndex": 3,
+    "explanation": "A Primary Key is a column or combination of columns that uniquely identifies each row in a table. It does not allow NULL values and must be unique within the table, ensuring data integrity.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/SQL"
+  },
+  {
+    "id": "database-002",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the main purpose of a database index?",
+    "options": [
+      "To automatically back up data",
+      "To keep table data in a sorted state",
+      "To improve data retrieval speed",
+      "To define relationships between tables"
+    ],
+    "correctIndex": 2,
+    "explanation": "An index is a data structure that improves the speed of data retrieval on a database table. Like an index in a book, it allows specific data to be found quickly, though it incurs maintenance cost during insert, update, and delete operations.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Database_index"
+  },
+  {
+    "id": "database-003",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of JOIN in SQL?",
+    "options": [
+      "A command that deletes data from a table",
+      "An operation that combines related data from two or more tables",
+      "A command that adds new columns to a table",
+      "A command that modifies the database schema"
+    ],
+    "correctIndex": 1,
+    "explanation": "JOIN is a SQL operation that combines rows from two or more tables based on related columns. There are several types including INNER JOIN, LEFT JOIN, RIGHT JOIN, and FULL OUTER JOIN, enabling efficient querying of normalized data.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/SQL"
+  },
+  {
+    "id": "database-004",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the primary purpose of database normalization?",
+    "options": [
+      "To maximize query execution speed",
+      "To minimize data redundancy and ensure data integrity",
+      "To reduce table size and save storage space",
+      "To store all data in a single table"
+    ],
+    "correctIndex": 1,
+    "explanation": "Normalization is the process of organizing database tables to minimize data redundancy and ensure data integrity. Through normal forms like 1NF, 2NF, and 3NF, it prevents insertion, update, and deletion anomalies.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Database_normalization"
+  },
+  {
+    "id": "database-005",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What does 'Atomicity' mean in the ACID properties?",
+    "options": [
+      "Multiple transactions can execute concurrently without interfering with each other",
+      "Once a transaction is complete, its results are permanently stored",
+      "All operations in a transaction are either fully completed or not executed at all",
+      "Database integrity constraints are maintained before and after a transaction"
+    ],
+    "correctIndex": 2,
+    "explanation": "Atomicity means that all operations within a transaction are treated as a single unit — they either all succeed or all fail (rollback). Partial completion is not allowed, maintaining data consistency.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/ACID"
+  },
+  {
+    "id": "database-006",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which of the following correctly describes a difference between SQL and NoSQL databases?",
+    "options": [
+      "SQL uses a fixed schema, while NoSQL supports flexible schemas",
+      "SQL scales horizontally easily, while NoSQL is suited for vertical scaling",
+      "SQL is optimized for unstructured data, while NoSQL is optimized for structured data",
+      "SQL follows BASE principles, while NoSQL follows ACID principles"
+    ],
+    "correctIndex": 0,
+    "explanation": "SQL (relational) databases use tables with fixed schemas to store structured data. NoSQL supports various models such as document, key-value, and graph stores with flexible schemas, making it advantageous for rapid development and horizontal scaling.",
+    "sourceUrl": "https://www.mongodb.com/nosql-explained/nosql-vs-sql"
+  },
+  {
+    "id": "database-007",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the result of the following SQL query?\n\nusers table: id(1,2,3), name('Alice','Bob','Charlie'), age(25,30,25)\n\nSELECT age, COUNT(*) as count FROM users GROUP BY age HAVING count > 1;",
+    "code": "SELECT age, COUNT(*) as count\nFROM users\nGROUP BY age\nHAVING count > 1;",
+    "options": [
+      "age: 25, count: 2",
+      "age: 30, count: 1",
+      "age: 25, count: 2 and age: 30, count: 1",
+      "No results (empty table)"
+    ],
+    "correctIndex": 0,
+    "explanation": "GROUP BY age groups rows by age, resulting in groups of 25 (2 rows) and 30 (1 row). The HAVING count > 1 condition filters out groups with a count of 1 or less, so only the group with age 25 (count: 2) is included in the result.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/SQL"
+  },
+  {
+    "id": "database-008",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What situation causes a database deadlock?",
+    "options": [
+      "When a single transaction queries too much data",
+      "When a full table scan occurs on a table without indexes",
+      "When two or more transactions wait indefinitely for each other's held locks",
+      "When all database connection pool connections are exhausted"
+    ],
+    "correctIndex": 2,
+    "explanation": "A deadlock occurs when two or more transactions each wait for locks held by the other, creating a circular dependency where neither can proceed. The DBMS uses deadlock detection algorithms to resolve this, typically by rolling back one of the transactions.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Deadlock"
+  },
+  {
+    "id": "database-009",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference between B-Tree and Hash indexes?",
+    "options": [
+      "Hash indexes are efficient for range queries, while B-Tree is only used for equality comparisons",
+      "B-Tree indexes are efficient for range queries and sorting, while Hash indexes are optimized for equality comparisons",
+      "Both indexes provide identical performance with no differences",
+      "Hash indexes are disk-based, while B-Tree indexes only work in memory"
+    ],
+    "correctIndex": 1,
+    "explanation": "B-Tree indexes maintain data in a sorted tree structure, making them efficient for range queries (>, <, BETWEEN) and ORDER BY clauses. Hash indexes use hash functions for near O(1) performance on exact match queries (=) but do not support range queries.",
+    "sourceUrl": "https://dev.mysql.com/doc/refman/8.0/en/index-btree-hash.html"
+  },
+  {
+    "id": "database-010",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the main purpose of database sharding?",
+    "options": [
+      "To encrypt data for enhanced security",
+      "To distribute data across multiple servers for horizontal scaling",
+      "To automate database backups",
+      "To cache query results for improved response times"
+    ],
+    "correctIndex": 1,
+    "explanation": "Sharding is a technique that horizontally distributes large datasets across multiple database servers (shards). Each shard holds only a portion of the total data, overcoming single-server load and storage limitations while improving read/write performance.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Shard_(database_architecture)"
+  },
+  {
+    "id": "database-011",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the result of the following SQL query?\n\nproducts table: id(1,2,3), name('A','B','C'), price(100, NULL, 300)\n\nSELECT COUNT(price) FROM products;",
+    "code": "SELECT COUNT(price) FROM products;",
+    "options": [
+      "3",
+      "2",
+      "NULL",
+      "Error"
+    ],
+    "correctIndex": 1,
+    "explanation": "COUNT(column_name) counts the number of non-NULL values in that column. In the price column, the non-NULL values are 100 and 300, giving a count of 2. To count all rows regardless of NULL, use COUNT(*).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/SQL"
+  },
+  {
+    "id": "database-012",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which is the highest transaction isolation level in databases?",
+    "options": [
+      "Read Uncommitted",
+      "Read Committed",
+      "Repeatable Read",
+      "Serializable"
+    ],
+    "correctIndex": 3,
+    "explanation": "Serializable is the highest isolation level, where transactions behave as if they were executed sequentially. It prevents all concurrency issues including phantom reads, but significantly limits concurrency and may cause performance degradation.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Isolation_(database_systems)"
+  }
+]

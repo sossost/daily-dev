@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 8 event-loop questions (021-028) (`c53b1c6`)
 - **code**: Add tests for low-coverage modules (`6b1df36`)
 - add onboarding flow, topic filter, and position-based topic system (`dd4400a`)
 - **content**: add 10 web-security questions (016-025) (`c4d346a`)

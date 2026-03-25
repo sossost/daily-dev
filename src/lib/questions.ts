@@ -27,6 +27,7 @@ import nodejsKo from '../../data/questions/ko/nodejs.json'
 import browserApiKo from '../../data/questions/ko/browser-api.json'
 import apiDesignKo from '../../data/questions/ko/api-design.json'
 import webSecurityKo from '../../data/questions/ko/web-security.json'
+import databaseKo from '../../data/questions/ko/database.json'
 
 // English imports
 import scopeEn from '../../data/questions/en/scope.json'
@@ -50,6 +51,7 @@ import nodejsEn from '../../data/questions/en/nodejs.json'
 import browserApiEn from '../../data/questions/en/browser-api.json'
 import apiDesignEn from '../../data/questions/en/api-design.json'
 import webSecurityEn from '../../data/questions/en/web-security.json'
+import databaseEn from '../../data/questions/en/database.json'
 
 // JSON imports are typed as { topic: string } (not Topic union).
 // Structural validation is handled by .harness/scripts/validate.sh at commit time,
@@ -64,14 +66,14 @@ const QUESTIONS_BY_LOCALE: Record<Locale, Question[]> = {
     typeCoercionKo, typescriptKo, promiseKo, domManipulationKo,
     cssLayoutKo, webPerformanceKo, reactBasicsKo, dataStructuresKo,
     designPatternsKo, networkKo, algorithmsKo, nodejsKo,
-    browserApiKo, apiDesignKo, webSecurityKo,
+    browserApiKo, apiDesignKo, webSecurityKo, databaseKo,
   ]),
   en: buildQuestionList([
     scopeEn, closureEn, prototypeEn, thisEn, eventLoopEn, asyncEn,
     typeCoercionEn, typescriptEn, promiseEn, domManipulationEn,
     cssLayoutEn, webPerformanceEn, reactBasicsEn, dataStructuresEn,
     designPatternsEn, networkEn, algorithmsEn, nodejsEn,
-    browserApiEn, apiDesignEn, webSecurityEn,
+    browserApiEn, apiDesignEn, webSecurityEn, databaseEn,
   ]),
 }
 
