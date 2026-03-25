@@ -161,6 +161,7 @@
 - type-coercion.json — 20 questions
 - typescript.json — 20 questions
 - web-performance.json — 20 questions
+- web-security.json — 15 questions
 
 ## Modules
 

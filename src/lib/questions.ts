@@ -24,6 +24,7 @@ import algorithmsQuestions from '../../data/questions/algorithms.json'
 import nodejsQuestions from '../../data/questions/nodejs.json'
 import browserApiQuestions from '../../data/questions/browser-api.json'
 import apiDesignQuestions from '../../data/questions/api-design.json'
+import webSecurityQuestions from '../../data/questions/web-security.json'
 
 const ALL_QUESTIONS: Question[] = [
   ...scopeQuestions,
@@ -46,6 +47,7 @@ const ALL_QUESTIONS: Question[] = [
   ...nodejsQuestions,
   ...browserApiQuestions,
   ...apiDesignQuestions,
+  ...webSecurityQuestions,
 ] as Question[]
 
 const QUESTIONS_BY_ID = new Map<string, Question>(

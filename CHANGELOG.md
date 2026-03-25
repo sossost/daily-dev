@@ -6,6 +6,7 @@
 
 ### Features
 
+- **feature**: Add wrong answer notebook (오답 노트) (`d4c61e8`)
 - **feature**: Add timed challenge mode (`efe5e8f`)
 - **content**: add 10 api-design questions (`67f5821`)
 - **expansion**: Add api-design topic (15 questions) (`2814b6e`)
