@@ -28,7 +28,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 |-------|-----------|
 | Algorithms | 20 |
 | API Design | 25 |
-| Async | 20 |
+| Async | 28 |
 | Browser API | 25 |
 | Closure | 30 |
 | CSS Layout | 20 |
@@ -49,7 +49,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Web Performance | 20 |
 | Web Security | 25 |
 
-**Total: 491 questions across 22 topics**
+**Total: 499 questions across 22 topics**
 
 ## Getting Started
 

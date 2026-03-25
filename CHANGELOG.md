@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-03-26
+
+### Features
+
+- **content**: add 8 promise questions (021-028) (`df39c74`)
+
 ## 2026-03-25
 
 ### Features

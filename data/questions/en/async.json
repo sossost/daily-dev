@@ -330,5 +330,137 @@
     "correctIndex": 3,
     "explanation": "Promise.race returns the result of the first Promise to settle (whether fulfilled or rejected). Promise.any returns the value of the first Promise to fulfill, ignoring rejected ones. Promise.any only rejects with an AggregateError when all Promises are rejected.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/any"
+  },
+  {
+    "id": "async-021",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "Promise.resolve('hello')\n  .then(val => val + ' world')\n  .then(val => console.log(val));",
+    "options": [
+      "hello",
+      "hello world",
+      "undefined",
+      "Promise { 'hello world' }"
+    ],
+    "correctIndex": 1,
+    "explanation": "When a .then() callback returns a value, a new Promise fulfilled with that value is created. The first .then() returns 'hello' + ' world' = 'hello world', and the second .then() receives this value and outputs it. This is the core principle of Promise chaining.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "async-022",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about Promise.finally() is correct?",
+    "options": [
+      "The callback receives the fulfillment value or rejection reason as an argument",
+      "It runs on both fulfillment and rejection, and the callback receives no arguments",
+      "No .then() or .catch() can be chained after finally()",
+      "finally() always changes the Promise to a fulfilled state"
+    ],
+    "correctIndex": 1,
+    "explanation": "Promise.finally() always runs regardless of whether the Promise is fulfilled or rejected. The callback receives no arguments, so you cannot determine the fulfillment value or rejection reason. It is ideal for cleanup tasks like hiding loading spinners or releasing resources. Chaining after finally() is possible, and the original fulfillment value or rejection reason passes through.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally"
+  },
+  {
+    "id": "async-023",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "async function test() {\n  try {\n    await Promise.reject('error');\n    console.log('A');\n  } catch (e) {\n    console.log('B');\n  } finally {\n    console.log('C');\n  }\n}\ntest();",
+    "options": [
+      "A, C",
+      "B",
+      "B, C",
+      "A, B, C"
+    ],
+    "correctIndex": 2,
+    "explanation": "await Promise.reject('error') throws an exception, jumping to the catch block. 'A' is never executed. The catch block outputs 'B', and the finally block always runs, outputting 'C'. In async/await, awaiting a rejected Promise behaves identically to a synchronous throw, handled by try-catch.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch"
+  },
+  {
+    "id": "async-024",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between queueMicrotask() and setTimeout(fn, 0)?",
+    "options": [
+      "Both execute at the same timing",
+      "setTimeout executes before queueMicrotask",
+      "queueMicrotask registers to the microtask queue while setTimeout registers to the macrotask queue, so microtasks execute first",
+      "queueMicrotask executes synchronously"
+    ],
+    "correctIndex": 2,
+    "explanation": "queueMicrotask() registers a callback to the microtask queue, while setTimeout(fn, 0) registers to the macrotask queue. The event loop drains the microtask queue first after the current code finishes, then processes macrotasks. Therefore, queueMicrotask callbacks always execute before setTimeout callbacks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "async-025",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, an AbortController cancels a fetch but an error occurs. What is the cause?",
+    "code": "const controller = new AbortController();\nfetch('/api/data', { signal: controller.signal })\n  .then(res => res.json())\n  .then(data => console.log(data));\ncontroller.abort();\n// Uncaught AbortError",
+    "options": [
+      "AbortController cannot be used with fetch",
+      "The signal option is in the wrong position",
+      "Calling abort() throws an AbortError which is not handled because .catch() is missing",
+      "abort() must be called before fetch"
+    ],
+    "correctIndex": 2,
+    "explanation": "When AbortController.abort() is called, the connected fetch request is cancelled and an AbortError is thrown. This error is passed as a Promise rejection, so it must be handled with .catch(). Typically, the catch block checks err.name === 'AbortError' to distinguish intentional cancellation from actual errors.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/AbortController"
+  },
+  {
+    "id": "async-026",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "Promise.resolve()\n  .then(() => {\n    console.log('A');\n    return Promise.resolve('B');\n  })\n  .then(val => {\n    console.log(val);\n  });\n\nPromise.resolve()\n  .then(() => console.log('C'))\n  .then(() => console.log('D'));",
+    "options": [
+      "A, C, B, D",
+      "A, B, C, D",
+      "C, A, D, B",
+      "A, C, D, B"
+    ],
+    "correctIndex": 3,
+    "explanation": "Two Promise chains start concurrently. In the first microtask batch, 'A' is output and Promise.resolve('B') is returned. The second chain outputs 'C'. When a .then() returns a Promise, additional microtask ticks are needed to resolve it, so 'D' is output before 'B'. The key insight is that returning a thenable from .then() requires extra ticks to resolve.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "async-027",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Which statement about async generator functions is correct?",
+    "options": [
+      "They cannot use the yield keyword",
+      "Declared with async function*, they produce async values sequentially using yield",
+      "They behave identically to regular generators and the async keyword is ignored",
+      "They can only be consumed with Promise.all()"
+    ],
+    "correctIndex": 1,
+    "explanation": "Async generators are declared with async function*. They can use yield to produce values and await to wait for async operations. Calling one returns an AsyncGenerator object, which can be consumed with for await...of. They are useful for paginated API calls, streaming data processing, and other scenarios requiring sequential async value production.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function*"
+  },
+  {
+    "id": "async-028",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between returning a value vs returning a Promise in a then chain?",
+    "options": [
+      "Returning a value causes an error",
+      "Returning a Promise makes the next then wait for it to settle, while returning a value passes it to the next then immediately",
+      "Both execute synchronously in the same way",
+      "Returning a Promise terminates the chain"
+    ],
+    "correctIndex": 1,
+    "explanation": "When a then callback returns a plain value, it is wrapped in Promise.resolve(value) and immediately (in the next microtask) passed to the next then. When a Promise is returned, the next then waits for that Promise to settle before executing. This allows sequential chaining of asynchronous operations.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
   }
 ]

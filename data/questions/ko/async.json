@@ -330,5 +330,137 @@
     "correctIndex": 3,
     "explanation": "Promise.race는 가장 먼저 settle되는 Promise의 결과를 반환합니다(이행이든 거부든). Promise.any는 가장 먼저 이행되는 Promise의 값을 반환하고, 거부된 Promise는 무시합니다. Promise.any는 모든 Promise가 거부되었을 때만 AggregateError로 reject됩니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/any"
+  },
+  {
+    "id": "async-021",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "Promise.resolve('hello')\n  .then(val => val + ' world')\n  .then(val => console.log(val));",
+    "options": [
+      "hello",
+      "hello world",
+      "undefined",
+      "Promise { 'hello world' }"
+    ],
+    "correctIndex": 1,
+    "explanation": ".then() 콜백에서 값을 return하면 그 값으로 이행되는 새로운 Promise가 생성됩니다. 첫 번째 .then()에서 'hello' + ' world' = 'hello world'를 반환하고, 두 번째 .then()이 이 값을 받아 출력합니다. 이것이 Promise 체이닝의 핵심 원리입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "async-022",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Promise.finally()에 대한 설명으로 올바른 것은?",
+    "options": [
+      "콜백에 이행값 또는 거부 사유가 인자로 전달된다",
+      "이행과 거부 모두에서 실행되며, 콜백에 인자가 전달되지 않는다",
+      "finally() 이후에는 .then()이나 .catch()를 체이닝할 수 없다",
+      "finally()는 Promise를 항상 이행 상태로 변경한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Promise.finally()는 Promise가 이행되든 거부되든 항상 실행됩니다. 콜백 함수에는 아무런 인자가 전달되지 않으므로 이행값이나 거부 사유를 알 수 없습니다. 로딩 스피너 제거, 리소스 정리 등 결과와 무관한 작업에 적합합니다. finally() 이후에도 체이닝이 가능하며, 원래의 이행값이나 거부 사유가 그대로 전달됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally"
+  },
+  {
+    "id": "async-023",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "async function test() {\n  try {\n    await Promise.reject('error');\n    console.log('A');\n  } catch (e) {\n    console.log('B');\n  } finally {\n    console.log('C');\n  }\n}\ntest();",
+    "options": [
+      "A, C",
+      "B",
+      "B, C",
+      "A, B, C"
+    ],
+    "correctIndex": 2,
+    "explanation": "await Promise.reject('error')는 예외를 발생시켜 catch 블록으로 점프합니다. 'A'는 실행되지 않습니다. catch 블록에서 'B'가 출력되고, finally 블록은 항상 실행되므로 'C'가 출력됩니다. async/await에서 rejected Promise를 await하면 동기 코드의 throw와 동일하게 try-catch로 처리됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/try...catch"
+  },
+  {
+    "id": "async-024",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "queueMicrotask()와 setTimeout(fn, 0)의 차이로 올바른 것은?",
+    "options": [
+      "둘 다 동일한 타이밍에 실행된다",
+      "setTimeout이 queueMicrotask보다 먼저 실행된다",
+      "queueMicrotask는 마이크로태스크 큐에, setTimeout은 매크로태스크 큐에 등록되어 마이크로태스크가 먼저 실행된다",
+      "queueMicrotask는 동기적으로 실행된다"
+    ],
+    "correctIndex": 2,
+    "explanation": "queueMicrotask()는 마이크로태스크 큐에 콜백을 등록하고, setTimeout(fn, 0)는 매크로태스크 큐에 등록합니다. 이벤트 루프는 현재 실행 중인 코드가 끝난 후 마이크로태스크 큐를 먼저 비우고, 그 다음 매크로태스크를 처리합니다. 따라서 queueMicrotask의 콜백이 setTimeout보다 항상 먼저 실행됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "async-025",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 AbortController로 fetch를 취소했지만 에러가 발생합니다. 원인은 무엇인가요?",
+    "code": "const controller = new AbortController();\nfetch('/api/data', { signal: controller.signal })\n  .then(res => res.json())\n  .then(data => console.log(data));\ncontroller.abort();\n// Uncaught AbortError",
+    "options": [
+      "AbortController는 fetch와 함께 사용할 수 없기 때문",
+      "signal 옵션이 잘못된 위치에 있기 때문",
+      "abort()로 요청을 취소하면 AbortError가 발생하는데 .catch()로 처리하지 않았기 때문",
+      "abort()를 fetch 호출 전에 호출해야 하기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "AbortController.abort()를 호출하면 연결된 fetch 요청이 취소되고 AbortError가 발생합니다. 이 에러는 Promise rejection으로 전달되므로 .catch()로 처리해야 합니다. 일반적으로 catch 블록에서 err.name === 'AbortError'를 확인하여 의도적인 취소와 실제 에러를 구분합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/AbortController"
+  },
+  {
+    "id": "async-026",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "Promise.resolve()\n  .then(() => {\n    console.log('A');\n    return Promise.resolve('B');\n  })\n  .then(val => {\n    console.log(val);\n  });\n\nPromise.resolve()\n  .then(() => console.log('C'))\n  .then(() => console.log('D'));",
+    "options": [
+      "A, C, B, D",
+      "A, B, C, D",
+      "C, A, D, B",
+      "A, C, D, B"
+    ],
+    "correctIndex": 3,
+    "explanation": "두 Promise 체인이 동시에 시작됩니다. 첫 번째 마이크로태스크 처리에서 'A'가 출력되고 Promise.resolve('B')가 반환됩니다. 두 번째 체인에서 'C'가 출력됩니다. .then()에서 Promise를 반환하면 추가 마이크로태스크가 필요하므로 'D'가 'B'보다 먼저 출력됩니다. thenable을 반환하면 해결에 추가 틱이 소요되는 것이 핵심입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "async-027",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "async 제너레이터(async generator) 함수에 대한 설명으로 올바른 것은?",
+    "options": [
+      "yield 키워드를 사용할 수 없다",
+      "async function*으로 선언하며, yield로 비동기 값을 순차적으로 생산한다",
+      "일반 제너레이터와 동일하게 동작하며 async 키워드는 무시된다",
+      "Promise.all()로만 소비할 수 있다"
+    ],
+    "correctIndex": 1,
+    "explanation": "async 제너레이터는 async function*으로 선언합니다. yield로 값을 생산하고 await로 비동기 작업을 기다릴 수 있습니다. 호출하면 AsyncGenerator 객체를 반환하며, for await...of로 소비할 수 있습니다. 페이지네이션된 API 호출, 스트리밍 데이터 처리 등에서 유용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function*"
+  },
+  {
+    "id": "async-028",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "then 체인에서 값을 return하는 것과 Promise를 return하는 것의 차이는?",
+    "options": [
+      "값을 return하면 에러가 발생한다",
+      "Promise를 return하면 그 Promise가 settle될 때까지 다음 then이 기다리고, 값을 return하면 즉시 다음 then에 전달된다",
+      "둘 다 동일하게 동기적으로 실행된다",
+      "Promise를 return하면 체인이 종료된다"
+    ],
+    "correctIndex": 1,
+    "explanation": "then 콜백에서 일반 값을 return하면 Promise.resolve(값)으로 감싸져 다음 then에 즉시(다음 마이크로태스크에서) 전달됩니다. Promise를 return하면 해당 Promise가 settle될 때까지 다음 then의 실행이 지연됩니다. 이를 통해 비동기 작업을 순차적으로 체이닝할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
   }
 ]
