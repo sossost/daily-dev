@@ -124,10 +124,10 @@ export function TopicFilterModal({ isOpen, onClose }: TopicFilterModalProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center backdrop-blur-sm"
         >
           <div
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/50"
             onClick={onClose}
             role="presentation"
           />
@@ -136,7 +136,7 @@ export function TopicFilterModal({ isOpen, onClose }: TopicFilterModalProps) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-t-2xl sm:rounded-2xl p-6 max-h-[70vh] sm:max-h-[65vh] flex flex-col"
+            className="relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-t-2xl sm:rounded-2xl p-6 max-h-[80vh] sm:max-h-[75vh] flex flex-col"
             role="dialog"
             aria-modal="true"
             aria-label={t('title')}
