@@ -9,11 +9,8 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 - 10-question daily sessions with spaced repetition
 - Multiple question types: concept, output prediction, debugging, comparison
 - Progress tracking with topic-level statistics
-- Multi-language support (English / Korean) via next-intl
 - Mobile-responsive design
 - Dark mode with system preference detection
-- Timed challenge mode
-- Wrong answer notebook for targeted review
 - Streak tracking for daily sessions
 - Keyboard shortcuts for navigation
 - Session history with past results
@@ -25,39 +22,21 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 
 | Topic | Questions |
 |-------|-----------|
-| Algorithms | 20 |
-| API Design | 25 |
-| Async | 20 |
-| Browser API | 25 |
-| Closure | 30 |
-| CSS Layout | 20 |
-| Data Structures | 20 |
-| Design Patterns | 20 |
-| Dom Manipulation | 20 |
-| Event Loop | 20 |
-| Network | 20 |
-| Node.js | 20 |
-| Promise | 20 |
-| Prototype | 20 |
-| React Basics | 20 |
-| Scope | 30 |
-| this Keyword | 20 |
-| Type Coercion | 20 |
-| TypeScript | 20 |
-| Web Performance | 20 |
-| Web Security | 15 |
+| Scope | 0 |
+| Closure | 0 |
+| Prototype | 0 |
+| this Keyword | 0 |
+| Event Loop | 0 |
+| Async | 0 |
+| Type Coercion | 0 |
 
-**Total: 445 questions across 21 topics**
+**Total: 0 questions across 7 topics**
 
 ## Getting Started
 
 ```bash
 # Install dependencies
 npm install
-
-# Set up environment variables
-cp .env.example .env.local
-# NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX  (optional: Google Analytics)
 
 # Start development server
 npm run dev
@@ -74,9 +53,8 @@ npm run build
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 15 (App Router, static export)
 - **UI**: React 19, Tailwind CSS 4, Framer Motion 12
-- **i18n**: next-intl (English / Korean)
 - **State**: Zustand 5
 - **Language**: TypeScript 5 (strict mode)
 - **Testing**: Jest 29, React Testing Library
@@ -92,21 +70,15 @@ See `.harness/agents/` for agent role definitions.
 
 ```
 src/
-  app/[locale]/  — Locale-aware pages and layouts
-  components/    — React components
-  hooks/         — Custom React hooks
-  i18n/          — next-intl routing, request config, navigation
-  lib/           — Utilities, helpers, stores
-  types/         — TypeScript type definitions
+  app/          — Next.js App Router pages and layouts
+  components/   — React components
+  hooks/        — Custom React hooks
+  lib/          — Utilities, helpers, stores
+  types/        — TypeScript type definitions
 data/
-  questions/
-    en/          — English question JSON files (one per topic)
-    ko/          — Korean question JSON files (one per topic)
-messages/
-  en.json        — English UI translations
-  ko.json        — Korean UI translations
-__tests__/       — Jest test files
-.harness/        — Agent orchestration system
+  questions/    — Question JSON files (one per topic)
+__tests__/      — Jest test files
+.harness/       — Agent orchestration system
 ```
 
 ## Contributing

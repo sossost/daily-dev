@@ -167,7 +167,28 @@
 - type-coercion.json — 20 questions
 - typescript.json — 20 questions
 - web-performance.json — 20 questions
-- web-security.json — 15 questions
+- web-security.json — 25 questions
+- algorithms.json — 20 questions
+- api-design.json — 25 questions
+- async.json — 20 questions
+- browser-api.json — 25 questions
+- closure.json — 30 questions
+- css-layout.json — 20 questions
+- data-structures.json — 20 questions
+- design-patterns.json — 20 questions
+- dom-manipulation.json — 20 questions
+- event-loop.json — 20 questions
+- network.json — 20 questions
+- nodejs.json — 20 questions
+- promise.json — 20 questions
+- prototype.json — 20 questions
+- react-basics.json — 20 questions
+- scope.json — 30 questions
+- this.json — 20 questions
+- type-coercion.json — 20 questions
+- typescript.json — 20 questions
+- web-performance.json — 20 questions
+- web-security.json — 25 questions
 
 ## Modules
 
@@ -202,7 +223,7 @@
 - `generateChallengeSession` (topicFilter?: readonly Topic[],) → SessionQuestion[] — Generate a large pool of shuffled questions for challenge mode. Returns up to CHALLENGE_POOL_SIZE questions with shuffled options.
 - `computeChallengeResult` (answers: readonly { readonly isCorrect: boolean }[], duration: ChallengeDuration,) → ChallengeResult — Compute challenge result statistics from answers.
 - `CHALLENGE_DURATIONS` readonly ChallengeDuration[]
-- `CHALLENGE_DURATION_LABELS` Record<ChallengeDuration, string>
+- `CHALLENGE_DURATION_KEYS` Record<ChallengeDuration, string> — i18n keys for each duration — use with useTranslations('challenge')
 - `ChallengeDuration`
 - `ChallengeResult`
 - *deps*: types, lib/questions, lib/session, lib/shuffle

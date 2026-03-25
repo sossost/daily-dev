@@ -6,6 +6,9 @@
 
 ### Features
 
+- add onboarding flow, topic filter, and position-based topic system (`8b16631`)
+- add i18n support with next-intl (English/Korean) (`e1ac70b`)
+- **expansion**: Add web-security topic (15 questions) (`89b3282`)
 - **feature**: Add wrong answer notebook (오답 노트) (`d4c61e8`)
 - **feature**: Add timed challenge mode (`efe5e8f`)
 - **content**: add 10 api-design questions (`67f5821`)

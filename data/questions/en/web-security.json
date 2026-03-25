@@ -241,5 +241,171 @@
     "correctIndex": 2,
     "explanation": "A CORS preflight (OPTIONS request) is triggered when a request does not meet the simple request conditions. A simple request uses only GET/HEAD/POST methods, has a Content-Type of text/plain, multipart/form-data, or application/x-www-form-urlencoded, and includes no custom headers. Any request outside these conditions sends a preflight request first.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#preflighted_requests"
+  },
+  {
+    "id": "web-security-016",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the HTML output after sanitizing with DOMPurify in the following code?",
+    "code": "const dirty = '<img src=x onerror=alert(1)><b>Hello</b>';\nconst clean = DOMPurify.sanitize(dirty);\nconsole.log(clean);",
+    "options": [
+      "<img src=x onerror=alert(1)><b>Hello</b>",
+      "<b>Hello</b>",
+      "<img src=x><b>Hello</b>",
+      "An empty string"
+    ],
+    "correctIndex": 2,
+    "explanation": "DOMPurify is an HTML sanitizer library that removes dangerous attributes (such as event handlers like onerror) while preserving safe tags and attributes. The <img src=x> tag is kept but the onerror handler is removed, resulting in <img src=x><b>Hello</b>.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/Security/Practical_implementation_guides/Cross-site_scripting_prevention"
+  },
+  {
+    "id": "web-security-017",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the following code have an Open Redirect vulnerability?",
+    "code": "app.get('/redirect', (req, res) => {\n  const url = req.query.url;\n  res.redirect(url);\n});",
+    "options": [
+      "Because res.redirect is an async function",
+      "Because user-supplied URLs are redirected without validation, allowing attackers to direct users to phishing sites",
+      "Because redirect cannot be used in GET requests",
+      "Because req.query.url is always undefined"
+    ],
+    "correctIndex": 1,
+    "explanation": "If a user puts a malicious site address in the url parameter, the server redirects to that URL without validation. An attacker can use a trusted domain's URL to redirect users to a phishing site. You should use a whitelist of allowed domains to restrict redirect targets.",
+    "sourceUrl": "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/11-Client-side_Testing/04-Testing_for_Client-side_URL_Redirect"
+  },
+  {
+    "id": "web-security-018",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of the HTTP Strict-Transport-Security (HSTS) header?",
+    "options": [
+      "Forces the browser to always connect to the domain using HTTPS only",
+      "Compresses server response data",
+      "Sets the cookie expiration period",
+      "Disables browser caching"
+    ],
+    "correctIndex": 0,
+    "explanation": "The HSTS (HTTP Strict-Transport-Security) header instructs the browser to connect to the domain using HTTPS only for a specified period. Even if a user visits http://, the browser automatically converts it to https://, preventing downgrade attacks like SSL stripping.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security"
+  },
+  {
+    "id": "web-security-019",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the security issue in the following code?",
+    "code": "document.location = 'javascript:alert(document.cookie)';\n// or\nwindow.location.href = userInput;",
+    "options": [
+      "document.location and window.location.href are identical, so there is no issue",
+      "Location changes are always blocked by the browser",
+      "The javascript: protocol can execute arbitrary scripts, and setting location with user input can cause XSS",
+      "The alert function cannot access cookies"
+    ],
+    "correctIndex": 2,
+    "explanation": "The javascript: URI scheme executes JavaScript code in the browser. If user input is assigned to location without validation, an attacker can inject javascript:alert(document.cookie) to perform an XSS attack. When setting URLs, you must restrict the protocol to http: or https:.",
+    "sourceUrl": "https://owasp.org/www-community/attacks/xss/"
+  },
+  {
+    "id": "web-security-020",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement correctly describes the difference between nonce-based and hash-based CSP policies?",
+    "options": [
+      "Nonces must be uniquely generated for each request, while hashes can be reused as long as the script content remains unchanged",
+      "Hashes must be changed for each request, while nonces use a fixed value",
+      "Both nonce and hash are used to block inline scripts",
+      "Hash-based policies apply only to external scripts"
+    ],
+    "correctIndex": 0,
+    "explanation": "A CSP nonce is a unique random value generated by the server for each request, allowing only scripts with that nonce to execute. Hash-based policies pre-compute the hash of script content and register it in the CSP, so the same hash can be reused as long as the script content doesn't change. Nonces are suited for dynamic content, while hashes are ideal for static inline scripts.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP#inline_script"
+  },
+  {
+    "id": "web-security-021",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why can the following code cause a Prototype Pollution vulnerability?",
+    "code": "function merge(target, source) {\n  for (const key in source) {\n    if (typeof source[key] === 'object') {\n      target[key] = merge(target[key] || {}, source[key]);\n    } else {\n      target[key] = source[key];\n    }\n  }\n  return target;\n}\n\nmerge({}, JSON.parse(userInput));",
+    "options": [
+      "Because JSON.parse can fail",
+      "Because the for...in loop causes performance issues",
+      "Because the __proto__ key can pollute Object.prototype, affecting all objects",
+      "Because the merge function has no recursion depth limit"
+    ],
+    "correctIndex": 2,
+    "explanation": "If a user inputs JSON like {\"__proto__\": {\"isAdmin\": true}}, the merge function adds properties to Object.prototype via the __proto__ key. All subsequently created objects will inherit isAdmin: true, enabling attacks like privilege escalation. Use Object.hasOwn() to validate keys or use Object.create(null).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/proto"
+  },
+  {
+    "id": "web-security-022",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of the X-Content-Type-Options: nosniff header?",
+    "options": [
+      "It allows the browser to ignore the Content-Type and analyze the response content to guess the MIME type",
+      "It disables compression for server responses",
+      "It prevents the browser from MIME type sniffing, blocking resources from being interpreted as a different type than declared in Content-Type",
+      "It blocks all file downloads"
+    ],
+    "correctIndex": 2,
+    "explanation": "Browsers by default analyze response content to guess the MIME type (sniffing) when the Content-Type is inaccurate. This can be exploited to execute text files as JavaScript. X-Content-Type-Options: nosniff prevents this sniffing, ensuring resources are only processed according to the server-declared Content-Type.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options"
+  },
+  {
+    "id": "web-security-023",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the security vulnerability in the following code?",
+    "code": "const express = require('express');\nconst app = express();\n\napp.use(express.json());\n\napp.post('/login', (req, res) => {\n  const { username, password } = req.body;\n  const query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;\n  db.query(query);\n});",
+    "options": [
+      "The express.json() middleware is unnecessary",
+      "req.body cannot be used in POST requests",
+      "Building SQL queries with string interpolation makes it vulnerable to SQL Injection attacks",
+      "db.query is a synchronous function causing performance issues"
+    ],
+    "correctIndex": 2,
+    "explanation": "Inserting user input directly into an SQL query via template literals allows an attacker to enter values like ' OR '1'='1 to bypass authentication. This is a SQL Injection attack. You must use parameterized queries (prepared statements) to separate user input from the SQL syntax.",
+    "sourceUrl": "https://owasp.org/www-community/attacks/SQL_Injection"
+  },
+  {
+    "id": "web-security-024",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement correctly describes the difference between the Secure and HttpOnly cookie attributes?",
+    "options": [
+      "Secure encrypts the cookie, and HttpOnly limits the cookie size",
+      "Secure blocks JavaScript access, and HttpOnly ensures cookies are only sent over HTTPS",
+      "Both attributes perform the same function",
+      "Secure ensures cookies are only sent over HTTPS connections, and HttpOnly blocks access via JavaScript's document.cookie"
+    ],
+    "correctIndex": 3,
+    "explanation": "The Secure attribute ensures cookies are only sent over HTTPS connections, preventing cookie theft through network eavesdropping. The HttpOnly attribute blocks access via JavaScript's document.cookie API, protecting cookies from XSS attacks. Using both attributes together is recommended for security.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies"
+  },
+  {
+    "id": "web-security-025",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the security issue with the following CORS configuration?",
+    "code": "app.use((req, res, next) => {\n  res.setHeader('Access-Control-Allow-Origin', '*');\n  res.setHeader('Access-Control-Allow-Credentials', 'true');\n  next();\n});",
+    "options": [
+      "Setting Access-Control-Allow-Origin blocks all requests",
+      "When Access-Control-Allow-Credentials is true, setting Allow-Origin to '*' causes the browser to reject the request",
+      "CORS headers are only needed for POST requests",
+      "The next() call is unnecessary and breaks the middleware chain"
+    ],
+    "correctIndex": 1,
+    "explanation": "Setting Access-Control-Allow-Credentials: true allows requests with credentials such as cookies. However, for security reasons, Access-Control-Allow-Origin cannot be set to '*' (wildcard) in this case, and the browser will reject it. A specific origin must be explicitly specified.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#credentialed_requests_and_wildcards"
   }
 ]

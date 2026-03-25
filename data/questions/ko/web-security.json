@@ -241,5 +241,171 @@
     "correctIndex": 2,
     "explanation": "CORS preflight(OPTIONS 요청)는 단순 요청 조건을 벗어날 때 발생합니다. 단순 요청은 GET/HEAD/POST 메서드만 사용하고, Content-Type이 text/plain, multipart/form-data, application/x-www-form-urlencoded 중 하나이며, 커스텀 헤더가 없는 경우입니다. 이 조건 외의 요청은 preflight가 먼저 전송됩니다.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#preflighted_requests"
+  },
+  {
+    "id": "web-security-016",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드에서 DOMPurify를 사용한 결과 렌더링되는 HTML은 무엇인가요?",
+    "code": "const dirty = '<img src=x onerror=alert(1)><b>Hello</b>';\nconst clean = DOMPurify.sanitize(dirty);\nconsole.log(clean);",
+    "options": [
+      "<img src=x onerror=alert(1)><b>Hello</b>",
+      "<b>Hello</b>",
+      "<img src=x><b>Hello</b>",
+      "빈 문자열"
+    ],
+    "correctIndex": 2,
+    "explanation": "DOMPurify는 HTML 새니타이저 라이브러리로, 위험한 속성(onerror 등 이벤트 핸들러)을 제거하지만 안전한 태그와 속성은 유지합니다. <img src=x>는 유지되고 onerror 핸들러만 제거되어 <img src=x><b>Hello</b>가 출력됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/Security/Practical_implementation_guides/Cross-site_scripting_prevention"
+  },
+  {
+    "id": "web-security-017",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 Open Redirect 취약점이 발생하는 이유는 무엇인가요?",
+    "code": "app.get('/redirect', (req, res) => {\n  const url = req.query.url;\n  res.redirect(url);\n});",
+    "options": [
+      "res.redirect가 비동기 함수이기 때문",
+      "사용자 입력 URL을 검증 없이 리다이렉트하여 피싱 사이트로 유도할 수 있기 때문",
+      "GET 요청에서는 redirect를 사용할 수 없기 때문",
+      "req.query.url이 항상 undefined이기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "사용자가 url 파라미터에 악성 사이트 주소를 넣으면 서버가 검증 없이 해당 URL로 리다이렉트합니다. 공격자는 신뢰할 수 있는 도메인의 URL을 이용해 피싱 사이트로 사용자를 유도할 수 있습니다. 허용된 도메인 화이트리스트를 사용하여 리다이렉트 대상을 제한해야 합니다.",
+    "sourceUrl": "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/11-Client-side_Testing/04-Testing_for_Client-side_URL_Redirect"
+  },
+  {
+    "id": "web-security-018",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "HTTP Strict-Transport-Security(HSTS) 헤더의 역할은 무엇인가요?",
+    "options": [
+      "브라우저가 해당 도메인에 항상 HTTPS로만 접속하도록 강제",
+      "서버의 응답 데이터를 압축",
+      "쿠키의 유효 기간을 설정",
+      "브라우저 캐시를 비활성화"
+    ],
+    "correctIndex": 0,
+    "explanation": "HSTS(HTTP Strict-Transport-Security) 헤더는 브라우저에게 해당 도메인에 지정된 기간 동안 HTTPS로만 접속하도록 지시합니다. 사용자가 http://로 접속해도 브라우저가 자동으로 https://로 변환하여, SSL 스트리핑 같은 다운그레이드 공격을 방지합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security"
+  },
+  {
+    "id": "web-security-019",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 보안상 문제가 되는 부분은 무엇인가요?",
+    "code": "document.location = 'javascript:alert(document.cookie)';\n// 또는\nwindow.location.href = userInput;",
+    "options": [
+      "document.location과 window.location.href는 동일하므로 문제없음",
+      "location 변경은 브라우저에서 항상 차단됨",
+      "javascript: 프로토콜을 통해 임의 스크립트가 실행될 수 있으며, 사용자 입력으로 location을 설정하면 XSS 발생 가능",
+      "alert 함수는 쿠키에 접근할 수 없음"
+    ],
+    "correctIndex": 2,
+    "explanation": "javascript: URI 스킴은 브라우저에서 JavaScript 코드를 실행합니다. 사용자 입력을 검증 없이 location에 할당하면 공격자가 javascript:alert(document.cookie) 같은 값을 넣어 XSS 공격을 수행할 수 있습니다. URL을 설정할 때는 반드시 프로토콜을 http: 또는 https:로 제한해야 합니다.",
+    "sourceUrl": "https://owasp.org/www-community/attacks/xss/"
+  },
+  {
+    "id": "web-security-020",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "CSP의 nonce 기반 정책과 hash 기반 정책의 차이점으로 올바른 것은?",
+    "options": [
+      "nonce는 매 요청마다 고유한 값을 생성해야 하고, hash는 스크립트 내용이 변경되지 않으면 동일한 해시를 재사용할 수 있다",
+      "hash는 매 요청마다 변경해야 하고, nonce는 고정값을 사용한다",
+      "nonce와 hash 모두 인라인 스크립트를 차단하는 데 사용된다",
+      "hash 기반 정책은 외부 스크립트에만 적용된다"
+    ],
+    "correctIndex": 0,
+    "explanation": "CSP nonce는 서버가 매 요청마다 생성하는 고유한 무작위 값으로, 해당 nonce가 포함된 스크립트만 실행을 허용합니다. hash 기반 정책은 스크립트 내용의 해시를 미리 계산하여 CSP에 등록하므로, 스크립트 내용이 바뀌지 않는 한 같은 해시를 재사용할 수 있습니다. nonce는 동적 콘텐츠에, hash는 정적 인라인 스크립트에 적합합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP#inline_script"
+  },
+  {
+    "id": "web-security-021",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 Prototype Pollution 취약점이 발생할 수 있는 이유는 무엇인가요?",
+    "code": "function merge(target, source) {\n  for (const key in source) {\n    if (typeof source[key] === 'object') {\n      target[key] = merge(target[key] || {}, source[key]);\n    } else {\n      target[key] = source[key];\n    }\n  }\n  return target;\n}\n\nmerge({}, JSON.parse(userInput));",
+    "options": [
+      "JSON.parse가 실패할 수 있기 때문",
+      "for...in 루프가 성능 문제를 일으키기 때문",
+      "__proto__ 키를 통해 Object.prototype을 오염시켜 모든 객체에 영향을 줄 수 있기 때문",
+      "merge 함수가 재귀 호출의 깊이 제한이 없기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "사용자가 {\"__proto__\": {\"isAdmin\": true}} 같은 JSON을 입력하면, merge 함수가 __proto__ 키를 통해 Object.prototype에 속성을 추가합니다. 이후 생성되는 모든 객체가 isAdmin: true 속성을 상속받게 되어 권한 우회 등의 공격이 가능합니다. Object.hasOwn()으로 키를 검증하거나 Object.create(null)을 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/proto"
+  },
+  {
+    "id": "web-security-022",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "X-Content-Type-Options: nosniff 헤더의 역할은 무엇인가요?",
+    "options": [
+      "브라우저가 응답의 Content-Type을 무시하고 내용을 분석하여 MIME 타입을 추측하도록 허용",
+      "서버 응답의 압축을 비활성화",
+      "브라우저의 MIME 타입 스니핑을 방지하여, 선언된 Content-Type과 다른 형식으로 해석되는 것을 차단",
+      "모든 파일 다운로드를 차단"
+    ],
+    "correctIndex": 2,
+    "explanation": "브라우저는 기본적으로 Content-Type이 정확하지 않을 때 응답 내용을 분석하여 MIME 타입을 추측(스니핑)합니다. 이를 악용하면 텍스트 파일을 JavaScript로 실행시킬 수 있습니다. X-Content-Type-Options: nosniff는 이 스니핑을 방지하여, 서버가 선언한 Content-Type으로만 리소스를 처리하게 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options"
+  },
+  {
+    "id": "web-security-023",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드에서 보안 취약점은 무엇인가요?",
+    "code": "const express = require('express');\nconst app = express();\n\napp.use(express.json());\n\napp.post('/login', (req, res) => {\n  const { username, password } = req.body;\n  const query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;\n  db.query(query);\n});",
+    "options": [
+      "express.json() 미들웨어가 불필요하게 사용됨",
+      "POST 요청에서 req.body를 사용할 수 없음",
+      "문자열 보간으로 SQL 쿼리를 구성하여 SQL Injection 공격에 취약",
+      "db.query가 동기 함수이므로 성능 문제 발생"
+    ],
+    "correctIndex": 2,
+    "explanation": "사용자 입력을 문자열 템플릿 리터럴로 직접 SQL 쿼리에 삽입하면, 공격자가 ' OR '1'='1 같은 값을 입력하여 인증을 우회할 수 있습니다. 이것이 SQL Injection 공격입니다. 반드시 매개변수화된 쿼리(prepared statement)를 사용하여 사용자 입력을 SQL 구문과 분리해야 합니다.",
+    "sourceUrl": "https://owasp.org/www-community/attacks/SQL_Injection"
+  },
+  {
+    "id": "web-security-024",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "쿠키의 Secure 속성과 HttpOnly 속성의 차이점으로 올바른 것은?",
+    "options": [
+      "Secure는 쿠키를 암호화하고, HttpOnly는 쿠키의 크기를 제한한다",
+      "Secure는 JavaScript 접근을 차단하고, HttpOnly는 HTTPS에서만 전송되게 한다",
+      "두 속성 모두 동일한 기능을 수행한다",
+      "Secure는 HTTPS 연결에서만 쿠키가 전송되도록 하고, HttpOnly는 JavaScript에서 document.cookie로 접근하는 것을 차단한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Secure 속성은 쿠키가 HTTPS 연결에서만 전송되도록 하여 네트워크 감청을 통한 쿠키 탈취를 방지합니다. HttpOnly 속성은 JavaScript의 document.cookie API를 통한 접근을 차단하여 XSS 공격으로부터 쿠키를 보호합니다. 보안을 위해 두 속성을 함께 사용하는 것이 권장됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies"
+  },
+  {
+    "id": "web-security-025",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 CORS 설정의 보안 문제는 무엇인가요?",
+    "code": "app.use((req, res, next) => {\n  res.setHeader('Access-Control-Allow-Origin', '*');\n  res.setHeader('Access-Control-Allow-Credentials', 'true');\n  next();\n});",
+    "options": [
+      "Access-Control-Allow-Origin을 설정하면 모든 요청이 차단됨",
+      "Access-Control-Allow-Credentials가 true일 때 Allow-Origin을 '*'로 설정하면 브라우저가 요청을 거부함",
+      "CORS 헤더는 POST 요청에서만 필요함",
+      "next() 호출이 불필요하여 미들웨어 체인이 중단됨"
+    ],
+    "correctIndex": 1,
+    "explanation": "Access-Control-Allow-Credentials: true로 설정하면 쿠키 등 인증 정보가 포함된 요청을 허용하게 됩니다. 하지만 보안상 이 경우 Access-Control-Allow-Origin을 '*'(와일드카드)로 설정할 수 없으며, 브라우저가 이를 거부합니다. 특정 출처를 명시적으로 지정해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#credentialed_requests_and_wildcards"
   }
 ]
