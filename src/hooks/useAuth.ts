@@ -5,6 +5,8 @@ import { setCurrentUser } from "@/lib/supabase/currentUser";
 import { migrateFromLocalStorage } from "@/lib/supabase/migrate";
 import { useProgressStore } from "@/stores/useProgressStore";
 import { useBookmarkStore } from "@/stores/useBookmarkStore";
+import { deactivateAllPushTokens } from "@/lib/supabase/push";
+import { FCM_TOKEN_KEY } from "@/hooks/usePushNotification";
 import type { User, AuthChangeEvent, Session } from "@supabase/supabase-js";
 
 interface AuthState {
@@ -85,6 +87,12 @@ export function useAuth() {
   }, []);
 
   const signOut = useCallback(async () => {
+    try {
+      await deactivateAllPushTokens();
+    } catch {
+      // Best-effort cleanup — proceed with sign-out regardless
+    }
+    localStorage.removeItem(FCM_TOKEN_KEY);
     await supabase.auth.signOut();
     useProgressStore.getState().reset();
     useBookmarkStore.getState().reset();

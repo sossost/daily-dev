@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { Menu, Sun, Moon, Monitor, LogIn, LogOut, Filter } from 'lucide-react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Menu, Sun, Moon, Monitor, LogIn, LogOut, Filter, Download, Share, Bell, BellOff } from 'lucide-react'
+import { toast } from 'sonner'
 import { useTranslations, useLocale } from 'next-intl'
 import { useThemeStore, resolveTheme } from '@/stores/useThemeStore'
 import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
@@ -12,6 +13,8 @@ import { TopicFilterModal } from '@/components/TopicFilterModal'
 import { useRouter, usePathname } from '@/i18n/navigation'
 import { isLocale, type Locale } from '@/i18n/routing'
 import { TOPICS } from '@/types'
+import { useInstallPrompt } from '@/hooks/useInstallPrompt'
+import { usePushNotification } from '@/hooks/usePushNotification'
 
 type ThemeMode = 'light' | 'dark' | 'system'
 
@@ -39,6 +42,7 @@ export function SettingsDropdown() {
   const tc = useTranslations('common')
   const filterT = useTranslations('topicFilter')
   const onboardingT = useTranslations('onboarding')
+  const pwaT = useTranslations('pwa')
   const rawLocale = useLocale()
   const locale = isLocale(rawLocale) ? rawLocale : 'en'
   const router = useRouter()
@@ -48,6 +52,8 @@ export function SettingsDropdown() {
   const selectedPosition = useTopicFilterStore((s) => s.selectedPosition)
   const enabledTopicCount = useTopicFilterStore((s) => s.enabledTopics.length)
 
+  const { isInstallable, isInstalled, isIOS, install } = useInstallPrompt()
+  const push = usePushNotification()
   const { user, signInWithGoogle, signInWithGitHub, signOut } = useAuth()
   const isAuthenticated = getIsAuthenticated()
   const avatarUrl = user?.user_metadata?.avatar_url as string | undefined
@@ -79,6 +85,8 @@ export function SettingsDropdown() {
     if (isOpen === false) return
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current != null && !dropdownRef.current.contains(event.target as Node)) {
+        event.preventDefault()
+        event.stopPropagation()
         setIsOpen(false)
       }
     }
@@ -117,6 +125,18 @@ export function SettingsDropdown() {
     setIsOpen(false)
     setIsFilterOpen(true)
   }
+
+  const handleNotificationToggle = useCallback(async () => {
+    if (push.isEnabled) {
+      await push.disable()
+      toast.success(pwaT('disabled'))
+      return
+    }
+    const result = await push.enable()
+    if (result === 'granted') { toast.success(pwaT('enabled')); return }
+    if (result === 'denied') { toast.error(pwaT('permissionDenied')); return }
+    toast.error(pwaT('setupFailed'))
+  }, [push, pwaT])
 
   const positionLabel = selectedPosition != null
     ? onboardingT(selectedPosition)
@@ -242,6 +262,70 @@ export function SettingsDropdown() {
               </span>
             </button>
           </div>
+
+          {/* PWA Install Section */}
+          {!isInstalled && (isInstallable || isIOS) && (
+            <div className="mb-3">
+              <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
+                {pwaT('installApp')}
+              </p>
+              {isInstallable ? (
+                <button
+                  type="button"
+                  onClick={install}
+                  className="flex items-center gap-2 w-full px-2.5 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+                  role="menuitem"
+                >
+                  <Download size={14} />
+                  <span className="text-sm font-medium">{pwaT('install')}</span>
+                </button>
+              ) : isIOS ? (
+                <div className="flex items-start gap-2 px-2.5 py-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <Share size={14} className="text-gray-500 dark:text-gray-400 mt-0.5 shrink-0" />
+                  <p className="text-xs text-gray-600 dark:text-gray-300">
+                    {pwaT('iosInstall')}
+                  </p>
+                </div>
+              ) : null}
+            </div>
+          )}
+
+          {/* Push Notification Section */}
+          {isAuthenticated && push.isSupported && (
+            <div className="mb-3">
+              <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
+                {pwaT('notifications')}
+              </p>
+              {push.isDenied ? (
+                <p className="text-xs text-amber-600 dark:text-amber-400 px-2.5 py-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
+                  {pwaT('permissionDenied')}
+                </p>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleNotificationToggle}
+                  disabled={push.isLoading}
+                  className={`flex items-center gap-2 w-full px-2.5 py-2 rounded-lg transition-colors ${
+                    push.isEnabled
+                      ? 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                  role="menuitem"
+                >
+                  {push.isEnabled ? <Bell size={14} /> : <BellOff size={14} />}
+                  <span className="text-sm font-medium">
+                    {push.isEnabled ? pwaT('disable') : pwaT('enable')}
+                  </span>
+                  {push.isLoading && (
+                    <span className="ml-auto text-xs opacity-60">{tc('loading')}</span>
+                  )}
+                </button>
+              )}
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 px-1">
+                {pwaT('notificationsDescription')}
+              </p>
+            </div>
+          )}
 
           {/* Auth Section */}
           <div className="pt-2 border-t border-gray-100 dark:border-gray-700">

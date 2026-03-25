@@ -66,7 +66,7 @@ rollback() {
   git reset HEAD -- . 2>/dev/null || true
   git checkout -- . 2>/dev/null || true
   local untracked
-  untracked="$(git ls-files --others --exclude-standard -- src/ data/ __tests__/ 2>/dev/null || echo "")"
+  untracked="$(git ls-files --others --exclude-standard -- src/ data/ __tests__/ messages/ 2>/dev/null || echo "")"
   if [ -n "${untracked}" ]; then
     echo "${untracked}" | while IFS= read -r f; do rm -f "${PROJECT_DIR}/${f}"; done
   fi
@@ -74,7 +74,7 @@ rollback() {
 
 cleanup() {
   cd "${PROJECT_DIR}"
-  if [ -n "$(git status --porcelain -- src/ data/ __tests__/ 2>/dev/null)" ]; then
+  if [ -n "$(git status --porcelain -- src/ data/ __tests__/ messages/ 2>/dev/null)" ]; then
     log "Uncommitted changes detected. Rolling back."
     rollback
   fi
@@ -160,7 +160,7 @@ ${context_content}
 1. Read existing files before writing. Never guess — verify first.
 2. Changes must not crash for existing users with old localStorage data.
 3. If you fail, explain WHY in your SUMMARY.
-4. Only modify files within src/, data/questions/, __tests__/.
+4. Only modify files within src/, data/questions/, __tests__/, messages/.
 5. Check the Dynamic Context above — do not duplicate existing features or repeat failed approaches.
 
 Work directory: ${PROJECT_DIR}
@@ -203,7 +203,7 @@ DETAILS:
 
   # Boundary check
   local offpath
-  offpath="$(echo "${changed_files}" | grep -vE '^(src/|data/|__tests__/)' | grep -v '^$' || true)"
+  offpath="$(echo "${changed_files}" | grep -vE '^(src/|data/|__tests__/|messages/)' | grep -v '^$' || true)"
   if [ -n "${offpath}" ]; then
     log "Changes outside allowed paths: ${offpath}"
     rollback
@@ -248,7 +248,7 @@ ${validate_output}
 \`\`\`
 
 Rules:
-- Only modify files within src/, data/questions/, __tests__/.
+- Only modify files within src/, data/questions/, __tests__/, messages/.
 - Make the smallest possible change to fix each error.
 - Do NOT add new files unless absolutely necessary.
 
@@ -317,7 +317,7 @@ Review and output APPROVE or REJECT with reason." \
   npx tsx .harness/scripts/generate-codemap.ts 2>/dev/null || true
   npx tsx .harness/scripts/generate-changelog.ts 2>/dev/null || true
 
-  git add src/ data/questions/ __tests__/ 2>/dev/null || true
+  git add src/ data/questions/ __tests__/ messages/ 2>/dev/null || true
   git add README.md GOALS.md CHANGELOG.md .harness/docs/codemap.md 2>/dev/null || true
   git add -u 2>/dev/null || true
 

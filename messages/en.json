@@ -291,6 +291,22 @@
     "allTopics": "All Topics",
     "apply": "Apply"
   },
+  "pwa": {
+    "installApp": "Install App",
+    "installDescription": "Add DailyDev to your home screen for quick access",
+    "install": "Install",
+    "installed": "App installed",
+    "iosInstall": "Tap the share button, then \"Add to Home Screen\"",
+    "notifications": "Study Reminders",
+    "notificationsDescription": "Get notified when your streak is about to break",
+    "enable": "Enable",
+    "disable": "Disable",
+    "enabled": "Notifications enabled",
+    "disabled": "Notifications disabled",
+    "permissionDenied": "Please allow notifications in your browser settings",
+    "setupFailed": "Failed to set up notifications. Please try again.",
+    "notSupported": "Notifications are not supported in this browser"
+  },
   "error": {
     "title": "Something went wrong",
     "description": "An error occurred. Please retry or reset data.",
