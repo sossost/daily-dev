@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 8 async questions (021-028) (`18cb005`)
 - **content**: add 8 promise questions (021-028) (`df39c74`)
 
 ## 2026-03-25
