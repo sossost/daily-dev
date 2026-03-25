@@ -95,6 +95,42 @@ describe('useQuizKeyboard', () => {
     expect(onNext).not.toHaveBeenCalled()
   })
 
+  it('ignores key events when target is an INPUT element', () => {
+    const onSelect = jest.fn()
+    const onNext = jest.fn()
+
+    renderHook(() =>
+      useQuizKeyboard({ isAnswered: false, onSelect, onNext }),
+    )
+
+    const input = document.createElement('input')
+    document.body.appendChild(input)
+    const event = new KeyboardEvent('keydown', { key: '1', bubbles: true })
+    Object.defineProperty(event, 'target', { value: input })
+    window.dispatchEvent(event)
+
+    expect(onSelect).not.toHaveBeenCalled()
+    document.body.removeChild(input)
+  })
+
+  it('ignores key events when target is a TEXTAREA element', () => {
+    const onSelect = jest.fn()
+    const onNext = jest.fn()
+
+    renderHook(() =>
+      useQuizKeyboard({ isAnswered: true, onSelect, onNext }),
+    )
+
+    const textarea = document.createElement('textarea')
+    document.body.appendChild(textarea)
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })
+    Object.defineProperty(event, 'target', { value: textarea })
+    window.dispatchEvent(event)
+
+    expect(onNext).not.toHaveBeenCalled()
+    document.body.removeChild(textarea)
+  })
+
   it('cleans up event listener on unmount', () => {
     const onSelect = jest.fn()
     const onNext = jest.fn()

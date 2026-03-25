@@ -74,4 +74,23 @@ describe('useHydration', () => {
     })
     restore()
   })
+
+  it('transitions to true via timeout fallback when stores never hydrate', async () => {
+    jest.useFakeTimers()
+    const { restore } = mockStores(false)
+    const { result } = renderHook(() => useHydration())
+
+    expect(result.current).toBe(false)
+
+    act(() => {
+      jest.advanceTimersByTime(500)
+    })
+
+    await waitFor(() => {
+      expect(result.current).toBe(true)
+    })
+
+    restore()
+    jest.useRealTimers()
+  })
 })

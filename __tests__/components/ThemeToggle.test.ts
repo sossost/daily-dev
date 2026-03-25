@@ -60,4 +60,64 @@ describe('ThemeToggle', () => {
 
     expect(useThemeStore.getState().mode).toBe('light')
   })
+
+  it('updates dark class when system preference changes in system mode', () => {
+    let changeHandler: (() => void) | null = null
+
+    ;(window.matchMedia as jest.Mock).mockImplementation((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn((_event: string, handler: () => void) => {
+        changeHandler = handler
+      }),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }))
+
+    useThemeStore.setState({ mode: 'system' })
+    render(createElement(ThemeToggle))
+
+    expect(changeHandler).not.toBeNull()
+
+    // Simulate system switching to dark
+    ;(window.matchMedia as jest.Mock).mockImplementation((query: string) => ({
+      matches: true,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }))
+
+    changeHandler!()
+
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
+  })
+
+  it('removes change listener on cleanup when leaving system mode', () => {
+    const removeEventListener = jest.fn()
+
+    ;(window.matchMedia as jest.Mock).mockImplementation((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener,
+      dispatchEvent: jest.fn(),
+    }))
+
+    useThemeStore.setState({ mode: 'system' })
+    const { unmount } = render(createElement(ThemeToggle))
+
+    unmount()
+
+    expect(removeEventListener).toHaveBeenCalledWith('change', expect.any(Function))
+  })
 })
