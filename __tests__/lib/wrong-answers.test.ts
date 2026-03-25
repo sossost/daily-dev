@@ -107,6 +107,65 @@ describe('extractWrongAnswers', () => {
     expect(result[0].lastWrongDate).toBe('2024-01-20')
   })
 
+  it('filters by topicFilter when provided', () => {
+    const allQuestions = getAllQuestions()
+    const scopeQ = allQuestions.find((q) => q.topic === 'scope')!
+    const closureQ = allQuestions.find((q) => q.topic === 'closure')!
+
+    const sessions = [
+      makeSession('s1', '2024-01-15', [
+        { questionId: scopeQ.id, topic: scopeQ.topic, isCorrect: false },
+        { questionId: closureQ.id, topic: closureQ.topic, isCorrect: false },
+      ]),
+    ]
+
+    const result = extractWrongAnswers(sessions, ['scope'])
+    expect(result).toHaveLength(1)
+    expect(result[0].question.topic).toBe('scope')
+  })
+
+  it('tracks last wrong date across multiple sessions', () => {
+    const allQuestions = getAllQuestions()
+    const q = allQuestions[0]
+
+    const sessions = [
+      makeSession('s1', '2024-01-20', [
+        { questionId: q.id, topic: q.topic, isCorrect: false },
+      ]),
+      makeSession('s2', '2024-01-10', [
+        { questionId: q.id, topic: q.topic, isCorrect: false },
+      ]),
+    ]
+
+    const result = extractWrongAnswers(sessions)
+    expect(result).toHaveLength(1)
+    expect(result[0].wrongCount).toBe(2)
+    // Should keep the later date even though it was processed first
+    expect(result[0].lastWrongDate).toBe('2024-01-20')
+  })
+
+  it('increments count for repeated wrong answers to same question', () => {
+    const allQuestions = getAllQuestions()
+    const q = allQuestions[0]
+
+    const sessions = [
+      makeSession('s1', '2024-01-10', [
+        { questionId: q.id, topic: q.topic, isCorrect: false },
+      ]),
+      makeSession('s2', '2024-01-12', [
+        { questionId: q.id, topic: q.topic, isCorrect: false },
+      ]),
+      makeSession('s3', '2024-01-14', [
+        { questionId: q.id, topic: q.topic, isCorrect: false },
+      ]),
+    ]
+
+    const result = extractWrongAnswers(sessions)
+    expect(result).toHaveLength(1)
+    expect(result[0].wrongCount).toBe(3)
+    expect(result[0].lastWrongDate).toBe('2024-01-14')
+  })
+
   it('ignores questions not in current question bank', () => {
     const sessions = [
       makeSession('s1', '2024-01-15', [

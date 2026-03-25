@@ -94,6 +94,30 @@ describe('analyzeFocusAreas', () => {
     expect(analysis.weakTopics[0].topic).toBe('scope')
   })
 
+  it('skips topics with no stats entry', () => {
+    // Create topicStats where some filtered topics have no entry at all
+    const topicStats = makeTopicStats()
+    // Delete a topic's stats to simulate missing entry
+    delete (topicStats as Record<string, TopicStat>)['scope']
+
+    const analysis = analyzeFocusAreas(topicStats, {}, undefined, ['scope', 'closure'])
+    // scope should be excluded since it has no stat entry
+    const weakTopicNames = analysis.weakTopics.map((t) => t.topic)
+    expect(weakTopicNames).not.toContain('scope')
+  })
+
+  it('filters out high-ease records in struggling count with topicFilter', () => {
+    const srsRecords: Record<string, SRSRecord> = {
+      'scope-001': makeSrsRecord('scope-001', { ease: 1.3 }),  // low ease, should count
+      'scope-002': makeSrsRecord('scope-002', { ease: 2.5 }),  // high ease, should NOT count
+      'closure-001': makeSrsRecord('closure-001', { ease: 1.1 }), // low ease but filtered out
+    }
+
+    const analysis = analyzeFocusAreas(DEFAULT_USER_PROGRESS.topicStats, srsRecords, undefined, ['scope'])
+    // Only scope-001 has low ease within the topic filter
+    expect(analysis.strugglingQuestionCount).toBe(1)
+  })
+
   it('sorts weak topics by accuracy ascending', () => {
     const topicStats = makeTopicStats({
       scope: { topic: 'scope', totalAnswered: 10, correctAnswers: 6, accuracy: 60, averageTime: 0 },
@@ -130,6 +154,27 @@ describe('selectFocusQuestions', () => {
   it('returns questions from all topics when no weak areas', () => {
     const questions = selectFocusQuestions(DEFAULT_USER_PROGRESS.topicStats, {})
     expect(questions.length).toBeGreaterThan(0)
+  })
+
+  it('handles topics with missing stats gracefully', () => {
+    const topicStats = makeTopicStats()
+    // Remove stats for a topic to test the null guard
+    delete (topicStats as Record<string, TopicStat>)['scope']
+
+    const questions = selectFocusQuestions(topicStats, {}, undefined, ['scope', 'closure'])
+    // Should still return questions (from least-practiced fill)
+    expect(questions.length).toBeGreaterThan(0)
+  })
+
+  it('sorts least-practiced topics by totalAnswered with missing stats', () => {
+    const topicStats = makeTopicStats()
+    // Remove one topic's stats so it falls back to 0
+    delete (topicStats as Record<string, TopicStat>)['scope']
+
+    const questions = selectFocusQuestions(topicStats, {}, undefined, ['scope', 'closure'])
+    // scope has no stats (treated as 0 totalAnswered), should appear in results
+    const hasScope = questions.some((q) => q.topic === 'scope')
+    expect(hasScope).toBe(true)
   })
 
   it('does not return duplicate questions', () => {

@@ -6,6 +6,7 @@
 
 ### Features
 
+- **feature**: Add endless practice mode (`0629f64`)
 - **expansion**: Add git-advanced topic with 20 questions (`c17a935`)
 - **code**: Add 7 test files with 72 new tests (`7b49733`)
 - **content**: add 8 async questions (021-028) (`18cb005`)

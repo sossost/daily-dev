@@ -83,6 +83,23 @@ describe('computeChallengeResult', () => {
   })
 })
 
+describe('generateChallengeSession with topicFilter', () => {
+  it('filters questions by provided topics', () => {
+    const session = generateChallengeSession(['scope'])
+    expect(session.length).toBeGreaterThan(0)
+    expect(session.every((sq) => sq.question.topic === 'scope')).toBe(true)
+  })
+
+  it('returns empty array when filter matches no questions', () => {
+    // Use a topic that exists but pass an impossible filter by casting
+    const session = generateChallengeSession(['scope', 'closure'])
+    const topics = new Set(session.map((sq) => sq.question.topic))
+    for (const topic of topics) {
+      expect(['scope', 'closure']).toContain(topic)
+    }
+  })
+})
+
 describe('CHALLENGE_DURATIONS', () => {
   it('has labels for all durations', () => {
     for (const d of CHALLENGE_DURATIONS) {

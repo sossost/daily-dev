@@ -121,6 +121,42 @@ describe('getUpcomingReviews with topicFilter', () => {
   })
 })
 
+describe('getDueByTopic with topicFilter', () => {
+  it('filters results by topic when topicFilter is provided', () => {
+    const records: Record<string, SRSRecord> = {
+      'scope-001': makeRecord('scope-001', '2024-06-01'),
+      'closure-001': makeRecord('closure-001', '2024-06-01'),
+    }
+
+    const result = getDueByTopic(records, undefined, ['scope'])
+    expect(result).toHaveLength(1)
+    expect(result[0].topic).toBe('scope')
+    expect(result[0].dueCount).toBe(1)
+  })
+
+  it('skips records for questions not in the question bank', () => {
+    const records: Record<string, SRSRecord> = {
+      'nonexistent-999': makeRecord('nonexistent-999', '2024-06-01'),
+      'scope-001': makeRecord('scope-001', '2024-06-01'),
+    }
+
+    const result = getDueByTopic(records)
+    // nonexistent question should be skipped
+    const ids = result.map((r) => r.topic)
+    expect(ids).toContain('scope')
+    expect(result.find((r) => r.topic === 'scope')?.dueCount).toBe(1)
+  })
+
+  it('returns empty when topicFilter excludes all topics', () => {
+    const records: Record<string, SRSRecord> = {
+      'scope-001': makeRecord('scope-001', '2024-06-01'),
+    }
+
+    const result = getDueByTopic(records, undefined, ['react-basics'])
+    expect(result).toEqual([])
+  })
+})
+
 describe('getScheduleSummary', () => {
   it('returns zeros for empty records', () => {
     const summary = getScheduleSummary({})
