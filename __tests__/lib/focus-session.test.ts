@@ -71,6 +71,29 @@ describe('analyzeFocusAreas', () => {
     expect(analysis.availableCount).toBeGreaterThan(0)
   })
 
+  it('filters struggling questions by topicFilter', () => {
+    const srsRecords: Record<string, SRSRecord> = {
+      'scope-001': makeSrsRecord('scope-001', { ease: 1.3 }),
+      'closure-001': makeSrsRecord('closure-001', { ease: 1.5 }),
+      'react-basics-001': makeSrsRecord('react-basics-001', { ease: 1.1 }),
+    }
+
+    const analysis = analyzeFocusAreas(DEFAULT_USER_PROGRESS.topicStats, srsRecords, undefined, ['scope'])
+    // Only scope-001 should be counted as a struggling question with filter
+    expect(analysis.strugglingQuestionCount).toBe(1)
+  })
+
+  it('respects topicFilter for weak topic detection', () => {
+    const topicStats = makeTopicStats({
+      scope: { topic: 'scope', totalAnswered: 10, correctAnswers: 5, accuracy: 50, averageTime: 0 },
+      closure: { topic: 'closure', totalAnswered: 10, correctAnswers: 4, accuracy: 40, averageTime: 0 },
+    })
+
+    const analysis = analyzeFocusAreas(topicStats, {}, undefined, ['scope'])
+    expect(analysis.weakTopics).toHaveLength(1)
+    expect(analysis.weakTopics[0].topic).toBe('scope')
+  })
+
   it('sorts weak topics by accuracy ascending', () => {
     const topicStats = makeTopicStats({
       scope: { topic: 'scope', totalAnswered: 10, correctAnswers: 6, accuracy: 60, averageTime: 0 },

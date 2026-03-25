@@ -58,6 +58,12 @@ describe('getAccuracyTrend', () => {
     expect(trend[1].accuracy).toBe(50)
   })
 
+  it('returns 0 accuracy when totalQuestions is 0', () => {
+    const sessions = [makeSession({ score: 0, totalQuestions: 0 })]
+    const trend = getAccuracyTrend(sessions)
+    expect(trend[0].accuracy).toBe(0)
+  })
+
   it('limits to last 10 sessions', () => {
     const sessions = Array.from({ length: 15 }, (_, i) =>
       makeSession({ score: i, totalQuestions: 10 }),
@@ -95,6 +101,17 @@ describe('getWeakTopics', () => {
     })
     expect(getWeakTopics(stats)).toEqual([])
   })
+
+  it('filters by topicFilter when provided', () => {
+    const stats = makeTopicStats({
+      scope: { totalAnswered: 10, accuracy: 50 },
+      closure: { totalAnswered: 10, accuracy: 40 },
+      prototype: { totalAnswered: 5, accuracy: 60 },
+    })
+    const weak = getWeakTopics(stats, ['scope', 'prototype'])
+    expect(weak).toHaveLength(2)
+    expect(weak.find((w) => w.topic === 'closure')).toBeUndefined()
+  })
 })
 
 describe('getAttemptedTopicCount', () => {
@@ -108,6 +125,15 @@ describe('getAttemptedTopicCount', () => {
       closure: { totalAnswered: 3 },
     })
     expect(getAttemptedTopicCount(stats)).toBe(2)
+  })
+
+  it('filters by topicFilter when provided', () => {
+    const stats = makeTopicStats({
+      scope: { totalAnswered: 5 },
+      closure: { totalAnswered: 3 },
+      prototype: { totalAnswered: 7 },
+    })
+    expect(getAttemptedTopicCount(stats, ['scope', 'closure'])).toBe(2)
   })
 })
 
@@ -126,6 +152,17 @@ describe('getBestAndWorstTopics', () => {
     })
     const { best, worst } = getBestAndWorstTopics(stats)
     expect(best?.topic).toBe('scope')
+    expect(worst?.topic).toBe('closure')
+  })
+
+  it('filters by topicFilter when provided', () => {
+    const stats = makeTopicStats({
+      scope: { totalAnswered: 10, accuracy: 90 },
+      closure: { totalAnswered: 10, accuracy: 40 },
+      prototype: { totalAnswered: 10, accuracy: 70 },
+    })
+    const { best, worst } = getBestAndWorstTopics(stats, ['closure', 'prototype'])
+    expect(best?.topic).toBe('prototype')
     expect(worst?.topic).toBe('closure')
   })
 })

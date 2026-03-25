@@ -99,6 +99,28 @@ describe('getDueByTopic', () => {
   })
 })
 
+describe('getUpcomingReviews with topicFilter', () => {
+  it('filters reviews by topic', () => {
+    const records: Record<string, SRSRecord> = {
+      'scope-001': makeRecord('scope-001', '2024-06-01'),
+      'closure-001': makeRecord('closure-001', '2024-06-01'),
+    }
+
+    const result = getUpcomingReviews(records, undefined, ['scope'])
+    expect(result[0].count).toBe(1) // only scope-001
+  })
+
+  it('returns all zeros when filter excludes all topics', () => {
+    const records: Record<string, SRSRecord> = {
+      'scope-001': makeRecord('scope-001', '2024-06-01'),
+    }
+
+    // Use a topic that has no matching questions in the records
+    const result = getUpcomingReviews(records, undefined, ['react-basics'])
+    expect(result[0].count).toBe(0)
+  })
+})
+
 describe('getScheduleSummary', () => {
   it('returns zeros for empty records', () => {
     const summary = getScheduleSummary({})
@@ -134,5 +156,17 @@ describe('getScheduleSummary', () => {
 
     const summary = getScheduleSummary(records)
     expect(summary.masteredCount).toBe(1)
+  })
+
+  it('filters by topicFilter when provided', () => {
+    const records: Record<string, SRSRecord> = {
+      'scope-001': makeRecord('scope-001', '2024-06-01', { interval: 1 }),
+      'closure-001': makeRecord('closure-001', '2024-06-01', { interval: 25 }),
+    }
+
+    const summary = getScheduleSummary(records, ['scope'])
+    expect(summary.totalTracked).toBe(1)
+    expect(summary.dueToday).toBe(1)
+    expect(summary.masteredCount).toBe(0)
   })
 })

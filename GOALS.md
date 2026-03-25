@@ -13,7 +13,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Content | Topics | 0 topics |
 | Content | Questions | 0 questions |
 | Features | Implemented | Dark mode, Streak, Keyboard shortcuts, Session history, Topic filter, Export/Import, Bookmark |
-| Code | Tests | 377 tests |
+| Code | Tests | 398 tests |
 | Deploy | Status | Deployed |
 
 > Auto-updated by `update-goals-progress.ts` on every harness run.

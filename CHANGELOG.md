@@ -6,6 +6,8 @@
 
 ### Features
 
+- add onboarding flow, topic filter, and position-based topic system (`dd4400a`)
+- **content**: add 10 web-security questions (016-025) (`c4d346a`)
 - add onboarding flow, topic filter, and position-based topic system (`8b16631`)
 - add i18n support with next-intl (English/Korean) (`e1ac70b`)
 - **expansion**: Add web-security topic (15 questions) (`89b3282`)
