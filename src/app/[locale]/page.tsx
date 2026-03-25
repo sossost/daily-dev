@@ -1,6 +1,6 @@
 'use client'
 
-import { BarChart3, Bookmark, CalendarClock, Dumbbell, FileX2, History, Target, Timer } from 'lucide-react'
+import { BarChart3, Bookmark, CalendarClock, Dumbbell, FileX2, History, Infinity as InfinityIcon, Target, Timer } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useBookmarkStore } from '@/stores/useBookmarkStore'
@@ -175,6 +175,18 @@ function DashboardContent({
           </span>
           <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
             {t('challengeDesc')}
+          </span>
+        </Link>
+        <Link
+          href="/endless"
+          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-teal-200 dark:hover:border-teal-800 transition-colors"
+        >
+          <InfinityIcon size={18} className="text-teal-500" />
+          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            {t('endless')}
+          </span>
+          <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
+            {t('endlessDesc')}
           </span>
         </Link>
       </div>

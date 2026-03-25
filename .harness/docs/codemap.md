@@ -21,6 +21,10 @@
 - `LOW_TIME_THRESHOLD` = `10`
 - `PERCENTAGE_MULTIPLIER` = `100`
 - `PERCENTAGE_MULTIPLIER` = `100`
+- `ANIMATION_DELAY_STEP` = `0.06`
+- `HIGH_ACCURACY` = `80`
+- `MEDIUM_ACCURACY` = `60`
+- `BAR_MAX_WIDTH_PERCENT` = `100`
 - `PERCENTAGE_MULTIPLIER` = `100`
 - `ANIMATION_DELAY_STEP` = `0.03`
 - `DISMISS_STORAGE_KEY` = `'daily-dev-keyboard-hint-dismissed'`
@@ -55,6 +59,7 @@
 - `SITE_DESCRIPTION` = `"매일 5분, 개발 핵심 개념을 학습하고 실력을 키워보세요."`
 - `SITE_TAGLINE` = `"매일 5분, 개발 핵심 개념 학습"`
 - `REPORT_TITLE` = `"개발 학습 리포트"`
+- `PERCENTAGE_MULTIPLIER` = `100`
 - `WEAK_ACCURACY_THRESHOLD` = `70`
 - `LOW_EASE_THRESHOLD` = `2.0`
 - `MIN_ATTEMPTS_FOR_WEAK` = `1`
@@ -274,6 +279,14 @@
 - `addDays` (dateStr: string, days: number) → string — Add days to a YYYY-MM-DD date string. Parses in local time, not UTC.
 - `isBeforeOrEqual` (dateA: string, dateB: string) → boolean — Check if dateA is before or equal to dateB (both YYYY-MM-DD strings).
 - `isValidDateString` (value: string) → boolean — Validate that a string is in YYYY-MM-DD format and represents a real date.
+
+#### `endless-session.ts` — Endless session generator — builds an unlimited pool of shuffled questions for marathon practice. Users answer until they decide to stop. Does not affect SRS scheduling.
+- `generateEndlessPool` (options: EndlessSessionOptions,) → SessionQuestion[] — Generate all available questions as SessionQuestion[], shuffled. Returns the full pool — the page component streams through them.
+- `computeEndlessResult` (answers: readonly { readonly questionId: string; readonly topic: Topic; readonly isCorrect: boolean }[],) → EndlessResult — Compute endless session result from answers.
+- `EndlessSessionOptions`
+- `EndlessResult`
+- `EndlessTopicStat`
+- *deps*: types, i18n/routing, lib/questions, lib/session, lib/shuffle
 
 #### `firebase.ts` — Request FCM push token from the browser. Returns the token string or null if unavailable/denied.
 - `requestFCMToken` () → Promise<string | null> — Request FCM push token from the browser. Returns the token string or null if unavailable/denied.
@@ -553,6 +566,13 @@
 #### `page.tsx`
 - *deps*: i18n/navigation, hooks/useHydration, stores/useTopicFilterStore, hooks/useQuizKeyboard, types, lib/topics, components/challenge/ChallengeTimer, components/challenge/ChallengeResult, components/quiz/QuizCard
 
+### src/app/[locale]/endless/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: i18n/navigation, i18n/routing, types, hooks/useHydration, hooks/useQuizKeyboard, lib/practice-session, components/practice/TopicSelector, components/quiz/QuizCard, components/quiz/KeyboardHint, components/endless/EndlessResultView
+
 ### src/app/[locale]/focus/
 
 #### `loading.tsx`
@@ -648,6 +668,12 @@
 #### `CategoryAccordion.tsx`
 - `CategoryAccordion` ({ category, defaultOpen = true, headerRight, children, }: CategoryAccordionProps)
 - *deps*: types
+
+### src/components/endless/
+
+#### `EndlessResultView.tsx`
+- `EndlessResultView` ({ result, onRetry, onHome }: EndlessResultViewProps)
+- *deps*: lib/endless-session, types
 
 ### src/components/history/
 

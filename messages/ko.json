@@ -42,7 +42,9 @@
     "wrongAnswers": "오답 노트",
     "wrongAnswersDesc": "틀린 문제 복습",
     "challenge": "타임 챌린지",
-    "challengeDesc": "스피드 퀴즈"
+    "challengeDesc": "스피드 퀴즈",
+    "endless": "끝없는 연습",
+    "endlessDesc": "제한 없이, 원할 때 종료"
   },
   "session": {
     "start": "학습 시작",
@@ -308,6 +310,28 @@
     "permissionDenied": "브라우저 설정에서 알림을 허용해주세요",
     "setupFailed": "알림 설정에 실패했습니다. 다시 시도해주세요.",
     "notSupported": "이 브라우저는 알림을 지원하지 않습니다"
+  },
+  "endless": {
+    "title": "끝없는 연습",
+    "subtitle": "제한 없이 연습하세요 — 원할 때 종료하세요",
+    "startEndless": "끝없는 연습 시작 ({count}문제)",
+    "questionsCompleted": "{count}문제 완료",
+    "correctCount": "{count}개 정답",
+    "nextQuestion": "다음 문제",
+    "showResult": "결과 보기",
+    "stop": "중단",
+    "stopSession": "끝없는 연습 중단",
+    "result": "연습 결과",
+    "sessionComplete": "수고하셨습니다!",
+    "totalAnswered": "풀은 문제",
+    "correctAnswers": "정답",
+    "accuracy": "정답률",
+    "topicBreakdown": "토픽별 결과",
+    "excellent": "훌륭해요!",
+    "good": "좋아요!",
+    "keepTrying": "계속 도전하세요!",
+    "retryEndless": "다시 도전",
+    "backHome": "홈으로"
   },
   "error": {
     "title": "문제가 발생했습니다",

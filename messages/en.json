@@ -42,7 +42,9 @@
     "wrongAnswers": "Wrong Answers",
     "wrongAnswersDesc": "Review wrong questions",
     "challenge": "Time Challenge",
-    "challengeDesc": "Speed quiz"
+    "challengeDesc": "Speed quiz",
+    "endless": "Endless Practice",
+    "endlessDesc": "No limit, stop anytime"
   },
   "session": {
     "start": "Start Learning",
@@ -308,6 +310,28 @@
     "permissionDenied": "Please allow notifications in your browser settings",
     "setupFailed": "Failed to set up notifications. Please try again.",
     "notSupported": "Notifications are not supported in this browser"
+  },
+  "endless": {
+    "title": "Endless Practice",
+    "subtitle": "Practice without limits — stop whenever you're ready",
+    "startEndless": "Start Endless ({count} questions)",
+    "questionsCompleted": "{count} completed",
+    "correctCount": "{count} correct",
+    "nextQuestion": "Next Question",
+    "showResult": "Show Result",
+    "stop": "Stop",
+    "stopSession": "Stop endless session",
+    "result": "Session Result",
+    "sessionComplete": "Great effort!",
+    "totalAnswered": "Answered",
+    "correctAnswers": "Correct",
+    "accuracy": "Accuracy",
+    "topicBreakdown": "Topic Breakdown",
+    "excellent": "Excellent!",
+    "good": "Good!",
+    "keepTrying": "Keep trying!",
+    "retryEndless": "Try Again",
+    "backHome": "Home"
   },
   "error": {
     "title": "Something went wrong",
