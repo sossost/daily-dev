@@ -2,32 +2,41 @@ import { formatDuration, formatSessionDate, getTopicBreakdown } from '@/lib/sess
 import type { SessionAnswer } from '@/types'
 
 describe('formatDuration', () => {
-  it('formats seconds only when under a minute', () => {
-    expect(formatDuration(5)).toBe('5초')
-    expect(formatDuration(45)).toBe('45초')
+  it('formats seconds only when under a minute (default: English)', () => {
+    expect(formatDuration(5)).toBe('5s')
+    expect(formatDuration(45)).toBe('45s')
   })
 
   it('formats zero seconds', () => {
-    expect(formatDuration(0)).toBe('0초')
+    expect(formatDuration(0)).toBe('0s')
   })
 
   it('formats minutes and seconds', () => {
-    expect(formatDuration(90)).toBe('1분 30초')
-    expect(formatDuration(125)).toBe('2분 5초')
+    expect(formatDuration(90)).toBe('1m 30s')
+    expect(formatDuration(125)).toBe('2m 5s')
+  })
+
+  it('formats in Korean when locale is ko', () => {
+    expect(formatDuration(5, 'ko')).toBe('5초')
+    expect(formatDuration(90, 'ko')).toBe('1분 30초')
   })
 })
 
 describe('formatSessionDate', () => {
-  it('formats a date string to Korean format', () => {
-    expect(formatSessionDate('2026-03-23')).toBe('2026년 3월 23일')
+  it('formats a date string in English by default', () => {
+    expect(formatSessionDate('2026-03-23')).toBe('Mar 23, 2026')
   })
 
   it('strips leading zeros from month and day', () => {
-    expect(formatSessionDate('2026-01-05')).toBe('2026년 1월 5일')
+    expect(formatSessionDate('2026-01-05')).toBe('Jan 5, 2026')
   })
 
   it('handles double-digit month and day', () => {
-    expect(formatSessionDate('2026-12-31')).toBe('2026년 12월 31일')
+    expect(formatSessionDate('2026-12-31')).toBe('Dec 31, 2026')
+  })
+
+  it('formats in Korean when locale is ko', () => {
+    expect(formatSessionDate('2026-03-23', 'ko')).toBe('2026년 3월 23일')
   })
 })
 

@@ -1,0 +1,500 @@
+[
+  {
+    "id": "closure-001",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which is the most accurate definition of a closure?",
+    "options": [
+      "A function that remembers its lexical environment and can access outer variables",
+      "A function that references global variables",
+      "Another name for an IIFE (Immediately Invoked Function Expression)",
+      "A function that recursively calls itself"
+    ],
+    "correctIndex": 0,
+    "explanation": "A closure is the combination of a function and the lexical environment in which it was declared. It is because of closures that an inner function can access variables of its outer function. Even after the outer function has finished executing, the variables it references are kept in memory.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-002",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "function outer() {\n  let count = 0;\n  return function inner() {\n    count++;\n    return count;\n  };\n}\nconst counter = outer();\nconsole.log(counter());\nconsole.log(counter());",
+    "options": [
+      "0, 0",
+      "1, 2",
+      "1, 1",
+      "undefined, undefined"
+    ],
+    "correctIndex": 1,
+    "explanation": "When outer executes, the count variable and inner function are created. The inner function, as a closure, references outer's LexicalEnvironment, which remains in the heap even after outer's execution context is removed from the call stack. Each call to counter() increments the same count variable, so 1 and 2 are output in order. This is the most basic pattern for maintaining state with closures.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-003",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function makeAdder(x) {\n  return function(y) {\n    return x + y;\n  };\n}\nconst add5 = makeAdder(5);\nconst add10 = makeAdder(10);\nconsole.log(add5(3));\nconsole.log(add10(3));",
+    "options": [
+      "8, 8",
+      "5, 10",
+      "8, 13",
+      "15, 15"
+    ],
+    "correctIndex": 2,
+    "explanation": "makeAdder(5) returns a function that remembers x=5 via closure. add5(3) is 5+3=8. makeAdder(10) creates a separate closure remembering x=10. add10(3) is 10+3=13. Each call creates an independent lexical environment, so add5 and add10 reference different x values. This pattern is the foundation of Partial Application and a core technique for creating function factories in functional programming.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-004",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about data hiding with closures is correct?",
+    "options": [
+      "Variables inside a closure are always exposed to the global scope",
+      "Closures use no memory at all",
+      "Variables inside a closure are subject to garbage collection",
+      "Closures can create private variables that cannot be accessed directly from outside"
+    ],
+    "correctIndex": 3,
+    "explanation": "Using closures, variables from the outer function can be made private — accessible only by the inner function. This is a classic pattern for implementing information hiding in JavaScript. The Module Pattern leverages this principle.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-005",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function createFunctions() {\n  const result = [];\n  for (let i = 0; i < 3; i++) {\n    result.push(() => i);\n  }\n  return result;\n}\nconst fns = createFunctions();\nconsole.log(fns[0](), fns[1](), fns[2]());",
+    "options": [
+      "0 1 2",
+      "3 3 3",
+      "undefined undefined undefined",
+      "0 0 0"
+    ],
+    "correctIndex": 0,
+    "explanation": "let creates block scope, so each iteration of the for loop creates a new i binding. Each closure remembers the i value from its own iteration (0, 1, 2). If var were used instead, all would return 3.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let"
+  },
+  {
+    "id": "closure-006",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why might the following code cause a memory leak?",
+    "code": "function createHandler() {\n  const largeData = new Array(1000000).fill('data');\n  return function handler(event) {\n    console.log(event.type);\n  };\n}\nconst handler = createHandler();",
+    "options": [
+      "The event object is too large",
+      "The handler function, as a closure, holds a reference to largeData preventing garbage collection",
+      "Array.fill does not release memory",
+      "console.log accumulates memory"
+    ],
+    "correctIndex": 1,
+    "explanation": "The handler function captures createHandler's lexical environment as a closure. Although handler does not directly use largeData, some JavaScript engines may retain the entire lexical environment of the outer function. Modern engines like V8 optimize by capturing only actually referenced variables, but this optimization is disabled when eval or with is present. In practice, it is recommended to either explicitly release the reference with handler = null, or separate large data from the closure scope.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_management"
+  },
+  {
+    "id": "closure-007",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const module = (() => {\n  let private_count = 0;\n  return {\n    increment() { private_count++; },\n    getCount() { return private_count; }\n  };\n})();\nmodule.increment();\nmodule.increment();\nconsole.log(module.getCount());\nconsole.log(module.private_count);",
+    "options": [
+      "2, 2",
+      "2, 0",
+      "2, undefined",
+      "0, undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "This implements the Module Pattern using an IIFE. private_count is protected by the closure and can only be accessed through increment and getCount. module.private_count is undefined because the returned object has no such property. getCount() returns 2 via the closure.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-008",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which is the correct condition for a closure to be created?",
+    "options": [
+      "When an inner function references variables from an outer function",
+      "When a function is declared in the global scope",
+      "Only in class methods",
+      "Only in async functions"
+    ],
+    "correctIndex": 0,
+    "explanation": "A closure is formed when a function is executed outside the lexical environment where it was declared, yet still has access to that environment's variables. Per the ECMAScript spec, every function references its creation-time lexical environment via the internal [[Environment]] slot. The key condition is that an inner function references an outer function's variables while being returned or passed as a callback outside the outer function.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-009",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "function greet(name) {\n  return function() {\n    return `Hello, ${name}!`;\n  };\n}\nconst hello = greet('World');\nconsole.log(hello());",
+    "options": [
+      "undefined",
+      "Hello, World!",
+      "Hello, !",
+      "TypeError"
+    ],
+    "correctIndex": 1,
+    "explanation": "Calling greet('World') binds 'World' to the parameter name. The returned inner function remembers the name variable as a closure. Calling hello() uses the closure-captured name value 'World' to return 'Hello, World!'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-010",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "In the following code, all button clicks alert '3'. What is the cause?",
+    "code": "for (var i = 0; i < 3; i++) {\n  buttons[i].onclick = function() {\n    alert(i);\n  };\n}",
+    "options": [
+      "The buttons array has no elements",
+      "The onclick event executes synchronously",
+      "var is function-scoped, so all closures reference the same i which is 3 after the loop ends",
+      "The alert function converts i to a string"
+    ],
+    "correctIndex": 2,
+    "explanation": "The i declared with var is function-scoped, so only one i exists across the entire for loop. Each onclick handler is a closure referencing the same i. By the time a button is clicked, the loop has ended and i is 3. Changing to let creates a new i for each iteration.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-011",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Which statement about the difference between closure-based and global variable state management is correct?",
+    "options": [
+      "Closures and global variables are the same concept",
+      "Global variables cannot be accessed from within functions",
+      "Closures are a pattern for exposing variables globally",
+      "Closures encapsulate variables within a function scope, blocking direct external access"
+    ],
+    "correctIndex": 3,
+    "explanation": "Global variables are accessible and modifiable from anywhere, making them vulnerable to unexpected changes. Closures hide variables within a function scope and only allow access through defined interfaces (returned functions). This ensures data integrity and prevents global pollution.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-012",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function counter() {\n  let count = 0;\n  return {\n    increment: () => ++count,\n    decrement: () => --count,\n    getCount: () => count\n  };\n}\nconst c = counter();\nc.increment();\nc.increment();\nc.decrement();\nconsole.log(c.getCount());",
+    "options": [
+      "1",
+      "2",
+      "0",
+      "3"
+    ],
+    "correctIndex": 0,
+    "explanation": "Calling counter() creates count = 0. The increment, decrement, and getCount functions all share the same count variable via closure. Two increments (0->1->2), one decrement (2->1). Final count is 1, so getCount() returns 1.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-013",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, 4, 4, 4 is output instead of the intended 1, 2, 3. What is the cause?",
+    "code": "for (var i = 1; i <= 3; i++) {\n  setTimeout(function() {\n    console.log(i);\n  }, i * 100);\n}",
+    "options": [
+      "The setTimeout delay is too short",
+      "var is function-scoped so all callbacks reference the same i, which is 4 at execution time",
+      "setTimeout does not execute asynchronously",
+      "The callback is not an arrow function"
+    ],
+    "correctIndex": 1,
+    "explanation": "The i declared with var is a single variable for the entire loop. By the time the setTimeout callbacks execute, the loop has ended and i is 4 (the point where i <= 3 becomes false). All callback closures reference the same i, outputting 4, 4, 4. Changing to let fixes this.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-014",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the difference between the closure-based module pattern and ES6 modules is correct?",
+    "options": [
+      "Both use the same mechanism",
+      "Closure modules allow static analysis but ES6 modules do not",
+      "Closure modules are created at runtime via IIFE, while ES6 modules have a static, file-level structure",
+      "ES6 modules do not use closures at all"
+    ],
+    "correctIndex": 2,
+    "explanation": "The closure module pattern uses IIFEs to create scope at runtime and returns only the public API. ES6 modules treat each file as a module with static import/export declarations. ES6 modules have the advantage of enabling static analysis by build tools (tree-shaking, etc.).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules"
+  },
+  {
+    "id": "closure-015",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about memory management with closures is correct?",
+    "options": [
+      "Variables referenced by a closure are immediately garbage collected",
+      "Closures use no memory",
+      "When a closure exists, all outer function variables stay in memory forever",
+      "Outer variables referenced by a closure are not garbage collected as long as the closure exists"
+    ],
+    "correctIndex": 3,
+    "explanation": "A closure holds a reference to outer function variables, so those variables are not garbage collected while the closure exists in memory. Once all references to the closure are removed (e.g., set to null), the associated variables also become eligible for garbage collection. Removing unnecessary closures helps optimize memory.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_management"
+  },
+  {
+    "id": "closure-016",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function multiply(x) {\n  return function(y) {\n    return function(z) {\n      return x * y * z;\n    };\n  };\n}\nconsole.log(multiply(2)(3)(4));",
+    "options": [
+      "24",
+      "9",
+      "NaN",
+      "TypeError"
+    ],
+    "correctIndex": 0,
+    "explanation": "multiply(2) returns a function capturing x=2 via closure. Passing 3 to that function returns another function capturing y=3. Finally passing 4 returns x*y*z = 2*3*4 = 24. This pattern is multi-level currying, where each call creates a new lexical environment forming a scope chain. Inner functions find variables by traversing up the scope chain.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-017",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Which statement about the relationship between currying and closures is correct?",
+    "options": [
+      "Currying is an independent pattern unrelated to closures",
+      "Currying uses closures to take function arguments one at a time and return new functions",
+      "Using currying does not create closures",
+      "Currying is a feature not supported in JavaScript"
+    ],
+    "correctIndex": 1,
+    "explanation": "Currying transforms a function that takes multiple arguments into a chain of functions that each take a single argument. At each step, previous arguments are captured via closure. Example: f(a, b, c) becomes f(a)(b)(c). It is used for partial application and function composition, and would be impossible to implement without closures.",
+    "sourceUrl": "https://javascript.info/currying-partials"
+  },
+  {
+    "id": "closure-018",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function createCounter(init) {\n  let count = init;\n  function change(val) { count += val; }\n  return {\n    increment: () => change(1),\n    decrement: () => change(-1),\n    value: () => count\n  };\n}\nconst a = createCounter(5);\nconst b = createCounter(10);\na.increment();\na.increment();\nb.decrement();\nconsole.log(a.value(), b.value());",
+    "options": [
+      "5, 10",
+      "6, 11",
+      "7, 9",
+      "7, 10"
+    ],
+    "correctIndex": 2,
+    "explanation": "Each call to createCounter creates an independent closure environment. a starts with count=5 and increments twice to become 7. b starts with count=10 and decrements once to become 9. Each closure has its own count and change function, so they do not affect each other.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-019",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about the difference between closures and class private fields (#) is correct?",
+    "options": [
+      "Closures always perform better than class private fields",
+      "Class private fields use no memory",
+      "Both work using the same mechanism",
+      "Closures hide data via function scope, while class private fields (#) provide language-level access control"
+    ],
+    "correctIndex": 3,
+    "explanation": "Closures use function scope to hide variables. There is no way to access them externally, but functions may be duplicated per instance, reducing memory efficiency. Class private fields (#), introduced in ES2022, provide language-level access control that can share prototype methods while still keeping fields private.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_properties"
+  },
+  {
+    "id": "closure-020",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In the following code, 3, 3, 3 is output instead of 0, 1, 2. How do you fix this using closures without let?",
+    "code": "for (var i = 0; i < 3; i++) {\n  setTimeout(function() {\n    console.log(i);\n  }, 100);\n}",
+    "options": [
+      "Change the setTimeout delay to 0",
+      "Move console.log outside setTimeout",
+      "Change var i to const i",
+      "Use an IIFE to capture each iteration's i in a new scope: (function(j) { setTimeout(function() { console.log(j); }, 100); })(i)"
+    ],
+    "correctIndex": 3,
+    "explanation": "Using an IIFE (Immediately Invoked Function Expression), each iteration's i value is passed as the parameter j, so each callback captures its own independent j value via closure. This was the traditional way to solve var's function scope problem before ES6. With ES6, simply using let provides a clean solution.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-021",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "In which case is a closure NOT formed?",
+    "options": [
+      "When an inner function references a local variable of the outer function",
+      "When a callback function uses a variable from the enclosing scope",
+      "When a function only uses its own local variables and does not reference any outer variables",
+      "When an event handler captures a variable from the enclosing scope"
+    ],
+    "correctIndex": 2,
+    "explanation": "A closure is formed when a function references outer variables from its defining lexical environment. If a function only uses its own local variables and parameters without referencing any outer scope variables, no practical closure is formed. In this case, the engine can optimize away the outer environment reference.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-022",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "function outer() {\n  const msg = 'hello';\n  function inner() {\n    return msg.toUpperCase();\n  }\n  return inner;\n}\nconst fn = outer();\nconsole.log(fn());",
+    "options": [
+      "hello",
+      "HELLO",
+      "undefined",
+      "TypeError: msg is not defined"
+    ],
+    "correctIndex": 1,
+    "explanation": "When outer executes, the msg variable is assigned 'hello' and the inner function is returned. inner, as a closure, captures msg, so even after outer finishes execution, msg is still accessible. Calling fn() executes msg.toUpperCase(), returning 'HELLO'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-023",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function createStack() {\n  const items = [];\n  return {\n    push(val) { items.push(val); },\n    pop() { return items.pop(); },\n    size() { return items.length; }\n  };\n}\nconst s = createStack();\ns.push('a');\ns.push('b');\ns.pop();\nconsole.log(s.size(), s.items);",
+    "options": [
+      "1, ['a']",
+      "2, undefined",
+      "0, []",
+      "1, undefined"
+    ],
+    "correctIndex": 3,
+    "explanation": "createStack uses a closure-based encapsulation pattern. The items array can only be accessed through the returned object's methods (push, pop, size). After push('a'), push('b'), pop() removes 'b', so size() is 1. s.items is undefined because the returned object has no items property.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-024",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, why is the cache not shared between calls?",
+    "code": "function memoize(fn) {\n  const cache = {};\n  return function(arg) {\n    if (cache[arg] !== undefined) return cache[arg];\n    cache[arg] = fn(arg);\n    return cache[arg];\n  };\n}\nconst memo1 = memoize(x => x * 2);\nconst memo2 = memoize(x => x * 2);\nmemo1(5);\nconsole.log(memo2(5)); // cache hit이 아닌 새로 계산됨",
+    "options": [
+      "The cache object is declared with const so it cannot be modified",
+      "Each call to memoize creates a new lexical environment, so each has its own independent cache",
+      "Arrow functions do not form closures",
+      "The cache[arg] check always fails"
+    ],
+    "correctIndex": 1,
+    "explanation": "Each call to memoize creates a new execution context and lexical environment. So memo1 and memo2 each capture an independent cache object via closure. The cache saved by memo1(5) exists only in memo1's closure, so memo2(5) does not find it in its own empty cache and computes fresh.",
+    "sourceUrl": "https://javascript.info/closure"
+  },
+  {
+    "id": "closure-025",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the difference between closure-based and WeakRef-based memory management strategies is correct?",
+    "options": [
+      "Closures hold strong references to their variables, while WeakRef provides weak references that allow garbage collection",
+      "WeakRef can only be used inside closures",
+      "Closures and WeakRef use the same memory management approach",
+      "WeakRef was introduced in ES5"
+    ],
+    "correctIndex": 0,
+    "explanation": "Closures maintain strong references to outer variables, so the referenced objects are not garbage collected as long as the closure exists. WeakRef (ES2021) creates weak references that allow garbage collection if there are no other strong references. Using WeakRef for caches or large object references can prevent memory leaks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakRef"
+  },
+  {
+    "id": "closure-026",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function createFn() {\n  let value = 1;\n  function get() { return value; }\n  function set(v) { value = v; }\n  return { get, set };\n}\nconst obj1 = createFn();\nconst obj2 = createFn();\nobj1.set(100);\nobj2.set(200);\nconsole.log(obj1.get(), obj2.get());",
+    "options": [
+      "200, 200",
+      "1, 1",
+      "100, 100",
+      "100, 200"
+    ],
+    "correctIndex": 3,
+    "explanation": "Calling createFn() twice creates two independent lexical environments. obj1's get/set share the first environment's value, and obj2's get/set share the second. obj1.set(100) changes only the first value, and obj2.set(200) changes only the second. So obj1.get() is 100, obj2.get() is 200.",
+    "sourceUrl": "https://javascript.info/closure"
+  },
+  {
+    "id": "closure-027",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Which statement about the [[Environment]] internal slot of closures in JavaScript is correct?",
+    "options": [
+      "[[Environment]] is set anew every time the function is called",
+      "[[Environment]] can only reference the global environment",
+      "[[Environment]] is determined when the function is created and references the lexical environment at creation time",
+      "[[Environment]] can be accessed and modified directly by developers"
+    ],
+    "correctIndex": 2,
+    "explanation": "Per the ECMAScript spec, every function object has an [[Environment]] internal slot. This slot is set to the lexical environment of the currently executing execution context at the time the function is created, and does not change afterward. When the function is called, this [[Environment]] value is used as the outer lexical environment reference of the new execution context, forming the scope chain.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-028",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "In the following code, 0 is always output. What is the cause?",
+    "code": "function counter() {\n  let count = 0;\n  return {\n    increment() { let count = 0; count++; },\n    getCount() { return count; }\n  };\n}\nconst c = counter();\nc.increment();\nc.increment();\nconsole.log(c.getCount());",
+    "options": [
+      "getCount references the wrong variable",
+      "The let count inside increment shadows the outer count, so the outer count is never modified",
+      "count++ performs string concatenation",
+      "count resets every time counter is called"
+    ],
+    "correctIndex": 1,
+    "explanation": "The let count = 0 inside the increment method declares a new local variable count. This local variable shadows the outer counter function's count. So count++ only increments the local variable, and the closure-captured outer count remains 0. getCount() references the outer count, so it always returns 0.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-029",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the difference between closure-based event handlers and data-* attribute event handlers is correct?",
+    "options": [
+      "data-* attributes can only store strings, while closures can capture values of any type including functions and objects",
+      "The closure approach stores data in the DOM, using less memory",
+      "data-* attributes cannot be accessed from JavaScript",
+      "Both approaches work identically"
+    ],
+    "correctIndex": 0,
+    "explanation": "data-* attributes are HTML attributes that can only store string values, accessed through the DOM. Closures allow event handlers to directly capture variables from the enclosing scope, maintaining any type — numbers, objects, functions, etc. When complex data needs to be passed to handlers, closures are more flexible.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes"
+  },
+  {
+    "id": "closure-030",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function compose(f, g) {\n  return function(x) {\n    return f(g(x));\n  };\n}\nconst double = x => x * 2;\nconst addOne = x => x + 1;\nconst doubleThenAdd = compose(addOne, double);\nconst addThenDouble = compose(double, addOne);\nconsole.log(doubleThenAdd(3), addThenDouble(3));",
+    "options": [
+      "7, 8",
+      "8, 7",
+      "7, 7",
+      "8, 8"
+    ],
+    "correctIndex": 0,
+    "explanation": "compose(f, g) returns a function that computes f(g(x)). doubleThenAdd(3) is addOne(double(3)) = addOne(6) = 7. addThenDouble(3) is double(addOne(3)) = double(4) = 8. The returned function captures f and g via closure, executing the correct function composition at call time. This pattern is the foundation of Function Composition in functional programming.",
+    "sourceUrl": "https://javascript.info/closure"
+  }
+]

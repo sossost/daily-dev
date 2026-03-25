@@ -1,0 +1,334 @@
+[
+  {
+    "id": "async-001",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What are the three states of a Promise?",
+    "options": [
+      "pending, fulfilled, rejected",
+      "start, running, done",
+      "open, closed, error",
+      "waiting, success, failure"
+    ],
+    "correctIndex": 0,
+    "explanation": "A Promise has three states. pending is the initial state, fulfilled means the operation completed successfully, and rejected means the operation failed. Once settled (either fulfilled or rejected), the state cannot change.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+  },
+  {
+    "id": "async-002",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const p = Promise.resolve(42);\np.then(value => console.log(value));",
+    "options": [
+      "undefined",
+      "42",
+      "Promise { 42 }",
+      "Error"
+    ],
+    "correctIndex": 1,
+    "explanation": "Promise.resolve(42) creates a Promise that is immediately fulfilled with the value 42. The then callback receives the fulfilled value 42 and outputs it. Importantly, even when a Promise is already fulfilled, the then callback does not execute synchronously — it is registered as a microtask and runs after the current code finishes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "async-003",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "async function fetchData() {\n  throw new Error('Failed');\n}\nfetchData()\n  .then(() => console.log('success'))\n  .catch(err => console.log(err.message));",
+    "options": [
+      "success",
+      "undefined",
+      "Failed",
+      "Unhandled Promise Rejection"
+    ],
+    "correctIndex": 2,
+    "explanation": "An error thrown inside an async function causes the returned Promise to be rejected. The catch handler receives the error and outputs err.message, which is 'Failed'. Since catch is present, no Unhandled Promise Rejection occurs.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "async-004",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between Promise.all and Promise.allSettled?",
+    "options": [
+      "Promise.all executes in parallel, Promise.allSettled executes sequentially",
+      "Both behave identically",
+      "Only Promise.all can handle errors",
+      "Promise.all rejects if any promise fails, Promise.allSettled returns all results"
+    ],
+    "correctIndex": 3,
+    "explanation": "Promise.all fulfills only when all promises fulfill, and rejects immediately if any one rejects. Promise.allSettled waits for all promises to settle (fulfill or reject) and returns each result with its status. This makes it useful for independent async operations where you need all results regardless of individual failures.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled"
+  },
+  {
+    "id": "async-005",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const delay = ms => new Promise(r => setTimeout(r, ms));\nasync function run() {\n  const start = Date.now();\n  await Promise.all([\n    delay(100),\n    delay(200),\n    delay(150)\n  ]);\n  const elapsed = Date.now() - start;\n  console.log(elapsed >= 200 && elapsed < 300);\n}\nrun();",
+    "options": [
+      "true",
+      "false",
+      "undefined",
+      "Error"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise.all starts all promises concurrently. The total time is determined by the slowest one — delay(200). The total elapsed time is about 200ms (not 450ms), so elapsed >= 200 && elapsed < 300 is true. Promise.all runs in parallel, not sequentially.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+  },
+  {
+    "id": "async-006",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "async function foo() {\n  return 1;\n}\nasync function bar() {\n  const x = await foo();\n  return x + 1;\n}\nbar().then(v => console.log(v));\nconsole.log('sync');",
+    "options": [
+      "2, sync",
+      "sync, 2",
+      "sync, 1",
+      "1, sync"
+    ],
+    "correctIndex": 1,
+    "explanation": "Calling bar() awaits foo()'s return value of 1. The code after await and the then handler are processed as microtasks. The synchronous console.log('sync') executes first, then the microtasks process and bar() returns 2, which is output.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "async-007",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the return value of an async function is correct?",
+    "options": [
+      "It always returns undefined",
+      "It returns the value directly",
+      "It always returns a Promise object",
+      "It returns a callback function"
+    ],
+    "correctIndex": 2,
+    "explanation": "An async function always returns a Promise. If the return value is not a Promise, it is automatically wrapped with Promise.resolve(). return 1 becomes Promise.resolve(1). Thrown errors are wrapped with Promise.reject(). Therefore, the result of an async function must always be consumed with .then() or await.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "async-008",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output order of the following code?",
+    "code": "const p = new Promise((resolve) => {\n  console.log('A');\n  resolve('B');\n  console.log('C');\n});\np.then((v) => console.log(v));",
+    "options": [
+      "A, B, C",
+      "A, C",
+      "B, A, C",
+      "A, C, B"
+    ],
+    "correctIndex": 3,
+    "explanation": "The executor function passed to the Promise constructor executes synchronously (this is a key frequently-tested point). First 'A' is output. resolve('B') puts the Promise in a fulfilled state but does not stop subsequent code. 'C' is output, then the .then callback registered as a microtask executes, outputting 'B'. The key point is that code continues to execute after resolve().",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
+  },
+  {
+    "id": "async-009",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "In the following code, the error is not caught. What is the cause?",
+    "code": "try {\n  setTimeout(() => {\n    throw new Error('fail');\n  }, 0);\n} catch (e) {\n  console.log('caught:', e.message);\n}",
+    "options": [
+      "The setTimeout callback runs as a separate task, so the try-catch block has already completed",
+      "setTimeout cannot throw errors",
+      "The Error object should be created without new",
+      "try-catch cannot be used with asynchronous code"
+    ],
+    "correctIndex": 0,
+    "explanation": "try-catch executes synchronously. The setTimeout callback runs later as a separate macrotask, by which time the try-catch block has already completed. Asynchronous errors must be handled with Promise's .catch() or async/await with try-catch.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch"
+  },
+  {
+    "id": "async-010",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Which statement about the difference between callbacks and Promises is correct?",
+    "options": [
+      "Callbacks support async but Promises only work synchronously",
+      "Promises enable chaining (.then) which solves the callback hell problem",
+      "Callbacks always perform better than Promises",
+      "Promises cannot handle errors"
+    ],
+    "correctIndex": 1,
+    "explanation": "The callback pattern suffers from 'callback hell' where deep nesting drastically reduces readability. Promises enable a flat structure through .then() chaining and centralized error handling with .catch(). async/await further allows writing Promise-based code in a synchronous style.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises"
+  },
+  {
+    "id": "async-011",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about the behavior of the await keyword is correct?",
+    "options": [
+      "It stops the entire program and waits",
+      "It returns the value synchronously and immediately",
+      "It pauses the async function's execution until the Promise settles, allowing other code to run",
+      "It works identically to setTimeout"
+    ],
+    "correctIndex": 2,
+    "explanation": "await can only be used inside an async function. It pauses the function's execution until the Promise settles (fulfills or rejects). Importantly, only the function is paused — the event loop continues running, so other code (UI rendering, event handling, etc.) executes normally.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "async-012",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "async function foo() {\n  const a = await Promise.resolve(1);\n  const b = await Promise.resolve(2);\n  return a + b;\n}\nfoo().then(v => console.log(v));",
+    "options": [
+      "undefined",
+      "Promise",
+      "12",
+      "3"
+    ],
+    "correctIndex": 3,
+    "explanation": "await Promise.resolve(1) returns 1, and await Promise.resolve(2) returns 2. a + b = 1 + 2 = 3. When the async function returns 3, it becomes Promise.resolve(3), and the .then callback receives 3. Since these are numbers (not strings), addition (not concatenation) is performed.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "async-013",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why might the error in the following code go unhandled?",
+    "code": "async function fetchData() {\n  const res = await fetch('/api/data');\n  return res.json();\n}\nfetchData();",
+    "options": [
+      "Calling without .catch() on the returned Promise causes an Unhandled Rejection on failure",
+      "The fetch API does not throw errors",
+      "async functions automatically handle errors",
+      "res.json() always succeeds"
+    ],
+    "correctIndex": 0,
+    "explanation": "An async function always returns a Promise. When fetchData() is called without attaching .catch() or wrapping in try-catch, a network error or other failure causes an Unhandled Promise Rejection. It should be fetchData().catch(handleError) or wrapped in try-catch.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "async-014",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "Approximately how long does the following code take to execute?",
+    "code": "async function sequential() {\n  const a = await delay(1000);\n  const b = await delay(1000);\n  return a + b;\n}\nsequential();\n// delay(ms)는 ms밀리초 후 resolve되는 Promise",
+    "options": [
+      "About 1 second",
+      "About 2 seconds",
+      "About 0 seconds",
+      "About 3 seconds"
+    ],
+    "correctIndex": 1,
+    "explanation": "await pauses the function at each line until the Promise settles, so the two awaits execute sequentially. The first delay(1000) must complete before the second delay(1000) starts, totaling about 2 seconds. Parallel pattern: const [a, b] = await Promise.all([delay(1000), delay(1000)]) starts both Promises simultaneously, reducing total time to about 1 second. This sequential vs parallel pattern is essential for API call optimization in practice.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "async-015",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about the behavior of Promise.race() is correct?",
+    "options": [
+      "It waits for all Promises to fulfill",
+      "It returns the result of the slowest Promise",
+      "It returns the result of the first Promise to settle (regardless of fulfillment or rejection)",
+      "It only returns fulfilled Promises and ignores rejected ones"
+    ],
+    "correctIndex": 2,
+    "explanation": "Promise.race() returns the result of the first Promise to settle (fulfill or reject). If the fastest one fulfills, the fulfillment value is returned. If the fastest one rejects, the rejection reason is returned. It is commonly used for implementing timeout patterns: Promise.race([fetchData(), timeout(5000)]).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race"
+  },
+  {
+    "id": "async-016",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, the intended parallel execution becomes sequential. What is the cause?",
+    "code": "async function fetchAll(urls) {\n  const results = [];\n  for (const url of urls) {\n    const res = await fetch(url);\n    results.push(await res.json());\n  }\n  return results;\n}",
+    "options": [
+      "for...of does not support async",
+      "fetch can only execute sequentially",
+      "The results array is synchronous",
+      "Each await waits for the previous request to complete; Promise.all() should be used for parallel execution"
+    ],
+    "correctIndex": 3,
+    "explanation": "The await inside the for loop waits for each iteration's request to complete before moving to the next. With N requests running sequentially, the total time is the sum of all requests. For parallel execution: const promises = urls.map(url => fetch(url)); const results = await Promise.all(promises) starts all requests simultaneously.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+  },
+  {
+    "id": "async-017",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const p1 = Promise.resolve('A');\nconst p2 = Promise.reject('B');\nconst p3 = Promise.resolve('C');\n\nPromise.allSettled([p1, p2, p3])\n  .then(results => {\n    console.log(results.length);\n    console.log(results[1].status);\n  });",
+    "options": [
+      "3, rejected",
+      "2, fulfilled",
+      "3, fulfilled",
+      "Error thrown"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise.allSettled waits for all Promises to settle and returns each result as a {status, value/reason} object. Even though p2 is rejected, the entire Promise.allSettled does not reject. results has 3 elements, and results[1] is p2's result: {status: 'rejected', reason: 'B'}.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled"
+  },
+  {
+    "id": "async-018",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the correct purpose of for await...of loops?",
+    "options": [
+      "Processing synchronous arrays in parallel",
+      "Consuming values from an async iterable sequentially",
+      "Working identically to Promise.all",
+      "Automatically converting regular for loops to async"
+    ],
+    "correctIndex": 1,
+    "explanation": "for await...of iterates over objects that implement the async iterable protocol. At each iteration, it waits for the Promise to resolve before moving to the next value. It is useful for sequentially processing async data sources like ReadableStreams and async generators.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of"
+  },
+  {
+    "id": "async-019",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why might the following code trigger an Unhandled Rejection warning?",
+    "code": "async function risky() {\n  throw new Error('oops');\n}\nconst promise = risky();\nsetTimeout(() => {\n  promise.catch(e => console.log(e.message));\n}, 1000);",
+    "options": [
+      "catch cannot be used inside setTimeout",
+      "async functions cannot use throw",
+      "The browser detects an Unhandled Rejection because there is no handler immediately after the Promise rejects",
+      "The risky function is called twice"
+    ],
+    "correctIndex": 2,
+    "explanation": "When a Promise is rejected, the browser checks for a rejection handler immediately or after microtask processing. Since .catch() is only attached 1 second later, an Unhandled Promise Rejection event fires before that. Rejection handlers should be attached immediately when the Promise is created.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+  },
+  {
+    "id": "async-020",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about the difference between Promise.any and Promise.race is correct?",
+    "options": [
+      "Both behave identically with only a name difference",
+      "Promise.any only rejects when all Promises are rejected",
+      "Promise.race waits for the slowest Promise",
+      "Promise.any returns the first fulfillment, Promise.race returns the first settlement (fulfillment or rejection)"
+    ],
+    "correctIndex": 3,
+    "explanation": "Promise.race returns the result of the first Promise to settle (whether fulfilled or rejected). Promise.any returns the value of the first Promise to fulfill, ignoring rejected ones. Promise.any only rejects with an AggregateError when all Promises are rejected.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/any"
+  }
+]

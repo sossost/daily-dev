@@ -1,17 +1,17 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import type { Difficulty, SessionQuestion } from '@/types'
-import { TOPIC_LABELS } from '@/types'
 import { CodeBlock } from '@/components/quiz/CodeBlock'
 import { OptionList } from '@/components/quiz/OptionList'
 import { Explanation } from '@/components/quiz/Explanation'
 import { BookmarkButton } from '@/components/quiz/BookmarkButton'
 
-const DIFFICULTY_LABELS: Record<Difficulty, string> = {
-  easy: '쉬움',
-  medium: '보통',
-  hard: '어려움',
+const DIFFICULTY_KEYS: Record<Difficulty, 'easy' | 'medium' | 'hard'> = {
+  easy: 'easy',
+  medium: 'medium',
+  hard: 'hard',
 }
 
 interface QuizCardProps {
@@ -29,6 +29,8 @@ export function QuizCard({
 }: QuizCardProps) {
   const { question, isReview } = sessionQuestion
   const isCorrect = selectedIndex === question.correctIndex
+  const quizT = useTranslations('quiz')
+  const topicT = useTranslations('topics')
 
   return (
     <motion.div
@@ -41,14 +43,14 @@ export function QuizCard({
     >
       <div className="flex items-center gap-2 mb-4">
         <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">
-          {TOPIC_LABELS[question.topic]}
+          {topicT(question.topic)}
         </span>
         <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-          {DIFFICULTY_LABELS[question.difficulty]}
+          {quizT(DIFFICULTY_KEYS[question.difficulty])}
         </span>
         {isReview && (
           <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300">
-            복습
+            {quizT('review')}
           </span>
         )}
         <div className="ml-auto">
@@ -93,17 +95,21 @@ export function NextButton({
   isLast: boolean
   onNext: () => void
 }) {
+  const t = useTranslations('quiz')
+
   if (isAnswered === false) return null
+
+  const label = isLast ? t('showResult') : t('nextQuestion')
 
   return (
     <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 z-50">
       <div className="max-w-lg mx-auto">
         <button
           onClick={onNext}
-          aria-label={isLast ? '결과 보기' : '다음 문제'}
+          aria-label={label}
           className="w-full py-3 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 active:scale-[0.98] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
         >
-          {isLast ? '결과 보기' : '다음 문제'}
+          {label}
         </button>
       </div>
     </div>

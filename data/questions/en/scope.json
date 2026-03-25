@@ -1,0 +1,499 @@
+[
+  {
+    "id": "scope-001",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "var x = 10;\nfunction foo() {\n  console.log(x);\n  var x = 20;\n}\nfoo();",
+    "options": [
+      "undefined",
+      "10",
+      "20",
+      "ReferenceError"
+    ],
+    "correctIndex": 0,
+    "explanation": "Inside the function, var x is hoisted — the declaration is moved to the top of the function scope, but the assignment stays in place. So at the point of console.log(x), x has been declared but not yet assigned, resulting in undefined.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Hoisting"
+  },
+  {
+    "id": "scope-002",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which keywords create block scope in JavaScript?",
+    "options": [
+      "var",
+      "let and const",
+      "function",
+      "this"
+    ],
+    "correctIndex": 1,
+    "explanation": "let and const have block scope (within {} blocks). var has function scope, meaning it remains accessible outside of a block even when declared inside one. Since ES6, let/const enable more predictable scope management.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let"
+  },
+  {
+    "id": "scope-003",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about lexical scope is correct?",
+    "options": [
+      "Scope is determined by where a function is called",
+      "Scope changes dynamically at runtime",
+      "The outer scope is determined by where a function is defined",
+      "Only the global scope can be referenced"
+    ],
+    "correctIndex": 2,
+    "explanation": "Lexical scope (static scope) determines the outer scope based on where a function is defined, not where it is called. The declaration location is what matters. JavaScript follows lexical scoping, which forms the basis of closures.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "scope-004",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "let a = 1;\n{\n  let a = 2;\n  {\n    let a = 3;\n    console.log(a);\n  }\n  console.log(a);\n}\nconsole.log(a);",
+    "options": [
+      "1, 2, 3",
+      "3, 3, 3",
+      "1, 1, 1",
+      "3, 2, 1"
+    ],
+    "correctIndex": 3,
+    "explanation": "let has block scope, so each a within its respective block ({}) is a different variable. The innermost block outputs 3, the middle block outputs 2, and the outermost scope outputs 1. Each console.log references the variable in its own block via the scope chain.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block"
+  },
+  {
+    "id": "scope-005",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "for (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}\nconsole.log(i);",
+    "options": [
+      "3, 3, 3, 3",
+      "0, 1, 2, 3",
+      "0, 1, 2, undefined",
+      "ReferenceError"
+    ],
+    "correctIndex": 0,
+    "explanation": "This problem combines two concepts: 1) var is function-scoped, so only one i exists across the entire loop. 2) setTimeout callbacks are placed in the macrotask queue and execute after all synchronous code. Therefore, the synchronous console.log(i) runs first outputting 3, then the three callbacks each reference the same i (which is 3), outputting 3, 3, 3.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/var"
+  },
+  {
+    "id": "scope-006",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the Temporal Dead Zone (TDZ) is correct?",
+    "options": [
+      "Accessing a let/const variable before its declaration throws a ReferenceError",
+      "TDZ only occurs with var declarations",
+      "TDZ refers to the top of a function scope",
+      "TDZ is the period right before a variable is garbage collected"
+    ],
+    "correctIndex": 0,
+    "explanation": "The TDZ (Temporal Dead Zone) is the region from the start of the scope to the actual declaration of a let/const variable. Accessing the variable within this zone throws a ReferenceError. var does not have a TDZ because it is initialized to undefined during hoisting.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let#temporal_dead_zone"
+  },
+  {
+    "id": "scope-007",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const x = 'outer';\n{\n  const x = 'inner';\n  console.log(x);\n}\nconsole.log(x);",
+    "options": [
+      "inner, inner",
+      "inner, outer",
+      "outer, outer",
+      "SyntaxError"
+    ],
+    "correctIndex": 1,
+    "explanation": "const has block scope. The x inside the block is 'inner' and the x outside the block is 'outer' — they are independent variables. The console.log inside the block references the nearest scope's x ('inner'), and the one outside references the outer x ('outer').",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const"
+  },
+  {
+    "id": "scope-008",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Why can i be accessed outside the for loop in the following code?",
+    "code": "for (var i = 0; i < 5; i++) {\n  // do something\n}\nconsole.log(i); // 5",
+    "options": [
+      "for loops always create global variables",
+      "console.log is executed inside the for loop",
+      "var has function scope, not block scope, so it remains accessible outside the block",
+      "i is hoisted above the loop and declared beforehand"
+    ],
+    "correctIndex": 2,
+    "explanation": "Variables declared with var have function scope. The block ({}) of a for loop does not create a scope for var, so i remains accessible after the loop ends with a value of 5. Using let would apply block scope and prevent external access.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/var"
+  },
+  {
+    "id": "scope-009",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Which statement about the scoping differences of var, let, and const is correct?",
+    "options": [
+      "All three have block scope",
+      "All three have function scope",
+      "var has block scope, while let and const have function scope",
+      "var has function scope, while let and const have block scope"
+    ],
+    "correctIndex": 3,
+    "explanation": "var has function scope and remains accessible throughout the entire function even when declared inside a block. let and const have block scope and are only accessible within the block where they are declared. This difference directly affects variable accessibility in for loops, if statements, and more.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let"
+  },
+  {
+    "id": "scope-010",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "let x = 1;\nfunction foo() {\n  console.log(x);\n  let x = 2;\n}\nfoo();",
+    "options": [
+      "ReferenceError",
+      "undefined",
+      "1",
+      "2"
+    ],
+    "correctIndex": 0,
+    "explanation": "Since let x = 2 exists inside foo, the TDZ (Temporal Dead Zone) for x spans the entire function block. At the point console.log(x) executes, the let x declaration has not been reached yet, so x is in the TDZ and a ReferenceError is thrown. The outer x = 1 is shadowed by the inner declaration.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let#temporal_dead_zone"
+  },
+  {
+    "id": "scope-011",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "A ReferenceError occurs in the following code. What is the cause?",
+    "code": "function example() {\n  console.log(value);\n  const value = 'hello';\n}\nexample();",
+    "options": [
+      "const is not hoisted",
+      "The const variable is in the TDZ and cannot be accessed before initialization",
+      "value cannot be handled by console.log because it is a string",
+      "The function keyword conflicts with const"
+    ],
+    "correctIndex": 1,
+    "explanation": "Variables declared with const are hoisted, but unlike var, the initialization phase is separate. Until the declaration statement is reached, the variable is in the TDZ (Temporal Dead Zone). Accessing it within this zone throws a ReferenceError. With var, it would have output undefined instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const"
+  },
+  {
+    "id": "scope-012",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "var x = 'global';\n(function() {\n  var x = 'local';\n  console.log(x);\n})();\nconsole.log(x);",
+    "options": [
+      "global, global",
+      "local, local",
+      "local, global",
+      "global, local"
+    ],
+    "correctIndex": 2,
+    "explanation": "The var x inside the IIFE (Immediately Invoked Function Expression) has function scope, so it is independent from the outer x. Inside the IIFE, 'local' is output, and outside, 'global' is output. IIFEs are commonly used to isolate scope and prevent global pollution.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/IIFE"
+  },
+  {
+    "id": "scope-013",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the hoisting difference between function declarations and function expressions is correct?",
+    "options": [
+      "Both are fully hoisted and can be called before their declaration",
+      "Neither is hoisted, so neither can be called before declaration",
+      "Only function expressions are hoisted and can be called before declaration",
+      "Function declarations are fully hoisted, but for function expressions only the variable declaration is hoisted"
+    ],
+    "correctIndex": 3,
+    "explanation": "Function declarations (function foo() {}) are hoisted in their entirety — both the declaration and the function body — making them callable anywhere in the scope. Function expressions (const foo = function() {}) only have the variable declaration hoisted; the function assignment happens at that line. Calling a function expression before its declaration results in a TypeError.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions#function_hoisting"
+  },
+  {
+    "id": "scope-014",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which of the following does NOT prevent global scope pollution in JavaScript?",
+    "options": [
+      "Declaring all variables with var at the top level",
+      "Wrapping code in an IIFE (Immediately Invoked Function Expression)",
+      "Using ES6 modules (import/export)",
+      "Using block scope with let/const"
+    ],
+    "correctIndex": 0,
+    "explanation": "var only creates function scope, so declaring it at the top level makes it a global variable. This can actually cause global pollution. IIFEs, ES6 modules, and let/const block scope all effectively limit variable accessibility and prevent global pollution.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Global_scope"
+  },
+  {
+    "id": "scope-015",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, the global variable value is unintentionally changed to 20. What is the cause?",
+    "code": "var value = 10;\nfunction update() {\n  value = 20;\n}\nupdate();\nconsole.log(value); // 20",
+    "options": [
+      "The update function runs asynchronously",
+      "The assignment inside the function has no declaration keyword, so it traverses the scope chain and modifies the global variable",
+      "var cannot be redeclared inside a function",
+      "console.log executes before update"
+    ],
+    "correctIndex": 1,
+    "explanation": "The value = 20 inside update has no var/let/const keyword, so instead of creating a new local variable, it traverses the scope chain upward and directly modifies the global value. If it had been var value = 20, it would have been a local variable and would not have affected the global value.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/var"
+  },
+  {
+    "id": "scope-016",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "var a = 1;\nfunction foo() {\n  var a = 2;\n  function bar() {\n    console.log(a);\n  }\n  return bar;\n}\nfunction baz() {\n  var a = 3;\n  foo()();\n}\nbaz();",
+    "options": [
+      "1",
+      "3",
+      "2",
+      "undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "The bar function is defined inside foo, so by lexical scoping it references foo's variable a = 2. Even though bar is called inside baz, the call site does not affect scope. JavaScript's lexical scoping rules mean only the scope chain at the definition site is followed, so 2 is output.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "scope-017",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "console.log(typeof foo);\nconsole.log(typeof bar);\nfunction foo() {}\nvar bar = function() {};",
+    "options": [
+      "undefined, undefined",
+      "function, function",
+      "undefined, function",
+      "function, undefined"
+    ],
+    "correctIndex": 3,
+    "explanation": "Function declarations (function foo) are fully hoisted, so typeof foo is 'function'. Function expressions (var bar = function) only have the var bar declaration hoisted; the function assignment happens later. At that point, bar is undefined, so typeof bar is 'undefined'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions#function_hoisting"
+  },
+  {
+    "id": "scope-018",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct description of the behavioral difference between the following two code snippets?\n\nA: console.log(x); var x = 5;\nB: console.log(y); let y = 5;",
+    "options": [
+      "Both throw a ReferenceError",
+      "A outputs 5, B outputs undefined",
+      "Both output undefined",
+      "A outputs undefined, B throws a ReferenceError"
+    ],
+    "correctIndex": 3,
+    "explanation": "var is initialized to undefined during hoisting, so accessing it before its declaration returns undefined. let is hoisted but not initialized, placing it in the TDZ (Temporal Dead Zone) — accessing it before the declaration throws a ReferenceError. This difference is one of the key reasons let/const were introduced.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let#temporal_dead_zone"
+  },
+  {
+    "id": "scope-019",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The intended output is 'inner', but 'outer' is printed instead. What is the cause?",
+    "code": "var name = 'outer';\nfunction printName() {\n  console.log(name);\n}\nfunction wrapper() {\n  var name = 'inner';\n  printName();\n}\nwrapper();",
+    "options": [
+      "Declaring name with var inside wrapper causes it to be ignored due to hoisting",
+      "JavaScript uses lexical scoping, so printName references the name at its definition site",
+      "var shares scope between functions",
+      "printName executes before wrapper"
+    ],
+    "correctIndex": 1,
+    "explanation": "JavaScript uses lexical (static) scoping. printName is defined in the global scope, so it follows the scope chain at its definition site (global), not the call site (inside wrapper). Therefore, it references the global name = 'outer' instead of wrapper's name = 'inner'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "scope-020",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Which statement about ES6 module scope is correct?",
+    "options": [
+      "All variables in a module are automatically registered in the global scope",
+      "Module scope works identically to function scope",
+      "Modules have their own scope, and variables not exported cannot be accessed externally",
+      "let and const cannot be used in module scope"
+    ],
+    "correctIndex": 2,
+    "explanation": "ES6 modules create an independent scope per file. Variables declared at the top level of a module belong to the module scope, not the global scope. They cannot be accessed from other modules unless explicitly exported with the export keyword. This fundamentally solves the global scope pollution problem.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules"
+  },
+  {
+    "id": "scope-021",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function foo(a) {\n  var a = 10;\n  console.log(a);\n}\nfoo(5);",
+    "options": [
+      "5",
+      "10",
+      "undefined",
+      "SyntaxError"
+    ],
+    "correctIndex": 1,
+    "explanation": "When a var variable with the same name as a function parameter is declared, they are treated as the same variable within the function scope. The hoisting of var a merges with the existing parameter a, then the a = 10 assignment executes, resulting in 10 being output.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions#description"
+  },
+  {
+    "id": "scope-022",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the JavaScript scope chain is correct?",
+    "options": [
+      "Variable lookup starts from the global scope and goes down to local scopes",
+      "Variable lookup starts from the current scope and goes up to outer scopes",
+      "The scope chain is dynamically determined by the call order",
+      "The scope chain only works with block scope"
+    ],
+    "correctIndex": 1,
+    "explanation": "The scope chain first looks for a variable in the current scope, then moves up to the next outer scope if not found. This process repeats until the global scope is reached. If the variable is not found even in the global scope, a ReferenceError is thrown. The lookup direction is always from inner to outer.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Scope"
+  },
+  {
+    "id": "scope-023",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "for (let i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}",
+    "options": [
+      "3, 3, 3",
+      "0, 1, 2",
+      "undefined, undefined, undefined",
+      "ReferenceError"
+    ],
+    "correctIndex": 1,
+    "explanation": "let has block scope, so each iteration of the for loop creates a new binding for i. Each setTimeout callback captures its own unique i from its respective iteration. Unlike var (which would output 3 for all), this outputs 0, 1, 2 in order. This is the key reason let is recommended in loops.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let#description"
+  },
+  {
+    "id": "scope-024",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, the two cases in the switch statement cause a SyntaxError due to variable collision. What is the cause?",
+    "code": "switch (action) {\n  case 'add':\n    let result = x + y;\n    break;\n  case 'sub':\n    let result = x - y;\n    break;\n}",
+    "options": [
+      "let cannot be used inside a switch statement",
+      "case clauses do not create separate block scopes, so result is declared twice in the same scope",
+      "The break statement invalidates the let declaration",
+      "Only const can be used inside switch statements"
+    ],
+    "correctIndex": 1,
+    "explanation": "Case clauses in a switch statement do not create separate block scopes. All cases share one switch block scope, so declaring let result twice causes a SyntaxError. The fix is to wrap each case in curly braces ({}) to create independent block scopes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch#lexical_scoping"
+  },
+  {
+    "id": "scope-025",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Which of the following creates a new scope in JavaScript?",
+    "options": [
+      "An if statement block ({})",
+      "A for loop block ({})",
+      "A function declaration",
+      "All of the above create a new scope"
+    ],
+    "correctIndex": 3,
+    "explanation": "Since ES6, all blocks ({}) create block scope for let/const. if statements, for loops, and function declarations all have blocks and thus form new scopes. However, var only recognizes function scope, so for var only function declarations create a new scope.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block"
+  },
+  {
+    "id": "scope-026",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function outer() {\n  let x = 10;\n  function middle() {\n    let y = 20;\n    function inner() {\n      let z = 30;\n      console.log(x + y + z);\n    }\n    inner();\n  }\n  middle();\n}\nouter();",
+    "options": [
+      "NaN",
+      "30",
+      "60",
+      "ReferenceError"
+    ],
+    "correctIndex": 2,
+    "explanation": "The inner function can access its own local variable z (30), the parent middle's y (20), and the grandparent outer's x (10) through the scope chain. The scope chain allows referencing all outer scope variables regardless of nesting depth, so x + y + z = 10 + 20 + 30 = 60 is output.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "scope-027",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about variable shadowing is correct?",
+    "options": [
+      "It is when a child scope deletes a variable from the parent scope",
+      "It is when a child scope declares a variable with the same name as one in the parent scope, obscuring access to the parent variable",
+      "It is when two variables share the same memory address",
+      "It is a phenomenon that only occurs in strict mode"
+    ],
+    "correctIndex": 1,
+    "explanation": "Variable shadowing occurs when a child scope declares a variable with the same name as one in a parent scope. Within the child scope, only the child's variable is referenced, and the parent variable is 'shadowed'. The parent variable is not deleted or modified — only access within that scope is blocked.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Scope"
+  },
+  {
+    "id": "scope-028",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Why does a ReferenceError occur in the following code?",
+    "code": "{\n  console.log(count);\n  let count = 0;\n}",
+    "options": [
+      "Variables cannot be declared inside a block",
+      "The let variable is in the TDZ and cannot be accessed before its declaration",
+      "count is falsy because it is initialized to 0",
+      "console.log cannot be used inside a block scope"
+    ],
+    "correctIndex": 1,
+    "explanation": "The count declared with let is in the TDZ (Temporal Dead Zone) from the start of the block until its declaration. console.log(count) is before the declaration, so it attempts to access count within the TDZ, causing a ReferenceError. The TDZ rules apply equally inside block scopes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let#temporal_dead_zone"
+  },
+  {
+    "id": "scope-029",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the scope of a try-catch block's catch clause is correct?",
+    "options": [
+      "The catch error parameter is registered in the global scope",
+      "The catch block does not create a scope",
+      "The catch error parameter is only accessible within the catch block",
+      "var variables inside the catch block are also confined to the catch block scope"
+    ],
+    "correctIndex": 2,
+    "explanation": "The error parameter of a catch block (e.g., the e in catch(e)) is a block-scoped variable accessible only within the catch block. However, variables declared with var inside the catch block follow function scope and are accessible outside the catch block. let/const are confined to the catch block.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch"
+  },
+  {
+    "id": "scope-030",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What effect does strict mode ('use strict') have on scope behavior?",
+    "options": [
+      "let and const are changed to function scope",
+      "All variables are automatically registered in the global scope",
+      "Hoisting of var is disabled",
+      "Assigning a value to a variable without a declaration keyword throws a ReferenceError"
+    ],
+    "correctIndex": 3,
+    "explanation": "In strict mode, assigning a value to a variable without var, let, or const does not create an implicit global variable — instead, it throws a ReferenceError. In non-strict mode, writing x = 10 without a keyword creates a global variable, but strict mode prevents this mistake.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode"
+  }
+]

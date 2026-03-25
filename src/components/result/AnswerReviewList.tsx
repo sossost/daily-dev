@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { motion, AnimatePresence } from 'framer-motion'
 import clsx from 'clsx'
 import { ChevronDown, Check, X, ListChecks } from 'lucide-react'
 import type { SessionQuestion, SessionAnswer } from '@/types'
-import { TOPIC_LABELS } from '@/types'
 import { CodeBlock } from '@/components/quiz/CodeBlock'
 import { BookmarkButton } from '@/components/quiz/BookmarkButton'
 
@@ -19,6 +19,9 @@ type FilterMode = 'all' | 'incorrect' | 'correct'
 const ANIMATION_DELAY_STEP = 0.05
 
 export function AnswerReviewList({ questions, answers }: AnswerReviewListProps) {
+  const t = useTranslations('result')
+  const quizT = useTranslations('quiz')
+  const topicT = useTranslations('topics')
   const [filter, setFilter] = useState<FilterMode>('all')
   const [expandedIds, setExpandedIds] = useState<ReadonlySet<string>>(new Set())
 
@@ -69,42 +72,42 @@ export function AnswerReviewList({ questions, answers }: AnswerReviewListProps) 
   )
 
   return (
-    <section className="mt-6" aria-label="문제 리뷰">
+    <section className="mt-6" aria-label={t('questionReview')}>
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
           <ListChecks size={18} />
-          문제 리뷰
+          {t('questionReview')}
         </h3>
         <button
           onClick={allExpanded ? collapseAll : expandAll}
           className="text-xs text-blue-500 dark:text-blue-400 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
-          aria-label={allExpanded ? '모두 접기' : '모두 펼치기'}
+          aria-label={allExpanded ? t('collapseAll') : t('expandAll')}
         >
-          {allExpanded ? '모두 접기' : '모두 펼치기'}
+          {allExpanded ? t('collapseAll') : t('expandAll')}
         </button>
       </div>
 
-      <div className="flex gap-2 mb-4" role="radiogroup" aria-label="필터">
+      <div className="flex gap-2 mb-4" role="radiogroup" aria-label={t('filterAll')}>
         <FilterButton
           active={filter === 'all'}
           onClick={() => setFilter('all')}
-          label={`전체 (${reviewItems.length})`}
+          label={`${t('filterAll')} (${reviewItems.length})`}
         />
         <FilterButton
           active={filter === 'incorrect'}
           onClick={() => setFilter('incorrect')}
-          label={`오답 (${incorrectCount})`}
+          label={`${t('filterWrong')} (${incorrectCount})`}
         />
         <FilterButton
           active={filter === 'correct'}
           onClick={() => setFilter('correct')}
-          label={`정답 (${correctCount})`}
+          label={`${t('filterCorrect')} (${correctCount})`}
         />
       </div>
 
       {filteredItems.length === 0 ? (
         <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-6">
-          해당하는 문제가 없습니다.
+          {t('noQuestions')}
         </p>
       ) : (
         <div className="space-y-3">
@@ -165,6 +168,8 @@ function ReviewCard({
   onToggle,
   index,
 }: ReviewCardProps) {
+  const topicT = useTranslations('topics')
+  const quizT = useTranslations('quiz')
   const { question } = sessionQuestion
   const questionNumber = index + 1
 
@@ -208,7 +213,7 @@ function ReviewCard({
             {question.question}
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-            {TOPIC_LABELS[question.topic]}
+            {topicT(question.topic)}
           </p>
         </div>
 
@@ -293,9 +298,9 @@ function ReviewCard({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block mt-2 text-xs text-blue-600 dark:text-blue-400 hover:underline"
-                  aria-label="참고 자료 보기 (새 탭에서 열림)"
+                  aria-label={quizT('viewSourceNewTab')}
                 >
-                  참고 자료 보기
+                  {quizT('viewSource')}
                 </a>
               </div>
 

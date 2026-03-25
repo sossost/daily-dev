@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Keyboard } from 'lucide-react'
 
@@ -37,6 +38,7 @@ function incrementDisplayCount(): void {
 }
 
 export function KeyboardHint() {
+  const t = useTranslations('session')
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -76,18 +78,18 @@ export function KeyboardHint() {
         >
           <Keyboard size={16} className="shrink-0 text-blue-500 dark:text-blue-400" />
           <p className="text-xs text-blue-700 dark:text-blue-300">
-            <span className="font-medium">키보드 단축키:</span>{' '}
+            <span className="font-medium">{t('keyboardShortcuts')}</span>{' '}
             <kbd className="px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 font-mono text-[11px]">1</kbd>
             –
             <kbd className="px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 font-mono text-[11px]">4</kbd>
-            {' '}답변 선택 ·{' '}
+            {' '}{t('selectAnswer')} ·{' '}
             <kbd className="px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 font-mono text-[11px]">Enter</kbd>
-            {' '}다음
+            {' '}{t('next')}
           </p>
           <button
             onClick={handleDismiss}
             className="ml-auto shrink-0 text-blue-400 dark:text-blue-500 hover:text-blue-600 dark:hover:text-blue-300 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
-            aria-label="단축키 안내 닫기"
+            aria-label={t('dismissKeyboardHint')}
           >
             ✕
           </button>

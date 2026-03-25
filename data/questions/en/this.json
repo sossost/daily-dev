@@ -1,0 +1,334 @@
+[
+  {
+    "id": "this-001",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "When is the this binding determined in JavaScript?",
+    "options": [
+      "When the function is called",
+      "When the function is declared",
+      "When the script is loaded",
+      "At compile time"
+    ],
+    "correctIndex": 0,
+    "explanation": "For regular functions, this is determined by how the function is called (dynamic binding). It varies based on the call pattern: method call, constructor call, call/apply/bind, or standalone call. Arrow functions are the exception — they inherit this from the enclosing scope at the time of declaration.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this"
+  },
+  {
+    "id": "this-002",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  name: 'Alice',\n  greet() {\n    return `Hello, ${this.name}`;\n  }\n};\nconsole.log(obj.greet());",
+    "options": [
+      "Hello, undefined",
+      "Hello, Alice",
+      "TypeError",
+      "Hello, "
+    ],
+    "correctIndex": 1,
+    "explanation": "obj.greet() is a method call pattern. The object before the dot (.) — obj — is bound as this. Therefore this.name is 'Alice', and 'Hello, Alice' is returned.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this"
+  },
+  {
+    "id": "this-003",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  name: 'Bob',\n  greet() {\n    return this.name;\n  }\n};\nconst greet = obj.greet;\nconsole.log(greet());",
+    "options": [
+      "Bob",
+      "null",
+      "undefined",
+      "TypeError"
+    ],
+    "correctIndex": 2,
+    "explanation": "When the reference to obj.greet is stored in greet and called standalone, this refers to the global object (browser: window, strict mode: undefined). This is known as 'implicit binding loss'. obj.greet is just a reference to a function object, and when called without an object before the dot, the default binding rule applies. Since the global object has no name property, undefined is returned. The same issue occurs when passing methods as callbacks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this"
+  },
+  {
+    "id": "this-004",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  name: 'Charlie',\n  greet: () => {\n    return this.name;\n  }\n};\nconsole.log(obj.greet());",
+    "options": [
+      "Charlie",
+      "TypeError",
+      "null",
+      "undefined"
+    ],
+    "correctIndex": 3,
+    "explanation": "Arrow functions do not have their own this binding — they inherit this from the enclosing scope. Object literals do not create a scope, so the arrow function's this is the module/global scope's this. Since there is no name on the global this, the result is undefined.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions"
+  },
+  {
+    "id": "this-005",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Which statement about the differences between call, apply, and bind is correct?",
+    "options": [
+      "call and apply invoke immediately while bind returns a new function",
+      "call passes arguments as an array, apply passes them individually",
+      "All three methods return a new function",
+      "Only bind changes this; call and apply do not"
+    ],
+    "correctIndex": 0,
+    "explanation": "call and apply both invoke the function immediately while setting this. call passes arguments individually, and apply passes them as an array. bind returns a new function with this permanently bound without invoking it immediately. The function created by bind can be called later.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind"
+  },
+  {
+    "id": "this-006",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function Timer() {\n  this.seconds = 0;\n  setInterval(function() {\n    this.seconds++;\n    console.log(this.seconds);\n  }, 1000);\n}\nconst timer = new Timer();\n// 1초 후 출력 결과는?",
+    "options": [
+      "1",
+      "NaN",
+      "undefined",
+      "TypeError"
+    ],
+    "correctIndex": 1,
+    "explanation": "The setInterval callback is a regular function, so this refers to the global object. The global object has no seconds property, so undefined++ is performed. Since Number(undefined) is NaN, and NaN + 1 is also NaN (IEEE 754 floating-point rules), NaN is output. Solutions include using an arrow function (setInterval(() => { ... })), bind(this), or the const self = this pattern.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this"
+  },
+  {
+    "id": "this-007",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const person = {\n  name: 'Kim',\n  sayHi() {\n    return `Hi, I'm ${this.name}`;\n  }\n};\nconst copy = { name: 'Lee', sayHi: person.sayHi };\nconsole.log(copy.sayHi());",
+    "options": [
+      "Hi, I'm Kim",
+      "Hi, I'm undefined",
+      "Hi, I'm Lee",
+      "TypeError"
+    ],
+    "correctIndex": 2,
+    "explanation": "When a method is called, this is bound to the object before the dot (.) operator. In copy.sayHi(), this refers to the copy object, so this.name is 'Lee'. What determines this is how the function is called, not where it was defined.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this"
+  },
+  {
+    "id": "this-008",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the this binding of arrow functions is correct?",
+    "options": [
+      "The this of an arrow function is determined at call time",
+      "Arrow functions always have the global object as this",
+      "Arrow functions can change this with call/apply",
+      "Arrow functions have no own this and inherit this from the enclosing scope"
+    ],
+    "correctIndex": 3,
+    "explanation": "Arrow functions do not have their own this binding. Instead, they inherit this from the enclosing scope where the function is defined (lexical this). This cannot be changed with call, apply, or bind. This characteristic makes arrow functions useful for preserving the outer this in callbacks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions"
+  },
+  {
+    "id": "this-009",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "In the following code, 'undefined' is output when the button is clicked. What is the cause?",
+    "code": "const user = {\n  name: 'Park',\n  handleClick() {\n    console.log(this.name);\n  }\n};\nbutton.addEventListener('click', user.handleClick);",
+    "options": [
+      "Passing a method to addEventListener binds this to the button element",
+      "The user object has no name property",
+      "addEventListener only accepts arrow functions",
+      "handleClick is not an async function"
+    ],
+    "correctIndex": 0,
+    "explanation": "When a method is passed as an event handler, only the function reference is passed and the calling context is detached. Per the addEventListener spec, when the callback is invoked, this is bound to currentTarget (the DOM element the event is registered on — the button here). The button element does not have the user object's name property, so this.name is not 'Park'. Solutions: use user.handleClick.bind(user) or an arrow function () => user.handleClick().",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener"
+  },
+  {
+    "id": "this-010",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Which statement about the this difference between regular functions and arrow functions is correct?",
+    "options": [
+      "Regular functions have no this, only arrow functions have this",
+      "Regular functions determine this based on how they are called, arrow functions use the this from their definition scope",
+      "Arrow functions determine this based on how they are called, regular functions use the this from definition",
+      "Both bind this in the same way"
+    ],
+    "correctIndex": 1,
+    "explanation": "A regular function's this is dynamically determined by the call pattern (method call, constructor, call/apply, etc.). Arrow functions have no own this and use the lexical scope's this as-is. Understanding this difference enables correct handling of this in callbacks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions"
+  },
+  {
+    "id": "this-011",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  x: 10,\n  getX() { return this.x; }\n};\nconst getX = obj.getX;\nconst boundGetX = obj.getX.bind(obj);\nconsole.log(getX());\nconsole.log(boundGetX());",
+    "options": [
+      "10, 10",
+      "10, undefined",
+      "undefined, 10",
+      "undefined, undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "getX stores a reference to obj.getX. When called standalone, this is the global object (or undefined), so this.x is undefined. boundGetX has this permanently bound to obj via bind(obj), so this.x returns 10. bind returns a new function with a fixed this.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind"
+  },
+  {
+    "id": "this-012",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, NaN is output after 1 second. What is the correct fix using an arrow function?",
+    "code": "const counter = {\n  count: 0,\n  start() {\n    setTimeout(function() {\n      this.count++;\n      console.log(this.count);\n    }, 1000);\n  }\n};\ncounter.start();",
+    "options": [
+      "Change the setTimeout delay to 0",
+      "Change function() to async function()",
+      "Change this.count to counter.count",
+      "Change function() callback to () => to preserve start's this"
+    ],
+    "correctIndex": 3,
+    "explanation": "In the regular function callback of setTimeout, this refers to the global object. Changing to an arrow function (setTimeout(() => { ... }, 1000)) means it has no own this and uses start method's this (the counter object). Directly referencing counter.count also works, but the arrow function is the more general solution.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions"
+  },
+  {
+    "id": "this-013",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about this when calling a function with the new keyword is correct?",
+    "options": [
+      "this is bound to the newly created empty object",
+      "this is bound to the global object",
+      "this refers to the constructor function itself",
+      "this is initialized to null"
+    ],
+    "correctIndex": 0,
+    "explanation": "When a function is called with new, the internal [[Construct]] operation executes: 1) A new object is created with Object.create(Func.prototype). 2) this is bound to the new object and the function body executes. 3) If the function explicitly returns an object, that object is returned; otherwise, the newly created object is returned. Note: returning a primitive value is ignored and the new object is returned, but returning an object overrides the new object.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new"
+  },
+  {
+    "id": "this-014",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  value: 42,\n  getValue: function() { return this.value; },\n  getValueArrow: () => this.value\n};\nconsole.log(obj.getValue());\nconsole.log(obj.getValueArrow());",
+    "options": [
+      "42, 42",
+      "42, undefined",
+      "undefined, 42",
+      "undefined, undefined"
+    ],
+    "correctIndex": 1,
+    "explanation": "obj.getValue() is a regular function method call, so this refers to obj and returns 42. getValueArrow is an arrow function, so it uses the enclosing scope's this (module or global scope), not the object literal. Since the global this has no value property, it returns undefined.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions"
+  },
+  {
+    "id": "this-015",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the difference between call() and apply() is correct?",
+    "options": [
+      "call executes asynchronously, apply executes synchronously",
+      "call only changes this, apply also changes arguments",
+      "call passes arguments individually, apply passes them as an array",
+      "call returns a new function, apply invokes immediately"
+    ],
+    "correctIndex": 2,
+    "explanation": "Both call and apply invoke the function immediately while setting this. The only difference is how arguments are passed. call uses fn.call(thisArg, arg1, arg2) with individual arguments, while apply uses fn.apply(thisArg, [arg1, arg2]) with an array. With ES6 spread operators, call with ... is now more commonly used.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call"
+  },
+  {
+    "id": "this-016",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, an error occurs inside setInterval. What is the cause?",
+    "code": "class Timer {\n  constructor() {\n    this.seconds = 0;\n  }\n  tick() {\n    this.seconds++;\n  }\n}\nconst timer = new Timer();\nsetInterval(timer.tick, 1000);",
+    "options": [
+      "setInterval cannot be used with class syntax",
+      "this.seconds is not initialized in the constructor",
+      "The tick method is not async",
+      "Passing a method to setInterval binds this to the global object instead of the Timer instance"
+    ],
+    "correctIndex": 3,
+    "explanation": "Passing timer.tick to setInterval only passes the function reference. When setInterval calls the function, this is the global object (or undefined in strict mode). Solutions: 1) Wrap in an arrow function: () => timer.tick(), 2) Use timer.tick.bind(timer), 3) Declare tick as an arrow function property in the class: tick = () => { ... }.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this"
+  },
+  {
+    "id": "this-017",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  name: 'outer',\n  inner: {\n    name: 'inner',\n    getName() {\n      return this.name;\n    }\n  }\n};\nconsole.log(obj.inner.getName());\nconst fn = obj.inner.getName;\nconsole.log(fn());",
+    "options": [
+      "inner, undefined",
+      "outer, undefined",
+      "inner, inner",
+      "outer, inner"
+    ],
+    "correctIndex": 0,
+    "explanation": "In obj.inner.getName(), this is bound to the object immediately before the dot — inner — so it returns 'inner'. The nearest calling object becomes this, not obj. fn() is a standalone call, so this is the global object (or undefined in strict mode), and this.name is undefined.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this"
+  },
+  {
+    "id": "this-018",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In the following code, bound.call(obj2) returns 1 instead of 2. What is the cause?",
+    "code": "const obj1 = { x: 1 };\nconst obj2 = { x: 2 };\nfunction getX() { return this.x; }\nconst bound = getX.bind(obj1);\nconsole.log(bound.call(obj2)); // 1",
+    "options": [
+      "call has higher priority than bind",
+      "this bound with bind cannot be changed by call or apply",
+      "obj1 and obj2 have the same property",
+      "getX is not an arrow function"
+    ],
+    "correctIndex": 1,
+    "explanation": "A function created with bind (a bound function) has its this permanently fixed. Even when call or apply pass a different this, it is ignored. Therefore bound.call(obj2) returns obj1's x which is 1, not obj2's. The this fixation from bind is immutable once set.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind"
+  },
+  {
+    "id": "this-019",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which correctly ranks this binding priority from highest to lowest?",
+    "options": [
+      "Implicit binding -> new binding -> Explicit binding -> Default binding",
+      "Default binding -> Implicit binding -> Explicit binding -> new binding",
+      "new binding -> Explicit binding (call/apply/bind) -> Implicit binding (method call) -> Default binding",
+      "Explicit binding -> new binding -> Default binding -> Implicit binding"
+    ],
+    "correctIndex": 2,
+    "explanation": "There are 4 this binding rules with this priority: 1) new binding has the highest priority — constructor calls override all bindings. 2) Explicit binding via call/apply/bind is next — though new can even override bind (bound functions can still be called with new). 3) Implicit binding via obj.method() is next. 4) If no rule applies, default binding kicks in (non-strict: global object, strict: undefined). Arrow functions are outside this rule system and always use lexical this.",
+    "sourceUrl": "https://javascript.info/bind"
+  },
+  {
+    "id": "this-020",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Which statement about this in regular functions in strict mode is correct?",
+    "options": [
+      "In strict mode, this always refers to the global object",
+      "In strict mode, this is always null",
+      "In strict mode, this cannot be used inside functions",
+      "In strict mode, this in a standalone function call is undefined"
+    ],
+    "correctIndex": 3,
+    "explanation": "In non-strict mode, this in a standalone function call refers to the global object (window/global). In strict mode ('use strict'), the default binding for this becomes undefined. This is a safety mechanism to prevent accidental modification of the global object. this in method calls, call/apply, and new works normally even in strict mode.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode"
+  }
+]

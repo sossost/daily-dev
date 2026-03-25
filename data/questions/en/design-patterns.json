@@ -1,0 +1,332 @@
+[
+  {
+    "id": "design-patterns-001",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the core purpose of the Singleton pattern?",
+    "options": [
+      "To ensure that only one instance of a class exists",
+      "To deep copy objects",
+      "To manage inheritance between multiple objects",
+      "To execute asynchronous operations sequentially"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Singleton pattern ensures that only one instance of a class is created and provides a global access point to that instance. In JavaScript, it can be implemented using the module system or closures.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/singleton"
+  },
+  {
+    "id": "design-patterns-002",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following Singleton pattern code?",
+    "code": "class Database {\n  static instance = null;\n  constructor(name) {\n    if (Database.instance) return Database.instance;\n    this.name = name;\n    Database.instance = this;\n  }\n}\nconst a = new Database('main');\nconst b = new Database('backup');\nconsole.log(a === b, b.name);",
+    "options": [
+      "false 'backup'",
+      "true 'backup'",
+      "false 'main'",
+      "true 'main'"
+    ],
+    "correctIndex": 3,
+    "explanation": "In the Database constructor, if an instance already exists, the existing instance is returned. The first creation sets name to 'main', and on the second creation, the existing instance is returned. So a === b is true and b.name is 'main'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes"
+  },
+  {
+    "id": "design-patterns-003",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of the Subject in the Observer pattern?",
+    "options": [
+      "It calls methods of other objects on their behalf",
+      "It detects state changes and notifies registered observers",
+      "It delegates object creation to a factory",
+      "It simplifies a complex subsystem"
+    ],
+    "correctIndex": 1,
+    "explanation": "In the Observer pattern, the Subject manages state and notifies all registered Observers when the state changes. JavaScript's EventEmitter, DOM event listeners, and React's state management all follow this pattern.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/observer"
+  },
+  {
+    "id": "design-patterns-004",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the biggest difference between the Factory pattern and direct constructor invocation?",
+    "options": [
+      "The Factory pattern always executes faster",
+      "The Factory pattern uses less memory",
+      "The Factory pattern encapsulates creation logic so clients don't depend on concrete classes",
+      "The Factory pattern can only be used in TypeScript"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Factory pattern separates object creation logic into a separate function or method, allowing the caller to create objects without knowing the specific class. This reduces coupling and increases flexibility in the code.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/factory-method"
+  },
+  {
+    "id": "design-patterns-005",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following Factory pattern code?",
+    "code": "function createUser(type) {\n  const roles = { admin: 'full', editor: 'write', viewer: 'read' };\n  return { type, access: roles[type] ?? 'none' };\n}\nconst user = createUser('editor');\nconsole.log(user.type, user.access);",
+    "options": [
+      "editor undefined",
+      "editor none",
+      "editor write",
+      "undefined write"
+    ],
+    "correctIndex": 2,
+    "explanation": "When the createUser factory function is called with the 'editor' type, it retrieves the value 'write' for the 'editor' key from the roles object. Therefore, user.type is 'editor' and user.access is 'write'.",
+    "sourceUrl": "https://www.patterns.dev/vanilla/factory-pattern"
+  },
+  {
+    "id": "design-patterns-006",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Decorator pattern code?",
+    "code": "function withLogging(fn) {\n  return function(...args) {\n    console.log('call');\n    return fn(...args);\n  };\n}\nfunction add(a, b) { return a + b; }\nconst loggedAdd = withLogging(add);\nconsole.log(loggedAdd(2, 3));",
+    "options": [
+      "5",
+      "call\nundefined",
+      "call\n5",
+      "undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "withLogging is a decorator function that wraps the original function and outputs 'call' before each invocation. When loggedAdd(2, 3) is called, 'call' is printed first, then add(2, 3) executes and returns 5, which is printed by console.log.",
+    "sourceUrl": "https://www.patterns.dev/vanilla/decorator-pattern"
+  },
+  {
+    "id": "design-patterns-007",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the main advantage of the Strategy pattern?",
+    "options": [
+      "It can reduce object creation costs",
+      "It can execute asynchronous code synchronously",
+      "It always reduces memory usage",
+      "It allows algorithms to be swapped at runtime, increasing flexibility"
+    ],
+    "correctIndex": 3,
+    "explanation": "The Strategy pattern defines a family of algorithms, encapsulates each one, and makes them interchangeable at runtime. In JavaScript, since functions are first-class objects, the Strategy pattern can be naturally implemented through callbacks and higher-order functions.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/strategy"
+  },
+  {
+    "id": "design-patterns-008",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the following Proxy pattern implementation not work as intended?",
+    "code": "const handler = {\n  get(target, prop) {\n    if (prop in target) return target[prop];\n    return `${prop} not found`;\n  }\n};\nconst obj = { name: 'Alice' };\nconst proxy = new Proxy(obj, handler);\nconsole.log(proxy.toString);",
+    "options": [
+      "Because the handler is incorrectly passed to the Proxy constructor",
+      "Because toString exists on the prototype chain, so the 'in' check passes and the function is returned",
+      "Because Proxy does not support the get trap",
+      "Because target[prop] returns undefined"
+    ],
+    "correctIndex": 1,
+    "explanation": "The 'in' operator checks the entire prototype chain. Since toString exists on Object.prototype, 'prop in target' returns true and the function itself is returned. To check only own properties, use Object.hasOwn(target, prop) instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy"
+  },
+  {
+    "id": "design-patterns-009",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between the Adapter pattern and the Facade pattern?",
+    "options": [
+      "Adapter converts interfaces, while Facade provides a simplified interface to a complex system",
+      "Adapter is a creational pattern, while Facade is a behavioral pattern",
+      "Adapter is for performance optimization, while Facade is for security",
+      "Both patterns are identical and only differ in name"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Adapter pattern converts the interface of a class with an incompatible interface so it can work with others. The Facade pattern provides a simplified interface to a complex subsystem, making it easier to use. Both are structural patterns but serve different purposes.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/adapter"
+  },
+  {
+    "id": "design-patterns-010",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Observer pattern code?",
+    "code": "class EventBus {\n  listeners = new Map();\n  on(event, fn) {\n    const fns = this.listeners.get(event) ?? [];\n    this.listeners.set(event, [...fns, fn]);\n  }\n  emit(event, data) {\n    (this.listeners.get(event) ?? []).forEach(fn => fn(data));\n  }\n}\nconst bus = new EventBus();\nbus.on('msg', d => console.log('A:', d));\nbus.on('msg', d => console.log('B:', d));\nbus.emit('msg', 'hi');",
+    "options": [
+      "A: hi",
+      "B: hi",
+      "Error occurs",
+      "A: hi\nB: hi"
+    ],
+    "correctIndex": 3,
+    "explanation": "Two listeners are registered for the 'msg' event on the EventBus. When emit('msg', 'hi') is called, both listeners execute in registration order, outputting 'A: hi' and 'B: hi' sequentially.",
+    "sourceUrl": "https://www.patterns.dev/vanilla/observer-pattern"
+  },
+  {
+    "id": "design-patterns-011",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the bug in the following memoization pattern implementation?",
+    "code": "function memoize(fn) {\n  const cache = {};\n  return function(...args) {\n    const key = args.toString();\n    if (key in cache) return cache[key];\n    cache[key] = fn(...args);\n    return cache[key];\n  };\n}\nconst getUser = memoize((id) => ({ id, ts: Date.now() }));\nconsole.log(getUser([1]) === getUser(1));",
+    "options": [
+      "Memory leak occurs because cache is not a WeakMap",
+      "args.toString() converts [1] and 1 to the same key '1', causing false cache hits",
+      "The this binding is lost in the fn(...args) call",
+      "Returning before assigning to cache[key] results in undefined"
+    ],
+    "correctIndex": 1,
+    "explanation": "Both [1].toString() and (1).toString() return '1'. Therefore, different argument types are treated as the same cache key, causing unintended cache hits. For a safe implementation, use JSON.stringify or generate keys that include argument types.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toString"
+  },
+  {
+    "id": "design-patterns-012",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the core goal achieved by using an IIFE in the Module Pattern?",
+    "options": [
+      "To prevent global namespace pollution and encapsulate private state",
+      "To convert asynchronous code to synchronous",
+      "To increase code execution speed",
+      "To set up the prototype chain"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Module pattern using IIFE (Immediately Invoked Function Expression) leverages function scope to create private variables and methods, returning only the public API. This prevents global scope pollution and implements information hiding. ES Modules support this pattern at the language level.",
+    "sourceUrl": "https://www.patterns.dev/vanilla/module-pattern"
+  },
+  {
+    "id": "design-patterns-013",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following Command pattern code?",
+    "code": "const history = [];\nfunction execute(cmd) {\n  cmd.run();\n  history.push(cmd);\n}\nfunction undoLast() {\n  const cmd = history.pop();\n  cmd?.undo();\n}\nlet value = 0;\nexecute({ run: () => value += 10, undo: () => value -= 10 });\nexecute({ run: () => value *= 2, undo: () => value /= 2 });\nundoLast();\nconsole.log(value);",
+    "options": [
+      "0",
+      "20",
+      "10",
+      "5"
+    ],
+    "correctIndex": 2,
+    "explanation": "First execute: value += 10 -> value = 10. Second execute: value *= 2 -> value = 20. undoLast() executes the last command's undo -> value /= 2 -> value = 10. The Command pattern encapsulates execution and undo to implement undo/redo functionality.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/command"
+  },
+  {
+    "id": "design-patterns-014",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the key difference between the Pub/Sub pattern and the Observer pattern?",
+    "options": [
+      "In the Observer pattern, observers directly reference the Subject, while in Pub/Sub they are loosely coupled through a message broker",
+      "Pub/Sub is synchronous and Observer is asynchronous",
+      "Pub/Sub allows only one subscriber while Observer has multiple observers",
+      "Both patterns are identical with no difference"
+    ],
+    "correctIndex": 0,
+    "explanation": "In the Observer pattern, Observers directly know the Subject, and the Subject directly notifies Observers. In the Pub/Sub pattern, an event channel (message broker) exists between Publishers and Subscribers, so neither side needs to know the other directly.",
+    "sourceUrl": "https://www.patterns.dev/vanilla/observer-pattern"
+  },
+  {
+    "id": "design-patterns-015",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why is 'done' not printed in the following middleware pattern implementation?",
+    "code": "function compose(middlewares) {\n  return function(ctx) {\n    let index = 0;\n    function next() {\n      if (index >= middlewares.length) return;\n      const fn = middlewares[index];\n      index++;\n      fn(ctx, next);\n    }\n    next();\n  };\n}\nconst app = compose([\n  (ctx, next) => { ctx.value = 1; },\n  (ctx, next) => { ctx.value += 1; next(); }\n]);\nconst ctx = {};\napp(ctx);\nconsole.log(ctx.value === 2 ? 'done' : 'fail');",
+    "options": [
+      "Because the return type of the compose function is incorrect",
+      "Because the index variable is shared in the closure and does not increment",
+      "Because the ctx object is frozen",
+      "Because the first middleware does not call next(), breaking the chain"
+    ],
+    "correctIndex": 3,
+    "explanation": "The first middleware only sets ctx.value = 1 without calling next(). In the middleware pattern, each middleware must call next() to pass control to the next middleware. Since the chain breaks at the first middleware, the second middleware never executes, so ctx.value is 1 and 'fail' is printed.",
+    "sourceUrl": "https://www.patterns.dev/vanilla/middleware-pattern"
+  },
+  {
+    "id": "design-patterns-016",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "When is the Flyweight pattern most effective in JavaScript?",
+    "options": [
+      "It is unrelated to delegating DOM events to a single handler",
+      "When thousands of similar objects need to share common data to reduce memory usage",
+      "When the execution order of asynchronous operations needs to be controlled",
+      "When interfaces between different classes need to be converted"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Flyweight pattern separates shared state (intrinsic state) from a large number of similar objects and shares it as a single instance. In JavaScript, using event delegation instead of many DOM elements, or placing shared properties on the prototype, are examples of this pattern in action.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/flyweight"
+  },
+  {
+    "id": "design-patterns-017",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Builder pattern code?",
+    "code": "class QueryBuilder {\n  #parts = [];\n  select(fields) { this.#parts.push(`SELECT ${fields}`); return this; }\n  from(table) { this.#parts.push(`FROM ${table}`); return this; }\n  where(cond) { this.#parts.push(`WHERE ${cond}`); return this; }\n  build() { return this.#parts.join(' '); }\n}\nconst q = new QueryBuilder()\n  .select('name')\n  .from('users')\n  .where('age > 18')\n  .build();\nconsole.log(q);",
+    "options": [
+      "SELECT name FROM users WHERE age > 18",
+      "SELECT name",
+      "Error: #parts is private and cannot be accessed",
+      "undefined"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Builder pattern constructs complex objects step-by-step through method chaining. Each method returns this, enabling chaining. When build() is called, all elements of the #parts array are joined with spaces. Since #parts is accessed from the class's internal method build(), no private field error occurs.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/builder"
+  },
+  {
+    "id": "design-patterns-018",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Why does an infinite loop occur in the following Iterator pattern implementation?",
+    "code": "const range = {\n  from: 1,\n  to: 3,\n  [Symbol.iterator]() {\n    return {\n      current: this.from,\n      last: this.to,\n      next() {\n        return this.current <= this.last\n          ? { value: this.current, done: false }\n          : { done: true };\n      }\n    };\n  }\n};\nfor (const n of range) console.log(n);",
+    "options": [
+      "Because Symbol.iterator is not correctly implemented",
+      "Because the next() method does not increment current, so it always returns the same value",
+      "Because this.from is undefined",
+      "Because the done property is missing, so the termination condition is not recognized"
+    ],
+    "correctIndex": 1,
+    "explanation": "The next() method returns this.current but never increments it. Therefore, the condition this.current <= this.last is always true, causing an infinite loop. It should be fixed to { value: this.current++, done: false }.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols"
+  },
+  {
+    "id": "design-patterns-019",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the most common way to implement Dependency Injection in JavaScript?",
+    "options": [
+      "Sharing dependencies through global variables",
+      "Hardcoding all dependencies with direct imports",
+      "Passing dependencies through constructor or function parameters",
+      "Inheriting dependencies through the prototype chain"
+    ],
+    "correctIndex": 2,
+    "explanation": "Dependency Injection is a pattern where objects receive their dependencies from the outside rather than creating them internally. In JavaScript, dependencies are typically injected through constructor parameters or function arguments. React's props and Express's middleware are representative examples, and this approach improves testability and reduces coupling between modules.",
+    "sourceUrl": "https://www.patterns.dev/vanilla/dependency-injection"
+  },
+  {
+    "id": "design-patterns-020",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the structural difference between the State pattern and the Strategy pattern?",
+    "options": [
+      "The Strategy pattern uses classes while the State pattern uses only functions",
+      "The State pattern is a creational pattern and the Strategy pattern is a structural pattern",
+      "The Strategy pattern only works at runtime while the State pattern only works at compile time",
+      "In the State pattern, state objects can transition to the next state themselves, while in the Strategy pattern, the client swaps strategies"
+    ],
+    "correctIndex": 3,
+    "explanation": "The State and Strategy patterns are structurally similar but differ in intent. In the State pattern, ConcreteState objects can directly change the Context's state, allowing state transitions to happen automatically. In the Strategy pattern, the client (external code) explicitly selects and swaps which strategy to use.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/state"
+  }
+]

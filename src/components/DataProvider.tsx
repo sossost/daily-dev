@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useProgressStore } from "@/stores/useProgressStore";
 import { useBookmarkStore } from "@/stores/useBookmarkStore";
@@ -9,6 +9,9 @@ import { migrateAnonymousData } from "@/lib/supabase/migrate";
 import type { ServerUserData } from "@/lib/supabase/loadUserData";
 
 const LOCAL_STORAGE_PROGRESS_KEY = "daily-dev-progress";
+
+// Module-level guard — persists across remounts (locale change, etc.)
+let injectedForUserId: string | null | undefined = undefined;
 
 interface DataProviderProps {
   userId: string | null;
@@ -19,8 +22,8 @@ interface DataProviderProps {
 
 /**
  * Injects server-fetched user data into Zustand stores.
- * Defers child rendering until client-side injection is complete,
- * preventing flash of default values during hydration.
+ * Uses useLayoutEffect to update stores before paint,
+ * preventing both flash and "setState during render" warnings.
  */
 export function DataProvider({
   userId,
@@ -28,32 +31,31 @@ export function DataProvider({
   initialData,
   children,
 }: DataProviderProps) {
-  const injected = useRef(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const router = useRouter();
 
-  // Synchronous injection during render — stores are ready before children render
-  if (!injected.current) {
-    injected.current = true;
-    setCurrentUser(userId, isAuthenticated);
+  // Runs before browser paint — no visual flash, no render-time setState
+  useLayoutEffect(() => {
+    if (injectedForUserId !== userId) {
+      injectedForUserId = userId;
+      setCurrentUser(userId, isAuthenticated);
 
-    if (initialData != null) {
-      useProgressStore.setState({
-        ...initialData.progress,
-        updateAfterSession: useProgressStore.getState().updateAfterSession,
-      });
-      useBookmarkStore.setState({
-        bookmarkedIds: initialData.bookmarks,
-      });
+      if (initialData != null) {
+        useProgressStore.setState({
+          ...initialData.progress,
+          updateAfterSession: useProgressStore.getState().updateAfterSession,
+        });
+        useBookmarkStore.setState({
+          bookmarkedIds: initialData.bookmarks,
+        });
+      }
     }
-  }
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    setIsReady(true);
+  }, [userId, isAuthenticated, initialData]);
 
   // One-time migration: localStorage → Supabase for existing anonymous users
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (initialData != null || userId == null || isAuthenticated) return;
 
     try {
@@ -74,7 +76,7 @@ export function DataProvider({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount
   }, []);
 
-  if (!isMounted) {
+  if (!isReady) {
     return <DataProviderSkeleton />;
   }
 

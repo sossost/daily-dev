@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import clsx from 'clsx'
 
 interface ExplanationProps {
@@ -10,6 +11,8 @@ interface ExplanationProps {
 }
 
 export function Explanation({ isCorrect, explanation, sourceUrl }: ExplanationProps) {
+  const t = useTranslations('quiz')
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -26,17 +29,17 @@ export function Explanation({ isCorrect, explanation, sourceUrl }: ExplanationPr
           'text-red-700 dark:text-red-300': !isCorrect,
         })}
       >
-        {isCorrect ? '정답입니다!' : '오답입니다'}
+        {isCorrect ? t('correct') : t('incorrect')}
       </p>
       <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">{explanation}</p>
       <a
         href={sourceUrl}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="참고 자료 보기 (새 탭에서 열림)"
+        aria-label={t('viewSourceNewTab')}
         className="inline-block mt-3 text-xs text-blue-600 dark:text-blue-400 hover:underline"
       >
-        참고 자료 보기
+        {t('viewSource')}
       </a>
     </motion.div>
   )

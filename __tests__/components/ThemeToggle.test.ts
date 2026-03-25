@@ -27,25 +27,26 @@ describe('ThemeToggle', () => {
   it('renders buttons with correct aria-labels', () => {
     render(createElement(ThemeToggle))
 
-    expect(screen.getByRole('radio', { name: '라이트 모드' })).toBeDefined()
-    expect(screen.getByRole('radio', { name: '다크 모드' })).toBeDefined()
-    expect(screen.getByRole('radio', { name: '시스템 설정' })).toBeDefined()
+    // Mock useTranslations returns namespace.key format
+    expect(screen.getByRole('radio', { name: 'settings.lightMode' })).toBeDefined()
+    expect(screen.getByRole('radio', { name: 'settings.darkMode' })).toBeDefined()
+    expect(screen.getByRole('radio', { name: 'settings.systemMode' })).toBeDefined()
   })
 
   it('marks the current mode as checked', () => {
     render(createElement(ThemeToggle))
 
-    const systemButton = screen.getByRole('radio', { name: '시스템 설정' })
+    const systemButton = screen.getByRole('radio', { name: 'settings.systemMode' })
     expect(systemButton.getAttribute('aria-checked')).toBe('true')
 
-    const lightButton = screen.getByRole('radio', { name: '라이트 모드' })
+    const lightButton = screen.getByRole('radio', { name: 'settings.lightMode' })
     expect(lightButton.getAttribute('aria-checked')).toBe('false')
   })
 
   it('toggles mode to dark on click', () => {
     render(createElement(ThemeToggle))
 
-    const darkButton = screen.getByRole('radio', { name: '다크 모드' })
+    const darkButton = screen.getByRole('radio', { name: 'settings.darkMode' })
     fireEvent.click(darkButton)
 
     expect(useThemeStore.getState().mode).toBe('dark')
@@ -54,7 +55,7 @@ describe('ThemeToggle', () => {
   it('toggles mode to light on click', () => {
     render(createElement(ThemeToggle))
 
-    const lightButton = screen.getByRole('radio', { name: '라이트 모드' })
+    const lightButton = screen.getByRole('radio', { name: 'settings.lightMode' })
     fireEvent.click(lightButton)
 
     expect(useThemeStore.getState().mode).toBe('light')

@@ -1,0 +1,327 @@
+[
+  {
+    "id": "css-layout-001",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "When calculating the total width of an element in the CSS Box Model, what is included?",
+    "options": [
+      "Only content is included",
+      "Only content + padding are included",
+      "Content + padding + border + margin are all included",
+      "Only content + margin are included"
+    ],
+    "correctIndex": 2,
+    "explanation": "In the default CSS Box Model, the total space an element occupies is calculated as content width + padding + border + margin. When using box-sizing: border-box, the width includes content + padding + border, but margin is always calculated separately.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_box_model/Introduction_to_the_CSS_box_model"
+  },
+  {
+    "id": "css-layout-002",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "When box-sizing: border-box is set, what does the width property include?",
+    "options": [
+      "Only content",
+      "Content + padding + border",
+      "Content + padding + border + margin",
+      "Only content + padding"
+    ],
+    "correctIndex": 1,
+    "explanation": "When using box-sizing: border-box, the width and height include content + padding + border. This makes layout calculations more intuitive, and most CSS resets apply it globally. Margin is not included.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing"
+  },
+  {
+    "id": "css-layout-003",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the default flex-direction value of a container with display: flex applied?",
+    "options": [
+      "row",
+      "column",
+      "row-reverse",
+      "column-reverse"
+    ],
+    "correctIndex": 0,
+    "explanation": "The default flex-direction of a Flexbox container is row. This means child elements are laid out horizontally (from left to right). Changing it to column will arrange them vertically.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction"
+  },
+  {
+    "id": "css-layout-004",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "In the following CSS, what is the actual rendered width of the .child element in pixels?",
+    "code": ".child {\n  width: 200px;\n  padding: 20px;\n  border: 5px solid black;\n  margin: 10px;\n  box-sizing: content-box;\n}",
+    "options": [
+      "200px",
+      "270px",
+      "250px",
+      "230px"
+    ],
+    "correctIndex": 2,
+    "explanation": "With box-sizing: content-box (the default), the rendered width is content (200px) + left/right padding (20px x 2) + left/right border (5px x 2) = 250px. Margin is not included in the element's rendered width — it is external space.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing"
+  },
+  {
+    "id": "css-layout-005",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the difference between align-items and justify-content in Flexbox?",
+    "options": [
+      "Both handle main axis alignment but have different priority",
+      "align-items handles the main axis, and justify-content handles the cross axis",
+      "align-items applies to single elements, and justify-content applies only to multiple elements",
+      "justify-content handles the main axis, and align-items handles the cross axis"
+    ],
+    "correctIndex": 3,
+    "explanation": "justify-content handles alignment along the main axis, while align-items handles alignment along the cross axis. When flex-direction is row, the main axis is horizontal and the cross axis is vertical. When flex-direction is column, it is the opposite.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_flexible_box_layout/Aligning_items_in_a_flex_container"
+  },
+  {
+    "id": "css-layout-006",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between position: absolute and position: fixed?",
+    "options": [
+      "Both are viewport-relative, but absolute moves with scrolling",
+      "fixed is always relative to the body, and absolute is relative to the nearest relative parent",
+      "absolute is positioned relative to the nearest positioned ancestor, and fixed is positioned relative to the viewport",
+      "absolute is viewport-relative, and fixed is parent-relative"
+    ],
+    "correctIndex": 2,
+    "explanation": "position: absolute is positioned relative to the nearest positioned ancestor (an ancestor whose position is not static). position: fixed is fixed relative to the viewport and stays in the same position even when scrolling. If there is no positioned ancestor, absolute also becomes viewport-relative.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/position"
+  },
+  {
+    "id": "css-layout-007",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the layout result for the .item elements in the following code?",
+    "code": ".container {\n  display: flex;\n  flex-wrap: wrap;\n  width: 300px;\n}\n.item {\n  flex: 0 0 150px;\n  height: 50px;\n}",
+    "options": [
+      "All items are laid out in a single row with 150px width",
+      "Items stretch to 300px width with one item per row",
+      "Items stack vertically because of flex-wrap",
+      "Items are laid out 2 per row, and the rest wrap to the next line"
+    ],
+    "correctIndex": 3,
+    "explanation": "flex: 0 0 150px means flex-grow: 0, flex-shrink: 0, flex-basis: 150px. Since the container width is 300px and each item is 150px, 2 items fit per row. With flex-wrap: wrap set, remaining items automatically wrap to the next line.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/flex"
+  },
+  {
+    "id": "css-layout-008",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the correct behavior of grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) in CSS Grid?",
+    "options": [
+      "It creates as many columns as possible with a minimum of 200px to fit the container width, distributing remaining space equally",
+      "It always creates fixed 200px-wide columns",
+      "It creates only one column that takes the full width",
+      "It selects the larger value between 200px and 1fr for the column width"
+    ],
+    "correctIndex": 0,
+    "explanation": "auto-fill creates as many tracks as can fit in the container. minmax(200px, 1fr) ensures each track is at least 200px and at most 1fr (equal distribution of remaining space). This pattern is a common approach for creating responsive grids without media queries.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/repeat"
+  },
+  {
+    "id": "css-layout-009",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference between auto-fill and auto-fit in CSS Grid?",
+    "options": [
+      "auto-fill keeps empty tracks, while auto-fit collapses empty tracks and stretches items",
+      "auto-fit keeps empty tracks, while auto-fill collapses empty tracks",
+      "Both behave identically and only differ in name",
+      "auto-fill is used for fixed column counts, and auto-fit is used for responsive columns"
+    ],
+    "correctIndex": 0,
+    "explanation": "auto-fill creates as many tracks as possible in the container, and empty tracks still occupy space. auto-fit collapses empty tracks to 0, distributing the remaining space to existing items. When there are enough items, both values behave identically.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/repeat"
+  },
+  {
+    "id": "css-layout-010",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "You wrote the following CSS to center an element both vertically and horizontally, but vertical centering does not work. What is the cause?",
+    "code": ".container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n.container {\n  /* height is not set */\n}",
+    "options": [
+      "justify-content and align-items cannot be used together",
+      "align-content: center should be used instead of align-items: center",
+      "display: grid must be used instead of display: flex",
+      "The flex container has no explicit height, so it is only as tall as its content"
+    ],
+    "correctIndex": 3,
+    "explanation": "If no explicit height (or min-height) is set on the flex container, it only takes up as much height as its content. In this case, even with align-items: center applied, there is no vertical space to center within, so vertical centering appears to not work. You need to specify a height like height: 100vh.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_flexible_box_layout/Aligning_items_in_a_flex_container"
+  },
+  {
+    "id": "css-layout-011",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct behavior of position: sticky?",
+    "options": [
+      "It is always fixed to the viewport and does not move when scrolling",
+      "It only acts like absolute within its parent element",
+      "It toggles between relative and fixed depending on the scroll position",
+      "It does not work without JavaScript"
+    ],
+    "correctIndex": 2,
+    "explanation": "position: sticky toggles between relative and fixed depending on the scroll position. Before the specified threshold (top, bottom, etc.) is reached, it behaves like relative; after reaching it, it behaves like fixed. However, it reverts to normal flow when it leaves the bounds of its parent element.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/position"
+  },
+  {
+    "id": "css-layout-012",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "In the following CSS, what is the final width of .child?",
+    "code": ".parent {\n  display: flex;\n  width: 600px;\n}\n.child {\n  flex-grow: 1;\n  flex-shrink: 1;\n  flex-basis: 0;\n  max-width: 200px;\n}",
+    "options": [
+      "600px",
+      "0px",
+      "200px",
+      "300px"
+    ],
+    "correctIndex": 2,
+    "explanation": "With flex-basis: 0 and flex-grow: 1, the child would try to take all available space (600px). However, since max-width: 200px is set, the final width is capped at 200px. max-width and min-width have higher priority than flex calculations.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_flexible_box_layout/Controlling_ratios_of_flex_items_along_the_main_axis"
+  },
+  {
+    "id": "css-layout-013",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What condition must an element meet for z-index to work?",
+    "options": [
+      "Its position must be a value other than static, or it must be a flex/grid child",
+      "display: block must be set",
+      "The parent element must also have z-index set",
+      "The element must have explicit width and height"
+    ],
+    "correctIndex": 0,
+    "explanation": "z-index only works on positioned elements (elements whose position is not static) or child elements of flex/grid containers. Setting z-index on a regular element with position: static will be ignored. It also works on elements that create a new stacking context.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/z-index"
+  },
+  {
+    "id": "css-layout-014",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In which situation does margin: 0 auto fail to horizontally center an element?",
+    "options": [
+      "When the element has a background-color set",
+      "When the element is inline or inline-block",
+      "When the element has a border set",
+      "When the parent element has padding"
+    ],
+    "correctIndex": 1,
+    "explanation": "margin: 0 auto works on block-level elements when an explicit width is set. Inline and inline-block elements only take up as much width as their content, so left and right auto margins compute to 0. In this case, you should use text-align: center on the parent or change the element to display: block.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/margin"
+  },
+  {
+    "id": "css-layout-015",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between display: none and visibility: hidden?",
+    "options": [
+      "Both completely remove the element from the DOM",
+      "visibility: hidden removes the space, and display: none keeps the space",
+      "display: none removes the space, and visibility: hidden keeps the space",
+      "Both behave identically with only a performance difference"
+    ],
+    "correctIndex": 2,
+    "explanation": "display: none completely removes the element from the render tree, so it takes up no space. visibility: hidden makes the element invisible but maintains its space in the layout. In both cases, the element still exists in the DOM.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/visibility"
+  },
+  {
+    "id": "css-layout-016",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "In the following CSS, what is the actual margin gap between two adjacent .box elements?",
+    "code": ".box {\n  margin-top: 30px;\n  margin-bottom: 20px;\n}",
+    "options": [
+      "50px",
+      "20px",
+      "0px",
+      "30px"
+    ],
+    "correctIndex": 3,
+    "explanation": "In CSS, vertical margins of adjacent block elements collapse (margin collapsing). Only the larger of the two margins is applied, so the actual gap between 30px and 20px is 30px. This only occurs with vertical margins and does not happen in flex/grid contexts.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_box_model/Mastering_margin_collapsing"
+  },
+  {
+    "id": "css-layout-017",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the difference between explicit placement and implicit placement using grid-area in CSS Grid?",
+    "options": [
+      "Explicit placement goes into areas defined by grid-template, while implicit placement goes into automatically generated tracks",
+      "Explicit placement requires JavaScript, while implicit placement works with CSS alone",
+      "Both are identical but differ in browser compatibility",
+      "Implicit placement works the same way as flex"
+    ],
+    "correctIndex": 0,
+    "explanation": "The explicit grid consists of tracks defined by grid-template-rows/columns, where items are placed using grid-area and similar properties. Items that exceed the defined tracks are automatically placed in implicit tracks, whose sizes are controlled by grid-auto-rows/columns.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Auto-placement_in_grid_layout"
+  },
+  {
+    "id": "css-layout-018",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the most common cause of position: sticky not working?",
+    "options": [
+      "The browser does not support sticky",
+      "The element does not have a width set",
+      "The element is not the first child",
+      "One of the ancestor elements has overflow: hidden set"
+    ],
+    "correctIndex": 3,
+    "explanation": "The most common cause of position: sticky not working is when an ancestor element has overflow: hidden, auto, or scroll set. Sticky works within a scroll container, and if an ancestor has overflow set, that element becomes the scroll container, causing unexpected behavior.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/position"
+  },
+  {
+    "id": "css-layout-019",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What does flex: 1 mean in Flexbox?",
+    "options": [
+      "flex-grow: 1, flex-shrink: 1, flex-basis: 0",
+      "flex-grow: 0, flex-shrink: 1, flex-basis: auto",
+      "flex-grow: 1, flex-shrink: 0, flex-basis: auto",
+      "flex-grow: 1, flex-shrink: 1, flex-basis: 100%"
+    ],
+    "correctIndex": 0,
+    "explanation": "flex: 1 is a shorthand for flex-grow: 1, flex-shrink: 1, flex-basis: 0. This means the element will equally share available space and can also shrink when needed. Unlike flex: auto (flex-basis: auto), it distributes space regardless of content size.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/flex"
+  },
+  {
+    "id": "css-layout-020",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the priority when min-width, max-width, and width conflict?",
+    "options": [
+      "width > max-width > min-width",
+      "max-width > min-width > width",
+      "min-width > max-width > width",
+      "If min-width is greater than max-width, min-width wins; otherwise, max-width takes priority over width"
+    ],
+    "correctIndex": 3,
+    "explanation": "According to the CSS specification: 1) If min-width is greater than max-width, min-width wins. 2) Otherwise, max-width takes priority over width (if width is greater than max-width, max-width is applied). 3) min-width takes priority over width (if width is less than min-width, min-width is applied).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/min-width"
+  }
+]

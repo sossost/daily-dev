@@ -4,6 +4,7 @@
  */
 import type { Difficulty, Question, SessionQuestion, SRSRecord, Topic } from '@/types'
 import { SESSION_TOTAL_QUESTIONS } from '@/types'
+import type { Locale } from '@/i18n/routing'
 import { getAllQuestions } from '@/lib/questions'
 import { shuffleOptions } from '@/lib/session'
 import { shuffle } from '@/lib/shuffle'
@@ -12,14 +13,15 @@ export interface PracticeSessionOptions {
   readonly topics: readonly Topic[]
   readonly difficulty: Difficulty | 'all'
   readonly srsRecords: Record<string, SRSRecord>
+  readonly locale?: Locale
 }
 
 /**
  * Filter questions by selected topics and difficulty.
  */
 export function filterQuestions(options: PracticeSessionOptions): Question[] {
-  const { topics, difficulty, srsRecords } = options
-  const allQuestions = getAllQuestions()
+  const { topics, difficulty, srsRecords, locale } = options
+  const allQuestions = getAllQuestions(locale)
   const topicSet = new Set(topics)
 
   const filtered = allQuestions.filter((q) => {
@@ -58,8 +60,9 @@ export function generatePracticeSession(
 export function countAvailableQuestions(
   topics: readonly Topic[],
   difficulty: Difficulty | 'all',
+  locale?: Locale,
 ): number {
-  const allQuestions = getAllQuestions()
+  const allQuestions = getAllQuestions(locale)
   const topicSet = new Set(topics)
 
   return allQuestions.filter((q) => {

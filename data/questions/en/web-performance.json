@@ -1,0 +1,329 @@
+[
+  {
+    "id": "web-performance-001",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which metric is NOT included in Core Web Vitals?",
+    "options": [
+      "Largest Contentful Paint (LCP)",
+      "Interaction to Next Paint (INP)",
+      "Cumulative Layout Shift (CLS)",
+      "Time to First Byte (TTFB)"
+    ],
+    "correctIndex": 3,
+    "explanation": "Core Web Vitals consist of three metrics: LCP (loading performance), INP (interaction responsiveness), and CLS (visual stability). TTFB is an important performance metric but is not included in Core Web Vitals.",
+    "sourceUrl": "https://web.dev/articles/vitals"
+  },
+  {
+    "id": "web-performance-002",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the impact on page loading performance from the following HTML?",
+    "code": "<head>\n  <link rel=\"stylesheet\" href=\"styles.css\">\n  <script src=\"app.js\"></script>\n</head>",
+    "options": [
+      "app.js becomes a render-blocking resource, and HTML parsing is paused until the script is downloaded and executed",
+      "styles.css and app.js load in parallel with no impact on page performance",
+      "app.js is automatically deferred and does not block HTML parsing",
+      "Since the link tag comes before the script tag, no performance issues occur"
+    ],
+    "correctIndex": 0,
+    "explanation": "A <script> tag without defer or async attributes is a parser-blocking resource. The browser pauses HTML parsing until the script is downloaded and executed. This delays the first render of the page. You can fix this by adding defer or async attributes, or by placing the script at the end of the body.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#notes"
+  },
+  {
+    "id": "web-performance-003",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What performance optimization pattern does the following code implement, and how does it work?",
+    "code": "const observer = new IntersectionObserver((entries) => {\n  entries.forEach(entry => {\n    if (entry.isIntersecting) {\n      entry.target.src = entry.target.dataset.src;\n      observer.unobserve(entry.target);\n    }\n  });\n});\n\ndocument.querySelectorAll('img[data-src]').forEach(img => {\n  observer.observe(img);\n});",
+    "options": [
+      "Image compression — reduces image file sizes to save bandwidth",
+      "Image lazy loading — assigns the actual URL from data-src to src when the element enters the viewport, reducing initial loading resources",
+      "Image preloading — downloads all images in advance and stores them in cache",
+      "Image resizing — dynamically resizes images to match the viewport size"
+    ],
+    "correctIndex": 1,
+    "explanation": "This is an image lazy loading pattern using IntersectionObserver. The actual image URL is stored in data-src, and when the element enters the viewport (isIntersecting), it is assigned to the src attribute to load the image. unobserve removes the observation for already-loaded images to prevent unnecessary callbacks. This approach reduces network requests during initial page load, improving LCP and overall loading performance.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API"
+  },
+  {
+    "id": "web-performance-004",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the correct order of render tree construction in the Critical Rendering Path?",
+    "options": [
+      "HTML Parsing -> CSSOM -> DOM -> Render Tree",
+      "DOM -> CSSOM -> Render Tree -> Layout -> Paint",
+      "CSSOM -> DOM -> Layout -> Render Tree -> Paint",
+      "DOM -> Layout -> CSSOM -> Render Tree -> Paint"
+    ],
+    "correctIndex": 1,
+    "explanation": "The browser parses HTML to build the DOM, parses CSS to create the CSSOM, then combines both to construct the render tree. After that, it goes through the layout phase (calculating positions and sizes) and the paint phase (rendering pixels).",
+    "sourceUrl": "https://web.dev/articles/critical-rendering-path"
+  },
+  {
+    "id": "web-performance-005",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which pattern causes layout thrashing (forced reflow)?",
+    "options": [
+      "Changing styles inside requestAnimationFrame",
+      "Using CSS transform for animations",
+      "Alternating between DOM reads and writes repeatedly",
+      "Setting the will-change property in advance"
+    ],
+    "correctIndex": 2,
+    "explanation": "Alternating between reading DOM properties (like offsetHeight) and changing styles forces the browser to recalculate layout each time. To avoid this, you should batch all reads first and then perform all writes together.",
+    "sourceUrl": "https://web.dev/articles/avoid-large-complex-layouts-and-layout-thrashing"
+  },
+  {
+    "id": "web-performance-006",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "Why does a performance issue occur in the following code?",
+    "code": "const elements = document.querySelectorAll('.item');\nfor (const el of elements) {\n  el.style.width = el.offsetWidth + 10 + 'px';\n}",
+    "options": [
+      "Because querySelectorAll returns a live collection",
+      "Because for...of loops are slower than forEach",
+      "Because assigning a string to style.width is inefficient",
+      "Because reading offsetWidth on each iteration triggers a forced reflow"
+    ],
+    "correctIndex": 3,
+    "explanation": "Reading offsetWidth forces the browser to calculate the current layout, and then changing style.width immediately invalidates that layout. On the next iteration, reading offsetWidth again forces another layout recalculation, causing layout thrashing.",
+    "sourceUrl": "https://gist.github.com/paulirish/5d52fb081b3570c81e3a"
+  },
+  {
+    "id": "web-performance-007",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the performance benefit of using DocumentFragment in the following code?",
+    "code": "const list = document.getElementById('list');\nconst fragment = document.createDocumentFragment();\n\nfor (let i = 0; i < 1000; i++) {\n  const li = document.createElement('li');\n  li.textContent = `Item ${i}`;\n  fragment.appendChild(li);\n}\n\nlist.appendChild(fragment);",
+    "options": [
+      "Only one DOM insertion occurs, minimizing the number of reflows and repaints",
+      "The fragment is processed in parallel in a Web Worker, not blocking the main thread",
+      "The 1000 li elements are batch-processed in a virtual DOM and rendered all at once",
+      "createElement calls are optimized in memory, reducing garbage collection overhead"
+    ],
+    "correctIndex": 0,
+    "explanation": "DocumentFragment is a lightweight in-memory DOM container that is not connected to the actual DOM. No reflow/repaint occurs while adding elements to the fragment, and all child elements are inserted into the DOM with a single appendChild(fragment) call. Directly calling appendChild on list 1000 times could trigger a reflow each time, significantly degrading performance.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment"
+  },
+  {
+    "id": "web-performance-008",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the performance difference between transform and top/left properties in CSS animations?",
+    "options": [
+      "No difference — both are processed on the GPU",
+      "transform is processed on the compositor thread without triggering reflow, while top/left triggers layout recalculation",
+      "top/left is faster — browsers optimize it by default",
+      "transform only runs on the main thread, making it slower"
+    ],
+    "correctIndex": 1,
+    "explanation": "transform and opacity are processed on the compositor layer, so they don't block the main thread and don't trigger reflow/repaint. In contrast, changing top/left requires re-running from the layout stage, which significantly degrades performance.",
+    "sourceUrl": "https://web.dev/articles/animations-guide"
+  },
+  {
+    "id": "web-performance-009",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What condition is required for tree shaking to work effectively?",
+    "options": [
+      "The CommonJS module system must be used",
+      "webpack's mode must be set to development",
+      "ES Module static import/export must be used",
+      "All functions must use default export"
+    ],
+    "correctIndex": 2,
+    "explanation": "Tree shaking removes unused code based on the static structure (import/export) of ES Modules. CommonJS require() is dynamic, making it difficult to analyze at build time. Using named exports allows the bundler to track whether each export is used.",
+    "sourceUrl": "https://webpack.js.org/guides/tree-shaking/"
+  },
+  {
+    "id": "web-performance-010",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What memory issue occurs when the following code is called repeatedly, and what is the solution?",
+    "code": "function setupHandler() {\n  const data = new Array(10000).fill('*');\n  const button = document.getElementById('btn');\n  \n  button.addEventListener('click', () => {\n    console.log(data.length);\n  });\n}",
+    "options": [
+      "new Array allocates too much memory, so the array size should be reduced",
+      "console.log accumulates memory, so logs should be removed in production",
+      "addEventListener is synchronous, so it should be wrapped in setTimeout",
+      "The click handler references data via closure preventing GC, and without removing previous listeners, handlers and data keep accumulating"
+    ],
+    "correctIndex": 3,
+    "explanation": "Each time setupHandler() is called, a new click handler is registered, and each handler references the 10,000-element data array through closure. Without removing previous listeners, the handlers and their referenced data are never garbage collected and keep accumulating in memory. The solution is to use an AbortController or call removeEventListener to remove the previous listener before registering a new one.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#memory_issues"
+  },
+  {
+    "id": "web-performance-011",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the most effective solution when the CLS (Cumulative Layout Shift) score is high?",
+    "options": [
+      "Load JavaScript with defer",
+      "Inline all CSS",
+      "Specify explicit width/height or aspect-ratio for images and ads",
+      "Use a Service Worker for caching"
+    ],
+    "correctIndex": 2,
+    "explanation": "CLS occurs when content shifts unexpectedly. Specifying dimensions on images, videos, ads, etc. in advance allows the browser to reserve space before loading, preventing layout shifts. The aspect-ratio CSS property can also be used for the same purpose.",
+    "sourceUrl": "https://web.dev/articles/cls"
+  },
+  {
+    "id": "web-performance-012",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "How does requestIdleCallback behave in the following code?",
+    "code": "requestIdleCallback((deadline) => {\n  while (deadline.timeRemaining() > 0) {\n    processNextItem();\n  }\n});",
+    "options": [
+      "It executes immediately when the browser is busy",
+      "It executes right before the next frame render",
+      "It runs in the background in a Web Worker",
+      "It executes during the browser's idle time, performing work only for the remaining time"
+    ],
+    "correctIndex": 3,
+    "explanation": "requestIdleCallback executes the callback when the browser is idle. deadline.timeRemaining() returns the remaining time (in ms) in the current idle period, allowing low-priority tasks to be safely processed without dropping frames.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback"
+  },
+  {
+    "id": "web-performance-013",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What effect does adding the defer attribute to a script tag have?",
+    "options": [
+      "The script is downloaded in parallel but executed in order after HTML parsing is complete",
+      "HTML parsing is paused while the script is downloading",
+      "The script executes immediately and ignores the rest of the HTML",
+      "The script is executed in a Web Worker"
+    ],
+    "correctIndex": 0,
+    "explanation": "defer downloads the script in parallel with HTML parsing, but defers execution until after HTML parsing is complete, right before the DOMContentLoaded event, in declaration order. Unlike async, it guarantees the order of execution, making it suitable for scripts with dependencies.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#defer"
+  },
+  {
+    "id": "web-performance-014",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between Cache-Control: no-cache and no-store in HTTP caching?",
+    "options": [
+      "no-cache uses the cache after revalidation, while no-store does not store the response in cache at all",
+      "Both completely disable caching",
+      "no-cache applies only to CDNs, while no-store applies only to browsers",
+      "no-store uses the cache after revalidation, while no-cache does not store the response in cache at all"
+    ],
+    "correctIndex": 0,
+    "explanation": "no-cache stores the response in cache but requires validation with the server (ETag/Last-Modified) before use. no-store does not store the response in cache at all, requiring a full request each time. For sensitive data, no-store should be used.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control"
+  },
+  {
+    "id": "web-performance-015",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the most appropriate way to prevent unnecessary re-renders in React?",
+    "options": [
+      "Convert all components to class components",
+      "Store all state in global variables",
+      "Always return false in shouldComponentUpdate",
+      "Use React.memo, useMemo, and useCallback appropriately to maintain reference stability"
+    ],
+    "correctIndex": 3,
+    "explanation": "React.memo skips re-rendering when props haven't changed, and useMemo and useCallback maintain stable references for computed values and functions. However, applying them everywhere can actually incur memoization overhead, so they should be used selectively where performance issues are actually proven.",
+    "sourceUrl": "https://react.dev/reference/react/memo"
+  },
+  {
+    "id": "web-performance-016",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "How can FOIT (Flash of Invisible Text) be prevented when loading web fonts?",
+    "options": [
+      "Remove font-weight from @font-face",
+      "Use font-display: swap to show system fonts first",
+      "Keep font file sizes above 2MB",
+      "Encode all fonts as base64 and inline them in CSS"
+    ],
+    "correctIndex": 1,
+    "explanation": "font-display: swap uses the system font (fallback) until the web font is loaded, displaying text immediately. This allows users to read content during font loading, preventing FOIT and improving LCP.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display"
+  },
+  {
+    "id": "web-performance-017",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "Which is the correct way to measure code execution time using the Performance API?",
+    "code": "performance.mark('start');\ndoSomething();\nperformance.mark('end');\nperformance.measure('task', 'start', 'end');",
+    "options": [
+      "performance.measure() throws an error",
+      "performance.mark() outputs the current time to the console",
+      "mark and measure enable precise time measurement, and results can be viewed in the Performance tab",
+      "measure can only accept timestamps, not mark names"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Performance API's mark() records a timestamp, and measure() measures the time between two marks. The results can be visually inspected in the DevTools Performance tab and provide higher-resolution timing than Date.now().",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Performance/measure"
+  },
+  {
+    "id": "web-performance-018",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the performance difference between Server-Side Rendering (SSR) and Static Site Generation (SSG)?",
+    "options": [
+      "SSR is always faster than SSG",
+      "SSG renders with JavaScript on the client",
+      "SSG generates HTML at build time and serves from CDN for fast TTFB, while SSR renders on the server per request making it suitable for dynamic data",
+      "There is no performance difference between SSR and SSG — they only affect SEO"
+    ],
+    "correctIndex": 2,
+    "explanation": "SSG pre-generates HTML at build time, so it can be served from a CDN with very fast TTFB. SSR generates HTML on the server for each request, so it can reflect the latest data, but server response time directly affects TTFB.",
+    "sourceUrl": "https://nextjs.org/docs/app/building-your-application/rendering"
+  },
+  {
+    "id": "web-performance-019",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What should you check first when the bundle size is larger than expected?",
+    "options": [
+      "Use a bundle analysis tool (such as webpack-bundle-analyzer) to check the size of each module",
+      "Upgrade the TypeScript compiler version",
+      "Change all imports to require()",
+      "Include source maps in the production build"
+    ],
+    "correctIndex": 0,
+    "explanation": "Bundle analysis tools visually show the size each module occupies in the final bundle. This helps identify unnecessarily large libraries, duplicate dependencies, and modules that aren't being tree-shaken, so you can develop an optimization strategy.",
+    "sourceUrl": "https://www.npmjs.com/package/webpack-bundle-analyzer"
+  },
+  {
+    "id": "web-performance-020",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference in performance optimization strategies between HTTP/1.1 and HTTP/2?",
+    "options": [
+      "Domain sharding is more effective in HTTP/2, so resources should be distributed across multiple CDNs",
+      "HTTP/2 supports multiplexing to send multiple resources simultaneously over a single connection, reducing the need for bundling and sprites used in HTTP/1.1",
+      "HTTP/1.1 is always faster than HTTP/2 — one request per connection is more efficient",
+      "HTTP/2 does not support browser caching, so all resources must be downloaded every time"
+    ],
+    "correctIndex": 1,
+    "explanation": "HTTP/2 multiplexing handles multiple requests/responses simultaneously over a single TCP connection. In HTTP/1.1, only one request per connection was processed, requiring optimizations like file bundling, CSS sprites, and domain sharding to reduce request count. In HTTP/2, these hacks can actually hurt cache efficiency, making it more effective to serve smaller module-level resources.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/HTTP_2"
+  }
+]

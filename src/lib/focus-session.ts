@@ -6,7 +6,8 @@
  * 3. Fills remaining slots with questions from least-practiced topics
  */
 import type { Question, SessionQuestion, SRSRecord, Topic, TopicStat } from '@/types'
-import { SESSION_TOTAL_QUESTIONS, TOPICS, TOPIC_LABELS } from '@/types'
+import { SESSION_TOTAL_QUESTIONS, TOPICS } from '@/types'
+import type { Locale } from '@/i18n/routing'
 import { getAllQuestions } from '@/lib/questions'
 import { shuffleOptions } from '@/lib/session'
 import { shuffle } from '@/lib/shuffle'
@@ -23,7 +24,6 @@ export interface FocusAnalysis {
 
 export interface FocusTopicInfo {
   readonly topic: Topic
-  readonly label: string
   readonly accuracy: number
 }
 
@@ -34,16 +34,17 @@ export interface FocusTopicInfo {
 export function analyzeFocusAreas(
   topicStats: Record<Topic, TopicStat>,
   srsRecords: Record<string, SRSRecord>,
+  locale?: Locale,
 ): FocusAnalysis {
   const weakTopics = TOPICS
     .filter((topic) => {
       const stat = topicStats[topic]
+      if (stat == null) return false
       return stat.totalAnswered >= MIN_ATTEMPTS_FOR_WEAK && stat.accuracy < WEAK_ACCURACY_THRESHOLD
     })
     .map((topic) => ({
       topic,
-      label: TOPIC_LABELS[topic],
-      accuracy: topicStats[topic].accuracy,
+      accuracy: topicStats[topic]?.accuracy ?? 0,
     }))
     .sort((a, b) => a.accuracy - b.accuracy)
 
@@ -51,7 +52,7 @@ export function analyzeFocusAreas(
     .filter((r) => r.ease < LOW_EASE_THRESHOLD)
     .length
 
-  const questions = selectFocusQuestions(topicStats, srsRecords)
+  const questions = selectFocusQuestions(topicStats, srsRecords, locale)
   const availableCount = Math.min(questions.length, SESSION_TOTAL_QUESTIONS)
 
   return { weakTopics, strugglingQuestionCount, availableCount }
@@ -64,13 +65,15 @@ export function analyzeFocusAreas(
 export function selectFocusQuestions(
   topicStats: Record<Topic, TopicStat>,
   srsRecords: Record<string, SRSRecord>,
+  locale?: Locale,
 ): Question[] {
-  const allQuestions = getAllQuestions()
+  const allQuestions = getAllQuestions(locale)
   const questionsById = new Map(allQuestions.map((q) => [q.id, q]))
 
   const weakTopicSet = new Set(
     TOPICS.filter((topic) => {
       const stat = topicStats[topic]
+      if (stat == null) return false
       return stat.totalAnswered >= MIN_ATTEMPTS_FOR_WEAK && stat.accuracy < WEAK_ACCURACY_THRESHOLD
     }),
   )
@@ -94,7 +97,7 @@ export function selectFocusQuestions(
 
   // Priority 3: Questions from least-practiced topics (fill remaining)
   const topicsByAttempts = [...TOPICS]
-    .sort((a, b) => topicStats[a].totalAnswered - topicStats[b].totalAnswered)
+    .sort((a, b) => (topicStats[a]?.totalAnswered ?? 0) - (topicStats[b]?.totalAnswered ?? 0))
 
   const leastPracticedQuestions = topicsByAttempts.flatMap((topic) =>
     allQuestions.filter(
@@ -127,8 +130,9 @@ export function selectFocusQuestions(
 export function generateFocusSession(
   topicStats: Record<Topic, TopicStat>,
   srsRecords: Record<string, SRSRecord>,
+  locale?: Locale,
 ): SessionQuestion[] {
-  const selected = selectFocusQuestions(topicStats, srsRecords)
+  const selected = selectFocusQuestions(topicStats, srsRecords, locale)
     .slice(0, SESSION_TOTAL_QUESTIONS)
 
   return selected.map((question) => ({

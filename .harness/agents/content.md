@@ -12,12 +12,13 @@ Generate high-quality JavaScript/frontend interview questions and improve existi
 
 Before doing anything:
 
-1. List all files in `data/questions/`
+1. List all files in `data/questions/ko/` and `data/questions/en/` (questions are organized by locale)
 2. Count questions per topic
 3. Find the topic with the fewest questions — prioritize it
 4. Target: 30–50 questions per topic. If a topic has fewer than 30, add questions. If 30–50, add only if quality can be maintained. Stop at 50.
 5. If all topics are at 30+ and roughly balanced, focus on quality improvement of existing questions
 6. Add 5–10 questions per run (not more). Quality over quantity.
+7. When adding or modifying questions, update BOTH `data/questions/ko/{topic}.json` and `data/questions/en/{topic}.json`. Korean questions go in `ko/`, English translations go in `en/`. Both files must have matching IDs.
 
 ## Constraints — What You CANNOT Do
 
@@ -80,9 +81,10 @@ When a topic has 30+ questions, improve quality instead of adding more:
 
 ## Scope
 
-- Only modify files in `data/questions/`
+- Only modify files in `data/questions/ko/` and `data/questions/en/`
 - Work on one topic at a time
 - Each JSON file contains an array of Question objects
+- Always update both locale directories to keep them in sync
 
 ## Output Rule
 

@@ -1,9 +1,10 @@
 'use client'
 
 import { useCallback, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Check } from 'lucide-react'
-import { CATEGORIES_WITH_FALLBACK, TOPICS, TOPIC_LABELS, type Topic } from '@/types'
+import { CATEGORIES_WITH_FALLBACK, TOPICS, type Topic } from '@/types'
 import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
 import { CategoryAccordion } from '@/components/common/CategoryAccordion'
 
@@ -15,6 +16,10 @@ interface TopicFilterModalProps {
 }
 
 export function TopicFilterModal({ isOpen, onClose }: TopicFilterModalProps) {
+  const t = useTranslations('session')
+  const topicT = useTranslations('topics')
+  const commonT = useTranslations('common')
+  const practiceT = useTranslations('practice')
   const enabledTopics = useTopicFilterStore((s) => s.enabledTopics)
   const enableAll = useTopicFilterStore((s) => s.enableAll)
   const disableAll = useTopicFilterStore((s) => s.disableAll)
@@ -62,36 +67,36 @@ export function TopicFilterModal({ isOpen, onClose }: TopicFilterModalProps) {
             className="relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-t-2xl sm:rounded-2xl p-6 max-h-[80vh] overflow-y-auto"
             role="dialog"
             aria-modal="true"
-            aria-label="토픽 필터 설정"
+            aria-label={t('filterSettings')}
           >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                세션 토픽 필터
+                {t('filterTitle')}
               </h2>
               <button
                 type="button"
                 onClick={onClose}
                 className="p-2 -mr-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                aria-label="닫기"
+                aria-label={commonT('close')}
               >
                 <X size={20} className="text-gray-500 dark:text-gray-400" />
               </button>
             </div>
 
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              선택한 토픽만 학습 세션에 포함됩니다
+              {t('filterDescription')}
             </p>
 
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm text-gray-600 dark:text-gray-300">
-                {enabledTopics.length}/{TOPICS.length}개 선택됨
+                {t('selectedCount', { count: enabledTopics.length, total: TOPICS.length })}
               </span>
               <button
                 type="button"
                 onClick={allEnabled ? disableAll : enableAll}
                 className="text-xs text-blue-500 dark:text-blue-400 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
               >
-                {allEnabled ? '전체 해제' : '전체 선택'}
+                {allEnabled ? practiceT('deselectAll') : practiceT('selectAll')}
               </button>
             </div>
 
@@ -108,9 +113,9 @@ export function TopicFilterModal({ isOpen, onClose }: TopicFilterModalProps) {
                         type="button"
                         onClick={() => toggleCategory(category.topics)}
                         className="text-xs text-blue-500 dark:text-blue-400 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded px-1"
-                        aria-label={`${category.label} 카테고리 ${allCategoryEnabled ? '전체 해제' : '전체 선택'}`}
+                        aria-label={`${category.label} ${allCategoryEnabled ? practiceT('deselectAll') : practiceT('selectAll')}`}
                       >
-                        {allCategoryEnabled ? '해제' : '전체'}
+                        {allCategoryEnabled ? practiceT('deselect') : practiceT('selectAll')}
                       </button>
                     }
                   >
@@ -132,7 +137,7 @@ export function TopicFilterModal({ isOpen, onClose }: TopicFilterModalProps) {
 
             {enabledTopics.length === 0 && (
               <p className="mt-3 text-sm text-amber-600 dark:text-amber-400 text-center">
-                최소 1개 이상의 토픽을 선택해주세요
+                {t('minTopicWarning')}
               </p>
             )}
           </motion.div>
@@ -150,6 +155,8 @@ interface TopicFilterItemProps {
 }
 
 function TopicFilterItem({ topic, isEnabled, index, onToggle }: TopicFilterItemProps) {
+  const topicT = useTranslations('topics')
+
   return (
     <motion.button
       type="button"
@@ -163,7 +170,7 @@ function TopicFilterItem({ topic, isEnabled, index, onToggle }: TopicFilterItemP
           : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
       }`}
       aria-pressed={isEnabled}
-      aria-label={`${TOPIC_LABELS[topic]} ${isEnabled ? '선택됨' : '선택 안됨'}`}
+      aria-label={topicT(topic)}
     >
       <div
         className={`flex-shrink-0 w-5 h-5 rounded flex items-center justify-center ${
@@ -175,7 +182,7 @@ function TopicFilterItem({ topic, isEnabled, index, onToggle }: TopicFilterItemP
         {isEnabled && <Check size={14} />}
       </div>
       <span className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-        {TOPIC_LABELS[topic]}
+        {topicT(topic)}
       </span>
     </motion.button>
   )

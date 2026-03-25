@@ -1,0 +1,329 @@
+[
+  {
+    "id": "nodejs-001",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which library is the Node.js event loop based on?",
+    "options": [
+      "V8",
+      "OpenSSL",
+      "zlib",
+      "libuv"
+    ],
+    "correctIndex": 3,
+    "explanation": "The Node.js event loop is based on the libuv library. libuv is a cross-platform library for asynchronous I/O that manages the event loop, thread pool, file system operations, and more. V8 is the JavaScript engine, OpenSSL handles encryption, and zlib handles compression.",
+    "sourceUrl": "https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick"
+  },
+  {
+    "id": "nodejs-002",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the CommonJS function used to import modules in Node.js?",
+    "options": [
+      "require()",
+      "import()",
+      "load()",
+      "include()"
+    ],
+    "correctIndex": 0,
+    "explanation": "The CommonJS module system uses the require() function to import modules. import is ES Modules syntax, and load() and include() are not standard Node.js module loading functions.",
+    "sourceUrl": "https://nodejs.org/api/modules.html#requireid"
+  },
+  {
+    "id": "nodejs-003",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following Node.js code?",
+    "code": "console.log('start');\nsetImmediate(() => console.log('immediate'));\nPromise.resolve().then(() => console.log('microtask'));\nconsole.log('end');",
+    "options": [
+      "start -> end -> immediate -> microtask",
+      "start -> end -> microtask -> immediate",
+      "start -> microtask -> end -> immediate",
+      "start -> immediate -> microtask -> end"
+    ],
+    "correctIndex": 1,
+    "explanation": "Synchronous code ('start', 'end') executes first, then the microtask queue (Promise.then) has higher priority than macrotasks (setImmediate), so 'microtask' is output before 'immediate'.",
+    "sourceUrl": "https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick"
+  },
+  {
+    "id": "nodejs-004",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What object is used to access environment variables in Node.js?",
+    "options": [
+      "global.env",
+      "system.env",
+      "process.env",
+      "os.env"
+    ],
+    "correctIndex": 2,
+    "explanation": "process.env is the standard way to access environment variables in Node.js. The process object provides information about and control over the current Node.js process, and the env property is an object containing the environment variables.",
+    "sourceUrl": "https://nodejs.org/api/process.html#processenv"
+  },
+  {
+    "id": "nodejs-005",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Node.js code?",
+    "code": "const EventEmitter = require('events');\nconst emitter = new EventEmitter();\n\nemitter.on('data', (msg) => console.log('A:', msg));\nemitter.on('data', (msg) => console.log('B:', msg));\nemitter.emit('data', 'hello');",
+    "options": [
+      "A: hello",
+      "B: hello",
+      "A: hello followed by B: hello",
+      "B: hello followed by A: hello"
+    ],
+    "correctIndex": 2,
+    "explanation": "EventEmitter invokes listeners synchronously in the order they were registered. Since the A listener was registered first for the 'data' event and B was registered after, A: hello is output first followed by B: hello when emit is called.",
+    "sourceUrl": "https://nodejs.org/api/events.html#class-eventemitter"
+  },
+  {
+    "id": "nodejs-006",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which Node.js Stream type supports both reading and writing?",
+    "options": [
+      "Readable",
+      "Writable",
+      "Duplex",
+      "Transform"
+    ],
+    "correctIndex": 2,
+    "explanation": "A Duplex stream implements both the Readable and Writable interfaces. TCP sockets are a representative example. Transform is a special form of Duplex that transforms input data before outputting it.",
+    "sourceUrl": "https://nodejs.org/api/stream.html#class-streamduplex"
+  },
+  {
+    "id": "nodejs-007",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Node.js code?",
+    "code": "process.nextTick(() => console.log('nextTick'));\nsetImmediate(() => console.log('immediate'));\nPromise.resolve().then(() => console.log('promise'));",
+    "options": [
+      "nextTick -> promise -> immediate",
+      "promise -> nextTick -> immediate",
+      "immediate -> nextTick -> promise",
+      "nextTick -> immediate -> promise"
+    ],
+    "correctIndex": 0,
+    "explanation": "In Node.js, process.nextTick callbacks execute before even the microtask queue. Therefore, nextTick runs first, then Promise (microtask), and finally setImmediate (macrotask).",
+    "sourceUrl": "https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick"
+  },
+  {
+    "id": "nodejs-008",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the biggest difference between child_process.fork() and child_process.spawn() in Node.js?",
+    "options": [
+      "fork() is synchronous and spawn() is asynchronous",
+      "spawn() can only run Node.js processes",
+      "fork() can directly execute shell commands",
+      "fork() creates a new V8 instance and automatically sets up an IPC channel"
+    ],
+    "correctIndex": 3,
+    "explanation": "fork() is a special form of spawn() that creates a new Node.js process while automatically setting up an IPC (Inter-Process Communication) channel between parent and child. spawn() can execute arbitrary commands but does not provide an IPC channel by default.",
+    "sourceUrl": "https://nodejs.org/api/child_process.html#child_processforkmodulepath-args-options"
+  },
+  {
+    "id": "nodejs-009",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the problem with the following Node.js HTTP server code?",
+    "code": "const http = require('http');\nconst server = http.createServer((req, res) => {\n  if (req.url === '/api') {\n    const data = { message: 'hello' };\n    res.writeHead(200);\n    res.end(data);\n  }\n});",
+    "options": [
+      "The callback argument order for createServer is wrong",
+      "A Content-Type header is always required in writeHead",
+      "server.listen() is missing so the server does not start",
+      "Objects cannot be passed directly to res.end() — JSON.stringify() is needed"
+    ],
+    "correctIndex": 3,
+    "explanation": "res.end() only accepts strings or Buffers as arguments. Passing an object directly will send '[object Object]' as a string. JSON.stringify(data) must be used to convert the object to a string.",
+    "sourceUrl": "https://nodejs.org/api/http.html#responseenddata-encoding-callback"
+  },
+  {
+    "id": "nodejs-010",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between CommonJS and ES Modules in Node.js?",
+    "options": [
+      "CommonJS uses asynchronous loading, while ES Modules use synchronous loading",
+      "ES Modules use require(), while CommonJS uses import",
+      "CommonJS allows dynamic loading at runtime, while ES Modules enable static analysis",
+      "ES Modules can only be used in Node.js"
+    ],
+    "correctIndex": 2,
+    "explanation": "CommonJS require() can dynamically load modules at runtime, enabling conditional loading. In contrast, ES Modules' import/export is static syntax, allowing bundlers to perform tree shaking (removing unused code) through static analysis.",
+    "sourceUrl": "https://nodejs.org/api/esm.html#differences-between-es-modules-and-commonjs"
+  },
+  {
+    "id": "nodejs-011",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the key difference between Worker Threads and the Cluster module in Node.js?",
+    "options": [
+      "Worker Threads can share memory within the same process, while Cluster creates separate processes",
+      "Cluster is suited for CPU-bound tasks, while Worker Threads are suited for I/O-bound tasks",
+      "Worker Threads are only available in Node.js 12+, while Cluster is available in all versions",
+      "Cluster cannot share a single port, but Worker Threads can"
+    ],
+    "correctIndex": 0,
+    "explanation": "Worker Threads create threads within the same process and can share memory through SharedArrayBuffer. Cluster creates separate Node.js processes (each with its own V8 instance) to utilize multiple CPU cores and communicates through IPC.",
+    "sourceUrl": "https://nodejs.org/api/worker_threads.html"
+  },
+  {
+    "id": "nodejs-012",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following Node.js code?",
+    "code": "const fs = require('fs');\n\nsetImmediate(() => console.log('1'));\nfs.readFile(__filename, () => {\n  console.log('2');\n  setImmediate(() => console.log('3'));\n  process.nextTick(() => console.log('4'));\n});\nconsole.log('5');",
+    "options": [
+      "5 -> 1 -> 2 -> 3 -> 4",
+      "5 -> 1 -> 2 -> 4 -> 3",
+      "5 -> 2 -> 4 -> 3 -> 1",
+      "5 -> 2 -> 1 -> 4 -> 3"
+    ],
+    "correctIndex": 1,
+    "explanation": "First, synchronous code '5' executes. Then in the event loop, setImmediate ('1') executes. After the file read completes, '2' is output, then nextTick ('4') runs as a microtask at the end of that phase, and finally setImmediate ('3') executes in the next check phase.",
+    "sourceUrl": "https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick"
+  },
+  {
+    "id": "nodejs-013",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What causes the memory leak in the following code?",
+    "code": "const cache = {};\n\nfunction handleRequest(userId) {\n  if (!cache[userId]) {\n    cache[userId] = {\n      data: fetchUserData(userId),\n      timestamp: Date.now()\n    };\n  }\n  return cache[userId].data;\n}",
+    "options": [
+      "The return value of fetchUserData is not garbage collected",
+      "Entries are added to the cache object indefinitely with no removal logic",
+      "If userId is not a string, prototype pollution occurs",
+      "The timestamp takes up unnecessary memory"
+    ],
+    "correctIndex": 1,
+    "explanation": "Every time a new userId is requested, an entry is added to the cache object, but there is no expiration time or maximum size limit, so old entries are never deleted. This is a classic unbounded cache memory leak pattern. An LRU cache or TTL-based expiration should be introduced.",
+    "sourceUrl": "https://nodejs.org/en/learn/diagnostics/memory/using-heap-snapshot"
+  },
+  {
+    "id": "nodejs-014",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the difference between Buffer.alloc() and Buffer.allocUnsafe() in Node.js?",
+    "options": [
+      "allocUnsafe() can only create larger buffers",
+      "allocUnsafe() allocates memory on the stack instead of the heap",
+      "alloc() is synchronous and allocUnsafe() is asynchronous",
+      "alloc() initializes memory to zero, while allocUnsafe() does not initialize it, so previous data may remain"
+    ],
+    "correctIndex": 3,
+    "explanation": "Buffer.alloc() fills the allocated memory with zeros for safe initialization. Buffer.allocUnsafe() skips initialization for better performance, but data from previously used memory may remain, posing a risk of exposing sensitive data.",
+    "sourceUrl": "https://nodejs.org/api/buffer.html#static-method-bufferallocunsafesize"
+  },
+  {
+    "id": "nodejs-015",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between __dirname and process.cwd() in Node.js?",
+    "options": [
+      "__dirname is the current working directory, and process.cwd() returns the file location",
+      "__dirname is the directory where the current file is located, and process.cwd() is the directory where the process was started",
+      "Both always return the same value",
+      "__dirname returns a relative path, and process.cwd() returns an absolute path"
+    ],
+    "correctIndex": 1,
+    "explanation": "__dirname returns the absolute path of the directory where the current module (file) is located. process.cwd() returns the working directory where the Node.js process was started. The two values can differ when running a script from a different directory.",
+    "sourceUrl": "https://nodejs.org/api/modules.html#__dirname"
+  },
+  {
+    "id": "nodejs-016",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the recommended way to handle an uncaughtException event in Node.js?",
+    "options": [
+      "Log the error and then terminate the process",
+      "Log the error and continue running",
+      "Ignore the error and process the next request",
+      "The process restarts automatically, so no handling is needed"
+    ],
+    "correctIndex": 0,
+    "explanation": "When an uncaughtException occurs, the process may be in an unstable state, so the recommended practice is to log the error and then safely terminate the process. A process manager like PM2 should then restart the process — this is the best practice.",
+    "sourceUrl": "https://nodejs.org/api/process.html#event-uncaughtexception"
+  },
+  {
+    "id": "nodejs-017",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Why does the following Node.js code not work as expected?",
+    "code": "const fs = require('fs');\nconst data = fs.readFile('config.json', 'utf-8');\nconsole.log(data);",
+    "options": [
+      "The encoding specification in readFile is incorrect",
+      "The config.json file does not exist",
+      "readFile is an asynchronous function that requires a callback — the return value is undefined",
+      "import should be used instead of require('fs')"
+    ],
+    "correctIndex": 2,
+    "explanation": "fs.readFile() is an asynchronous function that does not return a result directly — it delivers data through a callback. To read a file synchronously, use fs.readFileSync(), or use a callback or fs.promises.readFile() with await.",
+    "sourceUrl": "https://nodejs.org/api/fs.html#fsreadfilepath-options-callback"
+  },
+  {
+    "id": "nodejs-018",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the difference between Young Generation and Old Generation in Node.js's V8 garbage collector?",
+    "options": [
+      "Young Generation quickly collects short-lived objects, while Old Generation manages long-lived objects",
+      "Young Generation manages large objects, while Old Generation manages small objects",
+      "Young Generation uses Mark-and-Sweep, while Old Generation uses the Scavenge algorithm",
+      "Both use the same algorithm and only differ in size"
+    ],
+    "correctIndex": 0,
+    "explanation": "In V8's generational garbage collection, Young Generation (New Space) quickly collects newly created short-lived objects using the Scavenge algorithm. Objects that survive two GC cycles are promoted to Old Generation (Old Space), which is managed using the Mark-Sweep-Compact algorithm.",
+    "sourceUrl": "https://v8.dev/blog/trash-talk"
+  },
+  {
+    "id": "nodejs-019",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about the execution order of setTimeout(fn, 0) and setImmediate(fn) in Node.js is correct?",
+    "options": [
+      "setTimeout(fn, 0) always executes first",
+      "setImmediate(fn) always executes first",
+      "Inside I/O callbacks, setImmediate executes first, but in the main module the order is non-deterministic",
+      "Both behave identically"
+    ],
+    "correctIndex": 2,
+    "explanation": "In the main module, the execution order of setTimeout(fn, 0) and setImmediate(fn) can vary depending on process performance, making it non-deterministic. However, inside an I/O cycle (e.g., fs.readFile callback), setImmediate always executes before setTimeout.",
+    "sourceUrl": "https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick"
+  },
+  {
+    "id": "nodejs-020",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the difference between process.exit() and natural termination in Node.js?",
+    "options": [
+      "There is no difference",
+      "Natural termination behaves identically to process.exit(0)",
+      "process.exit() terminates immediately without waiting for async operations to complete, while natural termination waits until the event loop is empty",
+      "process.exit() does not fire the 'exit' event"
+    ],
+    "correctIndex": 2,
+    "explanation": "Calling process.exit() terminates the process immediately even if pending asynchronous operations (timers, I/O, etc.) have not completed. In contrast, natural termination occurs automatically when there is no more work for the event loop to process. Caution is needed as asynchronous operations like log writing may be missed with process.exit().",
+    "sourceUrl": "https://nodejs.org/api/process.html#processexitcode"
+  }
+]

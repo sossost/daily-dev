@@ -1,0 +1,332 @@
+[
+  {
+    "id": "data-structures-001",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What data structure principle do JavaScript array's push() and pop() methods follow?",
+    "options": [
+      "LIFO (Last In, First Out)",
+      "FIFO (First In, First Out)",
+      "Priority Queue",
+      "Deque (Double-ended Queue)"
+    ],
+    "correctIndex": 0,
+    "explanation": "push() adds an element to the end of the array, and pop() removes an element from the end. This follows the LIFO (Last In, First Out) principle of a Stack data structure.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push"
+  },
+  {
+    "id": "data-structures-002",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const queue = [1, 2, 3];\nqueue.push(4);\nconst first = queue.shift();\nconsole.log(first, queue.length);",
+    "options": [
+      "4 3",
+      "3 3",
+      "1 4",
+      "1 3"
+    ],
+    "correctIndex": 3,
+    "explanation": "push(4) adds 4 to the end, resulting in [1, 2, 3, 4]. shift() removes and returns the first element, so first is 1, and the remaining array [2, 3, 4] has a length of 3.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/shift"
+  },
+  {
+    "id": "data-structures-003",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the most distinctive feature of JavaScript's Set data structure?",
+    "options": [
+      "It does not allow duplicate values",
+      "It stores data as key-value pairs",
+      "Elements are always kept in sorted order",
+      "It has a fixed size"
+    ],
+    "correctIndex": 0,
+    "explanation": "A Set is a collection of unique values. Even if the same value is added multiple times, only one instance is stored. This characteristic is frequently used to remove duplicates from arrays.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set"
+  },
+  {
+    "id": "data-structures-004",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const map = new Map();\nmap.set('a', 1);\nmap.set('b', 2);\nmap.set('a', 3);\nconsole.log(map.size, map.get('a'));",
+    "options": [
+      "3 1",
+      "3 3",
+      "2 3",
+      "2 1"
+    ],
+    "correctIndex": 2,
+    "explanation": "When set() is called with the same key in a Map, the value is overwritten. Setting 1 for key 'a' and then 3 results in a final value of 3. There are two keys ('a' and 'b'), so the size is 2.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map"
+  },
+  {
+    "id": "data-structures-005",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between Map and a plain Object?",
+    "options": [
+      "Object can use any type as keys, but Map can only use strings",
+      "Map can be directly serialized with JSON.stringify()",
+      "Object always has faster lookup performance than Map",
+      "Map can use any type as keys and guarantees insertion order"
+    ],
+    "correctIndex": 3,
+    "explanation": "Map can use not only strings but also objects, functions, and any other value as keys, and it guarantees insertion order. In contrast, Object keys are limited to strings or Symbols.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#objects_vs._maps"
+  },
+  {
+    "id": "data-structures-006",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const set = new Set([1, 2, 3, 2, 1]);\nconst arr = [...set].filter(x => x > 1);\nconsole.log(arr);",
+    "options": [
+      "[2, 3]",
+      "[2, 3, 2]",
+      "[1, 2, 3]",
+      "[3]"
+    ],
+    "correctIndex": 0,
+    "explanation": "Set removes duplicates, so new Set([1, 2, 3, 2, 1]) becomes {1, 2, 3}. Converting to an array with the spread operator gives [1, 2, 3], and filtering with filter(x => x > 1) keeps only values greater than 1, resulting in [2, 3].",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set"
+  },
+  {
+    "id": "data-structures-007",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the problem when using an object as a Map key in the following code?",
+    "code": "const cache = new Map();\nfunction getData(config) {\n  if (cache.has(config)) return cache.get(config);\n  const result = expensiveComputation(config);\n  cache.set(config, result);\n  return result;\n}\ngetData({ page: 1 });\ngetData({ page: 1 });",
+    "options": [
+      "Map cannot use objects as keys, so an error occurs",
+      "The Map's size limit is exceeded",
+      "The config object is garbage collected, causing the key to disappear",
+      "A new object reference is passed each time, so the cache never hits"
+    ],
+    "correctIndex": 3,
+    "explanation": "Map uses reference equality (===) for key comparison. Calling { page: 1 } twice creates a new object each time, so they are recognized as different keys. To properly utilize the cache, you must use the same object reference or use string keys.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#key_equality"
+  },
+  {
+    "id": "data-structures-008",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the most important difference between WeakMap and Map?",
+    "options": [
+      "WeakMap can also use strings as keys",
+      "WeakMap is iterable",
+      "WeakMap keys can become garbage collection targets",
+      "WeakMap has faster lookup speed than Map"
+    ],
+    "correctIndex": 2,
+    "explanation": "WeakMap holds weak references to its keys. If there are no other references to the key object, it becomes eligible for garbage collection. This characteristic allows you to associate metadata with objects without causing memory leaks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap"
+  },
+  {
+    "id": "data-structures-009",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const stack = [];\nstack.push(10);\nstack.push(20);\nstack.push(30);\nstack.pop();\nstack.push(40);\nconsole.log(stack[stack.length - 1], stack.length);",
+    "options": [
+      "40 3",
+      "30 3",
+      "40 4",
+      "20 2"
+    ],
+    "correctIndex": 0,
+    "explanation": "push(10), push(20), push(30) results in [10, 20, 30]. pop() removes 30, leaving [10, 20]. push(40) gives [10, 20, 40]. The last element (stack[2]) is 40, and the length is 3.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/pop"
+  },
+  {
+    "id": "data-structures-010",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Why is Set.has() more efficient than Array.includes() when checking if a value exists in a large dataset?",
+    "options": [
+      "Because Set internally uses a sorted array",
+      "Because Set uses less memory",
+      "Because Array.includes() has type conversion overhead",
+      "Because Set.has() is a hash-based O(1) lookup, while Array.includes() is an O(n) linear search"
+    ],
+    "correctIndex": 3,
+    "explanation": "Set is a hash table-based data structure, and the has() method performs lookups with an average O(1) time complexity. In contrast, Array's includes() performs an O(n) linear search by traversing the array from start to end.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/has"
+  },
+  {
+    "id": "data-structures-011",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the potential problem with the following tree traversal code?",
+    "code": "function flatten(node) {\n  const result = [node.value];\n  if (node.children) {\n    for (const child of node.children) {\n      result.push(flatten(child));\n    }\n  }\n  return result;\n}",
+    "options": [
+      "An infinite loop occurs",
+      "Using push instead of spread or concat creates nested arrays",
+      "An error occurs when children is undefined",
+      "const result must be changed to let"
+    ],
+    "correctIndex": 1,
+    "explanation": "flatten() returns an array, but using push() to add an array creates nested arrays. You should use result.push(...flatten(child)) or result = result.concat(flatten(child)) to get a flattened result.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat"
+  },
+  {
+    "id": "data-structures-012",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the main reason for using immutable data structures for state management in React?",
+    "options": [
+      "Because immutable data structures use less memory",
+      "Because JavaScript engines process immutable objects faster",
+      "To enable fast change detection through reference comparison (===) and optimize re-rendering",
+      "Because garbage collection performance improves"
+    ],
+    "correctIndex": 2,
+    "explanation": "React uses reference comparison (===) to detect state changes. If you directly mutate an object, the reference stays the same and React cannot detect the change. Creating a new object changes the reference, allowing React to detect the change and efficiently re-render.",
+    "sourceUrl": "https://react.dev/learn/updating-objects-in-state"
+  },
+  {
+    "id": "data-structures-013",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const arr = [1, 2, 3, 4, 5];\nconst result = arr.reduce((acc, val) => {\n  return val % 2 === 0 ? [...acc, val * 2] : acc;\n}, []);\nconsole.log(result);",
+    "options": [
+      "[2, 4, 6, 8, 10]",
+      "[4, 8]",
+      "[1, 4, 3, 8, 5]",
+      "[2, 6, 10]"
+    ],
+    "correctIndex": 1,
+    "explanation": "reduce iterates through the array and only adds val * 2 to the accumulator when the value is even (val % 2 === 0). The even numbers are 2 and 4, which doubled give [4, 8].",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce"
+  },
+  {
+    "id": "data-structures-014",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "When should you choose a plain Object over Map considering JSON serialization?",
+    "options": [
+      "When key insertion order matters",
+      "When you need to use objects or functions as keys",
+      "When JSON serialization is needed, such as for API responses or localStorage",
+      "When frequent key-value additions and deletions are needed"
+    ],
+    "correctIndex": 2,
+    "explanation": "Map cannot be directly serialized with JSON.stringify(). For cases requiring JSON conversion like API communication or localStorage storage, plain objects are more suitable. To serialize a Map, a conversion step using Array.from() or Object.fromEntries() is needed.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify"
+  },
+  {
+    "id": "data-structures-015",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why are duplicates not removed as intended in the following code?",
+    "code": "const users = [\n  { id: 1, name: 'Alice' },\n  { id: 2, name: 'Bob' },\n  { id: 1, name: 'Alice' }\n];\nconst unique = [...new Set(users)];\nconsole.log(unique.length);",
+    "options": [
+      "Set cannot accept an array as input",
+      "The spread operator does not correctly convert a Set",
+      "Set compares by reference equality, so different objects with the same content are not recognized as duplicates",
+      "The id field of the object must be explicitly specified"
+    ],
+    "correctIndex": 2,
+    "explanation": "Set uses reference equality (===) for value comparison. Even if the content is the same, different object references are treated as separate values. For object deduplication, use an id-based Map or a filter + findIndex pattern.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set"
+  },
+  {
+    "id": "data-structures-016",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What do the entries(), keys(), and values() methods of JavaScript's Map return?",
+    "options": [
+      "A regular Array",
+      "An Iterator object",
+      "A new Map object",
+      "A generator function"
+    ],
+    "correctIndex": 1,
+    "explanation": "Map's entries(), keys(), and values() methods all return Iterator objects. Iterators can be traversed using for...of loops or the spread operator (...), and values can be retrieved one at a time by calling next().",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/entries"
+  },
+  {
+    "id": "data-structures-017",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Why does WeakSet not provide a size property or iteration methods unlike regular Set?",
+    "options": [
+      "Because of browser compatibility issues",
+      "Because garbage collection operates non-deterministically, making it impossible to know the exact number of elements",
+      "Because WeakSet is still an experimental feature with incomplete implementation",
+      "Because WeakSet only stores primitive values, making iteration meaningless"
+    ],
+    "correctIndex": 1,
+    "explanation": "WeakSet holds weak references to its elements, meaning the garbage collector can reclaim elements at any time. Since the timing of GC is non-deterministic, the exact number of elements at any given point cannot be guaranteed, which is why the size property and iteration methods are not provided.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet"
+  },
+  {
+    "id": "data-structures-018",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const m = new Map();\nconst objKey = {};\nm.set(objKey, 'first');\nm.set({}, 'second');\nm.set(objKey, 'third');\nconsole.log(m.size, m.get(objKey), m.get({}));",
+    "options": [
+      "2 'third' undefined",
+      "3 'third' 'second'",
+      "2 'first' undefined",
+      "3 'first' 'second'"
+    ],
+    "correctIndex": 0,
+    "explanation": "Map compares keys using reference equality (===). Setting objKey twice overwrites the value from 'first' to 'third' since it's the same reference. The {} used with set is a separate object reference, so it's a different key. Therefore, size is 2, looking up objKey returns 'third', and looking up a new {} returns undefined since that reference doesn't exist.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#key_equality"
+  },
+  {
+    "id": "data-structures-019",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What problem occurs due to the circular reference in the following code, and what is the solution?",
+    "code": "const a = { name: 'A', ref: null };\nconst b = { name: 'B', ref: a };\na.ref = b;\ntry {\n  const json = JSON.stringify(a);\n  console.log(json);\n} catch (e) {\n  console.log(e.constructor.name);\n}",
+    "options": [
+      "A RangeError occurs, and the solution is to use deep copy (structuredClone)",
+      "A TypeError occurs, and a replacer function is needed to remove the circular reference",
+      "A SyntaxError occurs, and a toJSON() method must be defined",
+      "It serializes normally with no problem"
+    ],
+    "correctIndex": 1,
+    "explanation": "JSON.stringify() cannot serialize objects with circular references and throws a TypeError. To fix this, pass a replacer function as the second argument to detect and remove circular references, or use a library for safe serialization.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#exceptions"
+  },
+  {
+    "id": "data-structures-020",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between TypedArray (e.g., Int32Array) and regular Array?",
+    "options": [
+      "TypedArray supports all array methods like push() and pop()",
+      "Regular Array has better numerical computation performance than TypedArray",
+      "TypedArray can store various types like strings and objects",
+      "TypedArray has a fixed type and size, and stores data in a contiguous memory block"
+    ],
+    "correctIndex": 3,
+    "explanation": "TypedArray is a view built on top of an ArrayBuffer that can only store specific numeric types (Int32, Float64, etc.) with a size fixed at creation. Using contiguous memory blocks, it offers superior memory efficiency and performance over regular Arrays when processing large amounts of numeric data.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray"
+  }
+]

@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import type { AccuracyPoint } from '@/lib/stats'
 
 const BAR_MAX_HEIGHT = 120
@@ -12,10 +13,12 @@ interface AccuracyTrendChartProps {
 }
 
 export function AccuracyTrendChart({ trend }: AccuracyTrendChartProps) {
+  const t = useTranslations('stats')
+
   if (trend.length === 0) {
     return (
       <div className="text-center py-8 text-sm text-gray-400 dark:text-gray-500">
-        세션을 완료하면 정답률 추이가 표시됩니다
+        {t('trendEmptyState')}
       </div>
     )
   }
@@ -40,15 +43,15 @@ export function AccuracyTrendChart({ trend }: AccuracyTrendChartProps) {
                 initial={{ height: 0 }}
                 animate={{ height }}
                 transition={{ duration: 0.4, delay: i * ANIMATION_DELAY_STEP, ease: 'easeOut' }}
-                aria-label={`세션 ${point.sessionIndex}: ${point.score}/${point.total} (${point.accuracy}%)`}
+                aria-label={t('sessionBar', { index: point.sessionIndex, score: point.score, total: point.total, accuracy: point.accuracy })}
               />
             </div>
           )
         })}
       </div>
       <div className="flex justify-between mt-2 text-[10px] text-gray-400 dark:text-gray-500">
-        <span>이전</span>
-        <span>최근</span>
+        <span>{t('earlier')}</span>
+        <span>{t('recent')}</span>
       </div>
     </div>
   )

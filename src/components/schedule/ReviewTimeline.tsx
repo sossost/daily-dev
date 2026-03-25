@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import type { DayReviewCount } from '@/lib/srs-schedule'
 
 const ANIMATION_DELAY_STEP = 0.04
@@ -12,6 +13,7 @@ interface ReviewTimelineProps {
 }
 
 export function ReviewTimeline({ reviews }: ReviewTimelineProps) {
+  const t = useTranslations('schedule')
   const maxCount = Math.max(1, ...reviews.map((r) => r.count))
 
   return (
@@ -20,7 +22,7 @@ export function ReviewTimeline({ reviews }: ReviewTimelineProps) {
         className="flex items-end gap-1 justify-between"
         style={{ height: BAR_MAX_HEIGHT + 32 }}
         role="img"
-        aria-label="향후 14일간 복습 예정 현황"
+        aria-label={t('reviewTimeline')}
       >
         {reviews.map((day, i) => {
           const height =
@@ -49,7 +51,7 @@ export function ReviewTimeline({ reviews }: ReviewTimelineProps) {
                   delay: i * ANIMATION_DELAY_STEP,
                   ease: 'easeOut',
                 }}
-                aria-label={`${day.label}: ${day.count}개`}
+                aria-label={t('dayCount', { label: day.label, count: day.count })}
               />
               <span className="text-[8px] text-gray-400 dark:text-gray-500 truncate w-full text-center leading-tight">
                 {day.label.length > 3 ? day.label.split(' ')[0] : day.label}

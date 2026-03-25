@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations, useLocale } from 'next-intl'
+import { isLocale } from '@/i18n/routing'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, ChevronUp, CheckCircle, XCircle, Clock } from 'lucide-react'
 import type { SessionRecord } from '@/types'
-import { TOPIC_LABELS } from '@/types'
 import { formatDuration, formatSessionDate, getTopicBreakdown } from '@/lib/session-history'
 
 const PERCENTAGE_MULTIPLIER = 100
@@ -15,6 +16,10 @@ interface SessionHistoryCardProps {
 }
 
 export function SessionHistoryCard({ session, index }: SessionHistoryCardProps) {
+  const t = useTranslations('history')
+  const topicT = useTranslations('topics')
+  const rawLocale = useLocale()
+  const locale = isLocale(rawLocale) ? rawLocale : 'en'
   const [isExpanded, setIsExpanded] = useState(false)
 
   const percentage = session.totalQuestions > 0
@@ -39,11 +44,11 @@ export function SessionHistoryCard({ session, index }: SessionHistoryCardProps) 
         onClick={() => setIsExpanded((prev) => !prev)}
         className="w-full text-left p-4 flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900 rounded-xl"
         aria-expanded={isExpanded}
-        aria-label={`세션 ${formatSessionDate(session.date)}, ${percentage}% 정답률`}
+        aria-label={t('sessionLabel', { date: formatSessionDate(session.date, locale), percent: percentage })}
       >
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {formatSessionDate(session.date)}
+            {formatSessionDate(session.date, locale)}
           </p>
           <div className="flex items-center gap-3 mt-1">
             <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
@@ -52,7 +57,7 @@ export function SessionHistoryCard({ session, index }: SessionHistoryCardProps) 
             </span>
             <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
               <Clock size={12} />
-              {formatDuration(session.duration)}
+              {formatDuration(session.duration, locale)}
             </span>
           </div>
         </div>
@@ -80,7 +85,7 @@ export function SessionHistoryCard({ session, index }: SessionHistoryCardProps) 
             <div className="px-4 pb-4 space-y-3">
               <div className="space-y-2">
                 <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  토픽별 결과
+                  {t('topicResults')}
                 </p>
                 {topicBreakdown.map(({ topic, correct, total }) => (
                   <div
@@ -88,7 +93,7 @@ export function SessionHistoryCard({ session, index }: SessionHistoryCardProps) 
                     className="flex items-center justify-between text-sm"
                   >
                     <span className="text-gray-700 dark:text-gray-300">
-                      {TOPIC_LABELS[topic]}
+                      {topicT(topic)}
                     </span>
                     <span className="flex items-center gap-1.5">
                       <span className="text-green-600 dark:text-green-400 font-medium">{correct}</span>
@@ -103,11 +108,11 @@ export function SessionHistoryCard({ session, index }: SessionHistoryCardProps) 
                 <div className="flex gap-4 text-xs text-gray-500 dark:text-gray-400">
                   <span className="flex items-center gap-1">
                     <CheckCircle size={12} className="text-green-500" />
-                    정답 {session.score}
+                    {t('correct')} {session.score}
                   </span>
                   <span className="flex items-center gap-1">
                     <XCircle size={12} className="text-red-400" />
-                    오답 {session.totalQuestions - session.score}
+                    {t('incorrect')} {session.totalQuestions - session.score}
                   </span>
                 </div>
               </div>

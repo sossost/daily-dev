@@ -1,9 +1,11 @@
 'use client'
 
 import { useEffect, useRef, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
+import { useLocale } from 'next-intl'
+import { useRouter } from '@/i18n/navigation'
 import { AnimatePresence } from 'framer-motion'
 import { TOPICS } from '@/types'
+import { isLocale } from '@/i18n/routing'
 import { useSessionStore } from '@/stores/useSessionStore'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
@@ -16,6 +18,8 @@ import { KeyboardHint } from '@/components/quiz/KeyboardHint'
 
 export default function SessionContent() {
   const router = useRouter()
+  const rawLocale = useLocale()
+  const locale = isLocale(rawLocale) ? rawLocale : 'en'
   const srsRecords = useProgressStore((s) => s.srsRecords)
   const enabledTopics = useTopicFilterStore((s) => s.enabledTopics)
   const isHydrated = useHydration()
@@ -46,14 +50,14 @@ export default function SessionContent() {
 
   const topicFilter = enabledTopics.length < TOPICS.length ? enabledTopics : undefined
   const sessionQuestions = useMemo(
-    () => generateSession(srsRecords, topicFilter),
+    () => generateSession(srsRecords, topicFilter, locale),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
 
   // Start fresh session once topicFilter store is hydrated
   useEffect(() => {
-    if (!isHydrated) return
+    if (isHydrated === false) return
     startSession(sessionQuestions)
     // eslint-disable-next-line react-hooks/exhaustive-deps -- run once when hydrated
   }, [isHydrated])
@@ -64,7 +68,7 @@ export default function SessionContent() {
     }
   }, [isComplete, answers.length, router])
 
-  if (!isHydrated || questions.length === 0) {
+  if (isHydrated === false || questions.length === 0) {
     return null
   }
 

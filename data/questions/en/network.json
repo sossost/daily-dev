@@ -1,0 +1,326 @@
+[
+  {
+    "id": "network-001",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which HTTP method is used to retrieve data without modifying server resources?",
+    "options": [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE"
+    ],
+    "correctIndex": 0,
+    "explanation": "The GET method is a safe method used to retrieve resources from the server. It does not change the server's state and has idempotency, meaning that sending the same request multiple times returns the same result.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/GET"
+  },
+  {
+    "id": "network-002",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What situation does HTTP status code 404 indicate?",
+    "options": [
+      "Internal server error",
+      "Request successful",
+      "The requested resource could not be found",
+      "Authentication required"
+    ],
+    "correctIndex": 2,
+    "explanation": "404 Not Found is a status code returned when the server cannot find the requested resource. 200 indicates success, 401 indicates authentication required, and 500 indicates an internal server error.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404"
+  },
+  {
+    "id": "network-003",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Why is CORS (Cross-Origin Resource Sharing) needed?",
+    "options": [
+      "To increase server response speed",
+      "To apply HTTPS encryption",
+      "To reduce cookie sizes",
+      "To bypass the browser's same-origin policy and access resources from other domains"
+    ],
+    "correctIndex": 3,
+    "explanation": "CORS is a mechanism that allows the server to permit cross-origin requests that would otherwise be blocked by the browser's Same-Origin Policy. The server sets the Access-Control-Allow-Origin response header to allow access from specific origins.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS"
+  },
+  {
+    "id": "network-004",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output order of the following fetch code?",
+    "code": "console.log('1');\nfetch('https://api.example.com/data')\n  .then(() => console.log('2'))\n  .catch(() => console.log('3'));\nconsole.log('4');",
+    "options": [
+      "1 -> 2 -> 4",
+      "1 -> 4 -> 2 -> 3",
+      "4 -> 1 -> 2",
+      "1 -> 4 -> 2 or 1 -> 4 -> 3"
+    ],
+    "correctIndex": 3,
+    "explanation": "fetch operates asynchronously, so after '1' is printed, fetch starts but '4' is printed immediately. Then, depending on the network response, '2' is printed on success or '3' on failure. Therefore the result is 1 -> 4 -> 2 or 1 -> 4 -> 3.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch"
+  },
+  {
+    "id": "network-005",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which is NOT a major improvement in HTTP/2?",
+    "options": [
+      "Multiplexing for concurrent request handling",
+      "Header compression (HPACK)",
+      "Server push",
+      "Introduction of JSON-based request format"
+    ],
+    "correctIndex": 3,
+    "explanation": "HTTP/2 introduced multiplexing (handling multiple requests/responses simultaneously on a single connection), HPACK header compression, and server push. However, it did not change the request format to JSON — HTTP/2 uses a binary framing layer.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/HTTP_2"
+  },
+  {
+    "id": "network-006",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between localStorage and cookies?",
+    "options": [
+      "Cookies are automatically included in every HTTP request, but localStorage is not",
+      "localStorage can be set from the server, but cookies can only be set from the client",
+      "Cookies have a larger storage limit than localStorage",
+      "localStorage can have an expiration date set, but cookies are permanent"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cookies are automatically sent to the server in the Cookie header with HTTP requests, but localStorage data is not automatically sent to the server. Cookies have a limit of about 4KB, while localStorage has a limit of about 5-10MB.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie"
+  },
+  {
+    "id": "network-007",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What HTTP method is used in CORS preflight requests?",
+    "options": [
+      "GET",
+      "HEAD",
+      "OPTIONS",
+      "TRACE"
+    ],
+    "correctIndex": 2,
+    "explanation": "CORS preflight requests use the OPTIONS method. Before sending the actual request, the browser sends an OPTIONS request to the server to verify if the cross-origin request is allowed. The server responds with headers like Access-Control-Allow-Methods.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request"
+  },
+  {
+    "id": "network-008",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does a CORS error occur in the following code?\n\nfetch('https://api.other-domain.com/data', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({ name: 'test' })\n});",
+    "options": [
+      "The POST method is not allowed in CORS",
+      "JSON-formatted body cannot be sent",
+      "When Content-Type is application/json, it is not a simple request, so the server must set CORS headers",
+      "The fetch API does not support cross-origin requests"
+    ],
+    "correctIndex": 2,
+    "explanation": "A request with Content-Type: application/json does not meet the CORS simple request conditions, triggering a preflight request. If the server does not properly return Access-Control-Allow-Origin and Access-Control-Allow-Headers headers, a CORS error occurs.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#simple_requests"
+  },
+  {
+    "id": "network-009",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the difference between 'no-cache' and 'no-store' in the Cache-Control header?",
+    "options": [
+      "no-cache stores the cache but requires revalidation with the server before use, while no-store prohibits storing the cache entirely",
+      "no-cache completely prohibits caching, while no-store allows use after revalidation",
+      "no-cache only prohibits browser cache, while no-store also prohibits CDN cache",
+      "Both have the same meaning, with no-store being the newer standard"
+    ],
+    "correctIndex": 0,
+    "explanation": "no-cache allows storing the response in cache, but requires revalidation with the server before use. no-store prohibits storing the response in cache entirely. For sensitive data, no-store should be used.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control"
+  },
+  {
+    "id": "network-010",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference between WebSocket and HTTP Long Polling?",
+    "options": [
+      "Long polling is more suitable for real-time communication than WebSocket",
+      "WebSocket can only send text data, while long polling can also send binary data",
+      "Long polling can only send data from server to client",
+      "WebSocket maintains a bidirectional communication channel after the initial HTTP handshake, while long polling creates a new HTTP connection each time"
+    ],
+    "correctIndex": 3,
+    "explanation": "WebSocket maintains a persistent bidirectional communication channel after the initial HTTP handshake, with low overhead. In contrast, long polling has the client send a request to the server, the server delays the response until new data is available, and then a new request is sent after the response — requiring a new HTTP connection each time.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API"
+  },
+  {
+    "id": "network-011",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the biggest difference between HTTPS and HTTP?",
+    "options": [
+      "HTTPS provides faster data transfer speeds",
+      "HTTPS can transfer larger files",
+      "HTTPS encrypts data in transit through TLS/SSL",
+      "HTTPS only supports HTTP/2"
+    ],
+    "correctIndex": 2,
+    "explanation": "HTTPS (HTTP Secure) is a protocol that adds a TLS (Transport Layer Security)/SSL encryption layer to HTTP. Data between the client and server is encrypted, preventing man-in-the-middle (MITM) attacks and eavesdropping.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/HTTPS"
+  },
+  {
+    "id": "network-012",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "When using AbortController to cancel a request in the following code, what error name is output in the catch block?",
+    "code": "const controller = new AbortController();\nfetch('https://api.example.com/data', {\n  signal: controller.signal\n}).catch(err => console.log(err.name));\ncontroller.abort();",
+    "options": [
+      "TypeError",
+      "NetworkError",
+      "AbortError",
+      "CancelError"
+    ],
+    "correctIndex": 2,
+    "explanation": "When AbortController.abort() is called, the fetch request linked to that signal is cancelled, and a DOMException with the name AbortError is thrown. This can be used to clean up unnecessary requests during request timeouts or when a user navigates away from a page.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/AbortController"
+  },
+  {
+    "id": "network-013",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why are cookies not sent to the server in the following code?\n\nfetch('https://api.other-domain.com/user', {\n  method: 'GET',\n  headers: { 'Content-Type': 'application/json' }\n});",
+    "options": [
+      "Cookies cannot be sent with GET methods",
+      "The Content-Type header is incorrectly set",
+      "Cross-origin requests require the credentials: 'include' option to include cookies",
+      "Cookies are not supported in the fetch API"
+    ],
+    "correctIndex": 2,
+    "explanation": "By default, fetch's credentials option is set to 'same-origin', which includes cookies only for same-origin requests. To send cookies with cross-origin requests, credentials: 'include' must be explicitly specified, and the server must also return the Access-Control-Allow-Credentials: true header.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#sending_a_request_with_credentials_included"
+  },
+  {
+    "id": "network-014",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between PUT and PATCH methods in a REST API?",
+    "options": [
+      "PUT replaces the entire resource, while PATCH modifies only part of the resource",
+      "PUT is used for creation, while PATCH is used for deletion",
+      "PATCH guarantees idempotency, but PUT does not",
+      "PUT does not require a request body, but PATCH does"
+    ],
+    "correctIndex": 0,
+    "explanation": "PUT sends the complete representation of a resource to the server, completely replacing the existing resource. PATCH is used to modify only a portion of a resource, including only the fields to change in the request body. PUT is idempotent, but PATCH may not be depending on the implementation.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PATCH"
+  },
+  {
+    "id": "network-015",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the role of the ETag header?",
+    "options": [
+      "It specifies the algorithm for compressing response data",
+      "It is an identifier for a specific version of a resource, used for cache revalidation",
+      "It is a timestamp for measuring server response time",
+      "It is a header that stores the client's authentication token"
+    ],
+    "correctIndex": 1,
+    "explanation": "ETag (Entity Tag) is a unique string that identifies a specific version of a resource. The client includes the ETag value in the If-None-Match header to send a conditional request. If the resource hasn't changed, the server returns 304 Not Modified, preventing unnecessary data transfer.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag"
+  },
+  {
+    "id": "network-016",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "When tracking readyState changes of XMLHttpRequest in the following code, what is the order of readyState values output to the console?",
+    "code": "const xhr = new XMLHttpRequest();\nxhr.onreadystatechange = function() {\n  console.log(xhr.readyState);\n};\nxhr.open('GET', 'https://api.example.com/data');\nxhr.send();",
+    "options": [
+      "0 -> 1 -> 2 -> 3 -> 4",
+      "1 -> 2 -> 3 -> 4",
+      "1 -> 4",
+      "0 -> 4"
+    ],
+    "correctIndex": 1,
+    "explanation": "The onreadystatechange event fires each time readyState changes. When open() is called, it becomes 1 (OPENED); when server response headers are received, 2 (HEADERS_RECEIVED); while receiving the response body, 3 (LOADING); and when complete, 4 (DONE). State 0 (UNSENT) is not output because the event handler is registered before it occurs.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/readyState"
+  },
+  {
+    "id": "network-017",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Why might a JSON parsing error occur in the following code?\n\nfetch('https://api.example.com/data')\n  .then(response => response.json())\n  .then(data => console.log(data));",
+    "options": [
+      "fetch automatically parses JSON, so calling response.json() is unnecessary",
+      "A parsing error occurs if the server response's Content-Type is text/html or the response body is not valid JSON",
+      "response.json() is a synchronous function and cannot be used in a then chain",
+      "The fetch API does not support JSON responses"
+    ],
+    "correctIndex": 1,
+    "explanation": "response.json() returns a promise that parses the response body as JSON. If the server returns an HTML error page, an empty response, or other invalid JSON, a SyntaxError occurs. To prevent this, check response.ok first or handle the error with try-catch.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Response/json"
+  },
+  {
+    "id": "network-018",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the main purpose of Content Security Policy (CSP)?",
+    "options": [
+      "To optimize server response speed",
+      "To prevent XSS (Cross-Site Scripting) attacks by restricting the sources from which the browser can load resources",
+      "To limit the size of HTTP request bodies",
+      "To validate the legitimacy of SSL certificates"
+    ],
+    "correctIndex": 1,
+    "explanation": "CSP is a security mechanism where the server uses the Content-Security-Policy header to explicitly specify the sources from which the browser can load scripts, styles, images, etc. Resources from unauthorized sources are blocked, significantly reducing the risk of XSS attacks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP"
+  },
+  {
+    "id": "network-019",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the shape of the statuses array output when using Promise.allSettled for multiple API calls in the following code?",
+    "code": "const urls = [\n  'https://api.example.com/valid',\n  'https://api.example.com/not-found'\n];\nPromise.allSettled(urls.map(url => fetch(url)))\n  .then(results => {\n    const statuses = results.map(r => r.status);\n    console.log(statuses);\n  });",
+    "options": [
+      "['resolved', 'rejected']",
+      "['fulfilled', 'fulfilled']",
+      "['fulfilled', 'rejected']",
+      "[200, 404]"
+    ],
+    "correctIndex": 1,
+    "explanation": "fetch resolves the promise as fulfilled even for HTTP error status codes (404, 500, etc.) as long as there's no network error. Therefore, if both requests succeed at the network level, the Promise.allSettled results are both 'fulfilled'. fetch only rejects on network failures, DNS failures, CORS blocks, etc.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#checking_that_the_fetch_was_successful"
+  },
+  {
+    "id": "network-020",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between sessionStorage and localStorage?",
+    "options": [
+      "sessionStorage data is deleted when the browser tab is closed, while localStorage persists until explicitly deleted",
+      "localStorage stores data per session, while sessionStorage stores data permanently",
+      "sessionStorage has a 5MB limit, while localStorage has a 50MB limit",
+      "sessionStorage is shared across all tabs of the same origin, while localStorage is isolated per tab"
+    ],
+    "correctIndex": 0,
+    "explanation": "sessionStorage retains data only for the duration of the page session, and data is deleted when the tab or browser is closed. In contrast, localStorage has no expiration and persists data permanently until the user explicitly deletes it or clears browser data.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage"
+  }
+]

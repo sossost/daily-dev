@@ -1,20 +1,22 @@
 'use client'
 
 import { createElement, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { Sun, Moon, Monitor } from 'lucide-react'
 import { useThemeStore, resolveTheme } from '@/stores/useThemeStore'
 
 type ThemeMode = 'light' | 'dark' | 'system'
 
-const MODES: ReadonlyArray<{ value: ThemeMode; Icon: typeof Sun; label: string }> = [
-  { value: 'light', Icon: Sun, label: '라이트 모드' },
-  { value: 'dark', Icon: Moon, label: '다크 모드' },
-  { value: 'system', Icon: Monitor, label: '시스템 설정' },
+const MODES: ReadonlyArray<{ value: ThemeMode; Icon: typeof Sun; labelKey: 'lightMode' | 'darkMode' | 'systemMode' }> = [
+  { value: 'light', Icon: Sun, labelKey: 'lightMode' },
+  { value: 'dark', Icon: Moon, labelKey: 'darkMode' },
+  { value: 'system', Icon: Monitor, labelKey: 'systemMode' },
 ] as const
 
 export function ThemeToggle() {
   const mode = useThemeStore((s) => s.mode)
   const setMode = useThemeStore((s) => s.setMode)
+  const t = useTranslations('settings')
 
   useEffect(() => {
     const root = document.documentElement
@@ -48,16 +50,16 @@ export function ThemeToggle() {
     {
       className: 'flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1',
       role: 'radiogroup',
-      'aria-label': '테마 선택',
+      'aria-label': t('theme'),
     },
-    ...MODES.map(({ value, Icon, label }) =>
+    ...MODES.map(({ value, Icon, labelKey }) =>
       createElement(
         'button',
         {
           key: value,
           role: 'radio',
           'aria-checked': mode === value,
-          'aria-label': label,
+          'aria-label': t(labelKey),
           onClick: () => setMode(value),
           className:
             mode === value

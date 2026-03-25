@@ -13,7 +13,7 @@ Add new learning topics with initial question sets, expanding coverage beyond ex
 Before doing anything:
 
 1. Read `src/types/index.ts` to see existing topics
-2. List files in `data/questions/` to see what's already covered
+2. List files in `data/questions/ko/` and `data/questions/en/` to see what's already covered
 3. Pick a topic that is NOT yet covered and would be valuable for frontend developers
 
 ## Constraints — What You CANNOT Do
@@ -40,11 +40,12 @@ This is NOT a fixed list — use judgment based on what's already covered.
 
 When adding a new topic:
 
-1. **`data/questions/{topic}.json`** — Generate at least 10 questions following the Question schema
-2. **`src/types/index.ts`** — Add to `TOPICS` array and `TOPIC_LABELS`
-3. **`src/types/index.ts`** — Add the topic to the appropriate category in `CATEGORIES`. If no existing category fits, create a new category entry with `id`, `label`, `icon`, `topics`, and `positions` fields.
-4. **`src/lib/questions.ts`** — Add the JSON import and register
-5. **`src/components/dashboard/TopicProgressList.tsx`** — Add a color to `TOPIC_COLORS`
+1. **`data/questions/ko/{topic}.json`** — Generate at least 10 Korean questions following the Question schema
+2. **`data/questions/en/{topic}.json`** — Generate matching English translations with the same IDs
+3. **`src/types/index.ts`** — Add to `TOPICS` array and `TOPIC_LABELS`
+4. **`src/types/index.ts`** — Add the topic to the appropriate category in `CATEGORIES`. If no existing category fits, create a new category entry with `id`, `label`, `icon`, `topics`, and `positions` fields.
+5. **`src/lib/questions.ts`** — Add BOTH Korean and English JSON imports (e.g. `import {topic}Ko from '../../data/questions/ko/{topic}.json'` and `import {topic}En from '../../data/questions/en/{topic}.json'`) and register them in `QUESTIONS_BY_LOCALE` for both `ko` and `en`
+6. **`src/components/dashboard/TopicProgressList.tsx`** — Add a color to `TOPIC_COLORS`
 
 ## Constraints
 

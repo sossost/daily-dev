@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { LogIn, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { getIsAuthenticated } from "@/lib/supabase/currentUser";
@@ -9,6 +10,7 @@ import { LoginModal } from "@/components/LoginModal";
 export function AuthButton() {
   const { user, isLoading, signInWithGoogle, signInWithGitHub, signOut } =
     useAuth();
+  const t = useTranslations("common");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // DataProvider sets currentUser during render (before this component).
@@ -38,7 +40,7 @@ export function AuthButton() {
           onClick={signOut}
           disabled={isLoading}
           className="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg transition-colors disabled:opacity-50"
-          aria-label="로그아웃"
+          aria-label={t("logout")}
         >
           <LogOut size={16} />
         </button>
@@ -52,10 +54,10 @@ export function AuthButton() {
       <button
         onClick={() => setIsModalOpen(true)}
         className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-        aria-label="로그인"
+        aria-label={t("login")}
       >
         <LogIn size={14} />
-        로그인
+        {t("login")}
       </button>
       <LoginModal
         isOpen={isModalOpen}

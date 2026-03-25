@@ -1,0 +1,332 @@
+[
+  {
+    "id": "promise-001",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What does Promise.race() return?",
+    "options": [
+      "The result of the first settled (fulfilled or rejected) Promise",
+      "Only the result of the first fulfilled Promise",
+      "Waits for all Promises to complete, then returns the fastest one",
+      "The result of the Promise with the smallest index in the array"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise.race() fulfills or rejects with the result of the first settled (fulfilled or rejected) Promise. It returns the first completed result regardless of whether it was fulfilled or rejected. This is the key difference from Promise.any(), which only returns the first fulfillment.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race"
+  },
+  {
+    "id": "promise-002",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "Promise.resolve(1)\n  .then(v => v + 1)\n  .then(v => v * 3)\n  .then(v => console.log(v));",
+    "options": [
+      "1",
+      "6",
+      "3",
+      "NaN"
+    ],
+    "correctIndex": 1,
+    "explanation": "In Promise chaining, each then callback's return value is passed to the next then. Promise.resolve(1) -> then(v => v + 1) returns 2 -> then(v => v * 3) returns 6 -> then(v => console.log(v)) outputs 6. The value explicitly returned from a then callback becomes the fulfillment value of the next Promise.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "promise-003",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "Promise.resolve('A')\n  .then(v => {\n    console.log(v);\n    return 'B';\n  })\n  .then(v => {\n    console.log(v);\n  })\n  .then(v => {\n    console.log(v);\n  });",
+    "options": [
+      "A, A, A",
+      "A, B, B",
+      "A, B, undefined",
+      "A, undefined, undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "The first then outputs 'A' and returns 'B'. The second then outputs 'B' but has no explicit return, so it implicitly returns undefined. The third then outputs the undefined received from the previous then. When a then callback has no return statement, undefined is implicitly returned and becomes the argument for the next then.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "promise-004",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the error handling difference between Promise.all() and Promise.race() is correct?",
+    "options": [
+      "Promise.all ignores errors and Promise.race propagates them",
+      "Both wait for all Promises to complete before handling errors",
+      "Promise.all collects all errors into an array",
+      "Promise.all rejects immediately on the first rejection, Promise.race returns the result of the first settled Promise"
+    ],
+    "correctIndex": 3,
+    "explanation": "Promise.all() rejects immediately with the error when any Promise rejects (fail-fast). Promise.race() returns the result of the first settled Promise (fulfilled or rejected) — if the fastest one rejects, the race rejects; if it fulfills, the race fulfills. The semantic difference is: Promise.all means 'all must succeed to succeed', Promise.race means 'the fastest one decides'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+  },
+  {
+    "id": "promise-005",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is a 'thenable' object in JavaScript?",
+    "options": [
+      "An object with a then method that provides a Promise-compatible interface",
+      "A special term that only refers to Promise instances",
+      "Any object that has a catch method",
+      "An async iterable object that implements Symbol.iterator"
+    ],
+    "correctIndex": 0,
+    "explanation": "A thenable is any object that has a then method. When a thenable is passed to Promise.resolve(), it calls the object's then method to convert it into a Promise. Thanks to this protocol, async objects from non-Promise libraries can be integrated into Promise chains. The ECMAScript spec also refers to this as 'PromiseLike'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise#thenables"
+  },
+  {
+    "id": "promise-006",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the key difference between Promise.all() and Promise.allSettled() is correct?",
+    "options": [
+      "Promise.all rejects immediately if any Promise rejects, while Promise.allSettled waits for all Promises to complete and returns each result",
+      "Promise.allSettled automatically retries rejected Promises",
+      "Promise.all returns results as { status, value } object arrays, Promise.allSettled returns value arrays",
+      "Both work identically, but Promise.allSettled is a newer API with better performance"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise.all() returns a result array when all Promises fulfill, but rejects immediately if any one rejects (fail-fast). Promise.allSettled() waits for all Promises to settle regardless of fulfillment or rejection, returning each result as { status: 'fulfilled', value } or { status: 'rejected', reason }. allSettled is suitable for parallel operations where partial failures are acceptable.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled"
+  },
+  {
+    "id": "promise-007",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const p = new Promise((resolve) => {\n  resolve(1);\n  resolve(2);\n  console.log(3);\n});\n\np.then(v => console.log(v));",
+    "options": [
+      "3, 2",
+      "1, 3",
+      "3, 1",
+      "3, 1, 2"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Promise executor function executes synchronously. resolve(1) is called but the then callback is registered as a microtask and does not execute immediately. resolve(2) is ignored — once a Promise is settled, its state cannot change (immutable). console.log(3) executes synchronously, outputting 3 first. Then the microtask then callback executes, outputting 1.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
+  },
+  {
+    "id": "promise-008",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why is the error not properly handled in the following code?",
+    "code": "function fetchData() {\n  return fetch('/api/data')\n    .then(res => res.json());\n}\n\ntry {\n  fetchData();\n} catch (err) {\n  console.log('caught:', err);\n}",
+    "options": [
+      "The fetch function does not throw errors",
+      "res.json() always succeeds",
+      "The catch block syntax is incorrect",
+      "try/catch only catches synchronous code; asynchronous Promise rejections are not caught"
+    ],
+    "correctIndex": 3,
+    "explanation": "try/catch only captures synchronously thrown exceptions. fetchData() returns a Promise, and network errors or JSON parsing errors occur asynchronously as Promise rejections. To handle them, chain .catch() or use async/await with try/catch. This pattern is a common mistake and a major cause of UnhandledPromiseRejection warnings.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises#error_handling"
+  },
+  {
+    "id": "promise-009",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "Promise.all([\n  Promise.resolve(1),\n  Promise.reject('error'),\n  Promise.resolve(3)\n])\n  .then(v => console.log('then:', v))\n  .catch(e => console.log('catch:', e));",
+    "options": [
+      "catch: error",
+      "then: [1, 'error', 3]",
+      "then: [1, undefined, 3]",
+      "catch: ['error']"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise.all() rejects immediately when any Promise rejects (fail-fast behavior). The second Promise rejects with 'error', so Promise.all does not wait for the rest and immediately rejects with 'error'. The catch handler receives the rejection reason 'error' and outputs 'catch: error'. To get all results regardless, use Promise.allSettled().",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+  },
+  {
+    "id": "promise-010",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What error is thrown when all Promises passed to Promise.any() are rejected?",
+    "options": [
+      "TypeError",
+      "AggregateError",
+      "RangeError",
+      "RejectionError"
+    ],
+    "correctIndex": 1,
+    "explanation": "Promise.any() returns the value of the first fulfillment, but if all Promises reject, it throws an AggregateError. AggregateError, introduced in ES2021, contains an errors property with an array of all rejection reasons, allowing you to inspect each individual failure.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/any"
+  },
+  {
+    "id": "promise-011",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What causes the unintended behavior in the following code?",
+    "code": "async function processItems(items) {\n  items.forEach(async (item) => {\n    await saveItem(item);\n  });\n  console.log('All items saved!');\n}",
+    "options": [
+      "forEach throws an error when receiving a non-array value",
+      "forEach does not await the async callback's returned Promise, so the log outputs before all saves complete",
+      "Using async inside forEach causes a syntax error",
+      "await does not work inside forEach callbacks so saveItem never executes"
+    ],
+    "correctIndex": 1,
+    "explanation": "Array.prototype.forEach() ignores the callback's return value. The async callback returns a Promise, but forEach does not await it, so the next line executes before all saveItem calls complete. The correct approach is to use a for...of loop with await, or Promise.all(items.map(async (item) => saveItem(item))).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach"
+  },
+  {
+    "id": "promise-012",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output order of the following code?",
+    "code": "console.log('1');\n\nPromise.resolve().then(() => {\n  console.log('2');\n  Promise.resolve().then(() => console.log('3'));\n});\n\nPromise.resolve().then(() => console.log('4'));\n\nconsole.log('5');",
+    "options": [
+      "1, 5, 2, 3, 4",
+      "1, 5, 2, 4, 3",
+      "1, 2, 4, 5, 3",
+      "1, 5, 4, 2, 3"
+    ],
+    "correctIndex": 1,
+    "explanation": "Synchronous code executes first: 1, 5. The microtask queue has two then callbacks registered in order. The first microtask executes, outputting 2, and registers a new microtask (output 3) in the queue. The second microtask executes, outputting 4. Then the internally registered microtask executes, outputting 3. Final order: 1, 5, 2, 4, 3. Microtasks are processed in FIFO order.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide"
+  },
+  {
+    "id": "promise-013",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between .catch(onRejected) and .then(undefined, onRejected)?",
+    "options": [
+      "They behave identically, but .catch can also catch errors from the preceding then, which is the practical difference in positioning",
+      ".catch catches synchronous errors too but .then's second argument only catches async errors",
+      ".catch collects multiple errors into an array",
+      ".then's second argument is deprecated and can no longer be used"
+    ],
+    "correctIndex": 0,
+    "explanation": ".catch(fn) is shorthand for .then(undefined, fn) and is identical per the spec. The practical difference is in chain positioning. In p.then(onFulfilled, onRejected), onRejected cannot catch errors thrown in the same then's onFulfilled. But in p.then(onFulfilled).catch(onRejected), catch can catch errors from then's onFulfilled. This is why .catch() at the end of the chain is the idiomatic approach.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch"
+  },
+  {
+    "id": "promise-014",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the shape of each element in the result array of Promise.allSettled()?",
+    "options": [
+      "{ resolved: boolean, data: any }",
+      "{ status: 'fulfilled', value } or { status: 'rejected', reason }",
+      "The fulfilled value or an Error object",
+      "{ success: boolean, result: any }"
+    ],
+    "correctIndex": 1,
+    "explanation": "Promise.allSettled() waits for all Promises to settle and returns each result in a standard format. Fulfilled cases are { status: 'fulfilled', value }, and rejected cases are { status: 'rejected', reason }. The status field serves as a discriminated union, which can be leveraged for type narrowing in TypeScript.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled"
+  },
+  {
+    "id": "promise-015",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "Promise.reject('fail')\n  .catch(e => {\n    console.log('caught:', e);\n    return 'recovered';\n  })\n  .then(v => console.log('then:', v))\n  .catch(e => console.log('catch2:', e));",
+    "options": [
+      "caught: fail, catch2: recovered",
+      "caught: fail",
+      "caught: fail, then: recovered",
+      "catch2: fail"
+    ],
+    "correctIndex": 2,
+    "explanation": "When a catch handler returns a value, the error is 'recovered'. The first catch handles reject('fail'), outputs 'caught: fail', and returns 'recovered'. The return value from catch becomes a fulfilled Promise, so the next then receives 'recovered' and outputs 'then: recovered'. The second catch does not execute. This pattern is called error recovery.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises#error_handling"
+  },
+  {
+    "id": "promise-016",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What causes the unintended behavior in the following code?",
+    "code": "function getUser(id) {\n  return fetch(`/api/users/${id}`)\n    .then(res => {\n      if (!res.ok) {\n        throw new Error('Not found');\n      }\n      res.json(); // 의도: 파싱된 JSON 반환\n    });\n}",
+    "options": [
+      "fetch works synchronously",
+      "The res.ok check is incorrect",
+      "throw new Error is used without a catch",
+      "res.json() is missing return, so the next then receives undefined"
+    ],
+    "correctIndex": 3,
+    "explanation": "Inside the then callback, res.json() returns a Promise, but without the return keyword, this value is discarded. The callback implicitly returns undefined, and the next then receives undefined. The correct code is 'return res.json();'. This mistake often occurs when confusing arrow function implicit returns (without { }) with explicit returns.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises#common_mistakes"
+  },
+  {
+    "id": "promise-017",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "How are Promise then callbacks scheduled in the event loop?",
+    "options": [
+      "Registered in the microtask queue, executing after the current execution context completes but before the next macrotask",
+      "Registered in the macrotask queue, executing with the same priority as setTimeout callbacks",
+      "Executed immediately and synchronously when the call stack is empty",
+      "Executed separately in a Web Worker thread"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise then/catch/finally callbacks are registered in the microtask queue. After the currently executing task completes, all microtask queue items are processed before the next macrotask (setTimeout, I/O, etc.). This is why Promise callbacks always execute before setTimeout(fn, 0). This is defined by the ECMAScript spec's HostEnqueuePromiseJob.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide"
+  },
+  {
+    "id": "promise-018",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the behavior of Promise.prototype.finally() is correct?",
+    "options": [
+      "The finally callback receives the fulfillment value or rejection reason as an argument",
+      "finally only executes when the Promise fulfills, not when it rejects",
+      "The finally callback's return value becomes the next chain's value",
+      "The finally callback is called with no arguments and passes through the previous Promise's value"
+    ],
+    "correctIndex": 3,
+    "explanation": "The finally() callback receives no arguments and always executes whether the Promise fulfills or rejects. The callback's return value is ignored, and the previous Promise's fulfillment value or rejection reason passes through to the next chain as-is. However, if the finally callback throws an error or returns a rejected Promise, the chain rejects with that error. It is suitable for cleanup logic.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally"
+  },
+  {
+    "id": "promise-019",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the error handling difference between async/await and Promise.then() chaining is correct?",
+    "options": [
+      "async/await automatically ignores errors while then chaining propagates them",
+      "then chaining errors cannot be caught with try/catch",
+      "async/await handles errors with try/catch like synchronous code, then chaining uses .catch() method",
+      "async/await terminates the process on error while then chaining continues execution"
+    ],
+    "correctIndex": 2,
+    "explanation": "async/await allows handling asynchronous errors with try/catch blocks just like synchronous code. With then chaining, errors are handled using .catch() method or the second argument of .then(). Both internally deal with Promise rejections, but async/await provides a more intuitive control flow that helps prevent missed error handling.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Promises"
+  },
+  {
+    "id": "promise-020",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the anti-pattern in the following code?",
+    "code": "function readData(url) {\n  return new Promise((resolve, reject) => {\n    fetch(url)\n      .then(res => res.json())\n      .then(data => resolve(data))\n      .catch(err => reject(err));\n  });\n}",
+    "options": [
+      "fetch does not return a Promise, so wrapping with new Promise is needed",
+      "Calling reject in catch causes an infinite loop",
+      "res.json() is synchronous so then is unnecessary",
+      "fetch already returns a Promise, so the unnecessary Promise wrapping is the explicit construction anti-pattern"
+    ],
+    "correctIndex": 3,
+    "explanation": "fetch() already returns a Promise, so wrapping it with new Promise is unnecessary. This is known as the 'explicit construction anti-pattern' or 'Promise constructor anti-pattern'. The correct code is simply return fetch(url).then(res => res.json()). Unnecessary wrapping makes code more complex, increases the risk of missed error handling, and creates unnecessarily deep stack traces during debugging.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises#common_mistakes"
+  }
+]

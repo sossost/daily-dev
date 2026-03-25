@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
@@ -17,6 +18,8 @@ export function LoginModal({
   onGoogle,
   onGitHub,
 }: LoginModalProps) {
+  const t = useTranslations("auth");
+  const commonT = useTranslations("common");
   const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,17 +61,17 @@ export function LoginModal({
               className="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-sm shadow-xl outline-none"
               role="dialog"
               aria-modal="true"
-              aria-label="로그인"
+              aria-label={t("loginTitle")}
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                  로그인
+                  {t("loginTitle")}
                 </h2>
                 <button
                   type="button"
                   onClick={onClose}
                   className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg"
-                  aria-label="닫기"
+                  aria-label={commonT("close")}
                 >
                   <X size={20} />
                 </button>
@@ -81,7 +84,7 @@ export function LoginModal({
                   className="flex items-center justify-center gap-3 w-full py-3 px-4 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
                 >
                   <GoogleIcon />
-                  Google로 계속하기
+                  {t("continueWithGoogle")}
                 </button>
                 <button
                   type="button"
@@ -89,12 +92,12 @@ export function LoginModal({
                   className="flex items-center justify-center gap-3 w-full py-3 px-4 rounded-xl bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
                 >
                   <GitHubIcon />
-                  GitHub로 계속하기
+                  {t("continueWithGitHub")}
                 </button>
               </div>
 
               <p className="mt-4 text-center text-xs text-gray-400 dark:text-gray-500">
-                로그인하면 다른 기기에서도 학습 기록을 이어갈 수 있습니다
+                {t("syncDescription")}
               </p>
             </div>
           </motion.div>

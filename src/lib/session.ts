@@ -5,6 +5,7 @@
  */
 import type { Question, SessionQuestion, SRSRecord, Topic } from '@/types'
 import { SESSION_TOTAL_QUESTIONS, SESSION_REVIEW_QUESTIONS } from '@/types'
+import type { Locale } from '@/i18n/routing'
 import { getToday, isBeforeOrEqual } from '@/lib/date'
 import { getAllQuestions } from '@/lib/questions'
 import { shuffle } from '@/lib/shuffle'
@@ -41,8 +42,9 @@ export function selectReviewQuestions(
   srsRecords: Record<string, SRSRecord>,
   today: string,
   topicFilter?: readonly Topic[],
+  locale?: Locale,
 ): Question[] {
-  const allQuestions = getAllQuestions()
+  const allQuestions = getAllQuestions(locale)
   const questionsById = new Map(allQuestions.map((q) => [q.id, q]))
   const topicSet = topicFilter != null ? new Set(topicFilter) : null
 
@@ -69,8 +71,9 @@ export function selectReviewQuestions(
 export function selectNewQuestions(
   srsRecords: Record<string, SRSRecord>,
   topicFilter?: readonly Topic[],
+  locale?: Locale,
 ): Question[] {
-  const allQuestions = getAllQuestions()
+  const allQuestions = getAllQuestions(locale)
   const attemptedIds = new Set(Object.keys(srsRecords))
   const topicSet = topicFilter != null ? new Set(topicFilter) : null
 
@@ -96,14 +99,15 @@ export function selectNewQuestions(
 export function generateSession(
   srsRecords: Record<string, SRSRecord>,
   topicFilter?: readonly Topic[],
+  locale?: Locale,
 ): SessionQuestion[] {
   const today = getToday()
 
-  const reviewQuestions = selectReviewQuestions(srsRecords, today, topicFilter)
+  const reviewQuestions = selectReviewQuestions(srsRecords, today, topicFilter, locale)
   const limitedReviews = reviewQuestions.slice(0, SESSION_REVIEW_QUESTIONS)
 
   const remainingCount = SESSION_TOTAL_QUESTIONS - limitedReviews.length
-  const newQuestions = selectNewQuestions(srsRecords, topicFilter).slice(0, remainingCount)
+  const newQuestions = selectNewQuestions(srsRecords, topicFilter, locale).slice(0, remainingCount)
 
   const sessionQuestions: SessionQuestion[] = [
     ...limitedReviews.map((question) => ({

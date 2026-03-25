@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CloudUpload } from 'lucide-react'
 import { getIsAuthenticated } from '@/lib/supabase/currentUser'
@@ -40,6 +41,7 @@ function incrementDisplayCount(): void {
 }
 
 export function LoginNudge() {
+  const t = useTranslations('auth')
   const [visible, setVisible] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { signInWithGoogle, signInWithGitHub } = useAuth()
@@ -77,19 +79,19 @@ export function LoginNudge() {
               <CloudUpload size={16} className="shrink-0 mt-0.5 text-amber-500 dark:text-amber-400" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-amber-800 dark:text-amber-200">
-                  로그인하면 다른 기기에서도 학습 기록을 이어갈 수 있어요
+                  {t('loginNudge')}
                 </p>
                 <button
                   onClick={() => setIsModalOpen(true)}
                   className="mt-2 text-xs font-medium text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-200 transition-colors"
                 >
-                  로그인하기 →
+                  {t('loginAction')} →
                 </button>
               </div>
               <button
                 onClick={handleDismiss}
                 className="shrink-0 text-amber-400 dark:text-amber-500 hover:text-amber-600 dark:hover:text-amber-300 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 rounded"
-                aria-label="로그인 안내 닫기"
+                aria-label={t('dismissLoginNudge')}
               >
                 ✕
               </button>

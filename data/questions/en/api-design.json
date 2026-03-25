@@ -1,0 +1,407 @@
+[
+  {
+    "id": "api-design-001",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the most appropriate URI to represent a resource collection in a REST API?",
+    "options": [
+      "/getUsers",
+      "/users",
+      "/user/list",
+      "/api/fetchAllUsers"
+    ],
+    "correctIndex": 1,
+    "explanation": "In REST APIs, resources are represented as nouns and collections use the plural form. Verbs (get, fetch) should not be included in the URI; actions are expressed through HTTP methods (GET, POST, etc.). /users is a RESTful URI that clearly represents the users collection.",
+    "sourceUrl": "https://restfulapi.net/resource-naming/"
+  },
+  {
+    "id": "api-design-002",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "In which situation should HTTP status code 201 be returned?",
+    "options": [
+      "When the request was processed successfully",
+      "When the requested resource has moved to a different location",
+      "When a new resource has been successfully created",
+      "When the server understood the request but refused to process it"
+    ],
+    "correctIndex": 2,
+    "explanation": "201 Created is returned when a new resource has been successfully created on the server, typically via a POST request. General success uses 200 OK, redirects use 301/302, and request refusal uses 403 Forbidden.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201"
+  },
+  {
+    "id": "api-design-003",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which HTTP method does NOT have idempotency in REST APIs?",
+    "options": [
+      "GET",
+      "PUT",
+      "DELETE",
+      "POST"
+    ],
+    "correctIndex": 3,
+    "explanation": "Idempotency means that sending the same request multiple times produces the same result. GET, PUT, and DELETE are idempotent, but POST creates a new resource with each request, so it is not idempotent.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Idempotent"
+  },
+  {
+    "id": "api-design-004",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which is a correct example of API versioning using the URI path approach?",
+    "options": [
+      "GET /users (Header: API-Version: 2)",
+      "GET /v2/users",
+      "GET /users?version=2",
+      "GET /users (Accept: application/vnd.api.v2+json)"
+    ],
+    "correctIndex": 1,
+    "explanation": "URI path versioning includes the version number in the path, like /v1/users or /v2/users. It is the most intuitive and widely used approach, though it has the drawback of changing the URI. Other approaches include header-based, query parameter, and content negotiation methods.",
+    "sourceUrl": "https://restfulapi.net/versioning/"
+  },
+  {
+    "id": "api-design-005",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the differences between REST API and GraphQL is NOT correct?",
+    "options": [
+      "REST uses multiple endpoints, while GraphQL uses a single endpoint",
+      "GraphQL allows clients to specify the exact structure of data they need",
+      "REST distinguishes operation types using HTTP methods, while GraphQL uses Query/Mutation",
+      "GraphQL always guarantees faster response times than REST"
+    ],
+    "correctIndex": 3,
+    "explanation": "The claim that GraphQL is always faster is not true. While GraphQL can reduce over-fetching for better network efficiency, complex queries can increase server load. Performance depends on usage patterns, caching strategies, and server implementation.",
+    "sourceUrl": "https://www.apollographql.com/blog/graphql-vs-rest"
+  },
+  {
+    "id": "api-design-006",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "In the following code, if the correct Content-Type header is set for the API request, what format will the request body be in when received by the server?",
+    "code": "fetch('/api/users', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({ name: 'Kim', age: 25 })\n});",
+    "options": [
+      "name=Kim&age=25",
+      "<name>Kim</name><age>25</age>",
+      "FormData object",
+      "{\"name\":\"Kim\",\"age\":25}"
+    ],
+    "correctIndex": 3,
+    "explanation": "Using the Content-Type: application/json header with JSON.stringify() sends the request body as a JSON string. The server parses this and converts it into an object. application/x-www-form-urlencoded uses the key=value format, and multipart/form-data uses FormData.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch"
+  },
+  {
+    "id": "api-design-007",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the advantage of cursor-based pagination when implementing pagination in a REST API?",
+    "options": [
+      "It is simpler to implement than offset-based pagination",
+      "It allows jumping directly to any page",
+      "It guarantees consistent results even when data is added or deleted",
+      "It makes it easy to know the total data count"
+    ],
+    "correctIndex": 2,
+    "explanation": "Cursor-based pagination fetches the next set of data based on a unique identifier of a specific record, providing consistent results without duplicates or omissions even when data is added or deleted in between. In contrast, offset-based pagination can produce duplicates or skip items when data changes.",
+    "sourceUrl": "https://slack.engineering/evolving-api-pagination-at-slack/"
+  },
+  {
+    "id": "api-design-008",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the problem with the following API response design?\n\nSuccess: { \"data\": [...], \"status\": 200 }\nFailure: { \"error\": true, \"message\": \"Not found\" }\nServer Error: { \"err\": \"Internal error\", \"code\": 500 }",
+    "options": [
+      "Status codes should not be included in the response body",
+      "Error messages should not be exposed to the client",
+      "The structure of success and failure responses is inconsistent",
+      "XML should be used instead of JSON"
+    ],
+    "correctIndex": 2,
+    "explanation": "API response formats should have a consistent structure for both success and failure. In the example above, the failure response uses 'error' and 'message', while the server error uses 'err' and 'code' — the field names are different. A consistent error format (e.g., { error: { code, message } }) should be used so that clients can handle errors predictably.",
+    "sourceUrl": "https://google.aip.dev/193"
+  },
+  {
+    "id": "api-design-009",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the main reason for separating Access Tokens and Refresh Tokens in OAuth 2.0?",
+    "options": [
+      "To minimize damage from token theft by setting a short lifetime on access tokens",
+      "Because refresh tokens are encrypted and therefore more secure",
+      "Because refresh tokens can only be verified on the client side",
+      "To store access tokens in the database and keep refresh tokens only in memory"
+    ],
+    "correctIndex": 0,
+    "explanation": "Access tokens have a short validity period (usually minutes to hours), so even if stolen, the damage is minimized. Refresh tokens have a longer validity period and are used only to obtain new access tokens. This separation balances security and user experience.",
+    "sourceUrl": "https://oauth.net/2/access-tokens/"
+  },
+  {
+    "id": "api-design-010",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the correct response for the following GraphQL query?",
+    "code": "query {\n  user(id: \"1\") {\n    name\n    posts {\n      title\n    }\n  }\n}",
+    "options": [
+      "{ \"user\": { \"id\": \"1\", \"name\": \"Kim\", \"email\": \"kim@test.com\", \"posts\": [...] } }",
+      "[{ \"name\": \"Kim\", \"title\": \"Hello\" }]",
+      "{ \"name\": \"Kim\", \"posts\": [\"Hello\"] }",
+      "{ \"data\": { \"user\": { \"name\": \"Kim\", \"posts\": [{ \"title\": \"Hello\" }] } } }"
+    ],
+    "correctIndex": 3,
+    "explanation": "GraphQL returns exactly the fields requested by the client. Since the query only requested name and posts.title, fields like id and email are not included. Also, GraphQL responses are always wrapped in a { data: { ... } } structure.",
+    "sourceUrl": "https://graphql.org/learn/queries/"
+  },
+  {
+    "id": "api-design-011",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What correctly describes the difference between 'Token Bucket' and 'Fixed Window' algorithms when implementing API rate limiting?",
+    "options": [
+      "Token Bucket allows burst traffic by refilling tokens at a steady rate, while Fixed Window only limits the number of requests in a fixed time window",
+      "Fixed Window always guarantees more accurate rate limiting than Token Bucket",
+      "Token Bucket uses less memory, making it more suitable for large-scale systems",
+      "Fixed Window naturally handles burst traffic, while Token Bucket cannot"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Token Bucket algorithm refills tokens at a constant rate and consumes tokens per request. If tokens have accumulated, temporary bursts of traffic are allowed. Fixed Window counts requests within a fixed time interval (e.g., 1 minute) and limits them, but has the issue of up to double the requests concentrating at window boundaries.",
+    "sourceUrl": "https://cloud.google.com/architecture/rate-limiting-strategies-techniques"
+  },
+  {
+    "id": "api-design-012",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Which of the following REST API endpoint designs violates RESTful principles?\n\n1. GET /users/:id/orders\n2. POST /users/:id/deactivate\n3. PUT /orders/:id\n4. DELETE /users/:id",
+    "options": [
+      "#1 — Nested resource paths are not RESTful",
+      "#3 — Using PUT to modify a resource is not RESTful",
+      "#2 — A verb (deactivate) is used in the URI",
+      "#4 — DELETE should not be used in RESTful APIs"
+    ],
+    "correctIndex": 2,
+    "explanation": "In REST, URIs should be nouns representing resources, and actions should be expressed through HTTP methods. 'deactivate' is a verb, making it non-RESTful. Instead, use something like PATCH /users/:id { \"active\": false } or PUT /users/:id/status { \"active\": false } to change the resource state.",
+    "sourceUrl": "https://restfulapi.net/rest-api-design-tutorial-with-example/"
+  },
+  {
+    "id": "api-design-013",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the core concept of HATEOAS (Hypermedia As The Engine Of Application State)?",
+    "options": [
+      "API responses include hypermedia links so that clients can discover possible next actions",
+      "API requests always include an Accept header to perform content negotiation",
+      "All API resources are assigned a unique ETag to optimize caching",
+      "API authentication uses hypermedia tokens to enhance security"
+    ],
+    "correctIndex": 0,
+    "explanation": "HATEOAS is the highest level of REST maturity (Level 3), where API responses include links to related resources so that clients can navigate the API without hardcoding. For example, an order query response includes links for payment, cancellation, etc., allowing the client to dynamically discover next actions.",
+    "sourceUrl": "https://restfulapi.net/hateoas/"
+  },
+  {
+    "id": "api-design-014",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which correctly describes the difference between JWT (JSON Web Token) and session-based authentication?",
+    "options": [
+      "JWT does not store state on the server, but it is difficult to invalidate a token before it expires",
+      "Session-based authentication is easier to scale than JWT",
+      "JWT is always more secure than session-based authentication",
+      "Session-based authentication does not store data on the client"
+    ],
+    "correctIndex": 0,
+    "explanation": "JWT includes user information within the token itself, so there is no need to store state (sessions) on the server, making horizontal scaling easier. However, once issued, a token is difficult to invalidate before expiration, requiring separate blacklist management. With sessions, deleting the session on the server immediately invalidates it.",
+    "sourceUrl": "https://jwt.io/introduction"
+  },
+  {
+    "id": "api-design-015",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "What problem can occur with the following API request?\n\nDELETE /api/users?id=1&id=2&id=3",
+    "options": [
+      "The DELETE method cannot use query parameters",
+      "Deleting multiple resources in a single request makes it difficult to handle individual deletion failures",
+      "Numbers cannot be used in query parameters",
+      "DELETE requests must always include a body"
+    ],
+    "correctIndex": 1,
+    "explanation": "When deleting multiple resources in a single DELETE request, it becomes difficult to communicate to the client which resources succeeded and which failed if only some are deleted. It also complicates idempotency guarantees. It is better to call DELETE /api/users/:id for each resource individually or design a dedicated batch delete endpoint.",
+    "sourceUrl": "https://google.aip.dev/235"
+  },
+  {
+    "id": "api-design-016",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "In the following fetch code, what value is logged to the console when response.ok is false?",
+    "code": "fetch('/api/users/999')\n  .then(response => {\n    if (!response.ok) {\n      console.log(response.status);\n      throw new Error('Not found');\n    }\n    return response.json();\n  })\n  .catch(err => console.log(err.message));",
+    "options": [
+      "undefined then 'Not found'",
+      "404 then 'Not found'",
+      "Only 'Not found' is logged",
+      "Only 404 is logged"
+    ],
+    "correctIndex": 1,
+    "explanation": "When the server returns a 404 status code for a non-existent resource, response.ok becomes false. First, console.log(response.status) outputs 404, then throw new Error('Not found') triggers the catch block where err.message outputs 'Not found'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Response/ok"
+  },
+  {
+    "id": "api-design-017",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which correctly describes the difference between PUT and PATCH methods in REST APIs?",
+    "options": [
+      "PUT is used for resource creation and PATCH for resource deletion",
+      "PUT replaces the entire resource, while PATCH modifies only part of the resource",
+      "PATCH guarantees idempotency but PUT does not",
+      "PUT does not require a request body but PATCH does"
+    ],
+    "correctIndex": 1,
+    "explanation": "PUT replaces the entire resource with a new representation. Fields not included in the request are reset to default values or deleted. PATCH modifies only some fields of the resource, updating only the fields included in the request. For example, PATCH is appropriate when only changing a user's name.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PATCH"
+  },
+  {
+    "id": "api-design-018",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "In the following code that uses AbortController to cancel an API request, what is the name property of the error logged in the catch block?",
+    "code": "const controller = new AbortController();\nfetch('/api/data', { signal: controller.signal })\n  .catch(err => console.log(err.name));\ncontroller.abort();",
+    "options": [
+      "'Error'",
+      "'TypeError'",
+      "'AbortError'",
+      "'NetworkError'"
+    ],
+    "correctIndex": 2,
+    "explanation": "When AbortController's abort() method is called, the connected fetch request is cancelled and a DOMException named AbortError is thrown. This enables patterns such as cancelling previous requests when a user navigates away from a page or changes a search query.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/AbortController"
+  },
+  {
+    "id": "api-design-019",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What situation does HTTP status code 429 indicate?",
+    "options": [
+      "An internal server error occurred",
+      "The requested resource could not be found",
+      "The client sent too many requests",
+      "The request format is invalid"
+    ],
+    "correctIndex": 2,
+    "explanation": "429 Too Many Requests is returned when the client has sent too many requests within a given time period. It is commonly seen in APIs with rate limiting applied, and is usually returned with a Retry-After header so the client knows when to retry.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429"
+  },
+  {
+    "id": "api-design-020",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is causing the CORS error in the following API request code?\n\nfetch('https://other-domain.com/api/data', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({ key: 'value' })\n});",
+    "options": [
+      "The POST method cannot be used in cross-origin requests",
+      "JSON.stringify() generates an invalid format",
+      "The server does not include the Access-Control-Allow-Origin header in its response",
+      "The Fetch API does not support cross-origin requests"
+    ],
+    "correctIndex": 2,
+    "explanation": "A CORS (Cross-Origin Resource Sharing) error occurs when the server does not include the appropriate Access-Control-Allow-Origin header in its response. Browsers block access to resources from different origins by default, and the server must explicitly allow it. Content-Type: application/json triggers a preflight request, making the server's CORS configuration even more critical.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS"
+  },
+  {
+    "id": "api-design-021",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which correctly describes the difference between WebSocket and Server-Sent Events (SSE)?",
+    "options": [
+      "SSE supports bidirectional communication while WebSocket only supports unidirectional",
+      "WebSocket only works with HTTP/2, while SSE also works with HTTP/1.1",
+      "WebSocket supports bidirectional communication, while SSE only supports unidirectional communication from server to client",
+      "SSE supports binary data while WebSocket only supports text"
+    ],
+    "correctIndex": 2,
+    "explanation": "WebSocket supports full-duplex bidirectional communication between client and server. SSE only supports unidirectional streaming from server to client and operates over HTTP. SSE provides automatic reconnection and event ID tracking by default, making it suitable for cases where only the server-to-client direction is needed, such as notifications or real-time feeds.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events"
+  },
+  {
+    "id": "api-design-022",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "In the following code, what is the maximum number of times the retry function can call fetch?",
+    "code": "async function retry(url, maxRetries = 3) {\n  for (let i = 0; i <= maxRetries; i++) {\n    try {\n      const res = await fetch(url);\n      if (res.ok) return await res.json();\n      throw new Error(`HTTP ${res.status}`);\n    } catch (err) {\n      if (i === maxRetries) throw err;\n    }\n  }\n}",
+    "options": [
+      "3 times",
+      "4 times",
+      "2 times",
+      "Infinite loop"
+    ],
+    "correctIndex": 1,
+    "explanation": "In the for loop, i iterates from 0 to maxRetries (3) inclusive. This means i = 0, 1, 2, 3, for a total of 4 fetch calls. The first attempt (i=0) is followed by up to 3 retries. When i === maxRetries (3), it is the last attempt, and if it also fails, the error is thrown.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch"
+  },
+  {
+    "id": "api-design-023",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the primary purpose of the ETag header in API design?",
+    "options": [
+      "To transmit the API request's authentication token",
+      "To measure the server's response time",
+      "To identify the version of a resource, supporting conditional requests and caching",
+      "To track the client's session ID"
+    ],
+    "correctIndex": 2,
+    "explanation": "ETag (Entity Tag) is an HTTP header that identifies a specific version of a resource. The client can include the ETag value in an If-None-Match header for conditional requests, and if the resource hasn't changed, the server returns 304 Not Modified to save bandwidth. When used with If-Match, it can also prevent concurrent modifications.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag"
+  },
+  {
+    "id": "api-design-024",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Why does the following fetch code fail to correctly read the response body?\n\nfetch('/api/data')\n  .then(response => {\n    console.log(response.json());\n  });",
+    "options": [
+      "The Fetch API does not support the .json() method",
+      "response.json() returns a Promise that is not handled before being logged",
+      "JSON responses cannot be received from GET requests",
+      "The response object should be directly logged with console.log"
+    ],
+    "correctIndex": 1,
+    "explanation": "response.json() returns a Promise. In the code above, this Promise is passed directly to console.log without being awaited or handled with .then(), so a Promise object is logged instead of the actual parsed data. Use response.json().then(data => console.log(data)) or async/await.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Response/json"
+  },
+  {
+    "id": "api-design-025",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which correctly describes the criteria for using query parameters vs. path parameters in API design?",
+    "options": [
+      "Query parameters are for required values, and path parameters are for optional values",
+      "Path parameters are used to identify resources, while query parameters are used to filter or sort resources",
+      "Query parameters are for sensitive data, and path parameters are for public data",
+      "Path parameters can only pass strings, while query parameters can only pass numbers"
+    ],
+    "correctIndex": 1,
+    "explanation": "Path parameters (/users/:id) are used to uniquely identify a specific resource. Query parameters (/users?role=admin&sort=name) are used to filter, sort, and paginate resource collections. This distinction clarifies the meaning of URIs and improves API consistency.",
+    "sourceUrl": "https://restfulapi.net/resource-naming/"
+  }
+]

@@ -1,0 +1,413 @@
+[
+  {
+    "id": "browser-api-001",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the biggest difference between localStorage and sessionStorage?",
+    "options": [
+      "localStorage persists data even after the browser is closed, while sessionStorage is deleted when the tab is closed",
+      "localStorage can store up to 5MB, while sessionStorage can store up to 10MB",
+      "localStorage is synchronous, while sessionStorage is asynchronous",
+      "localStorage can only store strings, while sessionStorage can also store objects"
+    ],
+    "correctIndex": 0,
+    "explanation": "localStorage stores data permanently unless explicitly deleted. sessionStorage automatically deletes data when the page session ends (when the tab or browser is closed). Both APIs provide the same methods (setItem, getItem, removeItem).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API"
+  },
+  {
+    "id": "browser-api-002",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "localStorage.setItem('count', 42);\nconsole.log(typeof localStorage.getItem('count'));",
+    "options": [
+      "number",
+      "string",
+      "object",
+      "undefined"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Web Storage API stores all values as strings. Even if the number 42 is passed to setItem, it is internally converted to the string '42'. Therefore, the typeof value retrieved by getItem is 'string'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem"
+  },
+  {
+    "id": "browser-api-003",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the primary purpose of requestAnimationFrame?",
+    "options": [
+      "To provide a more accurate timer than setTimeout",
+      "To control CSS animations with JavaScript",
+      "To execute a callback before the browser's next repaint for smooth animations",
+      "To run multiple animations in parallel simultaneously"
+    ],
+    "correctIndex": 2,
+    "explanation": "requestAnimationFrame calls a callback function before the browser performs its next repaint. It is typically called about 60 times per second (60fps) and runs in sync with the browser's rendering cycle, enabling smoother and more efficient animations than setTimeout.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame"
+  },
+  {
+    "id": "browser-api-004",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which of the following is NOT a primary use case for the IntersectionObserver API?",
+    "options": [
+      "Image lazy loading",
+      "Infinite scroll implementation",
+      "Detecting size changes of DOM elements",
+      "Triggering animations when an element enters the viewport"
+    ],
+    "correctIndex": 2,
+    "explanation": "Detecting size changes of DOM elements is the role of ResizeObserver. IntersectionObserver asynchronously observes changes in the intersection state between a target element and its ancestor element or viewport. It is primarily used for lazy loading, infinite scroll, and visibility-based animations.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API"
+  },
+  {
+    "id": "browser-api-005",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about Web Workers is NOT correct?",
+    "options": [
+      "They execute scripts in a separate thread from the main thread",
+      "They communicate with the main thread via postMessage",
+      "They can directly access the DOM",
+      "They can perform CPU-intensive tasks without blocking the main thread"
+    ],
+    "correctIndex": 2,
+    "explanation": "Web Workers cannot directly access the DOM. Workers run in a separate global context (DedicatedWorkerGlobalScope) and cannot access the window or document objects. They can only communicate with the main thread through the postMessage API.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"
+  },
+  {
+    "id": "browser-api-006",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output order of the following code?",
+    "code": "console.log('1');\n\nconst observer = new MutationObserver(() => {\n  console.log('2');\n});\n\nconst div = document.createElement('div');\nobserver.observe(div, { childList: true });\ndiv.appendChild(document.createElement('span'));\n\nPromise.resolve().then(() => console.log('3'));\n\nconsole.log('4');",
+    "options": [
+      "1, 4, 2, 3",
+      "1, 4, 3, 2",
+      "1, 2, 4, 3",
+      "1, 4, 2, 3 or 1, 4, 3, 2 (varies by browser)"
+    ],
+    "correctIndex": 0,
+    "explanation": "MutationObserver callbacks are executed as microtasks. Synchronous code (1, 4) runs first, then in the microtask queue, the MutationObserver callback (2) was queued before Promise.then (3), so 2 runs first. Microtasks are processed in the order they were queued.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver"
+  },
+  {
+    "id": "browser-api-007",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Why does response.json() in the Fetch API return a Promise?",
+    "options": [
+      "Because JSON parsing is always performed asynchronously",
+      "Because the response body is a stream that must be fully read before parsing",
+      "Because the network request might not be complete yet",
+      "Because JSON parsing is performed in a Web Worker"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Fetch API's Response object provides the body as a ReadableStream. response.json() needs to read all data from the stream, convert it to text, and then parse it as JSON. Since reading from a stream is an asynchronous operation, it returns a Promise.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Response/json"
+  },
+  {
+    "id": "browser-api-008",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "The following code attempts to cancel a fetch request using AbortController. What is the issue?",
+    "code": "const controller = new AbortController();\n\nfetch('/api/data', { signal: controller.signal })\n  .then(res => res.json())\n  .then(data => console.log(data))\n  .catch(err => console.log('Error:', err.message));\n\ncontroller.abort();\n// 예상: 요청이 취소되고 에러 출력\n// 실제: 'Error: The user aborted a request.' 출력",
+    "options": [
+      "The AbortController must be created before the fetch call",
+      "There is no issue — the code works correctly and the error is logged as expected",
+      "The controller itself should be passed instead of signal",
+      "abort() is an async function and must be awaited"
+    ],
+    "correctIndex": 1,
+    "explanation": "This code actually works correctly. controller.abort() is called synchronously, immediately cancelling the fetch request, and the AbortError is caught in the catch block. 'The user aborted a request.' is the standard AbortError message. In real applications, abort() is typically called on a timeout or user action.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/AbortController"
+  },
+  {
+    "id": "browser-api-009",
+    "topic": "browser-api",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What happens when you pass { once: true } as the third argument to addEventListener?",
+    "options": [
+      "The event is restricted to fire only once",
+      "It prevents the same listener from being registered more than once",
+      "The event is handled only once during the capturing phase",
+      "The listener is automatically removed after being invoked once"
+    ],
+    "correctIndex": 3,
+    "explanation": "When the { once: true } option is used, the event listener is automatically removed (via removeEventListener) after its first invocation. The event itself continues to fire, but the listener only executes once. This eliminates the need to manually call removeEventListener and is useful for preventing memory leaks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener"
+  },
+  {
+    "id": "browser-api-010",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the correct order of the Service Worker lifecycle?",
+    "options": [
+      "installing -> activated -> waiting -> redundant",
+      "installing -> waiting -> activating -> activated",
+      "registered -> installing -> activated -> idle",
+      "downloading -> installing -> active -> terminated"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Service Worker lifecycle follows the order: installing -> waiting -> activating -> activated. After installation, if a previous version is still active, it waits in the waiting state. Once the previous version is removed, it goes through activating to the activated state. Calling skipWaiting() can skip the waiting phase.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers"
+  },
+  {
+    "id": "browser-api-011",
+    "topic": "browser-api",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which correctly describes the difference between structuredClone() and JSON.parse(JSON.stringify())?",
+    "options": [
+      "structuredClone can clone circular references, while the JSON method throws an error",
+      "The JSON method is always faster",
+      "structuredClone can also clone functions",
+      "The JSON method can correctly clone Date objects"
+    ],
+    "correctIndex": 0,
+    "explanation": "structuredClone() uses the structured clone algorithm to correctly clone circular references, Date, RegExp, Map, Set, ArrayBuffer, and more. The JSON method throws a TypeError on circular references, converts Date to strings, and removes undefined and functions. However, structuredClone also cannot clone functions or DOM nodes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/structuredClone"
+  },
+  {
+    "id": "browser-api-012",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the value of entries[0].isIntersecting when the observer's callback is first invoked in the following code?",
+    "code": "const div = document.createElement('div');\ndocument.body.appendChild(div);\n// div는 뷰포트 밖에 위치 (스크롤 필요)\ndiv.style.marginTop = '200vh';\n\nconst observer = new IntersectionObserver((entries) => {\n  console.log(entries[0].isIntersecting);\n});\nobserver.observe(div);",
+    "options": [
+      "true",
+      "false",
+      "undefined",
+      "The callback is not invoked"
+    ],
+    "correctIndex": 1,
+    "explanation": "IntersectionObserver fires an initial callback immediately when observe() is called. If the target element does not intersect with the viewport at that time, isIntersecting is false. Since the div's marginTop is 200vh, it is outside the viewport, so false is logged. This initial callback serves to report the current visibility state.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/observe"
+  },
+  {
+    "id": "browser-api-013",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The following code attempts to communicate between tabs using BroadcastChannel. What is the issue?",
+    "code": "// Tab A\nconst channel = new BroadcastChannel('app');\nchannel.postMessage({ type: 'update', data: 'hello' });\nchannel.onmessage = (e) => console.log('A received:', e.data);\n\n// Tab B\nconst channel = new BroadcastChannel('app');\nchannel.onmessage = (e) => console.log('B received:', e.data);",
+    "options": [
+      "You cannot create channels with the same name in two tabs",
+      "Tab A sent the message before registering its listener, so Tab A itself will not receive the message",
+      "postMessage can only send strings, so passing an object will throw an error",
+      "BroadcastChannel only works within the same tab"
+    ],
+    "correctIndex": 1,
+    "explanation": "BroadcastChannel does not deliver messages to the same context that sent them. So Tab A's onmessage will only receive messages sent from other tabs. Additionally, Tab B's listener must be registered before Tab A's postMessage to receive the message. In real-time cross-tab communication, listeners should be registered first.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel"
+  },
+  {
+    "id": "browser-api-014",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Why is performance.now() from the Performance API more suitable for measuring performance than Date.now()?",
+    "options": [
+      "Because performance.now() executes faster",
+      "Because performance.now() can only be used in Web Workers",
+      "Because Date.now() executes asynchronously",
+      "Because performance.now() provides high-resolution timestamps in microsecond precision and is not affected by system clock changes"
+    ],
+    "correctIndex": 3,
+    "explanation": "performance.now() returns a DOMHighResTimeStamp with sub-millisecond (microsecond) precision. It is also a monotonic timestamp based on navigationStart, so it is not affected by system clock adjustments. Date.now() has only millisecond precision and can be affected by clock changes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Performance/now"
+  },
+  {
+    "id": "browser-api-015",
+    "topic": "browser-api",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about ResizeObserver, MutationObserver, and IntersectionObserver is correct?",
+    "options": [
+      "All three Observers execute their callbacks as macrotasks",
+      "Only MutationObserver executes as a microtask, while the other two execute as separate tasks",
+      "Only IntersectionObserver supports the threshold option",
+      "ResizeObserver can also detect content changes of elements"
+    ],
+    "correctIndex": 1,
+    "explanation": "MutationObserver callbacks execute as microtasks, processing synchronously right after DOM changes. IntersectionObserver and ResizeObserver execute as separate tasks (similar to macrotasks), called at appropriate points in the browser's rendering pipeline. These differences affect the performance characteristics and usage patterns of each Observer.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver"
+  },
+  {
+    "id": "browser-api-016",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const url = new URL('https://example.com/path?name=kim&age=25');\nconsole.log(url.searchParams.get('name'));\nconsole.log(url.searchParams.has('email'));",
+    "options": [
+      "kim, true",
+      "kim, false",
+      "null, false",
+      "'name=kim', true"
+    ],
+    "correctIndex": 1,
+    "explanation": "The URL object's searchParams returns a URLSearchParams instance. get('name') returns the value 'kim' for the query parameter 'name', and has('email') returns false since that parameter does not exist. URLSearchParams provides a convenient API for safely parsing and manipulating query strings.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams"
+  },
+  {
+    "id": "browser-api-017",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "The following code attempts to copy text using the Clipboard API. What is the issue?",
+    "code": "function copyText(text) {\n  navigator.clipboard.writeText(text);\n  alert('복사 완료!');\n}",
+    "options": [
+      "writeText returns a Promise, so the alert runs before the copy is completed",
+      "navigator.clipboard is a non-existent API",
+      "write should be used instead of writeText",
+      "text must be converted with JSON.stringify"
+    ],
+    "correctIndex": 0,
+    "explanation": "navigator.clipboard.writeText() is an asynchronous method that returns a Promise. The current code calls it without await, so the alert runs before the copy operation completes. Additionally, errors cannot be handled if the copy fails. You should use async/await or .then() to display the notification after the copy completes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText"
+  },
+  {
+    "id": "browser-api-018",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the difference between the History API's pushState() and replaceState()?",
+    "options": [
+      "pushState adds a new entry to the history stack, while replaceState replaces the current entry",
+      "pushState reloads the page, while replaceState does not",
+      "pushState only changes the URL, while replaceState changes both the URL and page content",
+      "pushState is synchronous, while replaceState is asynchronous"
+    ],
+    "correctIndex": 0,
+    "explanation": "pushState() adds a new entry to the browser's history stack, allowing the user to return to the previous state using the back button. replaceState() replaces the current history entry with a new one, so the previous state cannot be accessed via the back button. Neither method reloads the page.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/History/pushState"
+  },
+  {
+    "id": "browser-api-019",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const canvas = document.createElement('canvas');\nconst ctx = canvas.getContext('2d');\nconst ctx2 = canvas.getContext('webgl');\n\nconsole.log(ctx !== null);\nconsole.log(ctx2);",
+    "options": [
+      "true, WebGLRenderingContext object",
+      "true, null",
+      "false, WebGLRenderingContext object",
+      "An error is thrown"
+    ],
+    "correctIndex": 1,
+    "explanation": "When a '2d' context has already been obtained from a canvas element, attempting to get a 'webgl' context from the same canvas returns null. A canvas element can only have one type of rendering context at a time. The first getContext('2d') returns a valid CanvasRenderingContext2D, so ctx !== null is true.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext"
+  },
+  {
+    "id": "browser-api-020",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The following code attempts to use the Geolocation API. What issue could occur in a production environment?",
+    "code": "function getLocation() {\n  const position = navigator.geolocation.getCurrentPosition(\n    (pos) => {\n      return { lat: pos.coords.latitude, lng: pos.coords.longitude };\n    }\n  );\n  console.log(position);\n}",
+    "options": [
+      "getCurrentPosition only works over HTTPS, so an error occurs in HTTP environments",
+      "The coordinates property should be used instead of coords",
+      "getCurrentPosition is asynchronous and returns undefined, and without an error callback, a silent failure occurs if the user denies permission",
+      "navigator.geolocation is only available in mobile browsers"
+    ],
+    "correctIndex": 2,
+    "explanation": "getCurrentPosition is an asynchronous method with no return value (undefined). Location data is only passed as an argument to the success callback. Also, if an error callback is not provided, there is no feedback when the user denies location permission or the location cannot be retrieved. You should always provide an error handler as the second argument.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition"
+  },
+  {
+    "id": "browser-api-021",
+    "topic": "browser-api",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which correctly describes the difference between the Notification API and the Push API?",
+    "options": [
+      "They are different names for the same API",
+      "The Notification API handles displaying notifications, while the Push API handles sending messages from the server to the client",
+      "The Push API can be used without user permission",
+      "The Notification API requires a Service Worker, but the Push API does not"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Notification API provides the ability to display notifications to users through the operating system's notification system. The Push API provides the ability to push messages from the server to the client via a Service Worker. They are typically used together: the Push API receives a server message, and then the Notification API displays a notification to the user.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Push_API"
+  },
+  {
+    "id": "browser-api-022",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const text = new TextEncoder().encode('Hello');\nconst decoded = new TextDecoder().decode(text);\n\nconsole.log(text instanceof Uint8Array);\nconsole.log(text.length);\nconsole.log(decoded === 'Hello');",
+    "options": [
+      "true, 5, true",
+      "false, 5, true",
+      "true, 10, false",
+      "true, 5, false"
+    ],
+    "correctIndex": 0,
+    "explanation": "TextEncoder.encode() returns a Uint8Array with the string encoded in UTF-8. 'Hello' consists of 5 ASCII characters, each taking 1 byte in UTF-8, for a total of 5 bytes. TextDecoder.decode() converts the Uint8Array back to a string, which matches the original 'Hello'. This API is useful for converting between binary data and strings.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder"
+  },
+  {
+    "id": "browser-api-023",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "The following code attempts to use IndexedDB. What is the issue?",
+    "code": "const request = indexedDB.open('myDB', 1);\n\nrequest.onsuccess = (event) => {\n  const db = event.target.result;\n  const store = db.createObjectStore('users', { keyPath: 'id' });\n  store.add({ id: 1, name: 'Kim' });\n};",
+    "options": [
+      "A transaction must be created before createObjectStore",
+      "autoIncrement should be used instead of keyPath",
+      "createObjectStore can only be called in the onupgradeneeded event; calling it in onsuccess throws an error",
+      "The put method should be used instead of add"
+    ],
+    "correctIndex": 2,
+    "explanation": "In IndexedDB, createObjectStore() can only be called within the onupgradeneeded event handler, which fires when the database version changes. Calling it in onsuccess will throw an InvalidStateError. Schema changes (creating/deleting Object Stores, adding indexes) must be performed in onupgradeneeded.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB"
+  },
+  {
+    "id": "browser-api-024",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the navigator.onLine property is correct?",
+    "options": [
+      "It returns the real-time internet connection speed",
+      "It sends a ping to the server to check connection status",
+      "It returns a boolean indicating whether the browser is online and can be used with online/offline events",
+      "It distinguishes between Wi-Fi and wired connections and returns the connection type"
+    ],
+    "correctIndex": 2,
+    "explanation": "navigator.onLine returns a boolean value indicating the browser's online/offline status. By listening for the 'online' and 'offline' events on the window object, you can react to network state changes. However, this property only indicates network connectivity and does not guarantee actual internet accessibility.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine"
+  },
+  {
+    "id": "browser-api-025",
+    "topic": "browser-api",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which comparison between Web Storage API (localStorage) and IndexedDB is NOT correct?",
+    "options": [
+      "localStorage is synchronous, while IndexedDB is asynchronous",
+      "localStorage can only store strings, while IndexedDB can store structured data",
+      "localStorage can store about 5MB, while IndexedDB can store hundreds of MB or more",
+      "localStorage supports transactions, while IndexedDB does not support transactions"
+    ],
+    "correctIndex": 3,
+    "explanation": "In reality, it is the opposite. IndexedDB is a transaction-based database where all data operations are performed within transactions. localStorage has no concept of transactions and each operation executes independently. IndexedDB's transactions ensure data integrity and allow multiple operations to be performed atomically.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Terminology"
+  }
+]

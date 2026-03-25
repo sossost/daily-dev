@@ -1,7 +1,8 @@
 'use client'
 
 import { useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
+import { useRouter } from '@/i18n/navigation'
 import { motion } from 'framer-motion'
 import { RotateCcw } from 'lucide-react'
 import type { SessionQuestion, SessionAnswer } from '@/types'
@@ -14,6 +15,7 @@ interface RetryWrongButtonProps {
 }
 
 export function RetryWrongButton({ questions, answers }: RetryWrongButtonProps) {
+  const t = useTranslations('result')
   const router = useRouter()
   const reset = useSessionStore((s) => s.reset)
   const startSession = useSessionStore((s) => s.startSession)
@@ -53,10 +55,10 @@ export function RetryWrongButton({ questions, answers }: RetryWrongButtonProps) 
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
       className="w-full mt-3 py-3 rounded-xl font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors flex items-center justify-center gap-2"
-      aria-label={`틀린 ${incorrectAnswers.length}문제 다시 풀기`}
+      aria-label={t('retryWrong', { count: incorrectAnswers.length })}
     >
       <RotateCcw size={16} />
-      틀린 {incorrectAnswers.length}문제 다시 풀기
+      {t('retryWrong', { count: incorrectAnswers.length })}
     </motion.button>
   )
 }

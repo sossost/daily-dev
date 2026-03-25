@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 
 interface ResultSummaryProps {
   correct: number
@@ -9,6 +10,7 @@ interface ResultSummaryProps {
 }
 
 export function ResultSummary({ correct, incorrect, total }: ResultSummaryProps) {
+  const t = useTranslations('result')
   const PERCENTAGE_MULTIPLIER = 100
   const FULL_CIRCUMFERENCE = 251.2
   const scorePercentage = total > 0
@@ -18,10 +20,10 @@ export function ResultSummary({ correct, incorrect, total }: ResultSummaryProps)
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-8 text-center">
-      <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">학습 결과</h2>
+      <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">{t('title')}</h2>
 
-      <div className="relative w-40 h-40 mx-auto mb-6" aria-label={`정답률 ${scorePercentage}%`}>
-        <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100" role="img" aria-label={`정답률 ${scorePercentage}퍼센트 원형 차트`}>
+      <div className="relative w-40 h-40 mx-auto mb-6" aria-label={t('accuracyLabel', { percent: scorePercentage })}>
+        <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100" role="img" aria-label={t('accuracyChart', { percent: scorePercentage })}>
           <circle
             cx="50"
             cy="50"
@@ -59,15 +61,15 @@ export function ResultSummary({ correct, incorrect, total }: ResultSummaryProps)
       <div className="flex justify-center gap-8">
         <div className="text-center">
           <p className="text-2xl font-bold text-green-600 dark:text-green-400">{correct}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400">정답</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{t('correct')}</p>
         </div>
         <div className="text-center">
           <p className="text-2xl font-bold text-red-500 dark:text-red-400">{incorrect}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400">오답</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{t('incorrect')}</p>
         </div>
         <div className="text-center">
           <p className="text-2xl font-bold text-gray-700 dark:text-gray-300">{total}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400">전체</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{t('total')}</p>
         </div>
       </div>
     </div>

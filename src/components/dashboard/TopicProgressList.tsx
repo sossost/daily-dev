@@ -1,7 +1,9 @@
 'use client'
 
+import { useTranslations, useLocale } from 'next-intl'
 import type { Topic, TopicStat } from '@/types'
-import { CATEGORIES_WITH_FALLBACK, TOPIC_LABELS } from '@/types'
+import { isLocale } from '@/i18n/routing'
+import { CATEGORIES_WITH_FALLBACK } from '@/types'
 import { getTopicQuestionCounts } from '@/lib/questions'
 import { CategoryAccordion } from '@/components/common/CategoryAccordion'
 
@@ -36,13 +38,16 @@ interface TopicProgressListProps {
 }
 
 export function TopicProgressList({ topicStats }: TopicProgressListProps) {
-  const topicCounts = getTopicQuestionCounts()
+  const topicT = useTranslations('topics')
+  const rawLocale = useLocale()
+  const locale = isLocale(rawLocale) ? rawLocale : 'en'
+  const topicCounts = getTopicQuestionCounts(locale)
   const categories = CATEGORIES_WITH_FALLBACK
 
   return (
     <div className="mt-8">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-        토픽별 진행률
+        {topicT('progress')}
       </h3>
       <div className="flex flex-col gap-6">
         {categories.map((category) => (
@@ -64,10 +69,10 @@ export function TopicProgressList({ topicStats }: TopicProgressListProps) {
                   >
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
-                        {TOPIC_LABELS[topic]}
+                        {topicT(topic)}
                       </span>
                       <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {attempted}/{total} ({stat.accuracy}% 정답률)
+                        {attempted}/{total} ({topicT('accuracyRate', { percent: stat.accuracy })})
                       </span>
                     </div>
                     <div className="w-full h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">

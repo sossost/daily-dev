@@ -1,0 +1,334 @@
+[
+  {
+    "id": "type-coercion-001",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "console.log(1 + '2');\nconsole.log('3' - 1);",
+    "options": [
+      "12, 2",
+      "3, 2",
+      "12, '31'",
+      "3, '31'"
+    ],
+    "correctIndex": 0,
+    "explanation": "The + operator performs string concatenation when one operand is a string. 1 + '2' is '12'. The - operator only performs numeric operations, so '3' is converted to the number 3. 3 - 1 is 2. This is the asymmetry of JavaScript type coercion.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Addition"
+  },
+  {
+    "id": "type-coercion-002",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "console.log('' == false);\nconsole.log('' === false);",
+    "options": [
+      "true, true",
+      "true, false",
+      "false, false",
+      "false, true"
+    ],
+    "correctIndex": 1,
+    "explanation": "== (equality operator) performs type coercion. Both empty string '' and false convert to the number 0, so the result is true. === (strict equality) compares without type coercion, so string and boolean are different types, resulting in false.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-003",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "console.log([] + []);\nconsole.log([] + {});\nconsole.log({} + []);",
+    "options": [
+      "'', '[object Object]', 0",
+      "0, 0, 0",
+      "'', '[object Object]', '[object Object]'",
+      "NaN, NaN, NaN"
+    ],
+    "correctIndex": 2,
+    "explanation": "The + operation on arrays and objects uses the ECMAScript ToPrimitive abstract operation to convert to primitive values. ToPrimitive calls valueOf() first when the hint is 'default'; if the result is not primitive, it calls toString(). [].valueOf() returns the array itself (not primitive), so [].toString() is called returning ''. ({}).toString() returns '[object Object]'. So [] + [] is '' + '' = '', [] + {} is '' + '[object Object]' = '[object Object]'. {} + [] inside console.log or in parentheses is interpreted as an expression, yielding '[object Object]'. However, in a statement position, {} can be parsed as an empty block, making +[] equal to 0.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Addition"
+  },
+  {
+    "id": "type-coercion-004",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which of the following is NOT a falsy value in JavaScript?",
+    "options": [
+      "0",
+      "'' (empty string)",
+      "null",
+      "'0' (string '0')"
+    ],
+    "correctIndex": 3,
+    "explanation": "JavaScript's falsy values are: false, 0, -0, 0n, '' (empty string), null, undefined, and NaN. The string '0' is a non-empty string, so it is truthy. Empty arrays [] and empty objects {} are also truthy.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Falsy"
+  },
+  {
+    "id": "type-coercion-005",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "console.log(null == undefined);\nconsole.log(null === undefined);\nconsole.log(null == 0);\nconsole.log(null >= 0);",
+    "options": [
+      "true, false, true, true",
+      "true, true, false, false",
+      "false, false, true, true",
+      "true, false, false, true"
+    ],
+    "correctIndex": 3,
+    "explanation": "Per the ECMAScript Abstract Equality Comparison algorithm (7.2.14), null == undefined returns true by a special rule. null === undefined is false under Strict Equality because the types differ. null == 0 is false because null's == comparison only returns true with undefined. However, null >= 0 uses the Abstract Relational Comparison algorithm (7.2.13), which calls ToNumber(null) converting it to 0. So == and relational operators (>=, <=, >, <) use different abstract operations with different coercion rules. This asymmetry is a common source of bugs in practice.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-006",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "console.log(typeof null);\nconsole.log(typeof undefined);\nconsole.log(typeof NaN);",
+    "options": [
+      "null, undefined, NaN",
+      "object, undefined, number",
+      "object, undefined, NaN",
+      "null, undefined, number"
+    ],
+    "correctIndex": 1,
+    "explanation": "typeof null being 'object' is a famous JavaScript bug (a mistake from the original implementation). typeof undefined is 'undefined'. NaN stands for 'Not a Number' but its type is number. This follows the IEEE 754 floating-point standard.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof"
+  },
+  {
+    "id": "type-coercion-007",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the difference between == (equality) and === (strict equality) is correct?",
+    "options": [
+      "== compares after type coercion, === compares without type coercion",
+      "=== compares after type coercion, == compares without type coercion",
+      "Both perform type coercion",
+      "Both compare without type coercion"
+    ],
+    "correctIndex": 0,
+    "explanation": "== (equality operator) performs type coercion when the two operands have different types, then compares. === (strict equality operator) compares both value and type without any coercion. Using === is recommended to prevent unexpected conversions.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality"
+  },
+  {
+    "id": "type-coercion-008",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "console.log(Number('123'));\nconsole.log(Number(''));\nconsole.log(Number('abc'));",
+    "options": [
+      "123, NaN, NaN",
+      "123, 0, NaN",
+      "123, 0, 0",
+      "'123', '', 'abc'"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Number() function converts strings to numbers. '123' becomes 123 normally. An empty string '' is specially converted to 0. 'abc' is not a valid number, so it becomes NaN. The empty string becoming 0 is a frequently confusing rule.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number"
+  },
+  {
+    "id": "type-coercion-009",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "In the following code, the condition unexpectedly evaluates to true. What is the cause?",
+    "code": "const value = '0';\nif (value) {\n  console.log('truthy!'); // 실행됨\n}",
+    "options": [
+      "'0' is automatically converted to the number 0 which is falsy",
+      "if statements always evaluate to true",
+      "Non-empty strings including '0' are truthy, so the condition is true",
+      "value is declared with const"
+    ],
+    "correctIndex": 2,
+    "explanation": "In JavaScript, the if condition converts values to boolean. For strings, only the empty string '' is falsy — all other strings are truthy. '0' is a non-empty string, so it is truthy. If it were the number 0, it would be falsy. Note that the boolean conversion of string '0' and number 0 differs.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Truthy"
+  },
+  {
+    "id": "type-coercion-010",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Which statement about equality comparison (==) of null and undefined is correct?",
+    "options": [
+      "null == undefined is false",
+      "null == 0 is true",
+      "undefined == false is true",
+      "null == undefined is true, but null == 0 and undefined == 0 are both false"
+    ],
+    "correctIndex": 3,
+    "explanation": "In == comparison, null and undefined are only equal to each other, and not equal to anything else. null == 0, null == false, undefined == 0, undefined == false are all false. This is a special rule of the Abstract Equality Comparison algorithm.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-011",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about JavaScript's implicit type coercion is correct?",
+    "options": [
+      "Types are automatically converted by operators, which can lead to unintended results",
+      "Implicit coercion always converts to strings only",
+      "Implicit coercion does not occur in strict mode",
+      "Implicit coercion occurs with the === operator as well"
+    ],
+    "correctIndex": 0,
+    "explanation": "Implicit type coercion is performed through the ECMAScript abstract operations (ToNumber, ToString, ToBoolean, ToPrimitive). The + operator calls ToString or ToNumber depending on the operands, the - operator always calls ToNumber. The == operator follows the Abstract Equality Comparison algorithm through multiple conversion steps. Conditional statements (if/while) use ToBoolean. Defining Symbol.toPrimitive (added in ES2015) allows customizing an object's ToPrimitive conversion behavior. strict mode ('use strict') affects variable declarations, this binding, etc. but does not change type coercion rules.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Type_coercion"
+  },
+  {
+    "id": "type-coercion-012",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "console.log(Boolean(0));\nconsole.log(Boolean(''));\nconsole.log(Boolean([]));\nconsole.log(Boolean({}));",
+    "options": [
+      "false, false, false, false",
+      "false, false, true, true",
+      "false, false, false, true",
+      "true, true, true, true"
+    ],
+    "correctIndex": 1,
+    "explanation": "0 and the empty string '' are falsy values, so they are false. Empty arrays [] and empty objects {} are not falsy. In JavaScript, all objects (including arrays) are truthy. Note that an empty array being truthy is frequently confusing. This is different from the rule that [] == false is true.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Falsy"
+  },
+  {
+    "id": "type-coercion-013",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, parseInt('123abc') returns 123 without an error. Why?",
+    "code": "console.log(parseInt('123abc')); // 123\nconsole.log(parseInt('abc123')); // NaN\nconsole.log(parseInt('0.99'));   // 0",
+    "options": [
+      "parseInt automatically removes all non-numeric characters",
+      "parseInt limits the string length to 3",
+      "parseInt parses from left to right and returns the integer portion up to the first non-numeric character",
+      "parseInt uses regex to extract only numbers"
+    ],
+    "correctIndex": 2,
+    "explanation": "parseInt parses the string character by character from the left. For '123abc', it parses '1', '2', '3' and stops at 'a', returning 123. For 'abc123', the first character is not a number, so it returns NaN. For '0.99', the decimal point '.' is not valid for integer parsing, so it returns only 0.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt"
+  },
+  {
+    "id": "type-coercion-014",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the difference between Number() and parseInt() is correct?",
+    "options": [
+      "Both return identical results",
+      "Only Number() can handle decimals and parseInt() returns only integers",
+      "parseInt() only accepts strings while Number() accepts all types",
+      "Number() requires the entire string to be a valid number, parseInt() only parses the valid integer portion from the start"
+    ],
+    "correctIndex": 3,
+    "explanation": "Number('123abc') returns NaN because the entire string is not a valid number. parseInt('123abc') parses the valid integer portion from the start, returning 123. Additionally, Number() handles all number formats including decimals, while parseInt() only parses the integer portion.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number"
+  },
+  {
+    "id": "type-coercion-015",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about the type coercion behavior of the unary + operator is correct?",
+    "options": [
+      "It converts the operand to a number. +'42' becomes 42, +true becomes 1",
+      "It converts the operand to a string",
+      "It converts the operand to a boolean",
+      "It negates the sign of the operand"
+    ],
+    "correctIndex": 0,
+    "explanation": "The unary + operator converts its operand to a number, same as Number(). +'42' is 42, +true is 1, +false is 0, +null is 0, +undefined is NaN. Negating the sign is done by the unary - operator. While it makes code concise, using Number() is recommended for readability.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Unary_plus"
+  },
+  {
+    "id": "type-coercion-016",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, why is NaN === NaN false?",
+    "code": "const a = NaN;\nconsole.log(a === a);  // false\nconsole.log(a == a);   // false",
+    "options": [
+      "NaN is not yet initialized",
+      "NaN is the only value in JavaScript that is not equal to itself, including any other value",
+      "The === and == operators cannot handle NaN",
+      "Variables declared with const cannot be compared for equality"
+    ],
+    "correctIndex": 1,
+    "explanation": "Per the IEEE 754 floating-point standard, NaN is the only JavaScript value that is not equal to itself. Both NaN === NaN and NaN == NaN are false. To check for NaN, use Number.isNaN(). The global isNaN() converts its argument to a number first, so Number.isNaN() is more precise.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN"
+  },
+  {
+    "id": "type-coercion-017",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "console.log([] == ![]);\nconsole.log('' == 0);\nconsole.log(null == 0);\nconsole.log(undefined == 0);",
+    "options": [
+      "false, true, false, false",
+      "true, true, true, true",
+      "true, true, false, false",
+      "false, false, false, false"
+    ],
+    "correctIndex": 2,
+    "explanation": "Tracing the conversion chain for [] == ![]: 1) ![] — ToBoolean([]) is true (all objects are truthy), so ![] is false. 2) [] == false — when a boolean is present, ToNumber(false) = 0 -> [] == 0. 3) Object vs number comparison: ToPrimitive([]) is called -> [].valueOf() returns the array itself, so [].toString() = '' -> '' == 0. 4) ToNumber('') = 0 -> 0 == 0 = true. '' == 0 similarly becomes ToNumber('') = 0, so true. null == 0 and undefined == 0 are false because the Abstract Equality spec (7.2.14) explicitly states null/undefined are only equal to each other and return false when compared with other types.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-018",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about the difference between Object.is() and the === operator is correct?",
+    "options": [
+      "There is no difference. They always return the same result",
+      "Object.is() performs type coercion but === does not",
+      "=== returns true for NaN comparisons but Object.is() returns false",
+      "Object.is(NaN, NaN) is true, Object.is(+0, -0) is false, differing from ==="
+    ],
+    "correctIndex": 3,
+    "explanation": "ECMAScript defines four equality algorithms: Abstract Equality (==), Strict Equality (===), SameValue, and SameValueZero. Object.is() uses the SameValue algorithm (7.2.10). It differs from === in exactly two ways: 1) NaN === NaN is false but Object.is(NaN, NaN) is true — SameValue corrects the IEEE 754 standard where NaN != NaN. 2) +0 === -0 is true but Object.is(+0, -0) is false — in floating-point, +0 and -0 have different bit representations. Note: Map and Set use the SameValueZero algorithm, which is identical to SameValue except it treats +0 and -0 as equal.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is"
+  },
+  {
+    "id": "type-coercion-019",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In the following code, why does isNaN('hello') return true, and what is the correct alternative?",
+    "code": "console.log(isNaN('hello'));        // true\nconsole.log(isNaN(undefined));      // true\nconsole.log(Number.isNaN('hello')); // false",
+    "options": [
+      "isNaN converts its argument to Number first, so Number('hello') becomes NaN resulting in true. Number.isNaN checks if the value is exactly NaN without conversion",
+      "isNaN is designed to return true for all non-numeric values",
+      "isNaN is inaccurate because it is a legacy API",
+      "'hello' is identical to the special value NaN"
+    ],
+    "correctIndex": 0,
+    "explanation": "The global isNaN() converts its argument to Number first, then checks if it is NaN. Number('hello') is NaN, so isNaN('hello') returns true. Number.isNaN() checks whether the value is exactly the NaN type without any conversion. Since 'hello' is a string, Number.isNaN('hello') returns false.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN"
+  },
+  {
+    "id": "type-coercion-020",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "In JavaScript's Abstract Equality Comparison (==) algorithm, what is the correct conversion rule when types differ?",
+    "options": [
+      "Always converts to the left operand's type",
+      "Always converts to string before comparing",
+      "String-number comparison converts the string to a number; if a boolean is present, it converts to a number first",
+      "If a boolean is present, it converts to a string first"
+    ],
+    "correctIndex": 2,
+    "explanation": "The == algorithm follows defined rules: 1) If a boolean is present, convert it to a number first (true->1, false->0). 2) For string-number comparison, convert the string to a number. 3) For object-primitive comparison, convert the object to a primitive (ToPrimitive). 4) null and undefined are only equal to each other. Due to these complex rules, using === is recommended.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality"
+  }
+]

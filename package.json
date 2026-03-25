@@ -23,6 +23,7 @@
     "framer-motion": "^12",
     "lucide-react": "^0.474",
     "next": "^15",
+    "next-intl": "^4.8.3",
     "prismjs": "^1",
     "react": "^19",
     "react-dom": "^19",

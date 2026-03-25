@@ -25,8 +25,8 @@ describe('getUpcomingReviews', () => {
 
     expect(result).toHaveLength(14)
     expect(result[0].isToday).toBe(true)
-    expect(result[0].label).toBe('오늘')
-    expect(result[1].label).toBe('내일')
+    expect(result[0].label).toBe('Today')
+    expect(result[1].label).toBe('Tomorrow')
   })
 
   it('counts reviews due on specific days', () => {

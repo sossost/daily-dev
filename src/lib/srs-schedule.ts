@@ -3,7 +3,7 @@
  * from SRS records for visualization.
  */
 import type { SRSRecord, Topic } from '@/types'
-import { TOPIC_LABELS } from '@/types'
+import type { Locale } from '@/i18n/routing'
 import { getToday, addDays, isBeforeOrEqual } from '@/lib/date'
 import { getQuestionById } from '@/lib/questions'
 
@@ -20,7 +20,6 @@ export interface DayReviewCount {
 
 export interface TopicReviewCount {
   readonly topic: Topic
-  readonly label: string
   readonly dueCount: number
   readonly totalCount: number
 }
@@ -38,10 +37,17 @@ export interface ScheduleSummary {
  */
 export function getUpcomingReviews(
   srsRecords: Record<string, SRSRecord>,
+  locale?: Locale,
 ): readonly DayReviewCount[] {
   const today = getToday()
   const records = Object.values(srsRecords)
-  const dayNames = ['일', '월', '화', '수', '목', '금', '토']
+  const resolvedLocale = locale ?? 'en'
+  const dayNames: Record<Locale, string[]> = {
+    ko: ['일', '월', '화', '수', '목', '금', '토'],
+    en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  }
+  const todayLabel: Record<Locale, string> = { ko: '오늘', en: 'Today' }
+  const tomorrowLabel: Record<Locale, string> = { ko: '내일', en: 'Tomorrow' }
 
   return Array.from({ length: SCHEDULE_DAYS }, (_, i) => {
     const date = addDays(today, i)
@@ -57,8 +63,8 @@ export function getUpcomingReviews(
 
     const [year, month, day] = date.split('-').map(Number)
     const dateObj = new Date(year, month - 1, day)
-    const dayName = dayNames[dateObj.getDay()]
-    const label = i === 0 ? '오늘' : i === 1 ? '내일' : `${month}/${day} (${dayName})`
+    const dayName = dayNames[resolvedLocale][dateObj.getDay()]
+    const label = i === 0 ? todayLabel[resolvedLocale] : i === 1 ? tomorrowLabel[resolvedLocale] : `${month}/${day} (${dayName})`
 
     return {
       date,
@@ -74,6 +80,7 @@ export function getUpcomingReviews(
  */
 export function getDueByTopic(
   srsRecords: Record<string, SRSRecord>,
+  locale?: Locale,
 ): readonly TopicReviewCount[] {
   const today = getToday()
   const records = Object.values(srsRecords)
@@ -81,7 +88,7 @@ export function getDueByTopic(
   const topicMap = new Map<Topic, { due: number; total: number }>()
 
   for (const record of records) {
-    const question = getQuestionById(record.questionId)
+    const question = getQuestionById(record.questionId, locale)
     if (question == null) continue
 
     const { topic } = question
@@ -97,7 +104,6 @@ export function getDueByTopic(
   return Array.from(topicMap.entries())
     .map(([topic, counts]) => ({
       topic,
-      label: TOPIC_LABELS[topic],
       dueCount: counts.due,
       totalCount: counts.total,
     }))

@@ -1,6 +1,7 @@
 'use client'
 
 import { type ReactNode, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import type { CategoryDefinition } from '@/types'
@@ -18,6 +19,7 @@ export function CategoryAccordion({
   headerRight,
   children,
 }: CategoryAccordionProps) {
+  const tc = useTranslations('common')
   const [isOpen, setIsOpen] = useState(defaultOpen)
 
   const buttonId = `accordion-btn-${category.id}`
@@ -33,7 +35,7 @@ export function CategoryAccordion({
           className="flex items-center gap-2 flex-1 min-w-0 py-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
           aria-expanded={isOpen}
           aria-controls={panelId}
-          aria-label={`${category.label} 카테고리 ${isOpen ? '접기' : '펼치기'}`}
+          aria-label={`${category.label}`}
         >
           <span className="text-base" aria-hidden="true">
             {category.icon}
@@ -42,7 +44,7 @@ export function CategoryAccordion({
             {category.label}
           </span>
           <span className="text-xs text-gray-400 dark:text-gray-500">
-            {category.topics.length}개 토픽
+            {tc('topicCount', { count: category.topics.length })}
           </span>
           <motion.span
             animate={{ rotate: isOpen ? 180 : 0 }}

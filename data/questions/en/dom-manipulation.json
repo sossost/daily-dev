@@ -1,0 +1,331 @@
+[
+  {
+    "id": "dom-manipulation-001",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct difference between document.getElementById() and document.querySelector()?",
+    "options": [
+      "getElementById() uses CSS selectors, while querySelector() only uses IDs",
+      "getElementById() searches only by ID, while querySelector() uses CSS selectors",
+      "Both methods work in exactly the same way",
+      "querySelector() returns multiple elements, while getElementById() returns only one"
+    ],
+    "correctIndex": 1,
+    "explanation": "getElementById() searches for elements only by their id attribute and takes a string as its argument. querySelector() uses CSS selector syntax, allowing for more flexible searches. querySelector() returns only the first matching element; querySelectorAll() is the method that returns multiple elements.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector"
+  },
+  {
+    "id": "dom-manipulation-002",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct difference between innerHTML and textContent?",
+    "options": [
+      "textContent parses and renders HTML tags",
+      "innerHTML is always safe from a security perspective",
+      "innerHTML parses HTML, while textContent treats content as plain text",
+      "Both properties work identically"
+    ],
+    "correctIndex": 2,
+    "explanation": "innerHTML parses strings as HTML and inserts them into the DOM, which can be vulnerable to XSS attacks. textContent treats strings as plain text, so HTML tags are displayed as literal text. When inserting user input into the DOM, using textContent is the safer choice.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML"
+  },
+  {
+    "id": "dom-manipulation-003",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "After running the following code, how many child elements does #container have?",
+    "code": "const container = document.getElementById('container');\ncontainer.innerHTML = '<div>A</div>';\nconst span = document.createElement('span');\nspan.textContent = 'B';\ncontainer.appendChild(span);\nconsole.log(container.children.length);",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "0"
+    ],
+    "correctIndex": 1,
+    "explanation": "innerHTML = '<div>A</div>' replaces the existing content and creates one div element. Then appendChild(span) adds a span element, resulting in a total of 2 child elements (div and span). innerHTML removes all existing children and replaces them with new content.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild"
+  },
+  {
+    "id": "dom-manipulation-004",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is a correct advantage of Event Delegation?",
+    "options": [
+      "It is more memory-efficient than attaching individual event listeners to each child element",
+      "It can prevent event bubbling",
+      "It only works during the capturing phase",
+      "It cannot be applied to dynamically added elements"
+    ],
+    "correctIndex": 0,
+    "explanation": "Event delegation is a pattern where a single event listener is registered on a parent element, and event bubbling is leveraged to handle events from child elements. It reduces memory usage and automatically applies to dynamically added child elements. The actual clicked element is identified using event.target.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#event_delegation"
+  },
+  {
+    "id": "dom-manipulation-005",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const div = document.createElement('div');\ndiv.classList.add('active', 'visible');\ndiv.classList.toggle('active');\ndiv.classList.replace('visible', 'hidden');\nconsole.log([...div.classList].join(', '));",
+    "options": [
+      "active, visible",
+      "active, hidden",
+      "hidden",
+      "visible, hidden"
+    ],
+    "correctIndex": 2,
+    "explanation": "classList.add('active', 'visible') adds both classes. classList.toggle('active') removes 'active' (since it already exists). classList.replace('visible', 'hidden') replaces 'visible' with 'hidden'. The final result is only 'hidden'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList"
+  },
+  {
+    "id": "dom-manipulation-006",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the main reason for using DocumentFragment?",
+    "options": [
+      "Because it cannot be inserted directly into the DOM tree",
+      "Because it is slower than innerHTML but safer",
+      "Because it is automatically garbage collected from memory",
+      "To minimize reflows by adding multiple nodes at once"
+    ],
+    "correctIndex": 3,
+    "explanation": "DocumentFragment is a lightweight in-memory DOM. You can add multiple nodes to the Fragment first, then insert them all into the actual DOM at once. This prevents the repeated reflows and repaints that would occur when adding each node individually, improving performance.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment"
+  },
+  {
+    "id": "dom-manipulation-007",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const ul = document.createElement('ul');\nconst li1 = document.createElement('li');\nconst li2 = document.createElement('li');\nul.appendChild(li1);\nul.appendChild(li2);\n\nconst items = ul.querySelectorAll('li');\nul.removeChild(li1);\nconsole.log(items.length, ul.children.length);",
+    "options": [
+      "2, 1",
+      "1, 1",
+      "2, 2",
+      "1, 2"
+    ],
+    "correctIndex": 0,
+    "explanation": "querySelectorAll() returns a static NodeList. It is a snapshot taken at the time of the call, so subsequent DOM changes are not reflected. Therefore, items.length remains 2. On the other hand, children is a live HTMLCollection, so after removing li1, it becomes 1.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll"
+  },
+  {
+    "id": "dom-manipulation-008",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct way to set an attribute on a DOM element?",
+    "options": [
+      "element.attr('name', 'value')",
+      "element.attribute('name', 'value')",
+      "element.setProperty('name', 'value')",
+      "element.setAttribute('name', 'value')"
+    ],
+    "correctIndex": 3,
+    "explanation": "setAttribute() is the standard DOM API for setting HTML attributes on an element. If the attribute already exists, the value is updated; if not, a new attribute is created. Use getAttribute() to read an attribute and removeAttribute() to remove one.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/setAttribute"
+  },
+  {
+    "id": "dom-manipulation-009",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between append() and appendChild()?",
+    "options": [
+      "appendChild() can also insert strings",
+      "append() can insert multiple nodes and strings at the same time",
+      "append() returns the inserted node",
+      "appendChild() can insert multiple nodes at the same time"
+    ],
+    "correctIndex": 1,
+    "explanation": "append() can accept multiple Node objects and strings (DOMStrings) as arguments simultaneously, and has no return value. appendChild() accepts only a single Node as an argument and returns the inserted node. append() is a more modern API that offers greater flexibility.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/append"
+  },
+  {
+    "id": "dom-manipulation-010",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const div = document.createElement('div');\ndiv.dataset.userId = '42';\ndiv.dataset.userName = 'Alice';\nconsole.log(div.getAttribute('data-user-name'));",
+    "options": [
+      "undefined",
+      "null",
+      "Alice",
+      "TypeError"
+    ],
+    "correctIndex": 2,
+    "explanation": "The dataset API accesses data-* attributes using camelCase. dataset.userName is converted to the data-user-name attribute in the actual HTML. Therefore, getAttribute('data-user-name') retrieves the value 'Alice'. The camelCase to kebab-case conversion happens automatically.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset"
+  },
+  {
+    "id": "dom-manipulation-011",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the difference between stopPropagation() and stopImmediatePropagation() in event propagation?",
+    "options": [
+      "stopPropagation() only stops capturing, and stopImmediatePropagation() only stops bubbling",
+      "Both methods work identically",
+      "stopPropagation() also prevents the default action, but stopImmediatePropagation() does not",
+      "stopImmediatePropagation() also stops the remaining listeners on the same element from executing"
+    ],
+    "correctIndex": 3,
+    "explanation": "stopPropagation() prevents the event from propagating to parent/child elements, but other listeners registered on the same element will still execute. stopImmediatePropagation() prevents propagation and also stops the remaining listeners on the same element from executing. Preventing the default action is handled by preventDefault().",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Event/stopImmediatePropagation"
+  },
+  {
+    "id": "dom-manipulation-012",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output order of the following code?",
+    "code": "const parent = document.createElement('div');\nconst child = document.createElement('span');\nparent.appendChild(child);\n\nparent.addEventListener('click', () => console.log('parent bubble'));\nparent.addEventListener('click', () => console.log('parent capture'), true);\nchild.addEventListener('click', () => console.log('child bubble'));\nchild.addEventListener('click', () => console.log('child capture'), true);\n\nchild.click();",
+    "options": [
+      "parent capture, child capture, child bubble, parent bubble",
+      "child capture, child bubble, parent capture, parent bubble",
+      "parent bubble, child bubble, child capture, parent capture",
+      "child bubble, parent bubble, child capture, parent capture"
+    ],
+    "correctIndex": 0,
+    "explanation": "DOM events propagate in the order: capturing -> target -> bubbling. First, during the capturing phase, 'parent capture' executes. Then, during the target phase, the listeners on the child execute in registration order: 'child capture', 'child bubble'. Finally, during the bubbling phase, 'parent bubble' executes. On the target element, registration order takes precedence over the capture/bubble distinction.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener"
+  },
+  {
+    "id": "dom-manipulation-013",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct way to change an element's inline style with JavaScript?",
+    "options": [
+      "element.style.backgroundColor = 'red'",
+      "element.css('background-color', 'red')",
+      "element.setStyle('background-color', 'red')",
+      "element.style['background-color'] = 'red'"
+    ],
+    "correctIndex": 0,
+    "explanation": "Inline styles can be set through the element.style object. CSS property names are converted to camelCase (background-color becomes backgroundColor). While element.style['background-color'] also works, camelCase is the standard approach.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style"
+  },
+  {
+    "id": "dom-manipulation-014",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between cloneNode(true) and cloneNode(false)?",
+    "options": [
+      "cloneNode(true) also copies event listeners",
+      "cloneNode(false) copies child nodes as well",
+      "cloneNode(true) performs a deep clone including all child nodes",
+      "cloneNode(false) removes the original node"
+    ],
+    "correctIndex": 2,
+    "explanation": "cloneNode(true) performs a deep clone of the node and all its descendant nodes. cloneNode(false) copies only the node itself without its children. In both cases, event listeners registered with addEventListener() are not copied. Inline event handlers (onclick attributes) are copied.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode"
+  },
+  {
+    "id": "dom-manipulation-015",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the DOM structure after running the following code?",
+    "code": "const parent = document.createElement('div');\nconst a = document.createElement('span');\nconst b = document.createElement('span');\nconst c = document.createElement('span');\na.id = 'a'; b.id = 'b'; c.id = 'c';\n\nparent.append(a, b);\nparent.insertBefore(c, a);\nconsole.log([...parent.children].map(el => el.id).join(', '));",
+    "options": [
+      "a, b, c",
+      "c, a, b",
+      "a, c, b",
+      "c, b, a"
+    ],
+    "correctIndex": 1,
+    "explanation": "append(a, b) adds elements in the order a, b. insertBefore(c, a) inserts c before a. Therefore, the final order is c, a, b. In insertBefore(newNode, referenceNode), newNode is inserted before referenceNode.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Node/insertBefore"
+  },
+  {
+    "id": "dom-manipulation-016",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the correct purpose of MutationObserver?",
+    "options": [
+      "It monitors changes in network requests",
+      "It monitors value changes of JavaScript variables",
+      "It synchronously monitors CSS style changes",
+      "It asynchronously monitors changes to the DOM tree"
+    ],
+    "correctIndex": 3,
+    "explanation": "MutationObserver is an API that asynchronously monitors changes to the DOM tree (adding/removing child nodes, attribute changes, text changes, etc.). Callbacks are executed in the microtask queue, allowing multiple DOM changes to be processed in batches. It replaces the older synchronous Mutation Events.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver"
+  },
+  {
+    "id": "dom-manipulation-017",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the click event not work in the following code?",
+    "code": "document.getElementById('btn').addEventListener('click', handler());\n\nfunction handler() {\n  console.log('clicked!');\n}",
+    "options": [
+      "Because the handler function is used before its declaration",
+      "Because the function's return value (undefined) is passed as the second argument to addEventListener",
+      "Because getElementById returns null",
+      "Because the click event name is incorrect"
+    ],
+    "correctIndex": 1,
+    "explanation": "handler() immediately invokes the function and passes its return value (undefined) to addEventListener. To pass a function reference, you should use handler (without parentheses). This is a common mistake in JavaScript, and it's important to understand the difference between a function reference and a function call.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener"
+  },
+  {
+    "id": "dom-manipulation-018",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const div = document.createElement('div');\ndiv.innerHTML = '  <span>hello</span>  ';\nconsole.log(div.childNodes.length, div.children.length);",
+    "options": [
+      "1, 1",
+      "3, 1",
+      "3, 3",
+      "1, 3"
+    ],
+    "correctIndex": 1,
+    "explanation": "childNodes returns all child nodes including text nodes. In '  <span>hello</span>  ', there are 3 childNodes: a leading whitespace text node, the span element, and a trailing whitespace text node. children returns only Element nodes, so it includes only the 1 span.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Node/childNodes"
+  },
+  {
+    "id": "dom-manipulation-019",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What are the coordinates returned by getBoundingClientRect() relative to?",
+    "options": [
+      "The top-left corner of the entire document",
+      "The top-left corner of the parent element",
+      "The top-left corner of the viewport",
+      "The top-left corner of the body element"
+    ],
+    "correctIndex": 2,
+    "explanation": "getBoundingClientRect() returns the position and size of an element relative to the top-left corner of the viewport (the visible area of the browser). Since scroll position is factored in, you need to add window.scrollX/scrollY to get document-relative coordinates. It has top, right, bottom, left, width, and height properties.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect"
+  },
+  {
+    "id": "dom-manipulation-020",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "What is the problem with the following code?",
+    "code": "const items = document.querySelectorAll('.item');\nitems.forEach((item, index) => {\n  item.style.order = index;\n});",
+    "options": [
+      "querySelectorAll does not support forEach",
+      "You cannot assign a number directly to style.order — it must be a string",
+      "The index parameter cannot be used in forEach",
+      "There is no problem — the code works correctly"
+    ],
+    "correctIndex": 3,
+    "explanation": "This code works correctly. NodeList supports forEach(), and when a number is assigned to a style property, it is automatically converted to a string. CSS properties without units (order, z-index, opacity, etc.) can have numbers assigned directly. querySelectorAll returns a static NodeList.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach"
+  }
+]

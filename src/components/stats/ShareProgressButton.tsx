@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Share2, Download, X, Check } from 'lucide-react'
 import type { Topic, TopicStat } from '@/types'
@@ -32,6 +33,8 @@ export function ShareProgressButton({
   totalAnswered,
   topicStats,
 }: ShareProgressButtonProps) {
+  const t = useTranslations('stats')
+  const commonT = useTranslations('common')
   const [isOpen, setIsOpen] = useState(false)
   const [feedback, setFeedback] = useState<FeedbackState>('idle')
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -112,10 +115,10 @@ export function ShareProgressButton({
         type="button"
         onClick={handleOpen}
         className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm font-medium"
-        aria-label="학습 성과 공유하기"
+        aria-label={t('shareProgress')}
       >
         <Share2 size={16} />
-        공유하기
+        {t('shareProgress')}
       </button>
 
       <AnimatePresence>
@@ -128,7 +131,7 @@ export function ShareProgressButton({
             onClick={handleClose}
             role="dialog"
             aria-modal="true"
-            aria-label="학습 성과 카드"
+            aria-label={t('progressCard')}
           >
             <motion.div
               className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-lg w-full overflow-hidden"
@@ -140,13 +143,13 @@ export function ShareProgressButton({
             >
               <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-700">
                 <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-                  학습 성과 카드
+                  {t('progressCard')}
                 </h2>
                 <button
                   type="button"
                   onClick={handleClose}
                   className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  aria-label="닫기"
+                  aria-label={commonT('close')}
                 >
                   <X size={18} className="text-gray-500 dark:text-gray-400" />
                 </button>
@@ -167,7 +170,7 @@ export function ShareProgressButton({
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg transition-colors text-sm font-medium"
                 >
                   <Download size={16} />
-                  이미지 저장
+                  {t('saveImage')}
                 </button>
                 <button
                   type="button"
@@ -175,7 +178,7 @@ export function ShareProgressButton({
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm font-medium"
                 >
                   <Share2 size={16} />
-                  공유하기
+                  {t('shareProgress')}
                 </button>
               </div>
 
@@ -189,7 +192,7 @@ export function ShareProgressButton({
                   >
                     <div className="flex items-center gap-2 px-3 py-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-lg text-sm">
                       <Check size={14} />
-                      {feedback === 'shared' ? '공유되었습니다' : '이미지가 저장되었습니다'}
+                      {feedback === 'shared' ? t('shared') : t('imageSaved')}
                     </div>
                   </motion.div>
                 )}

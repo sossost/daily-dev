@@ -1,0 +1,330 @@
+[
+  {
+    "id": "react-basics-001",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What happens when a component's state changes in React?",
+    "options": [
+      "The entire page refreshes",
+      "The browser re-parses the CSS",
+      "The entire DOM is recreated",
+      "The component and its child components re-render"
+    ],
+    "correctIndex": 3,
+    "explanation": "React re-renders the component whose state changed along with its child components. It uses the Virtual DOM to apply only the changed parts to the actual DOM, so the entire page is not refreshed.",
+    "sourceUrl": "https://react.dev/learn/render-and-commit"
+  },
+  {
+    "id": "react-basics-002",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What value is displayed in the alert when the button is clicked in the following code?",
+    "code": "function Counter() {\n  const [count, setCount] = useState(0);\n\n  function handleClick() {\n    setCount(count + 1);\n    setCount(count + 1);\n    setCount(count + 1);\n    alert(count);\n  }\n\n  return <button onClick={handleClick}>{count}</button>;\n}",
+    "options": [
+      "3",
+      "1",
+      "0",
+      "undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "setState operates asynchronously, and each setCount call references the same count value (0) from the current render cycle. alert(count) also displays the current closure's count value, which is 0. On the next render, count becomes 1.",
+    "sourceUrl": "https://react.dev/learn/queueing-a-series-of-state-updates"
+  },
+  {
+    "id": "react-basics-003",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the main purpose of the key prop in React?",
+    "options": [
+      "It serves as a selector for CSS styling",
+      "It passes data between components",
+      "It uniquely identifies each element when rendering lists",
+      "It binds event handlers"
+    ],
+    "correctIndex": 2,
+    "explanation": "key is used by React to uniquely identify each element in a list. Through keys, React can efficiently determine which elements have been added, removed, or changed, performing minimal DOM updates.",
+    "sourceUrl": "https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key"
+  },
+  {
+    "id": "react-basics-004",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "When does the useEffect in the following code execute?",
+    "code": "function App() {\n  const [count, setCount] = useState(0);\n  const [name, setName] = useState('React');\n\n  useEffect(() => {\n    document.title = `${name}: ${count}`;\n  }, [count]);\n\n  return <div>{count}</div>;\n}",
+    "options": [
+      "Only when both count and name change",
+      "On every render",
+      "When the component mounts and when count changes",
+      "Only when the component mounts"
+    ],
+    "correctIndex": 2,
+    "explanation": "Since [count] is specified in the dependency array of useEffect, it executes when the component first mounts and whenever count changes. Even if name changes, the effect does not run because it is not included in the dependency array.",
+    "sourceUrl": "https://react.dev/reference/react/useEffect#specifying-reactive-dependencies"
+  },
+  {
+    "id": "react-basics-005",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the most important difference between useState and useRef?",
+    "options": [
+      "Changing a useState value triggers a re-render, but changing a useRef value does not",
+      "useState can only store primitive values, while useRef can only store objects",
+      "useState is synchronous, while useRef is asynchronous",
+      "useState can only be used in function components, while useRef can only be used in class components"
+    ],
+    "correctIndex": 0,
+    "explanation": "Updating state with useState causes the component to re-render, but changing the .current value of a useRef does not trigger a re-render. useRef is useful when you need to persist a value between renders without causing a re-render.",
+    "sourceUrl": "https://react.dev/learn/referencing-values-with-refs"
+  },
+  {
+    "id": "react-basics-006",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does an infinite loop occur in the following code?",
+    "code": "function UserList() {\n  const [users, setUsers] = useState([]);\n\n  useEffect(() => {\n    fetch('/api/users')\n      .then(res => res.json())\n      .then(data => setUsers(data));\n  });\n\n  return <ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>;\n}",
+    "options": [
+      "Because the fetch function returns a Promise",
+      "Because setUsers sets a new array reference causing a re-render, and without a dependency array the effect re-runs on every render",
+      "Because the initial value of useState is an empty array",
+      "Because async/await is not used inside useEffect"
+    ],
+    "correctIndex": 1,
+    "explanation": "When no dependency array is specified for useEffect, it runs on every render. When setUsers is called, a re-render occurs, and after the re-render, useEffect runs again, creating an infinite loop. Passing an empty array [] as the dependency will make it run only on mount.",
+    "sourceUrl": "https://react.dev/reference/react/useEffect#fetching-data-with-effects"
+  },
+  {
+    "id": "react-basics-007",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which is NOT a valid way to perform conditional rendering in React?",
+    "options": [
+      "Ternary operator: condition ? <A /> : <B />",
+      "Logical AND operator: condition && <A />",
+      "Using if statements directly inside JSX",
+      "Early return pattern"
+    ],
+    "correctIndex": 2,
+    "explanation": "If statements cannot be used directly inside JSX. JSX only allows expressions, so you must use ternary operators or logical AND operators, or use if statements outside of JSX to branch conditionally before returning.",
+    "sourceUrl": "https://react.dev/learn/conditional-rendering"
+  },
+  {
+    "id": "react-basics-008",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "How many times does the Child component render in the following code? (Including the initial render)",
+    "code": "function Parent() {\n  const [count, setCount] = useState(0);\n  const style = { color: 'red' };\n\n  return (\n    <div>\n      <button onClick={() => setCount(c => c + 1)}>+</button>\n      <Child style={style} />\n    </div>\n  );\n}\n\nconst Child = React.memo(({ style }) => {\n  console.log('Child rendered');\n  return <span style={style}>Hello</span>;\n});",
+    "options": [
+      "Child renders only once initially, even when the button is clicked",
+      "Child never re-renders even when Parent re-renders",
+      "Thanks to React.memo, it only renders when style changes",
+      "Child renders with every button click"
+    ],
+    "correctIndex": 3,
+    "explanation": "React.memo performs a shallow comparison of props. Every time Parent re-renders, a new style object is created, so ({ color: 'red' } !== { color: 'red' }), and React.memo considers this a props change, causing Child to re-render each time. Memoizing the style with useMemo would prevent this.",
+    "sourceUrl": "https://react.dev/reference/react/memo"
+  },
+  {
+    "id": "react-basics-009",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference between useMemo and useCallback?",
+    "options": [
+      "useMemo memoizes a value, while useCallback memoizes a function",
+      "useMemo is synchronous, while useCallback is asynchronous",
+      "useMemo runs during rendering, while useCallback works like an effect",
+      "useMemo is for class components, while useCallback is for function components"
+    ],
+    "correctIndex": 0,
+    "explanation": "useMemo memoizes a computed value and only recalculates when dependencies change. useCallback memoizes the function itself and only creates a new function reference when dependencies change. useCallback(fn, deps) is equivalent to useMemo(() => fn, deps).",
+    "sourceUrl": "https://react.dev/reference/react/useCallback"
+  },
+  {
+    "id": "react-basics-010",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct way to pass an event handler in React?",
+    "options": [
+      "<button onClick={handleClick()}>",
+      "<button onclick={handleClick}>",
+      "<button onClick={handleClick}>",
+      "<button onClick=\"handleClick()\">"
+    ],
+    "correctIndex": 2,
+    "explanation": "In React, event handlers are written in camelCase (onClick), and a function reference should be passed. Using handleClick() would immediately invoke the function at render time, and lowercase onclick or string values are not compatible with React's event system.",
+    "sourceUrl": "https://react.dev/learn/responding-to-events"
+  },
+  {
+    "id": "react-basics-011",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the input value not change when typing in the following code?",
+    "code": "function Form() {\n  const [form, setForm] = useState({ name: '', email: '' });\n\n  function handleNameChange(e) {\n    form.name = e.target.value;\n    setForm(form);\n  }\n\n  return <input value={form.name} onChange={handleNameChange} />;\n}",
+    "options": [
+      "Because the onChange event is not supported on input",
+      "Because useState does not work when the initial value is an object",
+      "Because the same object reference is passed to setForm, so React does not detect a change",
+      "Because e.target.value always returns an empty string"
+    ],
+    "correctIndex": 2,
+    "explanation": "React uses Object.is() to compare the previous and new values during state updates. Directly mutating form.name and passing the same object reference causes React to determine that the state hasn't changed. You need to create a new object like setForm({ ...form, name: e.target.value }).",
+    "sourceUrl": "https://react.dev/learn/updating-objects-in-state"
+  },
+  {
+    "id": "react-basics-012",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which of the following is NOT a behavior that React's Strict Mode performs in development?",
+    "options": [
+      "Rendering components twice to detect impure rendering",
+      "Running useEffect twice to detect missing cleanup",
+      "Warning about deprecated API usage",
+      "Optimizing bundle size in production builds"
+    ],
+    "correctIndex": 3,
+    "explanation": "Strict Mode only operates in the development environment and has no effect on production builds. It renders components twice, runs effects twice, and warns about deprecated APIs. It has nothing to do with bundle size optimization.",
+    "sourceUrl": "https://react.dev/reference/react/StrictMode"
+  },
+  {
+    "id": "react-basics-013",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What does the count value become when the button is clicked in the following code?",
+    "code": "function Counter() {\n  const [count, setCount] = useState(0);\n\n  function handleClick() {\n    setCount(prev => prev + 1);\n    setCount(prev => prev + 1);\n    setCount(prev => prev + 1);\n  }\n\n  return <button onClick={handleClick}>{count}</button>;\n}",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "0"
+    ],
+    "correctIndex": 2,
+    "explanation": "When using functional updates (updater functions), each setCount call updates based on the previous state value. prev => prev + 1 is applied three times consecutively: 0 -> 1 -> 2 -> 3. Unlike passing a plain value (setCount(count + 1)), functional updates reference the latest state.",
+    "sourceUrl": "https://react.dev/learn/queueing-a-series-of-state-updates"
+  },
+  {
+    "id": "react-basics-014",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the basic way to pass data to a child component in React?",
+    "options": [
+      "Use global variables",
+      "Pass data through props",
+      "Use localStorage",
+      "Use event bubbling"
+    ],
+    "correctIndex": 1,
+    "explanation": "In React, parent components pass data to child components through props. Props are read-only and follow a one-way data flow. This is one of the core design principles of React.",
+    "sourceUrl": "https://react.dev/learn/passing-props-to-a-component"
+  },
+  {
+    "id": "react-basics-015",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between controlled and uncontrolled components?",
+    "options": [
+      "Controlled means class components, and uncontrolled means function components",
+      "Controlled components manage form values with React state, while uncontrolled components let the DOM manage form values directly",
+      "Controlled components are rendered on the server, while uncontrolled components are rendered on the client",
+      "Controlled components use TypeScript, while uncontrolled components use JavaScript"
+    ],
+    "correctIndex": 1,
+    "explanation": "In a controlled component, React state serves as the 'single source of truth' that controls the form input value. In an uncontrolled component, the DOM itself manages the form data, and values are accessed through refs.",
+    "sourceUrl": "https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components"
+  },
+  {
+    "id": "react-basics-016",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the cause of the error in the following code?",
+    "code": "function App() {\n  const [items, setItems] = useState([1, 2, 3]);\n\n  return (\n    <div>\n      <h1>Items</h1>\n      {items.map(item => <span>{item}</span>)}\n    </div>\n  );\n}",
+    "options": [
+      "An array cannot be passed as the initial value to useState",
+      "JSX cannot be returned from a map callback",
+      "No error occurs, but a warning about missing key props is generated",
+      "h1 and span cannot be used together inside a div"
+    ],
+    "correctIndex": 2,
+    "explanation": "The code itself works, but since each element in the list is missing a unique key prop, React displays a console warning. Without keys, React cannot efficiently track changes to list elements, which can lead to performance issues and unexpected behavior.",
+    "sourceUrl": "https://react.dev/learn/rendering-lists#rules-of-keys"
+  },
+  {
+    "id": "react-basics-017",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Which statement about performance optimization when using React's useContext is correct?",
+    "options": [
+      "When a Context value changes, all components subscribing to that Context re-render",
+      "useContext automatically prevents unnecessary re-renders",
+      "Using useContext with React.memo always prevents re-renders",
+      "Context always has better performance than state management libraries"
+    ],
+    "correctIndex": 0,
+    "explanation": "When the Context Provider's value changes, all child components that subscribe to that Context via useContext will re-render. Even wrapping with React.memo does not prevent re-renders caused by Context changes. Therefore, for frequently changing values, consider splitting Contexts or using a state management library.",
+    "sourceUrl": "https://react.dev/reference/react/useContext#optimizing-re-renders-when-passing-objects-and-functions"
+  },
+  {
+    "id": "react-basics-018",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "When is cleanup needed in a React component's lifecycle?",
+    "options": [
+      "When props are passed to the component",
+      "When the component has child components",
+      "When conditional rendering is used in JSX",
+      "When there are side effects like event listener registration, timer setup, or subscriptions"
+    ],
+    "correctIndex": 3,
+    "explanation": "Side effects like event listeners, timers (setInterval), and WebSocket subscriptions need to be cleaned up when the component unmounts to prevent memory leaks. Cleanup logic is written in the return function of useEffect.",
+    "sourceUrl": "https://react.dev/learn/synchronizing-with-effects#how-to-handle-the-effect-firing-twice-in-development"
+  },
+  {
+    "id": "react-basics-019",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "If the button is clicked 5 times within 3 seconds in the following code, what values are displayed in the alerts?",
+    "code": "function Counter() {\n  const [count, setCount] = useState(0);\n\n  function handleClick() {\n    setCount(count + 1);\n    setTimeout(() => {\n      alert(count);\n    }, 3000);\n  }\n\n  return <button onClick={handleClick}>{count}</button>;\n}",
+    "options": [
+      "5 is displayed 5 times",
+      "0, 1, 2, 3, 4 are displayed in order",
+      "4 is displayed 5 times",
+      "0 is displayed 5 times"
+    ],
+    "correctIndex": 1,
+    "explanation": "Each render in React has its own unique closure. On the first click, count is 0; on the second click, it is 1; on the third, 2, and so on. Each setTimeout callback captures the count value at the time of its render. Therefore, 0, 1, 2, 3, 4 are displayed in order.",
+    "sourceUrl": "https://react.dev/learn/state-as-a-snapshot"
+  },
+  {
+    "id": "react-basics-020",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "When is lifting state up needed in React?",
+    "options": [
+      "When optimizing component rendering performance",
+      "When two or more components need to share the same state",
+      "When you want to reduce the depth of the component tree",
+      "When fetching data from the server"
+    ],
+    "correctIndex": 1,
+    "explanation": "When two sibling components need to share the same data, the state is moved (lifted up) to the common parent component. The parent owns the state and passes it down to children via props, so a change in one child is reflected in the other.",
+    "sourceUrl": "https://react.dev/learn/sharing-state-between-components"
+  }
+]

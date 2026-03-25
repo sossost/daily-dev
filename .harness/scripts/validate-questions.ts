@@ -77,40 +77,63 @@ if (!fs.existsSync(QUESTIONS_DIR)) {
   process.exit(0)
 }
 
-const files = fs.readdirSync(QUESTIONS_DIR).filter((f) => f.endsWith('.json'))
+// Scan locale subdirectories (e.g. data/questions/en/, data/questions/ko/)
+// Falls back to root directory for backwards compatibility
+const LOCALE_DIRS = ['en', 'ko']
+const fileEntries: { locale: string; file: string; filePath: string }[] = []
 
-if (files.length === 0) {
+for (const locale of LOCALE_DIRS) {
+  const localeDir = path.join(QUESTIONS_DIR, locale)
+  if (!fs.existsSync(localeDir)) continue
+  for (const file of fs.readdirSync(localeDir).filter((f) => f.endsWith('.json'))) {
+    fileEntries.push({ locale, file, filePath: path.join(localeDir, file) })
+  }
+}
+
+// Fallback: check root directory (legacy flat structure)
+if (fileEntries.length === 0) {
+  for (const file of fs.readdirSync(QUESTIONS_DIR).filter((f) => f.endsWith('.json'))) {
+    fileEntries.push({ locale: '', file, filePath: path.join(QUESTIONS_DIR, file) })
+  }
+}
+
+if (fileEntries.length === 0) {
   console.log('No question files found. Skipping validation.')
   process.exit(0)
 }
 
 // ---------------------------------------------------------------------------
-// Global ID set for duplicate detection across all files
+// Global ID set for duplicate detection across all files (per locale)
 // ---------------------------------------------------------------------------
-const globalIds = new Set<string>()
+const globalIdsByLocale = new Map<string, Set<string>>()
 
-for (const file of files) {
-  const filePath = path.join(QUESTIONS_DIR, file)
-  console.log(`Validating ${file}...`)
+for (const { locale, file, filePath } of fileEntries) {
+  const displayName = locale !== '' ? `${locale}/${file}` : file
+  console.log(`Validating ${displayName}...`)
+
+  if (!globalIdsByLocale.has(locale)) {
+    globalIdsByLocale.set(locale, new Set())
+  }
+  const globalIds = globalIdsByLocale.get(locale)!
 
   // Try to parse JSON
   let questions: Question[]
   try {
     const raw = fs.readFileSync(filePath, 'utf-8')
     if (raw.trim().length === 0) {
-      console.error(`  ERROR [${file}]: File is empty`)
+      console.error(`  ERROR [${displayName}]: File is empty`)
       errorCount++
       continue
     }
     questions = JSON.parse(raw)
   } catch (e) {
-    console.error(`  ERROR [${file}]: Invalid JSON — ${(e as Error).message}`)
+    console.error(`  ERROR [${displayName}]: Invalid JSON — ${(e as Error).message}`)
     errorCount++
     continue
   }
 
   if (!Array.isArray(questions)) {
-    console.error(`  ERROR [${file}]: Root must be an array`)
+    console.error(`  ERROR [${displayName}]: Root must be an array`)
     errorCount++
     continue
   }
@@ -124,21 +147,21 @@ for (const file of files) {
 
     // ID checks
     if (q.id == null || q.id === '') {
-      logError(file, i, 'Missing or empty id')
+      logError(displayName, i, 'Missing or empty id')
     } else {
       // Validate ID format: {topic}-{NNN}
       const ID_PATTERN = /^[a-z][a-z-]+-\d{3}$/
       const fileTopic = file.replace('.json', '')
       if (!ID_PATTERN.test(q.id)) {
-        logError(file, i, `ID "${q.id}" does not match required pattern {topic}-{NNN} (e.g. "${fileTopic}-001")`)
+        logError(displayName, i, `ID "${q.id}" does not match required pattern {topic}-{NNN} (e.g. "${fileTopic}-001")`)
       } else if (!q.id.startsWith(fileTopic + '-')) {
-        logError(file, i, `ID "${q.id}" does not start with file topic "${fileTopic}-"`)
+        logError(displayName, i, `ID "${q.id}" does not start with file topic "${fileTopic}-"`)
       }
       if (globalIds.has(q.id)) {
-        logError(file, i, `Duplicate id across files: "${q.id}"`)
+        logError(displayName, i, `Duplicate id across files: "${q.id}"`)
       }
       if (fileIds.has(q.id)) {
-        logError(file, i, `Duplicate id within file: "${q.id}"`)
+        logError(displayName, i, `Duplicate id within file: "${q.id}"`)
       }
       globalIds.add(q.id)
       fileIds.add(q.id)
@@ -146,63 +169,63 @@ for (const file of files) {
 
     // Topic
     if (!VALID_TOPICS.includes(q.topic)) {
-      logError(file, i, `Invalid topic: "${q.topic}". Valid: ${VALID_TOPICS.join(', ')}`)
+      logError(displayName, i, `Invalid topic: "${q.topic}". Valid: ${VALID_TOPICS.join(', ')}`)
     }
 
     // Type
     if (!VALID_TYPES.includes(q.type)) {
-      logError(file, i, `Invalid type: "${q.type}". Valid: ${VALID_TYPES.join(', ')}`)
+      logError(displayName, i, `Invalid type: "${q.type}". Valid: ${VALID_TYPES.join(', ')}`)
     }
 
     // Difficulty
     if (!VALID_DIFFICULTIES.includes(q.difficulty)) {
-      logError(file, i, `Invalid difficulty: "${q.difficulty}". Valid: ${VALID_DIFFICULTIES.join(', ')}`)
+      logError(displayName, i, `Invalid difficulty: "${q.difficulty}". Valid: ${VALID_DIFFICULTIES.join(', ')}`)
     }
 
     // Question text
     if (q.question == null || q.question.trim() === '') {
-      logError(file, i, 'Question text is empty')
+      logError(displayName, i, 'Question text is empty')
     }
 
     // Options
     if (!Array.isArray(q.options) || q.options.length !== 4) {
-      logError(file, i, `Must have exactly 4 options, got ${Array.isArray(q.options) ? q.options.length : 'none'}`)
+      logError(displayName, i, `Must have exactly 4 options, got ${Array.isArray(q.options) ? q.options.length : 'none'}`)
     } else {
       // Check for duplicate options
       const optionSet = new Set(q.options.map((o: string) => o.trim()))
       if (optionSet.size !== 4) {
-        logError(file, i, 'Duplicate options detected')
+        logError(displayName, i, 'Duplicate options detected')
       }
     }
 
     // correctIndex
     if (typeof q.correctIndex !== 'number' || !Number.isInteger(q.correctIndex) || q.correctIndex < 0 || q.correctIndex > 3) {
-      logError(file, i, `correctIndex must be 0-3, got "${q.correctIndex}"`)
+      logError(displayName, i, `correctIndex must be 0-3, got "${q.correctIndex}"`)
     } else {
       correctIndexCounts[q.correctIndex]++
     }
 
     // Explanation
     if (q.explanation == null || q.explanation.trim() === '') {
-      logError(file, i, 'Explanation is empty')
+      logError(displayName, i, 'Explanation is empty')
     } else if (q.explanation.trim().length < 20) {
-      logError(file, i, `Explanation too short (${q.explanation.trim().length} chars, min 20)`)
+      logError(displayName, i, `Explanation too short (${q.explanation.trim().length} chars, min 20)`)
     }
 
     // sourceUrl
     if (q.sourceUrl == null || q.sourceUrl.trim() === '') {
-      logError(file, i, 'sourceUrl is empty')
+      logError(displayName, i, 'sourceUrl is empty')
     } else if (!q.sourceUrl.startsWith('http')) {
-      logError(file, i, `sourceUrl must start with "http", got "${q.sourceUrl.substring(0, 30)}"`)
+      logError(displayName, i, `sourceUrl must start with "http", got "${q.sourceUrl.substring(0, 30)}"`)
     }
 
     // output-prediction must have code
     if (q.type === 'output-prediction') {
       if (q.code == null || q.code.trim() === '') {
-        logError(file, i, 'output-prediction question must have a "code" field')
+        logError(displayName, i, 'output-prediction question must have a "code" field')
       } else {
         // Code execution validation
-        validateCodeExecution(file, i, q)
+        validateCodeExecution(displayName, i, q)
       }
     }
   }
@@ -213,7 +236,7 @@ for (const file of files) {
     for (const [idx, count] of Object.entries(correctIndexCounts)) {
       const ratio = count / total
       if (ratio > 0.5) {
-        logError(file, -1, `correctIndex=${idx} appears in ${(ratio * 100).toFixed(0)}% of questions (max 50%)`)
+        logError(displayName, -1, `correctIndex=${idx} appears in ${(ratio * 100).toFixed(0)}% of questions (max 50%)`)
       }
     }
   }

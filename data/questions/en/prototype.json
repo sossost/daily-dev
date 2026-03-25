@@ -1,0 +1,334 @@
+[
+  {
+    "id": "prototype-001",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the JavaScript prototype chain is correct?",
+    "options": [
+      "If a property is not found on an object, the prototype chain is traversed to search parent objects",
+      "The prototype chain only searches up to 3 levels",
+      "The prototype chain is identical to class-based inheritance",
+      "The prototype chain was removed in ES6"
+    ],
+    "correctIndex": 0,
+    "explanation": "JavaScript is a prototype-based language. When a property is not found on an object, it follows the [[Prototype]] link to search parent prototype objects. This chain continues until null is reached (above Object.prototype).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain"
+  },
+  {
+    "id": "prototype-002",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function Animal(name) {\n  this.name = name;\n}\nAnimal.prototype.speak = function() {\n  return this.name + ' makes a sound';\n};\nconst dog = new Animal('Dog');\nconsole.log(dog.speak());\nconsole.log(dog.hasOwnProperty('speak'));",
+    "options": [
+      "Dog makes a sound, true",
+      "Dog makes a sound, false",
+      "undefined, false",
+      "TypeError"
+    ],
+    "correctIndex": 1,
+    "explanation": "The dog object has the name property as its own property, but the speak method is defined on Animal.prototype. dog.speak() finds the method through the prototype chain and executes it. hasOwnProperty only checks the object's own properties, so it returns false for speak.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwnProperty"
+  },
+  {
+    "id": "prototype-003",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const obj = { a: 1 };\nconst child = Object.create(obj);\nchild.b = 2;\nconsole.log(child.a);\nconsole.log(child.b);\nconsole.log(Object.keys(child));",
+    "options": [
+      "1, 2, ['a', 'b']",
+      "undefined, 2, ['b']",
+      "1, 2, ['b']",
+      "1, 2, ['a']"
+    ],
+    "correctIndex": 2,
+    "explanation": "Object.create(obj) creates a new object with obj as its [[Prototype]]. child.a is not found on child itself, so the prototype chain is followed to find 1 on obj. child.b = 2 creates a property directly on child. Object.keys() ignores the prototype and returns only the object's own enumerable properties, so it returns ['b']. This same behavior applies to JSON.stringify(), the spread operator, etc.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create"
+  },
+  {
+    "id": "prototype-004",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the difference between __proto__ and prototype?",
+    "options": [
+      "Both refer to the same thing and are interchangeable",
+      "__proto__ was added in ES6 and prototype existed before ES5",
+      "prototype is used only on instances, __proto__ only on constructors",
+      "__proto__ is an instance's prototype link, prototype is a property of constructor functions"
+    ],
+    "correctIndex": 3,
+    "explanation": "__proto__ is the link through which an object instance points to its prototype (parent object). prototype is a property that exists on constructor functions, pointing to the object that instances' __proto__ will reference. When you use new Foo(), instance.__proto__ === Foo.prototype.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/proto"
+  },
+  {
+    "id": "prototype-005",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function Foo() {}\nFoo.prototype.x = 1;\nconst a = new Foo();\nconsole.log(a.x);\nFoo.prototype = { x: 2 };\nconsole.log(a.x);\nconst b = new Foo();\nconsole.log(b.x);",
+    "options": [
+      "1, 1, 2",
+      "1, 2, 2",
+      "1, 1, 1",
+      "2, 2, 2"
+    ],
+    "correctIndex": 0,
+    "explanation": "a references the original Foo.prototype. Replacing Foo.prototype with a new object does not change a's __proto__, which still points to the original prototype. So a.x remains 1. After the replacement, new Foo() creates b which references the new prototype, so b.x is 2.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain"
+  },
+  {
+    "id": "prototype-006",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "The following code throws 'TypeError: dog.bark is not a function'. What is the cause?",
+    "code": "function Dog(name) {\n  this.name = name;\n}\nDog.prototype = {\n  bark: function() { return 'Woof!'; }\n};\nconst dog = Dog('Rex');\ndog.bark();",
+    "options": [
+      "The bark method is not properly defined",
+      "Calling the constructor without new makes dog undefined",
+      "Replacing Dog.prototype with an object literal removes the method",
+      "this.name overwrites the bark method"
+    ],
+    "correctIndex": 1,
+    "explanation": "When a constructor function is called without the new keyword, this refers to the global object (or undefined in strict mode), and the function returns undefined. Therefore dog is undefined and bark() cannot be called. It should be called as new Dog('Rex') to create a proper instance.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new"
+  },
+  {
+    "id": "prototype-007",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between Object.create(null) and {}?",
+    "options": [
+      "There is no difference. Both create empty objects",
+      "Object.create(null) creates an object with no prototype, while {} inherits from Object.prototype",
+      "{} creates an object with no prototype, while Object.create(null) inherits from Object.prototype",
+      "Object.create(null) creates an immutable object"
+    ],
+    "correctIndex": 1,
+    "explanation": "Objects created with {} inherit from Object.prototype, giving them properties like toString(), hasOwnProperty(), and constructor. Object.create(null) creates a pure dictionary object with a null prototype that has no inherited properties at all. Such objects are safe when using user input as keys, avoiding collisions with keys like '__proto__' or 'constructor'. Before Map, this was the idiomatic way to create a safe hash map.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create"
+  },
+  {
+    "id": "prototype-008",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const arr = [1, 2, 3];\nconsole.log(arr.hasOwnProperty('length'));\nconsole.log(arr.hasOwnProperty('map'));",
+    "options": [
+      "true, true",
+      "false, false",
+      "true, false",
+      "false, true"
+    ],
+    "correctIndex": 2,
+    "explanation": "An array's length is an own property of the array instance, so hasOwnProperty('length') returns true. In contrast, map is a method defined on Array.prototype and is accessed through the prototype chain, so hasOwnProperty('map') returns false.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array"
+  },
+  {
+    "id": "prototype-009",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, constructor points to Object instead of Shape. What is the cause?",
+    "code": "function Shape(type) {\n  this.type = type;\n}\nShape.prototype = {\n  getType: function() { return this.type; }\n};\nconst s = new Shape('circle');\nconsole.log(s.constructor === Shape); // false",
+    "options": [
+      "The Shape function is not properly defined",
+      "The getType method overwrites constructor",
+      "Replacing prototype with an object literal loses the constructor property",
+      "The new keyword does not initialize the constructor reference"
+    ],
+    "correctIndex": 2,
+    "explanation": "When a function's prototype property is completely replaced with an object literal, the original constructor property on the prototype is lost. The new object literal's constructor points to Object. To fix this, explicitly restore it: Shape.prototype = { constructor: Shape, getType: ... }.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/constructor"
+  },
+  {
+    "id": "prototype-010",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of the Object.getPrototypeOf() method?",
+    "options": [
+      "Returns the object's [[Prototype]] (internal prototype)",
+      "Deletes the object's prototype chain",
+      "Returns all properties of the object",
+      "Sets the constructor function's prototype property"
+    ],
+    "correctIndex": 0,
+    "explanation": "Object.getPrototypeOf() returns the internal [[Prototype]] link of a given object — its prototype. It provides the same result as accessing __proto__, but is the standardized method. __proto__ is non-standard (legacy), so Object.getPrototypeOf() is recommended.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getPrototypeOf"
+  },
+  {
+    "id": "prototype-011",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function A() {}\nfunction B() {}\nB.prototype = Object.create(A.prototype);\nconst b = new B();\nconsole.log(b instanceof B);\nconsole.log(b instanceof A);\nconsole.log(b instanceof Object);",
+    "options": [
+      "true, false, true",
+      "true, true, true",
+      "false, true, true",
+      "true, true, false"
+    ],
+    "correctIndex": 1,
+    "explanation": "Since B.prototype is set to an object whose prototype is A.prototype, the prototype chain is: b -> B.prototype -> A.prototype -> Object.prototype -> null. instanceof checks the prototype chain, so b is an instance of B, A, and Object — all returning true.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof"
+  },
+  {
+    "id": "prototype-012",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about the relationship between prototypal inheritance and ES6 class inheritance is correct?",
+    "options": [
+      "class is a completely new inheritance mechanism unrelated to prototypes",
+      "Using class does not create a [[Prototype]] chain",
+      "Objects created with class do not support the instanceof operator",
+      "class is syntactic sugar over prototype-based inheritance"
+    ],
+    "correctIndex": 3,
+    "explanation": "ES6 class is syntactic sugar that provides a more readable syntax for prototype-based inheritance. Internally, the same prototype chain is created. When you write class A extends B, A.prototype's [[Prototype]] is set to point to B.prototype.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes"
+  },
+  {
+    "id": "prototype-013",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const parent = { x: 1 };\nconst child = Object.create(parent);\nchild.x = 2;\nconsole.log(child.x);\nconsole.log(parent.x);\ndelete child.x;\nconsole.log(child.x);",
+    "options": [
+      "2, 2, undefined",
+      "2, 1, undefined",
+      "2, 1, 1",
+      "2, 2, 1"
+    ],
+    "correctIndex": 2,
+    "explanation": "child.x = 2 creates an own property x on child (property shadowing). parent.x is unaffected and remains 1. When delete child.x removes child's own property, the prototype chain is traversed again, finding parent.x which is 1.",
+    "sourceUrl": "https://javascript.info/prototype-inheritance"
+  },
+  {
+    "id": "prototype-014",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In the following code, the for...in loop outputs prototype properties as well. How do you output only own properties?",
+    "code": "const base = { shared: true };\nconst obj = Object.create(base);\nobj.own = 'mine';\nfor (const key in obj) {\n  console.log(key); // 'own', 'shared' 모두 출력\n}",
+    "options": [
+      "Use a for...of loop",
+      "Call Object.freeze(base)",
+      "Add an obj.hasOwnProperty(key) check inside the loop",
+      "Create the object with Object.create(null)"
+    ],
+    "correctIndex": 2,
+    "explanation": "for...in iterates over all enumerable properties in the prototype chain. To process only own properties, filter with hasOwnProperty(). A more modern alternative is to use Object.keys(obj), which returns only own enumerable properties from the start.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in"
+  },
+  {
+    "id": "prototype-015",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the prototype-related difference between Object.keys() and for...in?",
+    "options": [
+      "Object.keys() includes prototype properties while for...in excludes them",
+      "Both include prototype properties",
+      "Both return only own properties",
+      "Object.keys() returns only own properties while for...in includes prototype properties"
+    ],
+    "correctIndex": 3,
+    "explanation": "Object.keys() returns only the object's own enumerable property names as an array. In contrast, for...in iterates over not just the object's own properties but all enumerable properties in the prototype chain. This is why a hasOwnProperty() check is often needed when using for...in.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys"
+  },
+  {
+    "id": "prototype-016",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about how the instanceof operator works is correct?",
+    "options": [
+      "It checks whether the constructor's prototype exists in the object's prototype chain",
+      "It compares the object's type name as a string",
+      "It only checks if the object was directly created by a specific class",
+      "It works identically to the typeof operator"
+    ],
+    "correctIndex": 0,
+    "explanation": "instanceof traverses the object's prototype chain to check whether the given constructor's prototype property exists in the chain. It examines the entire prototype chain, not just direct creation. obj instanceof Foo is true if Foo.prototype is found anywhere in obj's prototype chain.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof"
+  },
+  {
+    "id": "prototype-017",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What happens when a constructor function is called without the new keyword?",
+    "options": [
+      "new is automatically added and it works normally",
+      "this points to the global object instead of a new object, causing unintended behavior",
+      "A TypeError is thrown immediately",
+      "undefined is always returned"
+    ],
+    "correctIndex": 1,
+    "explanation": "When a constructor function is called without new, this refers to the global object (or undefined in strict mode). In non-strict mode, properties are unintentionally added to the global object (global pollution). In strict mode, assigning to undefined.property throws a TypeError. ES6 classes internally run in strict mode and automatically throw a TypeError when called without new, preventing this mistake.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new"
+  },
+  {
+    "id": "prototype-018",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "class Animal {\n  constructor(name) { this.name = name; }\n  speak() { return `${this.name} speaks`; }\n}\nclass Dog extends Animal {\n  speak() { return `${this.name} barks`; }\n}\nconst d = new Dog('Rex');\nconsole.log(d.speak());\nconsole.log(d instanceof Animal);",
+    "options": [
+      "Rex speaks, true",
+      "Rex barks, false",
+      "Rex speaks, false",
+      "Rex barks, true"
+    ],
+    "correctIndex": 3,
+    "explanation": "Dog overrides Animal's speak method, so d.speak() calls Dog's method and returns 'Rex barks'. Since Dog extends Animal, Animal.prototype exists in the prototype chain, making d instanceof Animal true.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/extends"
+  },
+  {
+    "id": "prototype-019",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function Person(name) { this.name = name; }\nPerson.prototype.greet = function() { return `Hi, ${this.name}`; };\nconst p1 = new Person('Kim');\nconst p2 = new Person('Lee');\nconsole.log(p1.greet === p2.greet);\nconsole.log(p1.name === p2.name);",
+    "options": [
+      "true, false",
+      "false, false",
+      "true, true",
+      "false, true"
+    ],
+    "correctIndex": 0,
+    "explanation": "greet is a method defined on Person.prototype, so p1 and p2 share the same function reference. Therefore p1.greet === p2.greet is true. name is an own property of each instance with different values ('Kim' vs 'Lee'), so p1.name === p2.name is false.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain"
+  },
+  {
+    "id": "prototype-020",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In the following code, an error occurs when super() is not called. What is the cause?",
+    "code": "class Base {\n  constructor() { this.x = 1; }\n}\nclass Child extends Base {\n  constructor() {\n    // super() 누락\n    this.y = 2; // ReferenceError\n  }\n}",
+    "options": [
+      "Constructors cannot be defined in class syntax",
+      "this.x must be initialized first",
+      "The extends keyword automatically calls super()",
+      "In a derived class, super() must be called before using this to complete the parent's initialization"
+    ],
+    "correctIndex": 3,
+    "explanation": "In a derived class (one using extends), super() must be called before accessing this in the constructor. super() executes the parent class's constructor to initialize the this object. Accessing this without calling super() first throws a ReferenceError.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/super"
+  }
+]

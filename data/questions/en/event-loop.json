@@ -1,0 +1,334 @@
+[
+  {
+    "id": "event-loop-001",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What best describes the role of the JavaScript event loop?",
+    "options": [
+      "It moves callbacks from the task queue to the call stack when the call stack is empty",
+      "It is a multi-threaded system for executing code in parallel",
+      "It is a dedicated engine that only handles DOM events",
+      "It is a garbage collector that manages memory"
+    ],
+    "correctIndex": 0,
+    "explanation": "The event loop is a runtime mechanism that continuously monitors the call stack and task queues (macrotask and microtask). When the call stack is empty, it first processes all microtask queue entries, then moves one callback from the macrotask queue to the call stack for execution. JavaScript is single-threaded, but the event loop enables asynchronous processing — this model is called the 'concurrency model'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop"
+  },
+  {
+    "id": "event-loop-002",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output order of the following code?",
+    "code": "console.log('1');\nsetTimeout(() => console.log('2'), 0);\nconsole.log('3');",
+    "options": [
+      "1, 2, 3",
+      "1, 3, 2",
+      "2, 1, 3",
+      "3, 1, 2"
+    ],
+    "correctIndex": 1,
+    "explanation": "Synchronous code always completes first. console.log('1') executes, then setTimeout(fn, 0) registers the callback in the macrotask queue asynchronously even with a 0ms delay (the minimum delay varies by browser, but 0ms still executes after synchronous code). console.log('3') completes the synchronous code, then the callback executes from the task queue to output '2'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/setTimeout"
+  },
+  {
+    "id": "event-loop-003",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output order of the following code?",
+    "code": "console.log('start');\nsetTimeout(() => console.log('timeout'), 0);\nPromise.resolve().then(() => console.log('promise'));\nconsole.log('end');",
+    "options": [
+      "start, end, timeout, promise",
+      "start, end, promise, timeout",
+      "start, promise, end, timeout",
+      "start, timeout, promise, end"
+    ],
+    "correctIndex": 1,
+    "explanation": "Microtasks (Promise) have higher priority than macrotasks (setTimeout). Synchronous code 'start' and 'end' execute first. When the call stack empties, 'promise' executes from the microtask queue, followed by 'timeout' from the macrotask queue.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "event-loop-004",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the difference between microtasks and macrotasks?",
+    "options": [
+      "Macrotasks have higher priority than microtasks",
+      "Microtasks execute synchronously",
+      "Their execution order is random",
+      "Microtasks execute immediately after the current task completes, before any macrotask"
+    ],
+    "correctIndex": 3,
+    "explanation": "Microtasks (Promise, queueMicrotask, MutationObserver) are processed immediately after the current task completes, before the next macrotask. Macrotasks (setTimeout, setInterval, I/O) only execute after the microtask queue is empty.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "event-loop-005",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output order of the following code?",
+    "code": "setTimeout(() => console.log('A'), 0);\nPromise.resolve()\n  .then(() => {\n    console.log('B');\n    return Promise.resolve();\n  })\n  .then(() => console.log('C'));\nPromise.resolve().then(() => console.log('D'));",
+    "options": [
+      "B, D, C, A",
+      "A, B, D, C",
+      "B, C, D, A",
+      "D, B, C, A"
+    ],
+    "correctIndex": 0,
+    "explanation": "Microtasks execute before macrotasks. 'B' from the first then and 'D' from the second Promise are registered in the microtask queue. 'B' executes first, then 'D'. The then for 'C' (from the Promise.resolve() returned in B) executes next, and finally macrotask 'A' runs.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop"
+  },
+  {
+    "id": "event-loop-006",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output order of the following code?",
+    "code": "async function foo() {\n  console.log('foo start');\n  await Promise.resolve();\n  console.log('foo end');\n}\nconsole.log('script start');\nfoo();\nconsole.log('script end');",
+    "options": [
+      "script start, foo start, foo end, script end",
+      "script start, foo start, script end, foo end",
+      "foo start, script start, script end, foo end",
+      "script start, script end, foo start, foo end"
+    ],
+    "correctIndex": 1,
+    "explanation": "Synchronous code 'script start' outputs first. Calling foo() synchronously outputs 'foo start'. The code after await ('foo end') is registered as a microtask. Then synchronous code 'script end' outputs. When the call stack empties, the microtask 'foo end' executes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "event-loop-007",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the Call Stack is correct?",
+    "options": [
+      "A structure that can execute multiple functions simultaneously",
+      "A queue that stores asynchronous callbacks",
+      "A LIFO (Last In, First Out) structure that tracks currently executing functions",
+      "A dedicated area for processing DOM events"
+    ],
+    "correctIndex": 2,
+    "explanation": "The call stack is a LIFO (Last In, First Out) structure that manages currently executing execution contexts. When a function is called it is pushed onto the stack, and when it returns it is popped. Since JavaScript is single-threaded, there is only one call stack, and only one function executes at a time.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Call_stack"
+  },
+  {
+    "id": "event-loop-008",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output order of the following code?",
+    "code": "console.log('A');\nsetTimeout(() => console.log('B'), 0);\nsetTimeout(() => console.log('C'), 0);\nconsole.log('D');",
+    "options": [
+      "A, B, C, D",
+      "A, D, C, B",
+      "A, B, D, C",
+      "A, D, B, C"
+    ],
+    "correctIndex": 3,
+    "explanation": "Synchronous code 'A' and 'D' execute first. Both setTimeout callbacks are registered in the macrotask queue. When the call stack empties, they execute in registration order: 'B', then 'C'. The macrotask queue processes in FIFO (First In, First Out) order.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/setTimeout"
+  },
+  {
+    "id": "event-loop-009",
+    "topic": "event-loop",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Why might the setTimeout in the following code not execute exactly after 1 second?",
+    "code": "setTimeout(() => console.log('실행'), 1000);\nfor (let i = 0; i < 1000000000; i++) {}",
+    "options": [
+      "The synchronous for loop occupies the call stack, so the setTimeout callback must wait",
+      "setTimeout is an unreliable API that does not guarantee exact timing",
+      "The for loop cancels the setTimeout",
+      "setTimeout and the for loop execute simultaneously"
+    ],
+    "correctIndex": 0,
+    "explanation": "The setTimeout delay is a 'minimum wait time'. After 1 second, the callback is added to the task queue, but it can only execute when the call stack is empty. If a heavy synchronous operation (the for loop) is occupying the call stack, the callback waits until that operation finishes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/setTimeout"
+  },
+  {
+    "id": "event-loop-010",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Which statement about the relationship between the Task Queue and Call Stack is correct?",
+    "options": [
+      "Task queue callbacks execute immediately even when the call stack is not empty",
+      "The call stack and task queue process work simultaneously",
+      "The event loop only moves callbacks from the task queue to the call stack when the call stack is empty",
+      "The task queue always has higher priority than the call stack"
+    ],
+    "correctIndex": 2,
+    "explanation": "The event loop continuously checks whether the call stack is completely empty. Only when it is empty does it move waiting callbacks from the task queue to the call stack one at a time. While synchronous code is executing, asynchronous callbacks can never interrupt.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop"
+  },
+  {
+    "id": "event-loop-011",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output order of the following code?",
+    "code": "Promise.resolve().then(() => console.log('A'));\nsetTimeout(() => console.log('B'), 0);\nPromise.resolve().then(() => console.log('C'));\nconsole.log('D');",
+    "options": [
+      "D, B, A, C",
+      "D, A, B, C",
+      "A, C, D, B",
+      "D, A, C, B"
+    ],
+    "correctIndex": 3,
+    "explanation": "First, synchronous code 'D' executes. Then the Promise callbacks in the microtask queue execute in order: 'A', 'C'. Once the microtask queue is empty, the setTimeout callback from the macrotask queue executes: 'B'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "event-loop-012",
+    "topic": "event-loop",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the UI freeze after clicking the button in the following code?",
+    "code": "button.onclick = function() {\n  for (let i = 0; i < 10000000; i++) {\n    processData(i);\n  }\n  updateUI();\n};",
+    "options": [
+      "JavaScript is single-threaded, so the synchronous loop blocks UI rendering while occupying the call stack",
+      "The onclick event executes asynchronously",
+      "The processData function uses excessive memory",
+      "updateUI executes before the for loop"
+    ],
+    "correctIndex": 0,
+    "explanation": "JavaScript and UI rendering run on the same main thread. When a heavy synchronous loop occupies the call stack, the event loop cannot process rendering updates, causing the UI to freeze. Solutions: delegate to a Web Worker, or break the work into small chunks and schedule them with requestAnimationFrame or setTimeout.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop"
+  },
+  {
+    "id": "event-loop-013",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the correct purpose of queueMicrotask()?",
+    "options": [
+      "Adds a task to the macrotask queue",
+      "Executes a function synchronously and immediately",
+      "Adds a task to the microtask queue to execute immediately after the current task completes",
+      "Delegates work to a Web Worker"
+    ],
+    "correctIndex": 2,
+    "explanation": "queueMicrotask() adds a callback to the microtask queue. Microtasks execute immediately after the current task completes, before the next macrotask. It has the same priority as Promise.then() and is useful when consistent asynchronous behavior is needed.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "event-loop-014",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the difference between requestAnimationFrame and setTimeout is correct?",
+    "options": [
+      "requestAnimationFrame executes synchronously",
+      "setTimeout is more suitable for animations",
+      "Both are registered in the same task queue",
+      "requestAnimationFrame executes in sync with the browser's rendering cycle, making it suitable for smooth animations"
+    ],
+    "correctIndex": 3,
+    "explanation": "requestAnimationFrame executes its callback just before the browser's next repaint (usually 60fps = ~16.7ms). setTimeout registers in the macrotask queue after the specified time, independent of the refresh rate. requestAnimationFrame is better for animations and automatically pauses when the tab is inactive.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame"
+  },
+  {
+    "id": "event-loop-015",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output order of the following code?",
+    "code": "console.log('1');\nqueueMicrotask(() => console.log('2'));\nsetTimeout(() => console.log('3'), 0);\nqueueMicrotask(() => console.log('4'));\nconsole.log('5');",
+    "options": [
+      "1, 5, 2, 4, 3",
+      "1, 2, 4, 5, 3",
+      "1, 5, 3, 2, 4",
+      "1, 5, 2, 3, 4"
+    ],
+    "correctIndex": 0,
+    "explanation": "Synchronous code '1' and '5' execute first. Then the microtask queue processes in registration order: '2', '4'. Finally, the setTimeout macrotask callback executes: '3'. queueMicrotask and Promise.then use the same microtask queue.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "event-loop-016",
+    "topic": "event-loop",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, the while loop runs infinitely. What is the cause?",
+    "code": "let done = false;\nsetTimeout(() => { done = true; }, 1000);\nwhile (!done) {\n  // 기다리는 중...\n}",
+    "options": [
+      "done is declared with const so it cannot be changed",
+      "The synchronous while loop occupies the call stack, so the setTimeout callback never gets a chance to execute",
+      "The setTimeout delay is too long",
+      "Variables declared with let cannot be accessed inside setTimeout"
+    ],
+    "correctIndex": 1,
+    "explanation": "The while loop is synchronous code that continuously occupies the call stack. The setTimeout callback waits in the macrotask queue, but the call stack must be empty for it to execute. Since the while loop never ends, the call stack never empties and done stays false forever. Busy-waiting should never be used in JavaScript.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop"
+  },
+  {
+    "id": "event-loop-017",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output order of the following code?",
+    "code": "async function async1() {\n  console.log('async1 start');\n  await async2();\n  console.log('async1 end');\n}\nasync function async2() {\n  console.log('async2');\n}\nconsole.log('script start');\nsetTimeout(() => console.log('setTimeout'), 0);\nasync1();\nconsole.log('script end');",
+    "options": [
+      "script start, async1 start, async2, async1 end, script end, setTimeout",
+      "script start, async1 start, async2, script end, setTimeout, async1 end",
+      "script start, async1 start, async2, script end, async1 end, setTimeout",
+      "script start, script end, async1 start, async2, async1 end, setTimeout"
+    ],
+    "correctIndex": 2,
+    "explanation": "'script start' outputs synchronously. Calling async1() outputs 'async1 start' synchronously, then calling async2() outputs 'async2'. The code after await becomes a microtask. 'script end' outputs synchronously, then microtask 'async1 end' executes, and finally macrotask 'setTimeout' runs.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "event-loop-018",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct execution order of MutationObserver callbacks, Promise.then callbacks, and setTimeout callbacks?",
+    "options": [
+      "setTimeout -> Promise.then -> MutationObserver",
+      "All execute simultaneously",
+      "setTimeout -> MutationObserver -> Promise.then",
+      "Promise.then and MutationObserver execute first as microtasks, setTimeout executes later as a macrotask"
+    ],
+    "correctIndex": 3,
+    "explanation": "Both Promise.then and MutationObserver callbacks are classified as microtasks. setTimeout callbacks are macrotasks. Since microtasks are processed before macrotasks, Promise.then and MutationObserver execute first, and setTimeout runs last.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver"
+  },
+  {
+    "id": "event-loop-019",
+    "topic": "event-loop",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In the following code, 'Done' is output before all processing completes. What is the cause?",
+    "code": "function processAll(items) {\n  items.forEach(item => {\n    setTimeout(() => {\n      heavyComputation(item);\n    }, 0);\n  });\n}\nprocessAll(largeArray);\nconsole.log('Done');",
+    "options": [
+      "forEach executes asynchronously",
+      "largeArray is empty",
+      "setTimeout callbacks are registered in the macrotask queue and execute only after all synchronous code completes",
+      "heavyComputation throws an error"
+    ],
+    "correctIndex": 2,
+    "explanation": "forEach itself is synchronous, but the setTimeout inside registers callbacks in the macrotask queue. After forEach registers all setTimeouts, console.log('Done') executes synchronously. The heavyComputation callbacks in the macrotask queue execute sequentially only after the call stack empties.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop"
+  },
+  {
+    "id": "event-loop-020",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "When does 'starvation' occur in the event loop?",
+    "options": [
+      "When the call stack is empty",
+      "When microtasks keep generating new microtasks, preventing macrotasks from executing",
+      "When macrotasks execute before microtasks",
+      "When the event loop stops automatically"
+    ],
+    "correctIndex": 1,
+    "explanation": "The event loop drains the entire microtask queue before executing any macrotask. If microtasks continuously generate new microtasks, the microtask queue never empties, and macrotasks (setTimeout, I/O, etc.) are starved and never execute. UI rendering is also blocked.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop"
+  }
+]

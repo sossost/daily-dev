@@ -1,0 +1,245 @@
+[
+  {
+    "id": "web-security-001",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is a Cross-Site Scripting (XSS) attack?",
+    "options": [
+      "An attack that injects malicious SQL into a server's database",
+      "An attack that injects malicious scripts into a web page to execute them in a user's browser",
+      "An attack that makes unauthorized requests to resources on a different domain",
+      "An attack that sends a massive number of requests to a server to disrupt its service"
+    ],
+    "correctIndex": 1,
+    "explanation": "XSS (Cross-Site Scripting) is an attack where an attacker injects malicious scripts into a web page, causing those scripts to execute in the browsers of users who visit the page. This can enable cookie theft, session hijacking, phishing, and more.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Cross-site_scripting"
+  },
+  {
+    "id": "web-security-002",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is a common method to prevent CSRF (Cross-Site Request Forgery) attacks?",
+    "options": [
+      "Include a CSRF token in every request and validate it on the server",
+      "Use HTTPS",
+      "Set the Content-Type header",
+      "Disable browser caching"
+    ],
+    "correctIndex": 0,
+    "explanation": "A CSRF attack tricks an authenticated user into sending unintended requests. To prevent this, the server includes a unique CSRF token with each request and validates that token on the server side to confirm the request is legitimate.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/CSRF"
+  },
+  {
+    "id": "web-security-003",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the primary purpose of Content Security Policy (CSP)?",
+    "options": [
+      "To improve web page loading speed",
+      "To restrict resources to only load from allowed origins, mitigating attacks such as XSS",
+      "To provide data encryption between servers",
+      "To limit cookie size"
+    ],
+    "correctIndex": 1,
+    "explanation": "CSP (Content Security Policy) is a security policy delivered via HTTP response headers that restricts the origins from which a web page can load resources. It blocks inline script execution and only allows resources from permitted domains, effectively mitigating XSS attacks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP"
+  },
+  {
+    "id": "web-security-004",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "Why does the following code create an XSS vulnerability?",
+    "code": "const userInput = '<img src=x onerror=alert(1)>';\ndocument.getElementById('output').innerHTML = userInput;",
+    "options": [
+      "Because getElementById references an element that does not exist",
+      "Because innerHTML parses user input as HTML, enabling script execution",
+      "Because the img tag has an invalid URL set in its src attribute",
+      "Because the alert function is blocked by the browser"
+    ],
+    "correctIndex": 1,
+    "explanation": "innerHTML parses a string as HTML and inserts it into the DOM. If user input contains event handlers like <img onerror=...>, the onerror handler executes when the image fails to load. Using textContent or escaping the input can prevent this.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML"
+  },
+  {
+    "id": "web-security-005",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What does the 'Strict' value of the SameSite cookie attribute mean?",
+    "options": [
+      "The cookie is included in all cross-origin requests",
+      "The cookie is only sent over HTTPS connections",
+      "The cookie is only sent with same-site requests and is not included even in navigation requests from external sites",
+      "The cookie's expiration is set to when the session ends"
+    ],
+    "correctIndex": 2,
+    "explanation": "SameSite=Strict is the most restrictive cookie policy, where the cookie is only sent with requests originating from the same site. Even when navigating via a link from an external site, the cookie is not sent. This is effective for CSRF defense but may impact the user experience.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value"
+  },
+  {
+    "id": "web-security-006",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement correctly describes the difference between storing authentication tokens in localStorage vs. httpOnly cookies?",
+    "options": [
+      "localStorage is safe from XSS, and httpOnly cookies are safe from CSRF",
+      "httpOnly cookies cannot be accessed by JavaScript, making them more secure against XSS, while localStorage is accessible via JavaScript and vulnerable to XSS",
+      "localStorage is automatically sent to the server, while cookies must be sent manually",
+      "Both methods provide the same level of security"
+    ],
+    "correctIndex": 1,
+    "explanation": "httpOnly cookies cannot be accessed via JavaScript's document.cookie, protecting tokens from XSS attacks. In contrast, localStorage is freely accessible via JavaScript, so tokens can be stolen during an XSS attack. However, httpOnly cookies still require separate CSRF protection.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies"
+  },
+  {
+    "id": "web-security-007",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why are inline scripts blocked with the following CSP header?\n\nContent-Security-Policy: script-src 'self'",
+    "options": [
+      "Because 'self' is an invalid CSP directive",
+      "Because 'unsafe-inline' is not included in script-src",
+      "Because the Content-Security-Policy header format is incorrect",
+      "Because CSP does not affect inline scripts"
+    ],
+    "correctIndex": 1,
+    "explanation": "script-src 'self' only allows external script files from the same origin. To allow inline scripts (code within <script> tags or event handlers), 'unsafe-inline' must be added, but this weakens XSS protection. Using nonce or hash values is recommended instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src"
+  },
+  {
+    "id": "web-security-008",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What security threat does Subresource Integrity (SRI) prevent?",
+    "options": [
+      "It verifies the integrity of resources loaded from CDNs by checking their hash to ensure they haven't been tampered with",
+      "It prevents passwords from being transmitted in plaintext",
+      "It prevents session fixation attacks",
+      "It prevents DNS spoofing attacks"
+    ],
+    "correctIndex": 0,
+    "explanation": "SRI (Subresource Integrity) adds an integrity attribute to <script> or <link> tags to verify the hash of resources loaded from external sources such as CDNs. If a resource has been tampered with, the hash won't match and the browser will block the resource from loading.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity"
+  },
+  {
+    "id": "web-security-009",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Why is the Authorization Code flow recommended over the Implicit flow in OAuth 2.0 for security reasons?",
+    "options": [
+      "Because the Authorization Code flow is faster",
+      "Because the Implicit flow does not support HTTPS",
+      "Because the Authorization Code flow does not expose the access token in the browser URL, as it is exchanged via a server-to-server back channel",
+      "Because the Implicit flow cannot issue refresh tokens"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Implicit flow includes the access token directly in the URL fragment, which risks exposure through browser history or the Referer header. The Authorization Code flow only passes an authorization code through the browser and exchanges the actual token via a server-to-server back channel, making it more secure.",
+    "sourceUrl": "https://datatracker.ietf.org/doc/html/rfc6749#section-1.3.1"
+  },
+  {
+    "id": "web-security-010",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the security vulnerability in the following code?",
+    "code": "app.get('/search', (req, res) => {\n  const query = req.query.q;\n  res.send(`<h1>검색 결과: ${query}</h1>`);\n});",
+    "options": [
+      "req.query.q could be undefined, causing a runtime error",
+      "res.json should be used instead of res.send",
+      "User input is inserted into HTML without escaping, creating a Reflected XSS vulnerability",
+      "Query parameters cannot be used in GET requests"
+    ],
+    "correctIndex": 2,
+    "explanation": "If a user passes a value like <script>alert('xss')</script> in the q parameter, the server includes it directly in the HTML response, causing the script to execute in the browser. This is a Reflected XSS attack. You should apply HTML escaping on output or use a template engine's auto-escaping feature.",
+    "sourceUrl": "https://owasp.org/www-community/attacks/xss/"
+  },
+  {
+    "id": "web-security-011",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the main reason HTTPS is more secure than HTTP?",
+    "options": [
+      "HTTPS provides faster data transfer",
+      "HTTPS enhances security by restricting cookie usage",
+      "HTTPS improves server processing speed",
+      "HTTPS uses TLS/SSL to encrypt data and prevent man-in-the-middle attacks"
+    ],
+    "correctIndex": 3,
+    "explanation": "HTTPS is HTTP with an added TLS (Transport Layer Security) encryption layer. All communication between the client and server is encrypted, protecting data from man-in-the-middle (MITM) attacks that eavesdrop on the network. It also verifies the server's identity through its certificate.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/HTTPS"
+  },
+  {
+    "id": "web-security-012",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Among the three types of XSS (Stored, Reflected, DOM-based), which correctly describes a characteristic of DOM-based XSS?",
+    "options": [
+      "The malicious script is stored in the server's database",
+      "The malicious script is reflected in the server response's HTML",
+      "It occurs on the client side when JavaScript manipulates the DOM without going through the server",
+      "It executes simultaneously on both the server and the client"
+    ],
+    "correctIndex": 2,
+    "explanation": "DOM-based XSS occurs when the server response itself is safe, but client-side JavaScript inserts user-controllable values (such as URL parameters or hashes) into the DOM without validation. A key characteristic is that attack traces do not appear in server logs, making detection difficult.",
+    "sourceUrl": "https://owasp.org/www-community/attacks/DOM_Based_XSS"
+  },
+  {
+    "id": "web-security-013",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the security vulnerability in the following JWT verification code?",
+    "code": "const decoded = jwt.decode(token);\nif (decoded.role === 'admin') {\n  grantAdminAccess();\n}",
+    "options": [
+      "jwt.decode is an async function, so await is required",
+      "jwt.decode does not verify the signature, so an attacker can forge the token",
+      "decoded.role should be accessed as decoded.payload.role",
+      "The if statement should use == instead of ==="
+    ],
+    "correctIndex": 1,
+    "explanation": "jwt.decode() only decodes the token's payload without verifying the signature. An attacker can modify the payload arbitrarily and change the role to 'admin'. You must use jwt.verify() to validate the signature with the secret key before trusting the payload.",
+    "sourceUrl": "https://datatracker.ietf.org/doc/html/rfc7519#section-7.2"
+  },
+  {
+    "id": "web-security-014",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which HTTP header is used to prevent clickjacking attacks?",
+    "options": [
+      "X-Content-Type-Options",
+      "X-Frame-Options or the CSP frame-ancestors directive",
+      "Strict-Transport-Security",
+      "X-XSS-Protection"
+    ],
+    "correctIndex": 1,
+    "explanation": "Clickjacking is an attack that overlays a transparent iframe over another site to intercept user clicks. You can restrict a page from being embedded in an iframe by setting the X-Frame-Options header (DENY or SAMEORIGIN) or using the CSP frame-ancestors directive.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options"
+  },
+  {
+    "id": "web-security-015",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Which of the following correctly describes the conditions that trigger a CORS preflight request?",
+    "options": [
+      "It occurs on every GET request",
+      "It only occurs on HTTP requests, not HTTPS",
+      "It occurs when the request does not meet simple request conditions, such as when Content-Type is application/json or custom headers are included",
+      "It always occurs even on same-origin requests"
+    ],
+    "correctIndex": 2,
+    "explanation": "A CORS preflight (OPTIONS request) is triggered when a request does not meet the simple request conditions. A simple request uses only GET/HEAD/POST methods, has a Content-Type of text/plain, multipart/form-data, or application/x-www-form-urlencoded, and includes no custom headers. Any request outside these conditions sends a preflight request first.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#preflighted_requests"
+  }
+]

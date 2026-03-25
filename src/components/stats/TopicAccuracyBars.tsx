@@ -1,8 +1,9 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import type { Topic, TopicStat } from '@/types'
-import { TOPICS, TOPIC_LABELS } from '@/types'
+import { TOPICS } from '@/types'
 
 const ANIMATION_DELAY_STEP = 0.04
 
@@ -11,11 +12,14 @@ interface TopicAccuracyBarsProps {
 }
 
 export function TopicAccuracyBars({ topicStats }: TopicAccuracyBarsProps) {
+  const t = useTranslations('stats')
+  const topicT = useTranslations('topics')
+
   const attempted = TOPICS
     .filter((topic) => topicStats[topic].totalAnswered > 0)
     .map((topic) => ({
       topic,
-      label: TOPIC_LABELS[topic],
+      label: topicT(topic),
       accuracy: topicStats[topic].accuracy,
       totalAnswered: topicStats[topic].totalAnswered,
     }))
@@ -24,7 +28,7 @@ export function TopicAccuracyBars({ topicStats }: TopicAccuracyBarsProps) {
   if (attempted.length === 0) {
     return (
       <div className="text-center py-8 text-sm text-gray-400 dark:text-gray-500">
-        토픽별 정답률을 보려면 학습을 시작하세요
+        {t('topicEmptyState')}
       </div>
     )
   }
