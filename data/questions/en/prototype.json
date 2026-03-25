@@ -330,5 +330,138 @@
     "correctIndex": 3,
     "explanation": "In a derived class (one using extends), super() must be called before accessing this in the constructor. super() executes the parent class's constructor to initialize the this object. Accessing this without calling super() first throws a ReferenceError.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/super"
+  },
+  {
+    "id": "prototype-021",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {};\nconsole.log(obj.toString());\n\nconst nullProto = Object.create(null);\nconsole.log(typeof nullProto.toString);",
+    "options": [
+      "[object Object], undefined",
+      "[object Object], function",
+      "undefined, undefined",
+      "{}, undefined"
+    ],
+    "correctIndex": 0,
+    "explanation": "A regular object {} inherits from Object.prototype, so it can use the toString() method which returns '[object Object]'. An object created with Object.create(null) has a null prototype and no inherited methods, so toString is undefined.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString"
+  },
+  {
+    "id": "prototype-022",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Why is using Object.setPrototypeOf() generally discouraged?",
+    "options": [
+      "It is a non-standard API that was removed in ES6",
+      "Dynamically changing an object's prototype invalidates engine optimizations and degrades performance",
+      "It is read-only and cannot actually change the prototype",
+      "It only works in browsers and is not available in Node.js"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.setPrototypeOf() is a standard API, but changing an object's prototype at runtime invalidates hidden class optimizations performed by JavaScript engines like V8. This can significantly slow down subsequent property accesses on that object. Using Object.create() to set the desired prototype from the beginning is recommended instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf"
+  },
+  {
+    "id": "prototype-023",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "class Base {\n  method() { return 'Base'; }\n}\nclass Mid extends Base {\n  method() { return `Mid > ${super.method()}`; }\n}\nclass Child extends Mid {\n  method() { return `Child > ${super.method()}`; }\n}\nconsole.log(new Child().method());",
+    "options": [
+      "Child > Base",
+      "Child > Mid > Base",
+      "Base > Mid > Child",
+      "Mid > Base"
+    ],
+    "correctIndex": 1,
+    "explanation": "Child.method() calls super.method() which invokes Mid.method(). Inside Mid.method(), super.method() calls Base.method() which returns 'Base'. The call chain is Child → Mid → Base, producing 'Child > Mid > Base'. super always references the method from the immediate parent in the prototype chain.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/super"
+  },
+  {
+    "id": "prototype-024",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between isPrototypeOf() and instanceof?",
+    "options": [
+      "They are identical and provide the same functionality",
+      "isPrototypeOf is called on a prototype object, while instanceof compares against a constructor function",
+      "instanceof checks the prototype chain, while isPrototypeOf only checks the direct prototype",
+      "isPrototypeOf was added in ES6, while instanceof existed before ES5"
+    ],
+    "correctIndex": 1,
+    "explanation": "isPrototypeOf() checks whether a specific prototype object exists in another object's prototype chain (A.isPrototypeOf(b)). instanceof checks whether a constructor function's prototype property exists in an object's prototype chain (b instanceof Constructor). Both traverse the full prototype chain, but they differ in calling syntax and what they compare against.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isPrototypeOf"
+  },
+  {
+    "id": "prototype-025",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "function Car(model) {\n  this.model = model;\n}\nCar.prototype.wheels = 4;\nconst tesla = new Car('Model 3');\nconst bmw = new Car('X5');\nbmw.wheels = 6;\nconsole.log(tesla.wheels);\nconsole.log(bmw.wheels);",
+    "options": [
+      "6, 6",
+      "4, 4",
+      "4, 6",
+      "undefined, 6"
+    ],
+    "correctIndex": 2,
+    "explanation": "tesla.wheels is not found on tesla itself, so the prototype chain returns Car.prototype.wheels which is 4. bmw.wheels = 6 creates an own property on bmw that shadows the prototype value, but does not modify the original prototype value. This is property shadowing in action.",
+    "sourceUrl": "https://javascript.info/prototype-inheritance"
+  },
+  {
+    "id": "prototype-026",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, JSON.stringify includes only name but not greet. Why?",
+    "code": "function User(name) {\n  this.name = name;\n}\nUser.prototype.greet = function() { return 'Hi'; };\nconst user = new User('Kim');\nconsole.log(JSON.stringify(user)); // {\"name\":\"Kim\"}",
+    "options": [
+      "greet must be a string, not a function, to be serialized",
+      "JSON.stringify includes prototype methods but excludes functions",
+      "JSON.stringify only serializes an object's own enumerable properties, not prototype properties",
+      "An error occurs because greet was not assigned directly to this in the constructor"
+    ],
+    "correctIndex": 2,
+    "explanation": "JSON.stringify() only serializes an object's own enumerable properties. Properties inherited through the prototype chain are not included. Additionally, function values cannot be represented in JSON, so even own properties that are functions are omitted. greet is both a prototype property and a function, so it is excluded for both reasons.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify"
+  },
+  {
+    "id": "prototype-027",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const proto = {\n  get value() { return 42; }\n};\nconst obj = Object.create(proto);\nobj.value = 100;\nconsole.log(obj.value);\nconsole.log(obj.hasOwnProperty('value'));",
+    "options": [
+      "100, true",
+      "42, false",
+      "42, true",
+      "100, false"
+    ],
+    "correctIndex": 1,
+    "explanation": "Properties defined as getters on the prototype behave differently from regular properties. When attempting obj.value = 100, if the prototype chain has a getter without a setter, the assignment is silently ignored in non-strict mode (or throws TypeError in strict mode). No own property is created on obj, so the getter still returns 42 and hasOwnProperty returns false.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get"
+  },
+  {
+    "id": "prototype-028",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between Object.getOwnPropertyNames() and Object.keys()?",
+    "options": [
+      "Object.getOwnPropertyNames() includes non-enumerable own properties, while Object.keys() returns only enumerable own properties",
+      "Object.keys() includes prototype properties, while Object.getOwnPropertyNames() excludes them",
+      "Both return identical results",
+      "Object.getOwnPropertyNames() also includes symbol properties"
+    ],
+    "correctIndex": 0,
+    "explanation": "Object.keys() returns only an object's own enumerable property names. Object.getOwnPropertyNames() returns all own string property names regardless of enumerability. For example, an array's length is non-enumerable, so it is not included in Object.keys but is included in getOwnPropertyNames. Neither includes prototype properties.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyNames"
   }
 ]

@@ -330,5 +330,138 @@
     "correctIndex": 3,
     "explanation": "파생 클래스(extends를 사용한 클래스)의 constructor에서는 this를 사용하기 전에 반드시 super()를 호출해야 합니다. super()가 부모 클래스의 constructor를 실행하여 this 객체를 초기화합니다. super() 없이 this에 접근하면 ReferenceError가 발생합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/super"
+  },
+  {
+    "id": "prototype-021",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const obj = {};\nconsole.log(obj.toString());\n\nconst nullProto = Object.create(null);\nconsole.log(typeof nullProto.toString);",
+    "options": [
+      "[object Object], undefined",
+      "[object Object], function",
+      "undefined, undefined",
+      "{}, undefined"
+    ],
+    "correctIndex": 0,
+    "explanation": "일반 객체 {}는 Object.prototype을 상속하므로 toString() 메서드를 사용할 수 있어 '[object Object]'를 반환합니다. 반면 Object.create(null)로 만든 객체는 프로토타입이 null이므로 상속받은 메서드가 없어 toString이 undefined입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/toString"
+  },
+  {
+    "id": "prototype-022",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Object.setPrototypeOf()의 사용이 권장되지 않는 주된 이유는?",
+    "options": [
+      "ES6에서 제거된 비표준 API이기 때문",
+      "객체의 프로토타입을 동적으로 변경하면 엔진의 최적화가 무효화되어 성능이 저하되기 때문",
+      "읽기 전용이라 프로토타입을 변경할 수 없기 때문",
+      "브라우저에서만 동작하고 Node.js에서는 사용할 수 없기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.setPrototypeOf()는 표준 API이지만, 객체의 프로토타입을 런타임에 변경하면 V8 등의 JavaScript 엔진이 수행한 히든 클래스(hidden class) 최적화가 무효화됩니다. 이로 인해 이후 해당 객체에 대한 프로퍼티 접근이 현저히 느려질 수 있습니다. 대신 Object.create()로 처음부터 원하는 프로토타입을 설정하는 것이 권장됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf"
+  },
+  {
+    "id": "prototype-023",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "class Base {\n  method() { return 'Base'; }\n}\nclass Mid extends Base {\n  method() { return `Mid > ${super.method()}`; }\n}\nclass Child extends Mid {\n  method() { return `Child > ${super.method()}`; }\n}\nconsole.log(new Child().method());",
+    "options": [
+      "Child > Base",
+      "Child > Mid > Base",
+      "Base > Mid > Child",
+      "Mid > Base"
+    ],
+    "correctIndex": 1,
+    "explanation": "Child.method()에서 super.method()는 Mid.method()를 호출합니다. Mid.method() 안에서 super.method()는 Base.method()를 호출하여 'Base'를 반환합니다. 따라서 호출 체인은 Child → Mid → Base로 이어져 최종 결과는 'Child > Mid > Base'입니다. super는 항상 프로토타입 체인의 바로 상위 클래스의 메서드를 참조합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/super"
+  },
+  {
+    "id": "prototype-024",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "isPrototypeOf()와 instanceof의 차이점은?",
+    "options": [
+      "둘 다 동일한 기능을 제공하며 차이가 없다",
+      "isPrototypeOf는 프로토타입 객체에서 호출하고, instanceof는 생성자 함수와 비교한다",
+      "instanceof가 프로토타입 체인을 검사하고, isPrototypeOf는 직접 프로토타입만 검사한다",
+      "isPrototypeOf는 ES6에서 추가되었고, instanceof는 ES5 이전부터 있었다"
+    ],
+    "correctIndex": 1,
+    "explanation": "isPrototypeOf()는 특정 프로토타입 객체가 다른 객체의 프로토타입 체인에 존재하는지 검사합니다(A.isPrototypeOf(b)). instanceof는 생성자 함수의 prototype 프로퍼티가 객체의 프로토타입 체인에 존재하는지 검사합니다(b instanceof Constructor). 둘 다 프로토타입 체인 전체를 검사하지만, 호출 방식과 비교 대상이 다릅니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/isPrototypeOf"
+  },
+  {
+    "id": "prototype-025",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function Car(model) {\n  this.model = model;\n}\nCar.prototype.wheels = 4;\nconst tesla = new Car('Model 3');\nconst bmw = new Car('X5');\nbmw.wheels = 6;\nconsole.log(tesla.wheels);\nconsole.log(bmw.wheels);",
+    "options": [
+      "6, 6",
+      "4, 4",
+      "4, 6",
+      "undefined, 6"
+    ],
+    "correctIndex": 2,
+    "explanation": "tesla.wheels는 tesla 자체에 wheels 프로퍼티가 없으므로 프로토타입 체인을 통해 Car.prototype.wheels인 4를 반환합니다. bmw.wheels = 6은 bmw 자체에 wheels 프로퍼티를 생성하여 프로토타입의 값을 가리지만(프로퍼티 섀도잉), 프로토타입의 원본 값은 변경하지 않습니다.",
+    "sourceUrl": "https://javascript.info/prototype-inheritance"
+  },
+  {
+    "id": "prototype-026",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 JSON.stringify가 name만 포함하고 greet를 포함하지 않습니다. 그 이유는?",
+    "code": "function User(name) {\n  this.name = name;\n}\nUser.prototype.greet = function() { return 'Hi'; };\nconst user = new User('Kim');\nconsole.log(JSON.stringify(user)); // {\"name\":\"Kim\"}",
+    "options": [
+      "greet가 함수가 아닌 문자열이어야 직렬화된다",
+      "JSON.stringify는 프로토타입의 메서드도 포함하지만 함수는 제외한다",
+      "JSON.stringify는 객체 자신의 열거 가능한 프로퍼티만 직렬화하며, 프로토타입 프로퍼티는 포함하지 않는다",
+      "User 생성자에서 greet를 this에 직접 할당하지 않았기 때문에 에러가 발생한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "JSON.stringify()는 객체 자신의(own) 열거 가능한 프로퍼티만 직렬화합니다. 프로토타입 체인을 통해 상속된 프로퍼티는 포함하지 않습니다. 또한 함수 값은 JSON으로 표현할 수 없어 자체 프로퍼티라도 함수인 경우 생략됩니다. greet는 프로토타입 프로퍼티이면서 함수이므로 두 가지 이유로 제외됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify"
+  },
+  {
+    "id": "prototype-027",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const proto = {\n  get value() { return 42; }\n};\nconst obj = Object.create(proto);\nobj.value = 100;\nconsole.log(obj.value);\nconsole.log(obj.hasOwnProperty('value'));",
+    "options": [
+      "100, true",
+      "42, false",
+      "42, true",
+      "100, false"
+    ],
+    "correctIndex": 1,
+    "explanation": "프로토타입에 getter로 정의된 프로퍼티는 일반 프로퍼티와 다르게 동작합니다. obj.value = 100을 시도해도, 프로토타입 체인에서 setter가 없는 getter만 존재하면 strict mode에서는 TypeError, 비엄격 모드에서는 조용히 무시됩니다. obj 자체에 새 프로퍼티가 생성되지 않으므로 여전히 getter를 통해 42가 반환되고 hasOwnProperty는 false입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/get"
+  },
+  {
+    "id": "prototype-028",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Object.getOwnPropertyNames()와 Object.keys()의 차이점은?",
+    "options": [
+      "Object.getOwnPropertyNames()는 열거 불가능한 자체 프로퍼티도 포함하고, Object.keys()는 열거 가능한 자체 프로퍼티만 반환한다",
+      "Object.keys()가 프로토타입 프로퍼티를 포함하고, Object.getOwnPropertyNames()는 제외한다",
+      "둘 다 동일한 결과를 반환한다",
+      "Object.getOwnPropertyNames()는 심볼 프로퍼티도 포함한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "Object.keys()는 객체 자신의 열거 가능한(enumerable) 프로퍼티 이름만 반환합니다. Object.getOwnPropertyNames()는 열거 가능 여부에 관계없이 객체 자신의 모든 문자열 프로퍼티 이름을 반환합니다. 예를 들어 배열의 length는 열거 불가능하므로 Object.keys에는 포함되지 않지만 getOwnPropertyNames에는 포함됩니다. 둘 다 프로토타입 프로퍼티는 포함하지 않습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyNames"
   }
 ]

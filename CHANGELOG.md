@@ -6,6 +6,7 @@
 
 ### Features
 
+- **code**: Add 12 tests for uncovered branches (`38372b3`)
 - **feature**: Add endless practice mode (`0629f64`)
 - **expansion**: Add git-advanced topic with 20 questions (`c17a935`)
 - **code**: Add 7 test files with 72 new tests (`7b49733`)
