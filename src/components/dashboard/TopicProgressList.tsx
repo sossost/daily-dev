@@ -31,6 +31,7 @@ const TOPIC_COLORS: Record<Topic, string> = {
   'api-design': 'bg-cyan-600',
   'web-security': 'bg-rose-600',
   database: 'bg-emerald-600',
+  'git-advanced': 'bg-amber-600',
 }
 
 const PERCENTAGE_MULTIPLIER = 100

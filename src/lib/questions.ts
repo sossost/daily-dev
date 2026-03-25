@@ -28,6 +28,7 @@ import browserApiKo from '../../data/questions/ko/browser-api.json'
 import apiDesignKo from '../../data/questions/ko/api-design.json'
 import webSecurityKo from '../../data/questions/ko/web-security.json'
 import databaseKo from '../../data/questions/ko/database.json'
+import gitAdvancedKo from '../../data/questions/ko/git-advanced.json'
 
 // English imports
 import scopeEn from '../../data/questions/en/scope.json'
@@ -52,6 +53,7 @@ import browserApiEn from '../../data/questions/en/browser-api.json'
 import apiDesignEn from '../../data/questions/en/api-design.json'
 import webSecurityEn from '../../data/questions/en/web-security.json'
 import databaseEn from '../../data/questions/en/database.json'
+import gitAdvancedEn from '../../data/questions/en/git-advanced.json'
 
 // JSON imports are typed as { topic: string } (not Topic union).
 // Structural validation is handled by .harness/scripts/validate.sh at commit time,
@@ -67,6 +69,7 @@ const QUESTIONS_BY_LOCALE: Record<Locale, Question[]> = {
     cssLayoutKo, webPerformanceKo, reactBasicsKo, dataStructuresKo,
     designPatternsKo, networkKo, algorithmsKo, nodejsKo,
     browserApiKo, apiDesignKo, webSecurityKo, databaseKo,
+    gitAdvancedKo,
   ]),
   en: buildQuestionList([
     scopeEn, closureEn, prototypeEn, thisEn, eventLoopEn, asyncEn,
@@ -74,6 +77,7 @@ const QUESTIONS_BY_LOCALE: Record<Locale, Question[]> = {
     cssLayoutEn, webPerformanceEn, reactBasicsEn, dataStructuresEn,
     designPatternsEn, networkEn, algorithmsEn, nodejsEn,
     browserApiEn, apiDesignEn, webSecurityEn, databaseEn,
+    gitAdvancedEn,
   ]),
 }
 

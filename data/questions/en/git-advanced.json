@@ -1,0 +1,324 @@
+[
+  {
+    "id": "git-advanced-001",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the key difference between git rebase and git merge?",
+    "options": [
+      "rebase creates a linear commit history, while merge creates a merge commit",
+      "rebase deletes the branch, while merge preserves it",
+      "rebase works only on remote, while merge works only locally",
+      "rebase never causes conflicts, while merge always does"
+    ],
+    "correctIndex": 0,
+    "explanation": "git rebase replays commits from the current branch onto the target branch, creating a linear history. git merge combines changes from two branches by creating a separate merge commit, preserving the branching structure in the history.",
+    "sourceUrl": "https://git-scm.com/book/en/v2/Git-Branching-Rebasing"
+  },
+  {
+    "id": "git-advanced-002",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of the git stash command?",
+    "options": [
+      "It is used to revert commits",
+      "It fetches changes from a remote repository",
+      "It temporarily saves uncommitted changes and cleans the working directory",
+      "It is used to delete branches"
+    ],
+    "correctIndex": 2,
+    "explanation": "git stash saves your uncommitted changes to a temporary storage area and restores the working directory to the last commit state. You can later apply the saved changes using git stash pop or git stash apply.",
+    "sourceUrl": "https://git-scm.com/docs/git-stash"
+  },
+  {
+    "id": "git-advanced-003",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "When would you use the git cherry-pick command?",
+    "options": [
+      "To merge all commits between branches at once",
+      "To modify commit messages",
+      "To track remote branches",
+      "To selectively apply a specific commit to another branch"
+    ],
+    "correctIndex": 3,
+    "explanation": "git cherry-pick applies a specific commit from one branch onto the current branch. Instead of merging an entire branch, you can selectively bring over only the changes you need, which is particularly useful for applying hotfixes across branches.",
+    "sourceUrl": "https://git-scm.com/docs/git-cherry-pick"
+  },
+  {
+    "id": "git-advanced-004",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "In git reset --soft, --mixed, --hard, what does --mixed reset?",
+    "options": [
+      "It resets only the commit, keeping staging and working directory",
+      "It resets the commit and staging area, keeping the working directory",
+      "It resets the commit, staging area, and working directory",
+      "It resets only the working directory, keeping commit and staging"
+    ],
+    "correctIndex": 1,
+    "explanation": "git reset --mixed (the default) resets the commit and staging area but preserves the working directory files. --soft resets only the commit pointer, --hard resets everything including the working directory. Understanding these modes is essential for safe history manipulation.",
+    "sourceUrl": "https://git-scm.com/docs/git-reset"
+  },
+  {
+    "id": "git-advanced-005",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the primary purpose of git reflog?",
+    "options": [
+      "To view the remote repository logs",
+      "To check file change history",
+      "To track the history of HEAD positions and recover lost commits",
+      "To compare differences between branches"
+    ],
+    "correctIndex": 2,
+    "explanation": "git reflog records the history of HEAD movements. Even after a reset --hard or accidental branch deletion, you can find previous commit hashes through reflog to recover lost work. It is maintained locally and expires after 90 days by default.",
+    "sourceUrl": "https://git-scm.com/docs/git-reflog"
+  },
+  {
+    "id": "git-advanced-006",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between git fetch and git pull?",
+    "options": [
+      "fetch updates only local branches, pull updates only remote branches",
+      "fetch retrieves all branches, while pull retrieves only the current branch",
+      "fetch only downloads remote changes, while pull downloads and merges into the current branch",
+      "fetch only retrieves tags, while pull only retrieves commits"
+    ],
+    "correctIndex": 2,
+    "explanation": "git fetch downloads changes from the remote repository to your local tracking branches without affecting your current work. git pull performs a fetch followed by a merge (or rebase), automatically integrating remote changes into your current branch.",
+    "sourceUrl": "https://git-scm.com/docs/git-pull"
+  },
+  {
+    "id": "git-advanced-007",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What problem does the git bisect command help solve?",
+    "options": [
+      "It automatically resolves merge conflicts",
+      "It finds the common ancestor of two branches",
+      "It splits large files into smaller chunks",
+      "It uses binary search to efficiently find the commit that introduced a bug"
+    ],
+    "correctIndex": 3,
+    "explanation": "git bisect uses a binary search algorithm to quickly find the commit that first introduced a bug. You mark a known good and bad commit, and it automatically checks out midpoints for testing, narrowing down the problematic commit in O(log n) steps.",
+    "sourceUrl": "https://git-scm.com/docs/git-bisect"
+  },
+  {
+    "id": "git-advanced-008",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between git revert and git reset?",
+    "options": [
+      "revert creates a new commit to undo changes, reset modifies the commit history itself",
+      "revert only undoes staging, reset undoes commits",
+      "revert works only locally, reset works only on remote",
+      "revert is file-level, reset is branch-level"
+    ],
+    "correctIndex": 0,
+    "explanation": "git revert creates a new commit that undoes the changes from a previous commit, preserving the history. git reset directly modifies the commit history, which can cause issues on shared branches. Use revert for public branches and reset for local-only changes.",
+    "sourceUrl": "https://git-scm.com/docs/git-revert"
+  },
+  {
+    "id": "git-advanced-009",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which action is NOT possible with git interactive rebase (git rebase -i)?",
+    "options": [
+      "Editing commit messages (reword)",
+      "Squashing multiple commits into one (squash)",
+      "Reordering commits",
+      "Importing commits from another repository"
+    ],
+    "correctIndex": 3,
+    "explanation": "Interactive rebase allows you to reword commit messages, squash/fixup commits, reorder commits, drop commits, and edit (split) commits. However, importing commits from another repository requires remote/fetch operations, which is outside the scope of rebase.",
+    "sourceUrl": "https://git-scm.com/docs/git-rebase"
+  },
+  {
+    "id": "git-advanced-010",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the main advantage of git worktree?",
+    "options": [
+      "It can mirror remote repositories",
+      "It automatically synchronizes changes between branches",
+      "It allows checking out multiple branches simultaneously in separate directories from a single repository",
+      "It provides commit history visualization"
+    ],
+    "correctIndex": 2,
+    "explanation": "git worktree lets you check out different branches into separate working directories from a single Git repository. This eliminates the need for stashing or switching branches, making it ideal for code review or hotfix work while keeping your main work intact.",
+    "sourceUrl": "https://git-scm.com/docs/git-worktree"
+  },
+  {
+    "id": "git-advanced-011",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What causes a 'detached HEAD' state and how do you resolve it?",
+    "options": [
+      "It occurs when a branch is deleted, and you must clone a new repository",
+      "It occurs during merge conflicts and resolves automatically when conflicts are fixed",
+      "It occurs when out of sync with remote and is fixed with git pull",
+      "It occurs when checking out a specific commit directly, and you resolve it by creating a branch or checking out an existing branch"
+    ],
+    "correctIndex": 3,
+    "explanation": "A detached HEAD occurs when you check out a specific commit, tag, or remote branch directly instead of a local branch. Commits made in this state don't belong to any branch. Create a new branch with git checkout -b <branch-name> to preserve your work.",
+    "sourceUrl": "https://git-scm.com/docs/git-checkout"
+  },
+  {
+    "id": "git-advanced-012",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "How do you make Git ignore a file that is already being tracked?",
+    "options": [
+      "Run git rm --cached <file> to untrack it, then add it to .gitignore",
+      "Simply adding it to .gitignore will automatically stop tracking",
+      "Use git delete <file> to delete the file",
+      "Use the git ignore <file> command"
+    ],
+    "correctIndex": 0,
+    "explanation": ".gitignore only applies to untracked files. To ignore a file already tracked by Git, you must first remove it from the index with git rm --cached <file>, then add the pattern to .gitignore. The file remains in your working directory but Git stops tracking changes.",
+    "sourceUrl": "https://git-scm.com/docs/gitignore"
+  },
+  {
+    "id": "git-advanced-013",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the final branch state after executing these commands in order?\n\ngit branch feature\ngit checkout feature\ngit commit --allow-empty -m \"A\"\ngit checkout main\ngit merge feature --no-ff",
+    "code": "git branch feature\ngit checkout feature\ngit commit --allow-empty -m \"A\"\ngit checkout main\ngit merge feature --no-ff",
+    "options": [
+      "Commit A is applied to main via fast-forward",
+      "A merge commit is created on main containing commit A",
+      "The feature branch is deleted",
+      "A conflict occurs"
+    ],
+    "correctIndex": 1,
+    "explanation": "The --no-ff flag forces Git to create a merge commit even when a fast-forward merge is possible. This preserves the feature branch history as a distinct set of commits, making it clear where the feature work began and ended in the project history.",
+    "sourceUrl": "https://git-scm.com/docs/git-merge"
+  },
+  {
+    "id": "git-advanced-014",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why is git push --force-with-lease safer than git push --force?",
+    "options": [
+      "Because force-with-lease only pushes local changes",
+      "Because force-with-lease automatically creates backups",
+      "Because force-with-lease only force-pushes when the remote branch is in the expected state, preventing overwriting others' commits",
+      "Because force-with-lease requires admin permissions"
+    ],
+    "correctIndex": 2,
+    "explanation": "git push --force-with-lease compares the local expectation of the remote branch state with its actual state. If someone else has pushed commits since your last fetch, the push is rejected, preventing accidental overwriting of a colleague's work.",
+    "sourceUrl": "https://git-scm.com/docs/git-push"
+  },
+  {
+    "id": "git-advanced-015",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Among git diff, git diff --staged, and git diff HEAD, what does git diff --staged compare?",
+    "options": [
+      "Working directory vs staging area",
+      "Staging area vs last commit",
+      "Working directory vs last commit",
+      "Differences between two branches"
+    ],
+    "correctIndex": 1,
+    "explanation": "git diff compares the working directory with the staging area. git diff --staged (or --cached) compares the staging area with the last commit. git diff HEAD compares the working directory with the last commit, showing all changes regardless of staging status.",
+    "sourceUrl": "https://git-scm.com/docs/git-diff"
+  },
+  {
+    "id": "git-advanced-016",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the difference between git submodule and git subtree?",
+    "options": [
+      "submodule includes an external repo as a reference to a specific commit, while subtree merges the external repo's code directly into the project",
+      "submodule is file-level, while subtree is directory-level",
+      "submodule is read-only, while subtree is writable",
+      "submodule works only locally, while subtree works only on remote"
+    ],
+    "correctIndex": 0,
+    "explanation": "git submodule includes an external repository as a pointer (reference) to a specific commit, managed separately. git subtree merges the external repository's history directly into the current project as one repository. Subtree is simpler but submodule offers easier independent update management.",
+    "sourceUrl": "https://git-scm.com/book/en/v2/Git-Tools-Submodules"
+  },
+  {
+    "id": "git-advanced-017",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "What is the format of conflict markers when a git merge conflict occurs?",
+    "options": [
+      "<<< MINE ... === ... THEIRS >>>",
+      "<<<<<<< HEAD ... ======= ... >>>>>>> branch-name",
+      "--- HEAD ... +++ branch-name",
+      "BEGIN CONFLICT ... END CONFLICT"
+    ],
+    "correctIndex": 1,
+    "explanation": "Git conflict markers consist of <<<<<<< HEAD (current branch changes), ======= (separator), and >>>>>>> branch-name (incoming branch changes). Developers must remove all markers and choose or modify the desired code before committing the resolution.",
+    "sourceUrl": "https://git-scm.com/docs/git-merge"
+  },
+  {
+    "id": "git-advanced-018",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the difference between pre-commit and pre-push Git hooks?",
+    "options": [
+      "pre-commit runs on the server, pre-push runs on the client",
+      "pre-commit is automatic, pre-push must be run manually",
+      "pre-commit checks messages, pre-push checks code",
+      "pre-commit runs before a commit is created, pre-push runs before data is sent to the remote repository"
+    ],
+    "correctIndex": 3,
+    "explanation": "The pre-commit hook runs when executing git commit, before the commit is created, commonly used for linting and formatting checks. The pre-push hook runs during git push, before data is transferred to the remote, commonly used for running tests or enforcing branch policies.",
+    "sourceUrl": "https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks"
+  },
+  {
+    "id": "git-advanced-019",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What does the following command show?\n\ngit log --oneline main..feature",
+    "code": "git log --oneline main..feature",
+    "options": [
+      "All commits from both main and feature",
+      "Commits that exist in feature but not in main",
+      "Commits that exist in main but not in feature",
+      "Only the common commits between main and feature"
+    ],
+    "correctIndex": 1,
+    "explanation": "The double-dot (..) notation in git log A..B shows 'commits in B that are not in A'. So main..feature lists commits added to the feature branch after diverging from main. Conversely, feature..main would show commits added to main after the divergence point.",
+    "sourceUrl": "https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection"
+  },
+  {
+    "id": "git-advanced-020",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What does the -a option mean in git tag -a v1.0 -m 'Release 1.0'?",
+    "options": [
+      "Create an annotated tag that includes author, date, and message information",
+      "Add the tag to all branches",
+      "Automatically tag the latest commit",
+      "Create an archive tag"
+    ],
+    "correctIndex": 0,
+    "explanation": "git tag -a creates an annotated tag, which is a full Git object containing the tagger's name, email, date, and a message. In contrast, a lightweight tag is simply a pointer to a specific commit. Annotated tags are recommended for releases as they contain important metadata.",
+    "sourceUrl": "https://git-scm.com/book/en/v2/Git-Basics-Tagging"
+  }
+]

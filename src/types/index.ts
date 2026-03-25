@@ -22,6 +22,7 @@ export const TOPICS = [
   'api-design',
   'web-security',
   'database',
+  'git-advanced',
 ] as const
 
 export type Topic = (typeof TOPICS)[number]
@@ -50,6 +51,7 @@ export const TOPIC_LABELS: Record<Topic, string> = {
   'api-design': 'API 설계',
   'web-security': '웹 보안',
   database: '데이터베이스',
+  'git-advanced': 'Git 심화',
 }
 
 // Category definitions
@@ -133,6 +135,13 @@ export const CATEGORIES: readonly CategoryDefinition[] = [
     icon: '🔒',
     topics: ['web-security'],
     positions: ['frontend', 'backend', 'fullstack'],
+  },
+  {
+    id: 'devops',
+    label: 'DevOps',
+    icon: '🔧',
+    topics: ['git-advanced'],
+    positions: ['frontend', 'backend', 'fullstack', 'devops'],
   },
 ] as const
 

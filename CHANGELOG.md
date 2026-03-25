@@ -6,6 +6,7 @@
 
 ### Features
 
+- **code**: Add 7 test files with 72 new tests (`7b49733`)
 - **content**: add 8 async questions (021-028) (`18cb005`)
 - **content**: add 8 promise questions (021-028) (`df39c74`)
 

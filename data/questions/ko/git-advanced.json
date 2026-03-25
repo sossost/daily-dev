@@ -1,0 +1,324 @@
+[
+  {
+    "id": "git-advanced-001",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "git rebase와 git merge의 가장 큰 차이점은 무엇인가요?",
+    "options": [
+      "rebase는 커밋 히스토리를 선형으로 만들고, merge는 병합 커밋을 생성한다",
+      "rebase는 브랜치를 삭제하고, merge는 브랜치를 유지한다",
+      "rebase는 원격에서만 가능하고, merge는 로컬에서만 가능하다",
+      "rebase는 충돌이 발생하지 않고, merge는 항상 충돌이 발생한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "git rebase는 현재 브랜치의 커밋들을 대상 브랜치 위에 재적용하여 선형적인 히스토리를 만듭니다. 반면 git merge는 두 브랜치의 변경사항을 합치면서 별도의 병합 커밋을 생성합니다.",
+    "sourceUrl": "https://git-scm.com/book/en/v2/Git-Branching-Rebasing"
+  },
+  {
+    "id": "git-advanced-002",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "git stash 명령어의 용도는 무엇인가요?",
+    "options": [
+      "커밋을 되돌리는 데 사용한다",
+      "원격 저장소에서 변경사항을 가져온다",
+      "현재 작업 중인 변경사항을 임시로 저장하고 워킹 디렉토리를 깨끗하게 만든다",
+      "브랜치를 삭제하는 데 사용한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "git stash는 아직 커밋하지 않은 변경사항을 임시 저장소에 보관하고, 워킹 디렉토리를 마지막 커밋 상태로 되돌립니다. 나중에 git stash pop으로 저장한 변경사항을 다시 적용할 수 있습니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-stash"
+  },
+  {
+    "id": "git-advanced-003",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "git cherry-pick 명령어는 어떤 상황에서 사용하나요?",
+    "options": [
+      "브랜치 간의 모든 커밋을 한 번에 병합할 때",
+      "커밋 메시지를 수정할 때",
+      "원격 브랜치를 추적할 때",
+      "특정 커밋 하나를 다른 브랜치에 선택적으로 적용할 때"
+    ],
+    "correctIndex": 3,
+    "explanation": "git cherry-pick은 다른 브랜치의 특정 커밋을 현재 브랜치에 적용하는 명령어입니다. 전체 브랜치를 병합하지 않고 필요한 변경사항만 선택적으로 가져올 수 있어 핫픽스 적용 등에 유용합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-cherry-pick"
+  },
+  {
+    "id": "git-advanced-004",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "git reset --soft, --mixed, --hard의 차이점에서 --mixed는 무엇을 되돌리나요?",
+    "options": [
+      "커밋만 되돌리고 스테이징과 워킹 디렉토리는 유지한다",
+      "커밋과 스테이징을 되돌리고 워킹 디렉토리는 유지한다",
+      "커밋, 스테이징, 워킹 디렉토리 모두 되돌린다",
+      "워킹 디렉토리만 되돌리고 커밋과 스테이징은 유지한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "git reset --mixed(기본값)는 커밋과 스테이징 영역을 되돌리지만 워킹 디렉토리의 파일은 그대로 유지합니다. --soft는 커밋만, --hard는 커밋, 스테이징, 워킹 디렉토리 모두를 되돌립니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-reset"
+  },
+  {
+    "id": "git-advanced-005",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "git reflog의 주요 용도는 무엇인가요?",
+    "options": [
+      "원격 저장소의 로그를 확인하는 것",
+      "파일의 변경 이력을 확인하는 것",
+      "HEAD가 가리켰던 커밋의 이력을 추적하여 잃어버린 커밋을 복구하는 것",
+      "브랜치 간의 차이를 비교하는 것"
+    ],
+    "correctIndex": 2,
+    "explanation": "git reflog는 HEAD의 이동 이력을 기록합니다. reset --hard나 실수로 브랜치를 삭제한 경우에도 reflog를 통해 이전 커밋 해시를 찾아 복구할 수 있습니다. 로컬에서만 유지되며 기본 90일 후 만료됩니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-reflog"
+  },
+  {
+    "id": "git-advanced-006",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "git fetch와 git pull의 차이점은 무엇인가요?",
+    "options": [
+      "fetch는 로컬 브랜치만, pull은 원격 브랜치만 업데이트한다",
+      "fetch는 모든 브랜치를, pull은 현재 브랜치만 가져온다",
+      "fetch는 원격 변경사항을 다운로드만 하고, pull은 다운로드 후 현재 브랜치에 병합까지 한다",
+      "fetch는 태그만 가져오고, pull은 커밋만 가져온다"
+    ],
+    "correctIndex": 2,
+    "explanation": "git fetch는 원격 저장소의 변경사항을 로컬에 다운로드하지만 현재 작업에 영향을 주지 않습니다. git pull은 fetch + merge(또는 rebase)를 수행하여 원격 변경사항을 현재 브랜치에 자동으로 통합합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-pull"
+  },
+  {
+    "id": "git-advanced-007",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "git bisect 명령어는 어떤 문제를 해결하는 데 유용한가요?",
+    "options": [
+      "충돌을 자동으로 해결하는 데 사용한다",
+      "두 브랜치의 공통 조상을 찾는 데 사용한다",
+      "대용량 파일을 분할하는 데 사용한다",
+      "이진 탐색을 통해 버그가 도입된 커밋을 효율적으로 찾는 데 사용한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "git bisect는 이진 탐색 알고리즘을 사용하여 버그가 처음 도입된 커밋을 빠르게 찾아줍니다. good/bad 커밋을 지정하면 자동으로 중간 지점을 체크아웃하여 테스트할 수 있게 해줍니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-bisect"
+  },
+  {
+    "id": "git-advanced-008",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "git revert와 git reset의 차이점은 무엇인가요?",
+    "options": [
+      "revert는 새로운 커밋을 만들어 변경을 취소하고, reset은 커밋 히스토리 자체를 변경한다",
+      "revert는 스테이징만 되돌리고, reset은 커밋을 되돌린다",
+      "revert는 로컬에서만 동작하고, reset은 원격에서만 동작한다",
+      "revert는 파일 단위이고, reset은 브랜치 단위이다"
+    ],
+    "correctIndex": 0,
+    "explanation": "git revert는 이전 커밋의 변경사항을 되돌리는 새로운 커밋을 생성하므로 히스토리가 보존됩니다. git reset은 커밋 히스토리를 직접 수정하므로 이미 공유된 브랜치에서는 사용에 주의가 필요합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-revert"
+  },
+  {
+    "id": "git-advanced-009",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "git interactive rebase (git rebase -i)로 할 수 없는 작업은 무엇인가요?",
+    "options": [
+      "커밋 메시지 수정 (reword)",
+      "여러 커밋을 하나로 합치기 (squash)",
+      "커밋 순서 변경",
+      "다른 저장소의 커밋을 가져오기"
+    ],
+    "correctIndex": 3,
+    "explanation": "git rebase -i를 사용하면 커밋 메시지 수정(reword), 커밋 합치기(squash/fixup), 커밋 순서 변경, 커밋 삭제(drop), 커밋 분할(edit) 등이 가능합니다. 하지만 다른 저장소의 커밋을 가져오는 것은 remote/fetch의 영역입니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-rebase"
+  },
+  {
+    "id": "git-advanced-010",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "git worktree의 주요 장점은 무엇인가요?",
+    "options": [
+      "원격 저장소를 미러링할 수 있다",
+      "자동으로 브랜치 간 변경사항을 동기화한다",
+      "하나의 저장소에서 여러 브랜치를 동시에 체크아웃하여 작업할 수 있다",
+      "커밋 히스토리를 시각화할 수 있다"
+    ],
+    "correctIndex": 2,
+    "explanation": "git worktree를 사용하면 하나의 Git 저장소에서 여러 디렉토리에 각각 다른 브랜치를 체크아웃할 수 있습니다. stash를 사용하지 않고도 브랜치 간 전환 없이 동시에 작업할 수 있어 코드 리뷰나 핫픽스 작업 시 유용합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-worktree"
+  },
+  {
+    "id": "git-advanced-011",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "'detached HEAD' 상태가 발생하는 원인과 해결 방법은 무엇인가요?",
+    "options": [
+      "브랜치가 삭제되어 발생하며, 새 저장소를 클론해야 한다",
+      "merge 충돌 시 발생하며, 충돌을 해결하면 자동으로 복구된다",
+      "원격 저장소와 동기화가 안 되어 발생하며, git pull로 해결한다",
+      "특정 커밋을 직접 체크아웃하면 발생하며, 브랜치를 생성하거나 기존 브랜치로 체크아웃하면 된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "detached HEAD는 브랜치가 아닌 특정 커밋, 태그, 또는 원격 브랜치를 직접 체크아웃할 때 발생합니다. 이 상태에서 만든 커밋은 어떤 브랜치에도 속하지 않으므로, git checkout -b <새 브랜치>로 브랜치를 생성하여 작업을 보존해야 합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-checkout"
+  },
+  {
+    "id": "git-advanced-012",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": ".gitignore 파일에서 이미 추적 중인 파일을 무시하려면 어떻게 해야 하나요?",
+    "options": [
+      "git rm --cached <파일>로 추적을 중단한 후 .gitignore에 추가한다",
+      ".gitignore에 추가하기만 하면 자동으로 추적이 중단된다",
+      "git delete <파일>로 파일을 삭제한다",
+      "git ignore <파일> 명령어를 사용한다"
+    ],
+    "correctIndex": 0,
+    "explanation": ".gitignore는 아직 추적되지 않는 파일에만 적용됩니다. 이미 Git이 추적 중인 파일을 무시하려면 git rm --cached <파일>로 인덱스에서 제거한 후 .gitignore에 패턴을 추가해야 합니다.",
+    "sourceUrl": "https://git-scm.com/docs/gitignore"
+  },
+  {
+    "id": "git-advanced-013",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 명령어를 순서대로 실행했을 때, 최종 브랜치 상태는 어떻게 되나요?\n\ngit branch feature\ngit checkout feature\ngit commit --allow-empty -m \"A\"\ngit checkout main\ngit merge feature --no-ff",
+    "code": "git branch feature\ngit checkout feature\ngit commit --allow-empty -m \"A\"\ngit checkout main\ngit merge feature --no-ff",
+    "options": [
+      "main에 커밋 A가 fast-forward로 적용된다",
+      "main에 병합 커밋이 생성되고 커밋 A가 포함된다",
+      "feature 브랜치가 삭제된다",
+      "충돌이 발생한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "--no-ff 옵션은 fast-forward가 가능한 경우에도 강제로 병합 커밋을 생성합니다. 이를 통해 feature 브랜치에서의 작업 이력을 명확하게 구분할 수 있습니다. 기본 merge는 가능할 때 fast-forward를 수행합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-merge"
+  },
+  {
+    "id": "git-advanced-014",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "git push --force-with-lease가 git push --force보다 안전한 이유는 무엇인가요?",
+    "options": [
+      "force-with-lease는 로컬 변경사항만 푸시하기 때문이다",
+      "force-with-lease는 자동으로 백업을 생성하기 때문이다",
+      "force-with-lease는 원격 브랜치가 예상한 상태일 때만 강제 푸시하여 다른 사람의 커밋을 덮어쓰지 않는다",
+      "force-with-lease는 관리자 권한이 필요하기 때문이다"
+    ],
+    "correctIndex": 2,
+    "explanation": "git push --force-with-lease는 로컬에서 마지막으로 fetch한 원격 브랜치의 상태와 현재 원격 상태를 비교합니다. 다른 누군가가 그 사이에 푸시했다면 거부하여 실수로 동료의 작업을 덮어쓰는 것을 방지합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-push"
+  },
+  {
+    "id": "git-advanced-015",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "git diff, git diff --staged, git diff HEAD의 차이점에서 git diff --staged는 무엇을 비교하나요?",
+    "options": [
+      "워킹 디렉토리와 스테이징 영역을 비교한다",
+      "스테이징 영역과 마지막 커밋을 비교한다",
+      "워킹 디렉토리와 마지막 커밋을 비교한다",
+      "두 브랜치 간의 차이를 비교한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "git diff는 워킹 디렉토리와 스테이징 영역을 비교하고, git diff --staged(또는 --cached)는 스테이징 영역과 마지막 커밋을 비교합니다. git diff HEAD는 워킹 디렉토리와 마지막 커밋을 비교하여 스테이징 여부와 관계없이 모든 변경사항을 보여줍니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-diff"
+  },
+  {
+    "id": "git-advanced-016",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "git submodule과 git subtree의 차이점은 무엇인가요?",
+    "options": [
+      "submodule은 외부 저장소의 특정 커밋을 참조로 포함하고, subtree는 외부 저장소의 코드를 직접 프로젝트에 병합한다",
+      "submodule은 파일 단위이고, subtree는 디렉토리 단위이다",
+      "submodule은 읽기 전용이고, subtree는 쓰기 가능하다",
+      "submodule은 로컬에서만, subtree는 원격에서만 동작한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "git submodule은 외부 저장소를 특정 커밋에 대한 참조(포인터)로 포함하여 별도 관리합니다. git subtree는 외부 저장소의 히스토리를 현재 프로젝트에 직접 병합하여 하나의 저장소처럼 관리합니다. subtree가 더 단순하지만, submodule은 독립적인 업데이트 관리가 용이합니다.",
+    "sourceUrl": "https://git-scm.com/book/en/v2/Git-Tools-Submodules"
+  },
+  {
+    "id": "git-advanced-017",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "git merge 충돌이 발생했을 때 충돌 마커의 형식은 무엇인가요?",
+    "options": [
+      "<<< MINE ... === ... THEIRS >>>",
+      "<<<<<<< HEAD ... ======= ... >>>>>>> branch-name",
+      "--- HEAD ... +++ branch-name",
+      "BEGIN CONFLICT ... END CONFLICT"
+    ],
+    "correctIndex": 1,
+    "explanation": "Git 충돌 마커는 <<<<<<< HEAD (현재 브랜치의 변경사항), ======= (구분선), >>>>>>> branch-name (병합하려는 브랜치의 변경사항)으로 구성됩니다. 개발자는 이 마커를 모두 제거하고 원하는 코드를 선택하거나 수정한 후 커밋해야 합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-merge"
+  },
+  {
+    "id": "git-advanced-018",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "git hooks 중 pre-commit과 pre-push의 차이점은 무엇인가요?",
+    "options": [
+      "pre-commit은 서버에서, pre-push는 클라이언트에서 실행된다",
+      "pre-commit은 자동이고, pre-push는 수동으로 실행해야 한다",
+      "pre-commit은 메시지를 검사하고, pre-push는 코드를 검사한다",
+      "pre-commit은 커밋 생성 전에, pre-push는 원격 저장소로 푸시하기 전에 실행된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "pre-commit 훅은 git commit 명령어 실행 시 커밋이 생성되기 전에 실행되어 린팅이나 포맷팅 검사에 사용됩니다. pre-push 훅은 git push 시 원격으로 데이터가 전송되기 전에 실행되어 테스트 실행이나 브랜치 정책 검사에 사용됩니다.",
+    "sourceUrl": "https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks"
+  },
+  {
+    "id": "git-advanced-019",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 명령어의 실행 결과는 무엇인가요?\n\ngit log --oneline main..feature",
+    "code": "git log --oneline main..feature",
+    "options": [
+      "main과 feature의 모든 커밋을 보여준다",
+      "feature에는 있지만 main에는 없는 커밋만 보여준다",
+      "main에는 있지만 feature에는 없는 커밋만 보여준다",
+      "main과 feature의 공통 커밋만 보여준다"
+    ],
+    "correctIndex": 1,
+    "explanation": "이중 점(..) 표기법에서 git log A..B는 'B에는 있지만 A에는 없는 커밋'을 보여줍니다. 따라서 main..feature는 feature 브랜치에서 main 이후에 추가된 커밋들을 나열합니다. 반대로 feature..main은 main에서 feature 이후 추가된 커밋을 보여줍니다.",
+    "sourceUrl": "https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection"
+  },
+  {
+    "id": "git-advanced-020",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "git tag -a v1.0 -m 'Release 1.0'에서 -a 옵션의 의미는 무엇인가요?",
+    "options": [
+      "주석이 달린(annotated) 태그를 생성하여 작성자, 날짜, 메시지 정보를 포함한다",
+      "모든 브랜치에 태그를 추가한다",
+      "자동으로 최신 커밋에 태그를 추가한다",
+      "아카이브 용도의 태그를 생성한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "git tag -a는 annotated 태그를 생성합니다. annotated 태그는 태그 작성자, 날짜, 메시지를 포함하는 완전한 Git 객체입니다. 반면 경량(lightweight) 태그는 단순히 특정 커밋을 가리키는 포인터입니다. 릴리스에는 annotated 태그 사용이 권장됩니다.",
+    "sourceUrl": "https://git-scm.com/book/en/v2/Git-Basics-Tagging"
+  }
+]

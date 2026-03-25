@@ -220,7 +220,9 @@
     "browser-api": "브라우저 API",
     "api-design": "API 설계",
     "web-security": "웹 보안",
-    "uncategorized": "기타"
+    "uncategorized": "기타",
+    "git-advanced": "Git 심화",
+    "database": "데이터베이스"
   },
   "challenge": {
     "title": "타임 챌린지",
