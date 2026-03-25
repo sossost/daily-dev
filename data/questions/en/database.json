@@ -192,5 +192,138 @@
     "correctIndex": 3,
     "explanation": "Serializable is the highest isolation level, where transactions behave as if they were executed sequentially. It prevents all concurrency issues including phantom reads, but significantly limits concurrency and may cause performance degradation.",
     "sourceUrl": "https://en.wikipedia.org/wiki/Isolation_(database_systems)"
+  },
+  {
+    "id": "database-013",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "The following SQL query does not work as intended. What is the cause?\n\nSELECT * FROM users WHERE age = NULL;",
+    "code": "SELECT * FROM users WHERE age = NULL;",
+    "options": [
+      "NULL comparison requires IS NULL instead of =",
+      "NULL cannot be used in a WHERE clause",
+      "An error occurs because there is no index on the age column",
+      "SELECT * excludes rows containing NULL values"
+    ],
+    "correctIndex": 0,
+    "explanation": "In SQL, NULL represents an 'unknown value' and cannot be compared using the = operator. Even NULL = NULL returns UNKNOWN, not TRUE. To check for NULL, you must use IS NULL or IS NOT NULL.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/SQL"
+  },
+  {
+    "id": "database-014",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "How many rows does the following SQL query return?\n\norders table: id(1,2), user_id(1,1)\nusers table: id(1,2,3)\n\nSELECT u.id, o.id AS order_id FROM users u LEFT JOIN orders o ON u.id = o.user_id;",
+    "code": "SELECT u.id, o.id AS order_id\nFROM users u\nLEFT JOIN orders o ON u.id = o.user_id;",
+    "options": [
+      "2 rows",
+      "3 rows",
+      "5 rows",
+      "4 rows"
+    ],
+    "correctIndex": 3,
+    "explanation": "LEFT JOIN preserves all rows from the left table (users). User 1 matches 2 orders, expanding to 2 rows. Users 2 and 3 have no matching orders but are preserved with NULL order_id due to LEFT JOIN. Total: 2+1+1 = 4 rows.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_join_left.asp"
+  },
+  {
+    "id": "database-015",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "When using an ORM, fetching a list and then individually querying each item's related data causes performance issues. What is this problem called?",
+    "options": [
+      "N+1 query problem",
+      "Cartesian product problem",
+      "Deadlock problem",
+      "Phantom read problem"
+    ],
+    "correctIndex": 0,
+    "explanation": "The N+1 query problem occurs when 1 query fetches a list, then N additional queries fetch related data for each item, resulting in N+1 total queries. It can be solved by using JOINs or eager loading to consolidate into a single query.",
+    "sourceUrl": "https://stackoverflow.com/questions/97197/what-is-the-n1-selects-problem-in-orm"
+  },
+  {
+    "id": "database-016",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "According to the CAP theorem, when a network partition (P) occurs, what must a distributed system sacrifice?",
+    "options": [
+      "Both availability and consistency can be maintained",
+      "Availability (A) or consistency (C) can be maintained, but partition tolerance (P) must be ignored",
+      "Availability (A) and consistency (C) cannot be maintained simultaneously",
+      "The system must choose between consistency (C) and availability (A)"
+    ],
+    "correctIndex": 3,
+    "explanation": "According to the CAP theorem, when a network partition (P) occurs, a distributed system cannot simultaneously satisfy both consistency (C) and availability (A), and must choose one. CP systems prioritize consistency, while AP systems prioritize availability.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/CAP_theorem"
+  },
+  {
+    "id": "database-017",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the result of the following SQL query?\n\ncolors table: id(1,2,3,4), color('red','blue','red','blue')\n\nSELECT DISTINCT color FROM colors;",
+    "code": "SELECT DISTINCT color FROM colors;",
+    "options": [
+      "red, blue, red, blue (4 rows)",
+      "red, red, blue, blue (4 sorted rows)",
+      "red, blue (2 rows)",
+      "4 (count of deduplicated values)"
+    ],
+    "correctIndex": 2,
+    "explanation": "The DISTINCT keyword removes duplicate rows from the result set. The unique values for the color column are 'red' and 'blue', so the result contains 2 rows. To count distinct values, use COUNT(DISTINCT color).",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_distinct.asp"
+  },
+  {
+    "id": "database-018",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which of the following correctly describes the difference between DELETE and TRUNCATE in SQL?",
+    "options": [
+      "DELETE is DDL, while TRUNCATE is DML",
+      "TRUNCATE can use a WHERE condition, but DELETE cannot",
+      "DELETE and TRUNCATE perform the exact same operation",
+      "DELETE removes rows one by one and is rollback-capable, while TRUNCATE quickly empties the entire table and is generally not rollback-capable"
+    ],
+    "correctIndex": 3,
+    "explanation": "DELETE is a DML command that removes rows individually, supports WHERE conditions, and allows transaction rollback. TRUNCATE is a DDL command that quickly removes all data from a table. In most DBMS, TRUNCATE cannot be rolled back and does not fire triggers.",
+    "sourceUrl": "https://www.postgresql.org/docs/current/sql-truncate.html"
+  },
+  {
+    "id": "database-019",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the security vulnerability in the following code?\n\nconst query = `SELECT * FROM users WHERE name = '${userInput}'`;",
+    "code": "const query = `SELECT * FROM users WHERE name = '${userInput}'`;",
+    "options": [
+      "SQL injection vulnerability — user input is directly interpolated into the query, allowing malicious SQL execution",
+      "XSS vulnerability — user input is rendered in HTML, allowing script execution",
+      "CSRF vulnerability — authentication token is not included in the query",
+      "Syntax error — template literals cannot be used in SQL queries"
+    ],
+    "correctIndex": 0,
+    "explanation": "Directly interpolating user input into SQL strings creates a SQL injection vulnerability. For example, if userInput is \"'; DROP TABLE users; --\", it could delete the entire table. Use parameterized queries (Prepared Statements) to prevent this.",
+    "sourceUrl": "https://owasp.org/www-community/attacks/SQL_Injection"
+  },
+  {
+    "id": "database-020",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the result of the following SQL query?\n\nSELECT COALESCE(NULL, NULL, 'hello', 'world');",
+    "code": "SELECT COALESCE(NULL, NULL, 'hello', 'world');",
+    "options": [
+      "NULL",
+      "world",
+      "hello",
+      "Error"
+    ],
+    "correctIndex": 2,
+    "explanation": "The COALESCE function returns the first non-NULL value from its argument list. It skips the two NULLs and returns 'hello', which is the third argument and the first non-NULL value. This function is commonly used for default value handling.",
+    "sourceUrl": "https://www.postgresql.org/docs/current/functions-conditional.html#FUNCTIONS-COALESCE-NVL-IFNULL"
   }
 ]

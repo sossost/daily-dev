@@ -6,6 +6,7 @@
 
 ### Features
 
+- **expansion**: Add database topic with 12 questions (`534ea8b`)
 - **content**: add 8 event-loop questions (021-028) (`c53b1c6`)
 - **code**: Add tests for low-coverage modules (`6b1df36`)
 - add onboarding flow, topic filter, and position-based topic system (`dd4400a`)
@@ -20,6 +21,10 @@
 - **code**: Fix timer leak, a11y, button types (`1677b90`)
 - **content**: add 10 browser-api questions (`e40d30e`)
 - **expansion**: Add browser-api topic (15 questions) (`6367825`)
+
+### Bug Fixes
+
+- update generate-readme to support i18n directory structure (`3d71c64`)
 
 ## 2026-03-24
 
