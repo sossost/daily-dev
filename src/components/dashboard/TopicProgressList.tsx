@@ -4,6 +4,7 @@ import { useTranslations, useLocale } from 'next-intl'
 import type { Topic, TopicStat } from '@/types'
 import { isLocale } from '@/i18n/routing'
 import { CATEGORIES_WITH_FALLBACK } from '@/types'
+import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
 import { getTopicQuestionCounts } from '@/lib/questions'
 import { CategoryAccordion } from '@/components/common/CategoryAccordion'
 
@@ -42,7 +43,14 @@ export function TopicProgressList({ topicStats }: TopicProgressListProps) {
   const rawLocale = useLocale()
   const locale = isLocale(rawLocale) ? rawLocale : 'en'
   const topicCounts = getTopicQuestionCounts(locale)
+  const enabledTopics = useTopicFilterStore((s) => s.enabledTopics)
+  const enabledSet = new Set(enabledTopics)
   const categories = CATEGORIES_WITH_FALLBACK
+    .map((c) => ({
+      ...c,
+      topics: c.topics.filter((t) => enabledSet.has(t)),
+    }))
+    .filter((c) => c.topics.length > 0)
 
   return (
     <div className="mt-8">

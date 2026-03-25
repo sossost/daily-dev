@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, FileX2, ChevronDown, ChevronUp, RotateCcw } from 'lucide-react'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useSessionStore } from '@/stores/useSessionStore'
+import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
 import { useHydration } from '@/hooks/useHydration'
 import {
   extractWrongAnswers,
@@ -14,6 +15,7 @@ import {
   generateWrongAnswerSession,
 } from '@/lib/wrong-answers'
 import type { WrongAnswerEntry } from '@/lib/wrong-answers'
+import { createTopicFilter } from '@/lib/topics'
 import { CodeBlock } from '@/components/quiz/CodeBlock'
 import { BookmarkButton } from '@/components/quiz/BookmarkButton'
 
@@ -118,10 +120,12 @@ export default function WrongAnswersPage() {
   const sessions = useProgressStore((s) => s.sessions)
   const startSession = useSessionStore((s) => s.startSession)
   const resetSession = useSessionStore((s) => s.reset)
+  const enabledTopics = useTopicFilterStore((s) => s.enabledTopics)
+  const topicFilter = createTopicFilter(enabledTopics)
 
   const wrongEntries = useMemo(
-    () => extractWrongAnswers(sessions),
-    [sessions],
+    () => extractWrongAnswers(sessions, topicFilter),
+    [sessions, topicFilter],
   )
 
   const topicGroups = useMemo(

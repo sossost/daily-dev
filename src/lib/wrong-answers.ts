@@ -26,7 +26,9 @@ export interface WrongAnswerTopicGroup {
  */
 export function extractWrongAnswers(
   sessions: readonly SessionRecord[],
+  topicFilter?: readonly Topic[],
 ): readonly WrongAnswerEntry[] {
+  const filterSet = topicFilter != null ? new Set(topicFilter) : null
   const wrongMap = new Map<string, { count: number; lastDate: string }>()
 
   for (const session of sessions) {
@@ -48,7 +50,7 @@ export function extractWrongAnswers(
   const entries: WrongAnswerEntry[] = []
   for (const [questionId, data] of wrongMap) {
     const question = getQuestionById(questionId)
-    if (question != null) {
+    if (question != null && (filterSet == null || filterSet.has(question.topic))) {
       entries.push({
         question,
         wrongCount: data.count,

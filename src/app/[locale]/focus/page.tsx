@@ -9,9 +9,11 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, Target, AlertTriangle, Zap, BookOpen } from 'lucide-react'
 import { useSessionStore } from '@/stores/useSessionStore'
 import { useProgressStore } from '@/stores/useProgressStore'
+import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
 import { useHydration } from '@/hooks/useHydration'
 import { useQuizKeyboard } from '@/hooks/useQuizKeyboard'
 import { analyzeFocusAreas, generateFocusSession } from '@/lib/focus-session'
+import { createTopicFilter } from '@/lib/topics'
 import { ProgressBar } from '@/components/quiz/ProgressBar'
 import { QuizCard, NextButton } from '@/components/quiz/QuizCard'
 import { KeyboardHint } from '@/components/quiz/KeyboardHint'
@@ -30,6 +32,8 @@ export default function FocusPage() {
   const isHydrated = useHydration()
   const topicStats = useProgressStore((s) => s.topicStats)
   const srsRecords = useProgressStore((s) => s.srsRecords)
+  const enabledTopics = useTopicFilterStore((s) => s.enabledTopics)
+  const topicFilter = createTopicFilter(enabledTopics)
 
   const cleared = useRef(false)
   if (!cleared.current) {
@@ -56,16 +60,16 @@ export default function FocusPage() {
   })
 
   const analysis = useMemo(
-    () => analyzeFocusAreas(topicStats, srsRecords, locale),
-    [topicStats, srsRecords, locale],
+    () => analyzeFocusAreas(topicStats, srsRecords, locale, topicFilter),
+    [topicStats, srsRecords, locale, topicFilter],
   )
 
   const handleStartFocus = useCallback(() => {
     reset()
-    const sessionQuestions = generateFocusSession(topicStats, srsRecords, locale)
+    const sessionQuestions = generateFocusSession(topicStats, srsRecords, locale, topicFilter)
     if (sessionQuestions.length === 0) return
     startSession(sessionQuestions)
-  }, [topicStats, srsRecords, locale, reset, startSession])
+  }, [topicStats, srsRecords, locale, topicFilter, reset, startSession])
 
   useEffect(() => {
     if (isComplete === true) {

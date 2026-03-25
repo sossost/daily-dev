@@ -6,16 +6,18 @@ import { useRouter, Link } from '@/i18n/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, Timer, Zap } from 'lucide-react'
 import { useHydration } from '@/hooks/useHydration'
+import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
 import { useQuizKeyboard } from '@/hooks/useQuizKeyboard'
 import {
   generateChallengeSession,
   computeChallengeResult,
   CHALLENGE_DURATIONS,
-  CHALLENGE_DURATION_LABELS,
+  CHALLENGE_DURATION_KEYS,
   type ChallengeDuration,
   type ChallengeResult as ChallengeResultData,
 } from '@/lib/challenge-session'
 import type { SessionQuestion, SessionAnswer } from '@/types'
+import { createTopicFilter } from '@/lib/topics'
 import { ChallengeTimer } from '@/components/challenge/ChallengeTimer'
 import { ChallengeResult } from '@/components/challenge/ChallengeResult'
 import { QuizCard } from '@/components/quiz/QuizCard'
@@ -31,6 +33,8 @@ export default function ChallengePage() {
   const t = useTranslations('challenge')
   const tc = useTranslations('common')
   const isHydrated = useHydration()
+  const enabledTopics = useTopicFilterStore((s) => s.enabledTopics)
+  const topicFilter = createTopicFilter(enabledTopics)
 
   const [phase, setPhase] = useState<ChallengePhase>('setup')
   const [duration, setDuration] = useState<ChallengeDuration>(DEFAULT_DURATION)
@@ -99,7 +103,7 @@ export default function ChallengePage() {
   })
 
   const handleStart = useCallback(() => {
-    const sessionQuestions = generateChallengeSession()
+    const sessionQuestions = generateChallengeSession(topicFilter)
     setQuestions(sessionQuestions)
     setCurrentIndex(0)
     setSelectedIndex(null)
@@ -108,7 +112,7 @@ export default function ChallengePage() {
     setResult(null)
     setPhase('quiz')
     setIsTimerRunning(true)
-  }, [])
+  }, [topicFilter])
 
   const handleRetry = useCallback(() => {
     setPhase('setup')
@@ -237,7 +241,7 @@ export default function ChallengePage() {
                   : 'text-gray-900 dark:text-gray-100'
               }`}
             >
-              {CHALLENGE_DURATION_LABELS[d]}
+              {t(CHALLENGE_DURATION_KEYS[d])}
             </span>
           </motion.button>
         ))}

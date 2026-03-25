@@ -1,14 +1,17 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Menu, Sun, Moon, Monitor, LogIn, LogOut } from 'lucide-react'
+import { Menu, Sun, Moon, Monitor, LogIn, LogOut, Filter } from 'lucide-react'
 import { useTranslations, useLocale } from 'next-intl'
 import { useThemeStore, resolveTheme } from '@/stores/useThemeStore'
+import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
 import { useAuth } from '@/hooks/useAuth'
 import { getIsAuthenticated } from '@/lib/supabase/currentUser'
 import { LoginModal } from '@/components/LoginModal'
+import { TopicFilterModal } from '@/components/TopicFilterModal'
 import { useRouter, usePathname } from '@/i18n/navigation'
 import { isLocale, type Locale } from '@/i18n/routing'
+import { TOPICS } from '@/types'
 
 type ThemeMode = 'light' | 'dark' | 'system'
 
@@ -30,15 +33,20 @@ const LOCALES: ReadonlyArray<{ value: Locale; label: string }> = [
 export function SettingsDropdown() {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const t = useTranslations('settings')
   const tc = useTranslations('common')
+  const filterT = useTranslations('topicFilter')
+  const onboardingT = useTranslations('onboarding')
   const rawLocale = useLocale()
   const locale = isLocale(rawLocale) ? rawLocale : 'en'
   const router = useRouter()
   const pathname = usePathname()
   const mode = useThemeStore((s) => s.mode)
   const setMode = useThemeStore((s) => s.setMode)
+  const selectedPosition = useTopicFilterStore((s) => s.selectedPosition)
+  const enabledTopicCount = useTopicFilterStore((s) => s.enabledTopics.length)
 
   const { user, signInWithGoogle, signInWithGitHub, signOut } = useAuth()
   const isAuthenticated = getIsAuthenticated()
@@ -104,6 +112,15 @@ export function SettingsDropdown() {
     setIsOpen(false)
     setIsLoginOpen(true)
   }
+
+  function handleOpenFilter() {
+    setIsOpen(false)
+    setIsFilterOpen(true)
+  }
+
+  const positionLabel = selectedPosition != null
+    ? onboardingT(selectedPosition)
+    : filterT('allTopics')
 
   const triggerButton = (
     <button
@@ -205,6 +222,27 @@ export function SettingsDropdown() {
             </div>
           </div>
 
+          {/* Topic Filter Section */}
+          <div className="mb-3">
+            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
+              {filterT('title')}
+            </p>
+            <button
+              type="button"
+              onClick={handleOpenFilter}
+              className="flex items-center gap-2 w-full px-2.5 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              role="menuitem"
+            >
+              <Filter size={14} className="text-gray-500 dark:text-gray-400" />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
+                {positionLabel}
+              </span>
+              <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
+                {enabledTopicCount}/{TOPICS.length}
+              </span>
+            </button>
+          </div>
+
           {/* Auth Section */}
           <div className="pt-2 border-t border-gray-100 dark:border-gray-700">
             {isAuthenticated ? (
@@ -235,6 +273,10 @@ export function SettingsDropdown() {
         onClose={() => setIsLoginOpen(false)}
         onGoogle={signInWithGoogle}
         onGitHub={signInWithGitHub}
+      />
+      <TopicFilterModal
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
       />
     </div>
   )

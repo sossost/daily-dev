@@ -2,7 +2,7 @@ import {
   generateChallengeSession,
   computeChallengeResult,
   CHALLENGE_DURATIONS,
-  CHALLENGE_DURATION_LABELS,
+  CHALLENGE_DURATION_KEYS,
 } from '@/lib/challenge-session'
 
 describe('generateChallengeSession', () => {
@@ -86,7 +86,7 @@ describe('computeChallengeResult', () => {
 describe('CHALLENGE_DURATIONS', () => {
   it('has labels for all durations', () => {
     for (const d of CHALLENGE_DURATIONS) {
-      expect(CHALLENGE_DURATION_LABELS[d]).toBeDefined()
+      expect(CHALLENGE_DURATION_KEYS[d]).toBeDefined()
     }
   })
 

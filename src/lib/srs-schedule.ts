@@ -7,6 +7,8 @@ import type { Locale } from '@/i18n/routing'
 import { getToday, addDays, isBeforeOrEqual } from '@/lib/date'
 import { getQuestionById } from '@/lib/questions'
 
+type TopicFilter = readonly Topic[] | undefined
+
 const SCHEDULE_DAYS = 14
 const PERCENTAGE_MULTIPLIER = 100
 const MASTERED_INTERVAL_THRESHOLD = 21
@@ -38,9 +40,19 @@ export interface ScheduleSummary {
 export function getUpcomingReviews(
   srsRecords: Record<string, SRSRecord>,
   locale?: Locale,
+  topicFilter?: TopicFilter,
 ): readonly DayReviewCount[] {
   const today = getToday()
-  const records = Object.values(srsRecords)
+  const filterSet = topicFilter != null ? new Set(topicFilter) : null
+  const allRecords = Object.entries(srsRecords)
+  const records = filterSet != null
+    ? allRecords
+        .filter(([id]) => {
+          const q = getQuestionById(id, locale)
+          return q != null && filterSet.has(q.topic)
+        })
+        .map(([, r]) => r)
+    : allRecords.map(([, r]) => r)
   const resolvedLocale = locale ?? 'en'
   const dayNames: Record<Locale, string[]> = {
     ko: ['일', '월', '화', '수', '목', '금', '토'],
@@ -81,15 +93,18 @@ export function getUpcomingReviews(
 export function getDueByTopic(
   srsRecords: Record<string, SRSRecord>,
   locale?: Locale,
+  topicFilter?: TopicFilter,
 ): readonly TopicReviewCount[] {
   const today = getToday()
   const records = Object.values(srsRecords)
+  const filterSet = topicFilter != null ? new Set(topicFilter) : null
 
   const topicMap = new Map<Topic, { due: number; total: number }>()
 
   for (const record of records) {
     const question = getQuestionById(record.questionId, locale)
     if (question == null) continue
+    if (filterSet != null && !filterSet.has(question.topic)) continue
 
     const { topic } = question
     const existing = topicMap.get(topic) ?? { due: 0, total: 0 }
@@ -116,10 +131,20 @@ export function getDueByTopic(
  */
 export function getScheduleSummary(
   srsRecords: Record<string, SRSRecord>,
+  topicFilter?: TopicFilter,
 ): ScheduleSummary {
   const today = getToday()
   const weekEnd = addDays(today, 7)
-  const records = Object.values(srsRecords)
+  const allRecords = Object.entries(srsRecords)
+  const filterSet = topicFilter != null ? new Set(topicFilter) : null
+  const records = filterSet != null
+    ? allRecords
+        .filter(([id]) => {
+          const q = getQuestionById(id)
+          return q != null && filterSet.has(q.topic)
+        })
+        .map(([, r]) => r)
+    : allRecords.map(([, r]) => r)
   const totalTracked = records.length
 
   if (totalTracked === 0) {

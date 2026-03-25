@@ -49,8 +49,10 @@ const MIN_ATTEMPTS_FOR_WEAK = 1
  */
 export function getWeakTopics(
   topicStats: Record<Topic, TopicStat>,
+  topicFilter?: readonly Topic[],
 ): readonly WeakTopic[] {
-  return TOPICS
+  const topics = topicFilter ?? TOPICS
+  return topics
     .filter((topic) => {
       const stat = topicStats[topic]
       return stat.totalAnswered >= MIN_ATTEMPTS_FOR_WEAK && stat.accuracy < WEAK_TOPIC_THRESHOLD
@@ -75,8 +77,12 @@ export function getOverallAccuracy(totalCorrect: number, totalAnswered: number):
 /**
  * Count how many topics have been attempted.
  */
-export function getAttemptedTopicCount(topicStats: Record<Topic, TopicStat>): number {
-  return TOPICS.filter((topic) => topicStats[topic].totalAnswered > 0).length
+export function getAttemptedTopicCount(
+  topicStats: Record<Topic, TopicStat>,
+  topicFilter?: readonly Topic[],
+): number {
+  const topics = topicFilter ?? TOPICS
+  return topics.filter((topic) => topicStats[topic].totalAnswered > 0).length
 }
 
 /**
@@ -85,8 +91,10 @@ export function getAttemptedTopicCount(topicStats: Record<Topic, TopicStat>): nu
  */
 export function getBestAndWorstTopics(
   topicStats: Record<Topic, TopicStat>,
+  topicFilter?: readonly Topic[],
 ): { best: WeakTopic | null; worst: WeakTopic | null } {
-  const attempted = TOPICS
+  const topics = topicFilter ?? TOPICS
+  const attempted = topics
     .filter((topic) => topicStats[topic].totalAnswered > 0)
     .map((topic) => ({
       topic,

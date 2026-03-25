@@ -240,7 +240,10 @@
     "keepTrying": "Keep trying!",
     "challengeComplete": "Challenge complete",
     "retryChallenge": "Try Again",
-    "backHome": "Home"
+    "backHome": "Home",
+    "duration30": "30s",
+    "duration60": "1 min",
+    "duration90": "1 min 30s"
   },
   "wrongAnswers": {
     "title": "Wrong Answers",
@@ -260,6 +263,33 @@
     "loginNudge": "Log in to sync your progress across devices",
     "loginAction": "Log in",
     "dismissLoginNudge": "Dismiss login prompt"
+  },
+  "onboarding": {
+    "title": "Welcome to DailyDev!",
+    "subtitle": "Select your position and we'll recommend the right topics for you",
+    "selectPosition": "What's your focus area?",
+    "frontend": "Frontend",
+    "frontendDesc": "React, JavaScript, CSS, Web APIs",
+    "backend": "Backend",
+    "backendDesc": "Node.js, APIs, databases, server-side",
+    "fullstack": "Fullstack",
+    "fullstackDesc": "Both frontend and backend",
+    "devops": "DevOps",
+    "devopsDesc": "Infrastructure, CI/CD, networking",
+    "topicCount": "{count} topics",
+    "customizeTopics": "Customize your topics",
+    "customizeDescription": "We pre-selected topics for {position}. Adjust as you like.",
+    "skip": "Skip",
+    "next": "Next",
+    "back": "Back",
+    "start": "Start Learning",
+    "step": "Step {current} of {total}"
+  },
+  "topicFilter": {
+    "title": "Topic Filter",
+    "description": "Manage your learning topics by position and category",
+    "allTopics": "All Topics",
+    "apply": "Apply"
   },
   "error": {
     "title": "Something went wrong",

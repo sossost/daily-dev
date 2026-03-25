@@ -4,10 +4,14 @@ import { BarChart3, Bookmark, CalendarClock, Dumbbell, FileX2, History, Target, 
 import { useTranslations } from 'next-intl'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useBookmarkStore } from '@/stores/useBookmarkStore'
+import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
+import { useHydration } from '@/hooks/useHydration'
 import { SessionStartCard } from '@/components/dashboard/SessionStartCard'
 import { TopicProgressList } from '@/components/dashboard/TopicProgressList'
 import { SettingsDropdown } from '@/components/SettingsDropdown'
+import { OnboardingModal } from '@/components/OnboardingModal'
 import { Link } from '@/i18n/navigation'
+import type { Topic } from '@/types'
 
 export default function DashboardPage() {
   const t = useTranslations()
@@ -15,6 +19,12 @@ export default function DashboardPage() {
   const totalSessions = useProgressStore((s) => s.sessions.length)
   const currentStreak = useProgressStore((s) => s.currentStreak)
   const bookmarkCount = useBookmarkStore((s) => s.bookmarkedIds.length)
+
+  const isHydrated = useHydration()
+  const isOnboardingComplete = useTopicFilterStore((s) => s.isOnboardingComplete)
+  const completeOnboarding = useTopicFilterStore((s) => s.completeOnboarding)
+
+  const showOnboarding = isHydrated && isOnboardingComplete === false
 
   return (
     <div>
@@ -27,6 +37,8 @@ export default function DashboardPage() {
         </div>
         <SettingsDropdown />
       </header>
+
+      <OnboardingModal isOpen={showOnboarding} onComplete={completeOnboarding} />
 
       <DashboardContent
         totalSessions={totalSessions}

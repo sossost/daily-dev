@@ -6,11 +6,13 @@
 
 - `ANIMATION_DELAY_STEP` = `0.05`
 - `DEFAULT_DURATION` = `60`
+- `AUTO_ADVANCE_MS` = `400`
 - `ANIMATION_DELAY_STEP` = `0.06`
 - `UPDATED_SESSION_KEY` = `'daily-dev-last-updated-session'`
 - `ANIMATION_DELAY_STEP` = `0.04`
 - `SESSION_LIMIT` = `10`
 - `LOCAL_STORAGE_PROGRESS_KEY` = `"daily-dev-progress"`
+- `ANIMATION_DELAY_STEP` = `0.02`
 - `ANIMATION_DELAY_STEP` = `0.08`
 - `HIGH_ACCURACY` = `80`
 - `MEDIUM_ACCURACY` = `60`
@@ -18,7 +20,6 @@
 - `MILLISECONDS_PER_SECOND` = `1000`
 - `LOW_TIME_THRESHOLD` = `10`
 - `PERCENTAGE_MULTIPLIER` = `100`
-- `ANIMATION_DELAY_STEP` = `0.02`
 - `PERCENTAGE_MULTIPLIER` = `100`
 - `PERCENTAGE_MULTIPLIER` = `100`
 - `ANIMATION_DELAY_STEP` = `0.03`
@@ -131,12 +132,17 @@
 ### TopicFilterState (`src/stores/useTopicFilterStore.ts`)
 ```
   readonly enabledTopics: readonly Topic[]
+  readonly selectedPosition: Position | null
+  readonly isOnboardingComplete: boolean
   toggleTopic: (topic: Topic) => void
   toggleCategory: (topics: readonly Topic[]) => void
+  togglePositionTopics: (position: Position) => void
   enableAll: () => void
   disableAll: () => void
   isEnabled: (topic: Topic) => boolean
   isAllEnabled: () => boolean
+  applyFilter: (position: Position | null, topics: readonly Topic[]) => void
+  completeOnboarding: (position: Position | null, topics: readonly Topic[]) => void
 ```
 
 ## Data
@@ -193,7 +199,7 @@
 ### src/lib/
 
 #### `challenge-session.ts` — Challenge session generator — builds a large pool of random questions for timed challenge mode. Unlike SRS sessions, challenge mode is purely for speed practice and does not affect spaced repetition scheduling.
-- `generateChallengeSession` () → SessionQuestion[] — Generate a large pool of shuffled questions for challenge mode. Returns up to CHALLENGE_POOL_SIZE questions with shuffled options.
+- `generateChallengeSession` (topicFilter?: readonly Topic[],) → SessionQuestion[] — Generate a large pool of shuffled questions for challenge mode. Returns up to CHALLENGE_POOL_SIZE questions with shuffled options.
 - `computeChallengeResult` (answers: readonly { readonly isCorrect: boolean }[], duration: ChallengeDuration,) → ChallengeResult — Compute challenge result statistics from answers.
 - `CHALLENGE_DURATIONS` readonly ChallengeDuration[]
 - `CHALLENGE_DURATION_LABELS` Record<ChallengeDuration, string>
@@ -216,19 +222,19 @@
 - `isValidDateString` (value: string) → boolean — Validate that a string is in YYYY-MM-DD format and represents a real date.
 
 #### `focus-session.ts` — Focus session generator — builds a quiz session targeting the user's weakest areas. Unlike manual practice mode, focus mode auto-selects questions based on performance data: 1. Questions from weak topics (accuracy < 70%) 2. Questions with low SRS ease (frequently answered wrong) 3. Fills remaining slots with questions from least-practiced topics
-- `analyzeFocusAreas` (topicStats: Record<Topic, TopicStat>, srsRecords: Record<string, SRSRecord>,) → FocusAnalysis — Analyze user progress to determine focus areas. Returns weak topics and count of available focus questions.
-- `selectFocusQuestions` (topicStats: Record<Topic, TopicStat>, srsRecords: Record<string, SRSRecord>,) → Question[] — Select questions for a focus session, prioritized by weakness. Priority: low-ease questions > weak-topic questions > least-practiced topics.
-- `generateFocusSession` (topicStats: Record<Topic, TopicStat>, srsRecords: Record<string, SRSRecord>,) → SessionQuestion[] — Generate a focus session targeting the user's weakest areas. Returns up to SESSION_TOTAL_QUESTIONS questions with options shuffled.
+- `analyzeFocusAreas` (topicStats: Record<Topic, TopicStat>, srsRecords: Record<string, SRSRecord>, locale?: Locale, topicFilter?: readonly Topic[],) → FocusAnalysis — Analyze user progress to determine focus areas. Returns weak topics and count of available focus questions.
+- `selectFocusQuestions` (topicStats: Record<Topic, TopicStat>, srsRecords: Record<string, SRSRecord>, locale?: Locale, topicFilter?: readonly Topic[],) → Question[] — Select questions for a focus session, prioritized by weakness. Priority: low-ease questions > weak-topic questions > least-practiced topics.
+- `generateFocusSession` (topicStats: Record<Topic, TopicStat>, srsRecords: Record<string, SRSRecord>, locale?: Locale, topicFilter?: readonly Topic[],) → SessionQuestion[] — Generate a focus session targeting the user's weakest areas. Returns up to SESSION_TOTAL_QUESTIONS questions with options shuffled.
 - `FocusAnalysis`
 - `FocusTopicInfo`
-- *deps*: types, types, lib/questions, lib/session, lib/shuffle
+- *deps*: types, types, i18n/routing, lib/questions, lib/session, lib/shuffle
 
 #### `practice-session.ts` — Practice session generator — builds a quiz session filtered by topics and difficulty. Unlike the standard SRS-driven session, practice mode lets users choose what to study.
 - `filterQuestions` (options: PracticeSessionOptions) → Question[] — Filter questions by selected topics and difficulty.
 - `generatePracticeSession` (options: PracticeSessionOptions,) → SessionQuestion[] — Generate a practice session from the given filter options. Returns up to SESSION_TOTAL_QUESTIONS questions, prioritizing unattempted ones.
-- `countAvailableQuestions` (topics: readonly Topic[], difficulty: Difficulty | 'all',) → number — Count available questions matching the given filter options (ignoring SRS).
+- `countAvailableQuestions` (topics: readonly Topic[], difficulty: Difficulty | 'all', locale?: Locale,) → number — Count available questions matching the given filter options (ignoring SRS).
 - `PracticeSessionOptions`
-- *deps*: types, types, lib/questions, lib/session, lib/shuffle
+- *deps*: types, types, i18n/routing, lib/questions, lib/session, lib/shuffle
 
 #### `progress-card.ts` — Progress card renderer — generates a shareable canvas image showing the user's learning progress summary.
 - `renderProgressCard` (canvas: HTMLCanvasElement, data: ProgressCardData,) → void
@@ -237,30 +243,30 @@
 - `ProgressCardData`
 - *deps*: types, types, lib/constants
 
-#### `questions.ts` — Question loader — statically imports all topic JSON files at build time. Provides indexed access by ID and topic. No runtime I/O.
-- `getAllQuestions` () → Question[]
-- `getQuestionsByTopic` (topic: Topic) → Question[]
-- `getQuestionById` (id: string) → Question | null
-- `getTopicQuestionCounts` () → Record<Topic, number>
-- *deps*: types
+#### `questions.ts` — Question loader — statically imports all topic JSON files at build time. Provides locale-aware, indexed access by ID and topic. No runtime I/O.
+- `getAllQuestions` (locale?: Locale) → Question[]
+- `getQuestionsByTopic` (topic: Topic, locale?: Locale) → Question[]
+- `getQuestionById` (id: string, locale?: Locale) → Question | null
+- `getTopicQuestionCounts` (locale?: Locale) → Record<Topic, number>
+- *deps*: types, i18n/routing
 
 #### `sentry.ts`
 - `initSentry` ()
 - `captureError` (error: Error, context?: Record<string, unknown>)
 
 #### `session-history.ts`
-- `formatDuration` (totalSeconds: number) → string
-- `formatSessionDate` (dateStr: string) → string
+- `formatDuration` (totalSeconds: number, locale?: Locale) → string
+- `formatSessionDate` (dateStr: string, locale?: Locale) → string
 - `getTopicBreakdown` (answers: readonly SessionAnswer[]) → readonly TopicBreakdownEntry[]
 - `TopicBreakdownEntry`
-- *deps*: types
+- *deps*: types, i18n/routing
 
 #### `session.ts` — Session generator — builds a quiz session using SRS (spaced repetition). Each session = up to 5 review questions (due today) + new questions to fill 10 total. Options are shuffled per question to prevent answer memorization.
 - `shuffleOptions` (question: Question) → Question — Shuffle the options of a question and remap the correctIndex. Returns a new Question with shuffled options.
-- `selectReviewQuestions` (srsRecords: Record<string, SRSRecord>, today: string, topicFilter?: readonly Topic[],) → Question[] — Select questions due for review today, sorted by nextReview date (oldest first). When topicFilter is provided, only questions from those topics are included.
-- `selectNewQuestions` (srsRecords: Record<string, SRSRecord>, topicFilter?: readonly Topic[],) → Question[] — Select new (unattempted) questions, ordered easy → medium → hard. Within the same difficulty, questions are shuffled randomly. When topicFilter is provided, only questions from those topics are included.
-- `generateSession` (srsRecords: Record<string, SRSRecord>, topicFilter?: readonly Topic[],) → SessionQuestion[] — Generate a session of questions: up to SESSION_REVIEW_QUESTIONS reviews, filled with new questions to reach SESSION_TOTAL_QUESTIONS. When topicFilter is provided, only questions from those topics are included.
-- *deps*: types, types, lib/date, lib/questions, lib/shuffle
+- `selectReviewQuestions` (srsRecords: Record<string, SRSRecord>, today: string, topicFilter?: readonly Topic[], locale?: Locale,) → Question[] — Select questions due for review today, sorted by nextReview date (oldest first). When topicFilter is provided, only questions from those topics are included.
+- `selectNewQuestions` (srsRecords: Record<string, SRSRecord>, topicFilter?: readonly Topic[], locale?: Locale,) → Question[] — Select new (unattempted) questions, ordered easy → medium → hard. Within the same difficulty, questions are shuffled randomly. When topicFilter is provided, only questions from those topics are included.
+- `generateSession` (srsRecords: Record<string, SRSRecord>, topicFilter?: readonly Topic[], locale?: Locale,) → SessionQuestion[] — Generate a session of questions: up to SESSION_REVIEW_QUESTIONS reviews, filled with new questions to reach SESSION_TOTAL_QUESTIONS. When topicFilter is provided, only questions from those topics are included.
+- *deps*: types, types, i18n/routing, lib/date, lib/questions, lib/shuffle
 
 #### `share.ts`
 - `buildShareText` (correct: number, total: number) → string
@@ -272,13 +278,13 @@
 - `shuffle` (array: readonly T[]) → T[] — Fisher-Yates shuffle algorithm. Returns a new shuffled array without mutating the original.
 
 #### `srs-schedule.ts` — SRS schedule utilities — compute upcoming review distribution from SRS records for visualization.
-- `getUpcomingReviews` (srsRecords: Record<string, SRSRecord>,) → readonly DayReviewCount[] — Get the number of reviews due each day for the next SCHEDULE_DAYS days.
-- `getDueByTopic` (srsRecords: Record<string, SRSRecord>,) → readonly TopicReviewCount[] — Get review counts grouped by topic for questions due today or overdue.
-- `getScheduleSummary` (srsRecords: Record<string, SRSRecord>,) → ScheduleSummary — Compute summary statistics for the SRS schedule.
+- `getUpcomingReviews` (srsRecords: Record<string, SRSRecord>, locale?: Locale, topicFilter?: TopicFilter,) → readonly DayReviewCount[] — Get the number of reviews due each day for the next SCHEDULE_DAYS days.
+- `getDueByTopic` (srsRecords: Record<string, SRSRecord>, locale?: Locale, topicFilter?: TopicFilter,) → readonly TopicReviewCount[] — Get review counts grouped by topic for questions due today or overdue.
+- `getScheduleSummary` (srsRecords: Record<string, SRSRecord>, topicFilter?: TopicFilter,) → ScheduleSummary — Compute summary statistics for the SRS schedule.
 - `DayReviewCount`
 - `TopicReviewCount`
 - `ScheduleSummary`
-- *deps*: types, types, lib/date, lib/questions
+- *deps*: types, i18n/routing, lib/date, lib/questions
 
 #### `srs.ts` — SM-2 spaced repetition algorithm. Calculates the next review state based on whether the answer was correct.
 - `calculateSRS` (current: SRSRecord, isCorrect: boolean, today: string,) → SRSRecord — SM-2 spaced repetition algorithm. Calculates the next review state based on whether the answer was correct.
@@ -287,10 +293,10 @@
 
 #### `stats.ts` — Statistics computation utilities. Pure functions that derive analytics from UserProgress data.
 - `getAccuracyTrend` (sessions: readonly SessionRecord[]) → readonly AccuracyPoint[] — Compute accuracy trend from the most recent sessions.
-- `getWeakTopics` (topicStats: Record<Topic, TopicStat>,) → readonly WeakTopic[] — Identify weak topics — topics with accuracy below threshold. Sorted by accuracy ascending (weakest first).
+- `getWeakTopics` (topicStats: Record<Topic, TopicStat>, topicFilter?: readonly Topic[],) → readonly WeakTopic[] — Identify weak topics — topics with accuracy below threshold. Sorted by accuracy ascending (weakest first).
 - `getOverallAccuracy` (totalCorrect: number, totalAnswered: number) → number — Compute overall accuracy percentage.
-- `getAttemptedTopicCount` (topicStats: Record<Topic, TopicStat>) → number — Count how many topics have been attempted.
-- `getBestAndWorstTopics` (topicStats: Record<Topic, TopicStat>,) — Get best and worst performing topic. Only considers topics with at least one answer.
+- `getAttemptedTopicCount` (topicStats: Record<Topic, TopicStat>, topicFilter?: readonly Topic[],) → number — Count how many topics have been attempted.
+- `getBestAndWorstTopics` (topicStats: Record<Topic, TopicStat>, topicFilter?: readonly Topic[],) — Get best and worst performing topic. Only considers topics with at least one answer.
 - `AccuracyPoint`
 - `WeakTopic`
 - *deps*: types, types
@@ -300,8 +306,16 @@
 - `saveToStorage` (key: string, value: T) → void
 - `clearStorage` (key: string) → void
 
+#### `topics.ts` — Topic utility functions — derives position-based topic sets from CATEGORIES definitions (single source of truth).
+- `getTopicsForPosition` (position: Position) → readonly Topic[] — Get all topics that belong to a given position, derived from CATEGORIES positions field.
+- `getCategoriesForPosition` (position: Position) → readonly CategoryDefinition[] — Get categories that belong to a given position.
+- `getPositionTopicCount` (position: Position) → number — Get the number of topics for a position.
+- `createTopicFilter` (enabledTopics: readonly Topic[]) → readonly Topic[] | undefined — Convert enabledTopics to a topicFilter parameter. Returns undefined when all topics are enabled (no filtering needed).
+- `POSITIONS` readonly Position[] — All available positions.
+- *deps*: types
+
 #### `wrong-answers.ts` — Wrong answer analysis — extracts and groups wrong answers from session history. Used by the wrong answer notebook (오답 노트) to help users review mistakes.
-- `extractWrongAnswers` (sessions: readonly SessionRecord[],) → readonly WrongAnswerEntry[] — Extract unique wrong answers from session history. Counts how many times each question was answered incorrectly. Only includes questions that exist in the current question bank.
+- `extractWrongAnswers` (sessions: readonly SessionRecord[], topicFilter?: readonly Topic[],) → readonly WrongAnswerEntry[] — Extract unique wrong answers from session history. Counts how many times each question was answered incorrectly. Only includes questions that exist in the current question bank.
 - `groupWrongAnswersByTopic` (entries: readonly WrongAnswerEntry[],) → readonly WrongAnswerTopicGroup[] — Group wrong answer entries by topic, sorted by total wrong count descending.
 - `generateWrongAnswerSession` (entries: readonly WrongAnswerEntry[],) → readonly SessionQuestion[] — Generate a retry session from wrong answer entries. Returns SessionQuestion[] ready for the session store.
 - `WrongAnswerEntry`
@@ -326,41 +340,19 @@
 - `resolveTheme` (mode: ThemeMode) → 'light' | 'dark'
 - `useThemeStore`
 
-#### `useTopicFilterStore.ts` — Topic filter store — controls which topics appear in SRS sessions. Persisted to localStorage so filter preferences survive across sessions. When all topics are enabled (default), the SRS session works as before.
+#### `useTopicFilterStore.ts` — Topic filter store — controls which topics appear across the app. Persisted to localStorage so filter preferences survive across sessions. Also stores onboarding state and selected position.
 - `useTopicFilterStore`
 - *deps*: types
 
 ### src/app/
 
-#### `layout.tsx`
-- `metadata` Metadata
-- `viewport` Viewport
-- *deps*: components/ErrorBoundary, components/SentryProvider, components/ToastProvider, components/DataProvider, components/ScrollToTop, lib/supabase/getUserId, lib/supabase/loadUserData, lib/constants
+#### `layout.tsx` — Root layout — minimal shell. Real layout (html, body, providers) lives in [locale]/layout.tsx.
 
-#### `loading.tsx`
+#### `robots.ts`
+- *deps*: lib/constants
 
-#### `page.tsx`
-- *deps*: stores/useProgressStore, stores/useBookmarkStore, components/dashboard/SessionStartCard, components/dashboard/TopicProgressList, components/ThemeToggle, components/AuthButton, lib/constants
-
-### src/app/session/
-
-#### `loading.tsx`
-
-#### `page.tsx`
-
-### src/app/session/result/
-
-#### `loading.tsx`
-
-#### `page.tsx`
-- *deps*: stores/useSessionStore, stores/useProgressStore, hooks/useHydration, components/result/ResultSummary, components/result/ReviewSchedule, components/result/AnswerReviewList, components/result/ShareButton, components/result/RetryWrongButton, components/result/LoginNudge
-
-### src/app/topics/
-
-#### `loading.tsx`
-
-#### `page.tsx`
-- *deps*: stores/useProgressStore, components/dashboard/TopicProgressList
+#### `sitemap.ts`
+- *deps*: i18n/routing, i18n/routing, lib/constants
 
 ### src/components/
 
@@ -368,8 +360,8 @@
 - `AuthButton` ()
 - *deps*: hooks/useAuth, lib/supabase/currentUser, components/LoginModal
 
-#### `DataProvider.tsx` — Injects server-fetched user data into Zustand stores. Defers child rendering until client-side injection is complete, preventing flash of default values during hydration.
-- `DataProvider` ({ userId, isAuthenticated, initialData, children, }: DataProviderProps) — Injects server-fetched user data into Zustand stores. Defers child rendering until client-side injection is complete, preventing flash of default values during hydration.
+#### `DataProvider.tsx` — Injects server-fetched user data into Zustand stores. Uses useLayoutEffect to update stores before paint, preventing both flash and "setState during render" warnings.
+- `DataProvider` ({ userId, isAuthenticated, initialData, children, }: DataProviderProps) — Injects server-fetched user data into Zustand stores. Uses useLayoutEffect to update stores before paint, preventing both flash and "setState during render" warnings.
 - *deps*: stores/useProgressStore, stores/useBookmarkStore, lib/supabase/currentUser, lib/supabase/migrate, lib/supabase/loadUserData
 
 #### `ErrorBoundary.tsx`
@@ -378,12 +370,21 @@
 #### `LoginModal.tsx`
 - `LoginModal` ({ isOpen, onClose, onGoogle, onGitHub, }: LoginModalProps)
 
+#### `OnboardingModal.tsx`
+- `OnboardingModal` ({ isOpen, onComplete }: OnboardingModalProps)
+- *deps*: types, lib/topics, components/common/CategoryAccordion
+
 #### `ScrollToTop.tsx`
 - `ScrollToTop` ()
+- *deps*: i18n/navigation
 
 #### `SentryProvider.tsx`
 - `SentryProvider` ({ children }: { children: React.ReactNode })
 - *deps*: lib/sentry
+
+#### `SettingsDropdown.tsx`
+- `SettingsDropdown` ()
+- *deps*: stores/useThemeStore, stores/useTopicFilterStore, hooks/useAuth, lib/supabase/currentUser, components/LoginModal, components/TopicFilterModal, i18n/navigation, i18n/routing, types
 
 #### `ThemeToggle.tsx`
 - `ThemeToggle` ()
@@ -392,19 +393,19 @@
 #### `ToastProvider.tsx`
 - `ToastProvider` ()
 
+#### `TopicFilterModal.tsx`
+- `TopicFilterModal` ({ isOpen, onClose }: TopicFilterModalProps)
+- *deps*: types, stores/useTopicFilterStore, lib/topics, components/common/CategoryAccordion
+
 ### src/components/dashboard/
 
 #### `SessionStartCard.tsx`
 - `SessionStartCard` ()
-- *deps*: types, stores/useTopicFilterStore, components/dashboard/TopicFilterModal
-
-#### `TopicFilterModal.tsx`
-- `TopicFilterModal` ({ isOpen, onClose }: TopicFilterModalProps)
-- *deps*: types, stores/useTopicFilterStore, components/common/CategoryAccordion
+- *deps*: i18n/navigation
 
 #### `TopicProgressList.tsx`
 - `TopicProgressList` ({ topicStats }: TopicProgressListProps)
-- *deps*: types, types, lib/questions, components/common/CategoryAccordion
+- *deps*: types, i18n/routing, types, stores/useTopicFilterStore, lib/questions, components/common/CategoryAccordion
 
 ### src/components/quiz/
 
@@ -430,16 +431,16 @@
 #### `QuizCard.tsx`
 - `QuizCard` ({ sessionQuestion, selectedIndex, isAnswered, onSelect, }: QuizCardProps)
 - `NextButton` ({ isAnswered, isLast, onNext, }: { isAnswered: boolean isLast: boolean onNext: ()
-- *deps*: types, types, components/quiz/CodeBlock, components/quiz/OptionList, components/quiz/Explanation, components/quiz/BookmarkButton
+- *deps*: types, components/quiz/CodeBlock, components/quiz/OptionList, components/quiz/Explanation, components/quiz/BookmarkButton
 
 #### `SessionContent.tsx`
-- *deps*: types, stores/useSessionStore, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, hooks/useQuizKeyboard, lib/session, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
+- *deps*: i18n/navigation, types, i18n/routing, stores/useSessionStore, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, hooks/useQuizKeyboard, lib/session, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
 
 ### src/components/result/
 
 #### `AnswerReviewList.tsx`
 - `AnswerReviewList` ({ questions, answers }: AnswerReviewListProps)
-- *deps*: types, types, components/quiz/CodeBlock, components/quiz/BookmarkButton
+- *deps*: types, components/quiz/CodeBlock, components/quiz/BookmarkButton
 
 #### `LoginNudge.tsx`
 - `LoginNudge` ()
@@ -450,7 +451,7 @@
 
 #### `RetryWrongButton.tsx`
 - `RetryWrongButton` ({ questions, answers }: RetryWrongButtonProps)
-- *deps*: types, stores/useSessionStore, lib/session
+- *deps*: i18n/navigation, types, stores/useSessionStore, lib/session
 
 #### `ReviewSchedule.tsx`
 - `ReviewSchedule` ({ incorrectCount }: ReviewScheduleProps)
@@ -472,67 +473,100 @@
 #### `useQuizKeyboard.ts` — Keyboard shortcuts for quiz sessions. - Press 1–4 to select an answer option - Press Enter or Space to advance to the next question (after answering)
 - `useQuizKeyboard` ({ isAnswered, onSelect, onNext, }: UseQuizKeyboardOptions) → void — Keyboard shortcuts for quiz sessions. - Press 1–4 to select an answer option - Press Enter or Space to advance to the next question (after answering)
 
+### src/app/[locale]/bookmarks/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: i18n/navigation, i18n/routing, stores/useBookmarkStore, hooks/useHydration, lib/questions, types, components/quiz/BookmarkButton, components/quiz/CodeBlock
+
+### src/app/[locale]/challenge/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: i18n/navigation, hooks/useHydration, stores/useTopicFilterStore, hooks/useQuizKeyboard, types, lib/topics, components/challenge/ChallengeTimer, components/challenge/ChallengeResult, components/quiz/QuizCard
+
+### src/app/[locale]/focus/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: i18n/navigation, i18n/navigation, i18n/routing, stores/useSessionStore, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, hooks/useQuizKeyboard, lib/focus-session, lib/topics, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
+
+### src/app/[locale]/history/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: i18n/navigation, stores/useProgressStore, hooks/useHydration, components/history/SessionHistoryCard
+
+### src/app/[locale]/
+
+#### `layout.tsx`
+- `generateMetadata` ({ params }: Props) → Promise<Metadata>
+- `generateStaticParams` ()
+- `viewport` Viewport
+- *deps*: components/ErrorBoundary, components/SentryProvider, components/ToastProvider, components/DataProvider, components/ScrollToTop, lib/supabase/getUserId, lib/supabase/loadUserData, lib/constants, i18n/routing
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: stores/useProgressStore, stores/useBookmarkStore, stores/useTopicFilterStore, hooks/useHydration, components/dashboard/SessionStartCard, components/dashboard/TopicProgressList, components/SettingsDropdown, components/OnboardingModal, i18n/navigation, types
+
+### src/app/[locale]/practice/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: i18n/navigation, i18n/navigation, i18n/routing, types, stores/useSessionStore, stores/useProgressStore, hooks/useHydration, hooks/useQuizKeyboard, lib/practice-session, components/practice/TopicSelector, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
+
+### src/app/[locale]/schedule/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: i18n/navigation, i18n/routing, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, lib/srs-schedule, lib/topics, components/stats/StatCard, components/schedule/ReviewTimeline, components/schedule/TopicDueList
+
+### src/app/[locale]/session/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+
+### src/app/[locale]/session/result/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: i18n/navigation, i18n/navigation, stores/useSessionStore, stores/useProgressStore, hooks/useHydration, components/result/ResultSummary, components/result/ReviewSchedule, components/result/AnswerReviewList, components/result/ShareButton, components/result/RetryWrongButton, components/result/LoginNudge
+
+### src/app/[locale]/stats/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: i18n/navigation, types, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, lib/topics, lib/stats, components/stats/AccuracyTrendChart, components/stats/WeakTopicsList, components/stats/StatCard, components/stats/TopicAccuracyBars, components/stats/ShareProgressButton
+
+### src/app/[locale]/topics/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: i18n/navigation, stores/useProgressStore, components/dashboard/TopicProgressList
+
+### src/app/[locale]/wrong-answers/
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: i18n/navigation, stores/useProgressStore, stores/useSessionStore, stores/useTopicFilterStore, hooks/useHydration, lib/wrong-answers, lib/topics, components/quiz/CodeBlock, components/quiz/BookmarkButton
+
 ### src/app/auth/callback/
 
 #### `route.ts`
 - `GET` (request: Request)
 - *deps*: lib/supabase/server, lib/supabase/admin
-
-### src/app/bookmarks/
-
-#### `loading.tsx`
-
-#### `page.tsx`
-- *deps*: stores/useBookmarkStore, hooks/useHydration, lib/questions, types, types, components/quiz/BookmarkButton, components/quiz/CodeBlock
-
-### src/app/challenge/
-
-#### `loading.tsx`
-
-#### `page.tsx`
-- *deps*: hooks/useHydration, hooks/useQuizKeyboard, types, components/challenge/ChallengeTimer, components/challenge/ChallengeResult, components/quiz/QuizCard
-
-### src/app/focus/
-
-#### `loading.tsx`
-
-#### `page.tsx`
-- *deps*: stores/useSessionStore, stores/useProgressStore, hooks/useHydration, hooks/useQuizKeyboard, lib/focus-session, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
-
-### src/app/history/
-
-#### `loading.tsx`
-
-#### `page.tsx`
-- *deps*: stores/useProgressStore, hooks/useHydration, components/history/SessionHistoryCard
-
-### src/app/practice/
-
-#### `loading.tsx`
-
-#### `page.tsx`
-- *deps*: types, stores/useSessionStore, stores/useProgressStore, hooks/useHydration, hooks/useQuizKeyboard, lib/practice-session, components/practice/TopicSelector, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
-
-### src/app/schedule/
-
-#### `loading.tsx`
-
-#### `page.tsx`
-- *deps*: stores/useProgressStore, hooks/useHydration, lib/srs-schedule, components/stats/StatCard, components/schedule/ReviewTimeline, components/schedule/TopicDueList
-
-### src/app/stats/
-
-#### `loading.tsx`
-
-#### `page.tsx`
-- *deps*: stores/useProgressStore, hooks/useHydration, lib/stats, components/stats/AccuracyTrendChart, components/stats/WeakTopicsList, components/stats/StatCard, components/stats/TopicAccuracyBars, components/stats/ShareProgressButton
-
-### src/app/wrong-answers/
-
-#### `loading.tsx`
-
-#### `page.tsx`
-- *deps*: stores/useProgressStore, stores/useSessionStore, hooks/useHydration, lib/wrong-answers, types, components/quiz/CodeBlock, components/quiz/BookmarkButton
 
 ### src/components/challenge/
 
@@ -553,13 +587,13 @@
 
 #### `SessionHistoryCard.tsx`
 - `SessionHistoryCard` ({ session, index }: SessionHistoryCardProps)
-- *deps*: types, types, lib/session-history
+- *deps*: i18n/routing, types, lib/session-history
 
 ### src/components/practice/
 
 #### `TopicSelector.tsx`
 - `TopicSelector` ({ selectedTopics, difficulty, onToggleTopic, onToggleCategory, onSelectAll, onDeselectAll, onDifficultyChange, }: TopicSelectorProps)
-- *deps*: types, lib/questions, components/common/CategoryAccordion
+- *deps*: i18n/routing, types, lib/questions, components/common/CategoryAccordion
 
 ### src/components/schedule/
 
@@ -591,6 +625,17 @@
 #### `WeakTopicsList.tsx`
 - `WeakTopicsList` ({ weakTopics }: WeakTopicsListProps)
 - *deps*: lib/stats
+
+### src/i18n/
+
+#### `navigation.ts`
+
+#### `request.ts`
+
+#### `routing.ts`
+- `isLocale` (value: string) → value is Locale
+- `routing`
+- `Locale`
 
 ### src/lib/supabase/
 

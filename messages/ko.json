@@ -240,7 +240,10 @@
     "keepTrying": "계속 도전하세요!",
     "challengeComplete": "챌린지 완료",
     "retryChallenge": "다시 도전",
-    "backHome": "홈으로"
+    "backHome": "홈으로",
+    "duration30": "30초",
+    "duration60": "1분",
+    "duration90": "1분 30초"
   },
   "wrongAnswers": {
     "title": "오답 노트",
@@ -260,6 +263,33 @@
     "loginNudge": "로그인하면 다른 기기에서도 학습 기록을 이어갈 수 있어요",
     "loginAction": "로그인하기",
     "dismissLoginNudge": "로그인 안내 닫기"
+  },
+  "onboarding": {
+    "title": "DailyDev에 오신 걸 환영합니다!",
+    "subtitle": "포지션을 선택하면 맞춤 토픽을 추천해드려요",
+    "selectPosition": "관심 분야가 무엇인가요?",
+    "frontend": "프론트엔드",
+    "frontendDesc": "React, JavaScript, CSS, Web API",
+    "backend": "백엔드",
+    "backendDesc": "Node.js, API, 데이터베이스, 서버",
+    "fullstack": "풀스택",
+    "fullstackDesc": "프론트엔드와 백엔드 모두",
+    "devops": "데브옵스",
+    "devopsDesc": "인프라, CI/CD, 네트워킹",
+    "topicCount": "{count}개 토픽",
+    "customizeTopics": "토픽을 커스텀하세요",
+    "customizeDescription": "{position}에 맞는 토픽을 미리 선택했어요. 원하는 대로 조정하세요.",
+    "skip": "건너뛰기",
+    "next": "다음",
+    "back": "이전",
+    "start": "학습 시작",
+    "step": "{current}/{total} 단계"
+  },
+  "topicFilter": {
+    "title": "토픽 필터",
+    "description": "포지션과 카테고리별로 학습 토픽을 관리하세요",
+    "allTopics": "전체 토픽",
+    "apply": "적용"
   },
   "error": {
     "title": "문제가 발생했습니다",

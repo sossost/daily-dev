@@ -3,7 +3,7 @@
  * for timed challenge mode. Unlike SRS sessions, challenge mode is purely
  * for speed practice and does not affect spaced repetition scheduling.
  */
-import type { Question, SessionQuestion } from '@/types'
+import type { Question, SessionQuestion, Topic } from '@/types'
 import { getAllQuestions } from '@/lib/questions'
 import { shuffleOptions } from '@/lib/session'
 import { shuffle } from '@/lib/shuffle'
@@ -15,10 +15,11 @@ export type ChallengeDuration = 30 | 60 | 90
 
 export const CHALLENGE_DURATIONS: readonly ChallengeDuration[] = [30, 60, 90] as const
 
-export const CHALLENGE_DURATION_LABELS: Record<ChallengeDuration, string> = {
-  30: '30초',
-  60: '1분',
-  90: '1분 30초',
+/** i18n keys for each duration — use with useTranslations('challenge') */
+export const CHALLENGE_DURATION_KEYS: Record<ChallengeDuration, string> = {
+  30: 'duration30',
+  60: 'duration60',
+  90: 'duration90',
 }
 
 export interface ChallengeResult {
@@ -36,9 +37,15 @@ const PERCENTAGE_MULTIPLIER = 100
  * Generate a large pool of shuffled questions for challenge mode.
  * Returns up to CHALLENGE_POOL_SIZE questions with shuffled options.
  */
-export function generateChallengeSession(): SessionQuestion[] {
+export function generateChallengeSession(
+  topicFilter?: readonly Topic[],
+): SessionQuestion[] {
   const allQuestions = getAllQuestions()
-  const shuffled = shuffle(allQuestions)
+  const filterSet = topicFilter != null ? new Set(topicFilter) : null
+  const filtered = filterSet != null
+    ? allQuestions.filter((q) => filterSet.has(q.topic))
+    : allQuestions
+  const shuffled = shuffle(filtered)
   const selected = shuffled.slice(0, CHALLENGE_POOL_SIZE)
 
   return selected.map((question) => ({

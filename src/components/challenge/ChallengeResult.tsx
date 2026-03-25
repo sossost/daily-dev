@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useTranslations } from 'next-intl'
 import { Trophy, Zap, Target, Clock } from 'lucide-react'
 import type { ChallengeResult as ChallengeResultData } from '@/lib/challenge-session'
-import { CHALLENGE_DURATION_LABELS } from '@/lib/challenge-session'
+import { CHALLENGE_DURATION_KEYS } from '@/lib/challenge-session'
 
 const ANIMATION_DELAY_STEP = 0.08
 const HIGH_ACCURACY = 80
@@ -65,7 +65,7 @@ export function ChallengeResult({ result, onRetry, onHome }: ChallengeResultProp
       >
         <p className={`text-2xl font-bold ${grade.color}`}>{grade.label}</p>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-          {CHALLENGE_DURATION_LABELS[result.duration]} {t('challengeComplete')}
+          {t(CHALLENGE_DURATION_KEYS[result.duration])} {t('challengeComplete')}
         </p>
       </motion.div>
 

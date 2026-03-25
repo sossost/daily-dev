@@ -13,7 +13,9 @@ import {
 } from 'lucide-react'
 import { TOPICS } from '@/types'
 import { useProgressStore } from '@/stores/useProgressStore'
+import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
 import { useHydration } from '@/hooks/useHydration'
+import { createTopicFilter } from '@/lib/topics'
 import { getAccuracyTrend, getWeakTopics, getOverallAccuracy, getAttemptedTopicCount, getBestAndWorstTopics } from '@/lib/stats'
 import { AccuracyTrendChart } from '@/components/stats/AccuracyTrendChart'
 import { WeakTopicsList } from '@/components/stats/WeakTopicsList'
@@ -33,6 +35,8 @@ export default function StatsPage() {
   const longestStreak = useProgressStore((s) => s.longestStreak)
   const topicStats = useProgressStore((s) => s.topicStats)
   const sessions = useProgressStore((s) => s.sessions)
+  const enabledTopics = useTopicFilterStore((s) => s.enabledTopics)
+  const topicFilter = createTopicFilter(enabledTopics)
 
   if (isHydrated === false) {
     return <StatsSkeleton />
@@ -40,9 +44,9 @@ export default function StatsPage() {
 
   const overallAccuracy = getOverallAccuracy(totalCorrect, totalAnswered)
   const trend = getAccuracyTrend(sessions)
-  const weakTopics = getWeakTopics(topicStats)
-  const attemptedTopics = getAttemptedTopicCount(topicStats)
-  const { best, worst } = getBestAndWorstTopics(topicStats)
+  const weakTopics = getWeakTopics(topicStats, topicFilter)
+  const attemptedTopics = getAttemptedTopicCount(topicStats, topicFilter)
+  const { best, worst } = getBestAndWorstTopics(topicStats, topicFilter)
 
   return (
     <div>

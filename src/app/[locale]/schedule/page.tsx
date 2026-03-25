@@ -11,8 +11,10 @@ import {
   Layers,
 } from 'lucide-react'
 import { useProgressStore } from '@/stores/useProgressStore'
+import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
 import { useHydration } from '@/hooks/useHydration'
 import { getUpcomingReviews, getDueByTopic, getScheduleSummary } from '@/lib/srs-schedule'
+import { createTopicFilter } from '@/lib/topics'
 import { StatCard } from '@/components/stats/StatCard'
 import { ReviewTimeline } from '@/components/schedule/ReviewTimeline'
 import { TopicDueList } from '@/components/schedule/TopicDueList'
@@ -24,14 +26,16 @@ export default function SchedulePage() {
   const locale = isLocale(rawLocale) ? rawLocale : 'en'
   const isHydrated = useHydration()
   const srsRecords = useProgressStore((s) => s.srsRecords)
+  const enabledTopics = useTopicFilterStore((s) => s.enabledTopics)
+  const topicFilter = createTopicFilter(enabledTopics)
 
   if (isHydrated === false) {
     return <ScheduleSkeleton />
   }
 
-  const summary = getScheduleSummary(srsRecords)
-  const upcomingReviews = getUpcomingReviews(srsRecords, locale)
-  const topicDue = getDueByTopic(srsRecords, locale)
+  const summary = getScheduleSummary(srsRecords, topicFilter)
+  const upcomingReviews = getUpcomingReviews(srsRecords, locale, topicFilter)
+  const topicDue = getDueByTopic(srsRecords, locale, topicFilter)
 
   return (
     <div>
