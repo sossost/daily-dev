@@ -10,7 +10,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 const PROJECT_DIR = path.resolve(__dirname, '../..')
-const QUESTIONS_DIR = path.join(PROJECT_DIR, 'data/questions')
+const QUESTIONS_BASE_DIR = path.join(PROJECT_DIR, 'data/questions')
 const SRC_DIR = path.join(PROJECT_DIR, 'src')
 const TESTS_DIR = path.join(PROJECT_DIR, '__tests__')
 const GOALS_PATH = path.join(PROJECT_DIR, 'GOALS.md')
@@ -19,17 +19,25 @@ const GOALS_PATH = path.join(PROJECT_DIR, 'GOALS.md')
 // Measurements
 // ---------------------------------------------------------------------------
 
+function resolveQuestionsDir(): string {
+  const enDir = path.join(QUESTIONS_BASE_DIR, 'en')
+  if (fs.existsSync(enDir)) return enDir
+  return QUESTIONS_BASE_DIR
+}
+
 function countTopics(): number {
-  if (!fs.existsSync(QUESTIONS_DIR)) return 0
-  return fs.readdirSync(QUESTIONS_DIR).filter((f) => f.endsWith('.json')).length
+  const dir = resolveQuestionsDir()
+  if (!fs.existsSync(dir)) return 0
+  return fs.readdirSync(dir).filter((f) => f.endsWith('.json')).length
 }
 
 function countQuestions(): number {
-  if (!fs.existsSync(QUESTIONS_DIR)) return 0
+  const dir = resolveQuestionsDir()
+  if (!fs.existsSync(dir)) return 0
   let total = 0
-  for (const file of fs.readdirSync(QUESTIONS_DIR).filter((f) => f.endsWith('.json'))) {
+  for (const file of fs.readdirSync(dir).filter((f) => f.endsWith('.json'))) {
     try {
-      const content = fs.readFileSync(path.join(QUESTIONS_DIR, file), 'utf-8')
+      const content = fs.readFileSync(path.join(dir, file), 'utf-8')
       const questions = JSON.parse(content)
       if (Array.isArray(questions)) total += questions.length
     } catch { /* skip */ }

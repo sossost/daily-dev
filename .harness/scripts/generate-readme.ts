@@ -11,7 +11,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 const PROJECT_DIR = path.resolve(__dirname, '../..')
-const QUESTIONS_DIR = path.join(PROJECT_DIR, 'data/questions')
+const QUESTIONS_BASE_DIR = path.join(PROJECT_DIR, 'data/questions')
 const SRC_DIR = path.join(PROJECT_DIR, 'src')
 const README_PATH = path.join(PROJECT_DIR, 'README.md')
 
@@ -36,6 +36,11 @@ const ENGLISH_LABELS: Record<string, string> = {
   'data-structures': 'Data Structures',
   network: 'Network',
   'design-patterns': 'Design Patterns',
+  'dom-manipulation': 'DOM Manipulation',
+  promise: 'Promise',
+  'web-performance': 'Web Performance',
+  'web-security': 'Web Security',
+  algorithms: 'Algorithms',
   'git-advanced': 'Git Advanced',
   docker: 'Docker',
   cicd: 'CI/CD',
@@ -44,15 +49,22 @@ const ENGLISH_LABELS: Record<string, string> = {
 // ---------------------------------------------------------------------------
 // Count questions per topic
 // ---------------------------------------------------------------------------
-function getTopicCounts(): Record<string, number> {
-  const counts: Record<string, number> = {}
-  if (!fs.existsSync(QUESTIONS_DIR)) return counts
+function resolveQuestionsDir(): string {
+  const enDir = path.join(QUESTIONS_BASE_DIR, 'en')
+  if (fs.existsSync(enDir)) return enDir
+  return QUESTIONS_BASE_DIR
+}
 
-  const files = fs.readdirSync(QUESTIONS_DIR).filter((f) => f.endsWith('.json'))
+function getTopicCounts(): Record<string, number> {
+  const questionsDir = resolveQuestionsDir()
+  const counts: Record<string, number> = {}
+  if (!fs.existsSync(questionsDir)) return counts
+
+  const files = fs.readdirSync(questionsDir).filter((f) => f.endsWith('.json'))
   for (const file of files) {
     const topic = file.replace('.json', '')
     try {
-      const content = fs.readFileSync(path.join(QUESTIONS_DIR, file), 'utf-8')
+      const content = fs.readFileSync(path.join(questionsDir, file), 'utf-8')
       const questions = JSON.parse(content)
       if (Array.isArray(questions)) {
         counts[topic] = questions.length
@@ -94,14 +106,17 @@ function detectFeatures(): string[] {
   }
 
   const featureChecks: Array<[RegExp, string]> = [
+    [/next-intl|useTranslations|useLocale/i, 'Multi-language support (English / Korean)'],
     [/prefers-color-scheme|dark-mode|theme-toggle/i, 'Dark mode with system preference detection'],
+    [/challenge.*mode|ChallengeMode|timed.*challenge/i, 'Timed challenge mode'],
+    [/wrong.*answer.*notebook|WrongAnswer/i, 'Wrong answer notebook for targeted review'],
     [/Streak|streak-count|currentStreak/i, 'Streak tracking for daily sessions'],
     [/onKeyDown|useHotkey|keydown/i, 'Keyboard shortcuts for navigation'],
     [/session-history|SessionHistory/i, 'Session history with past results'],
     [/topic-filter|TopicFilter/i, 'Topic filter for focused practice'],
     [/export.*progress|import.*progress/i, 'Export/Import progress data'],
     [/bookmark|Bookmark/i, 'Bookmark questions for review'],
-    [/extra.*practice|ExtraPractice/i, 'Extra practice mode'],
+    [/onboarding|OnboardingModal/i, 'Onboarding flow with position-based topics'],
   ]
 
   for (const [pattern, label] of featureChecks) {
@@ -185,8 +200,9 @@ npm run build
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (App Router, static export)
+- **Framework**: Next.js 15 (App Router)
 - **UI**: React 19, Tailwind CSS 4, Framer Motion 12
+- **i18n**: next-intl (English / Korean)
 - **State**: Zustand 5
 - **Language**: TypeScript 5 (strict mode)
 - **Testing**: Jest 29, React Testing Library
@@ -202,15 +218,21 @@ See \`.harness/agents/\` for agent role definitions.
 
 \`\`\`
 src/
-  app/          — Next.js App Router pages and layouts
-  components/   — React components
-  hooks/        — Custom React hooks
-  lib/          — Utilities, helpers, stores
-  types/        — TypeScript type definitions
+  app/[locale]/  — Locale-aware pages and layouts
+  components/    — React components
+  hooks/         — Custom React hooks
+  i18n/          — next-intl routing, request config, navigation
+  lib/           — Utilities, helpers, stores
+  types/         — TypeScript type definitions
 data/
-  questions/    — Question JSON files (one per topic)
-__tests__/      — Jest test files
-.harness/       — Agent orchestration system
+  questions/
+    en/          — English question JSON files (one per topic)
+    ko/          — Korean question JSON files (one per topic)
+messages/
+  en.json        — English UI translations
+  ko.json        — Korean UI translations
+__tests__/       — Jest test files
+.harness/        — Agent orchestration system
 \`\`\`
 
 ## Contributing

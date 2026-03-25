@@ -15,7 +15,7 @@ import * as path from 'path'
 import { execSync } from 'child_process'
 
 const PROJECT_DIR = path.resolve(__dirname, '../..')
-const QUESTIONS_DIR = path.join(PROJECT_DIR, 'data/questions')
+const QUESTIONS_BASE_DIR = path.join(PROJECT_DIR, 'data/questions')
 const SRC_DIR = path.join(PROJECT_DIR, 'src')
 const STATUS_FILE = path.join(PROJECT_DIR, '.harness/docs/status.md')
 const OUTPUT_FILE = path.join(PROJECT_DIR, '.harness/docs/context.md')
@@ -84,15 +84,22 @@ interface TopicInfo {
   count: number
 }
 
+function resolveQuestionsDir(): string {
+  const enDir = path.join(QUESTIONS_BASE_DIR, 'en')
+  if (fs.existsSync(enDir)) return enDir
+  return QUESTIONS_BASE_DIR
+}
+
 function getTopicInfo(): TopicInfo[] {
-  if (!fs.existsSync(QUESTIONS_DIR)) return []
+  const questionsDir = resolveQuestionsDir()
+  if (!fs.existsSync(questionsDir)) return []
   return fs
-    .readdirSync(QUESTIONS_DIR)
+    .readdirSync(questionsDir)
     .filter((f) => f.endsWith('.json'))
     .map((file) => {
       const name = file.replace('.json', '')
       try {
-        const content = fs.readFileSync(path.join(QUESTIONS_DIR, file), 'utf-8')
+        const content = fs.readFileSync(path.join(questionsDir, file), 'utf-8')
         const questions = JSON.parse(content)
         return { name, count: Array.isArray(questions) ? questions.length : 0 }
       } catch {

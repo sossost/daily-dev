@@ -10,27 +10,46 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 - Multiple question types: concept, output prediction, debugging, comparison
 - Progress tracking with topic-level statistics
 - Mobile-responsive design
+- Multi-language support (English / Korean)
 - Dark mode with system preference detection
+- Timed challenge mode
+- Wrong answer notebook for targeted review
 - Streak tracking for daily sessions
 - Keyboard shortcuts for navigation
 - Session history with past results
 - Topic filter for focused practice
 - Export/Import progress data
 - Bookmark questions for review
+- Onboarding flow with position-based topics
 
 ## Topics
 
 | Topic | Questions |
 |-------|-----------|
-| Scope | 0 |
-| Closure | 0 |
-| Prototype | 0 |
-| this Keyword | 0 |
-| Event Loop | 0 |
-| Async | 0 |
-| Type Coercion | 0 |
+| Algorithms | 20 |
+| API Design | 25 |
+| Async | 20 |
+| Browser API | 25 |
+| Closure | 30 |
+| CSS Layout | 20 |
+| Data Structures | 20 |
+| Database | 12 |
+| Design Patterns | 20 |
+| DOM Manipulation | 20 |
+| Event Loop | 28 |
+| Network | 20 |
+| Node.js | 20 |
+| Promise | 20 |
+| Prototype | 20 |
+| React Basics | 20 |
+| Scope | 30 |
+| this Keyword | 20 |
+| Type Coercion | 20 |
+| TypeScript | 20 |
+| Web Performance | 20 |
+| Web Security | 25 |
 
-**Total: 0 questions across 7 topics**
+**Total: 475 questions across 22 topics**
 
 ## Getting Started
 
@@ -53,8 +72,9 @@ npm run build
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (App Router, static export)
+- **Framework**: Next.js 15 (App Router)
 - **UI**: React 19, Tailwind CSS 4, Framer Motion 12
+- **i18n**: next-intl (English / Korean)
 - **State**: Zustand 5
 - **Language**: TypeScript 5 (strict mode)
 - **Testing**: Jest 29, React Testing Library
@@ -70,15 +90,21 @@ See `.harness/agents/` for agent role definitions.
 
 ```
 src/
-  app/          — Next.js App Router pages and layouts
-  components/   — React components
-  hooks/        — Custom React hooks
-  lib/          — Utilities, helpers, stores
-  types/        — TypeScript type definitions
+  app/[locale]/  — Locale-aware pages and layouts
+  components/    — React components
+  hooks/         — Custom React hooks
+  i18n/          — next-intl routing, request config, navigation
+  lib/           — Utilities, helpers, stores
+  types/         — TypeScript type definitions
 data/
-  questions/    — Question JSON files (one per topic)
-__tests__/      — Jest test files
-.harness/       — Agent orchestration system
+  questions/
+    en/          — English question JSON files (one per topic)
+    ko/          — Korean question JSON files (one per topic)
+messages/
+  en.json        — English UI translations
+  ko.json        — Korean UI translations
+__tests__/       — Jest test files
+.harness/        — Agent orchestration system
 ```
 
 ## Contributing
