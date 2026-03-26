@@ -44,13 +44,13 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Prototype | 28 |
 | React Basics | 20 |
 | Scope | 30 |
-| this Keyword | 20 |
+| this Keyword | 30 |
 | Type Coercion | 20 |
 | TypeScript | 20 |
 | Web Performance | 20 |
 | Web Security | 25 |
 
-**Total: 527 questions across 23 topics**
+**Total: 537 questions across 23 topics**
 
 ## Getting Started
 

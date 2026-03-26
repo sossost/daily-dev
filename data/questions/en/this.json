@@ -330,5 +330,172 @@
     "correctIndex": 3,
     "explanation": "In non-strict mode, this in a standalone function call refers to the global object (window/global). In strict mode ('use strict'), the default binding for this becomes undefined. This is a safety mechanism to prevent accidental modification of the global object. this in method calls, call/apply, and new works normally even in strict mode.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode"
+  },
+  {
+    "id": "this-021",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "class Dog {\n  name = 'Rex';\n  bark = () => {\n    return this.name;\n  };\n}\nconst dog = new Dog();\nconst bark = dog.bark;\nconsole.log(bark());",
+    "options": [
+      "Rex",
+      "undefined",
+      "TypeError",
+      "null"
+    ],
+    "correctIndex": 0,
+    "explanation": "When a method is defined as an arrow function in a class field, a new function is created per instance in the constructor with this permanently bound to that instance. Even when the method reference is stored in a variable and called standalone, this still refers to the Dog instance. This pattern is commonly used to prevent this loss in event handlers and callbacks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields"
+  },
+  {
+    "id": "this-022",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  _value: 10,\n  get value() {\n    return this._value;\n  },\n  set value(v) {\n    this._value = v;\n  }\n};\nconst copy = { _value: 20 };\nObject.defineProperty(copy, 'value',\n  Object.getOwnPropertyDescriptor(obj, 'value'));\nconsole.log(copy.value);",
+    "options": [
+      "10",
+      "20",
+      "undefined",
+      "TypeError"
+    ],
+    "correctIndex": 1,
+    "explanation": "Inside getters and setters, this is bound to the object on which the property is accessed. When the getter/setter is copied to copy via Object.getOwnPropertyDescriptor and Object.defineProperty, accessing copy.value invokes the getter with this bound to copy. Therefore copy._value (20) is returned. Getters and setters follow the same this binding rules as regular methods.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get"
+  },
+  {
+    "id": "this-023",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "How can you specify this inside a callback passed to Array.prototype.forEach?",
+    "options": [
+      "Pass a thisArg as the second argument to forEach",
+      "forEach cannot specify this, so it is always the global object",
+      "Inside forEach, this is automatically the array",
+      "You must always use arrow functions with forEach"
+    ],
+    "correctIndex": 0,
+    "explanation": "Array methods like forEach, map, filter, some, and every accept an optional second argument (thisArg) that sets this inside the callback. Example: arr.forEach(function(item) { console.log(this.prefix + item); }, { prefix: '> ' }). If an arrow function is used as the callback, thisArg is ignored and the lexical this from the enclosing scope is used instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach"
+  },
+  {
+    "id": "this-024",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  value: 1,\n  method() {\n    const nested = () => {\n      const deep = () => {\n        return this.value;\n      };\n      return deep();\n    };\n    return nested();\n  }\n};\nconsole.log(obj.method());",
+    "options": [
+      "undefined",
+      "1",
+      "TypeError",
+      "null"
+    ],
+    "correctIndex": 1,
+    "explanation": "Arrow functions have no own this and inherit it from the enclosing scope. nested inherits this from method (which is obj), and deep inherits this from nested. No matter how deeply arrow functions are nested, the this from the nearest regular function (method) propagates through. Therefore this.value returns obj.value which is 1.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions"
+  },
+  {
+    "id": "this-025",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "class Parent {\n  constructor() {\n    this.type = 'parent';\n  }\n  getType() {\n    return this.type;\n  }\n}\nclass Child extends Parent {\n  constructor() {\n    super();\n    this.type = 'child';\n  }\n}\nconst child = new Child();\nconsole.log(child.getType());",
+    "options": [
+      "parent",
+      "undefined",
+      "child",
+      "TypeError"
+    ],
+    "correctIndex": 2,
+    "explanation": "When super() is called in Child's constructor, Parent's constructor runs and sets this.type to 'parent'. Then Child's constructor overwrites this.type to 'child'. When child.getType() is called, getType is found on Parent's prototype via the prototype chain, but this refers to the child instance. Therefore this.type is 'child'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/extends"
+  },
+  {
+    "id": "this-026",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "In the following code, 'Hello, undefined' is output. What is the most appropriate fix?",
+    "code": "class Greeter {\n  constructor(name) {\n    this.name = name;\n  }\n  greet() {\n    return `Hello, ${this.name}`;\n  }\n}\nconst greeter = new Greeter('World');\nconst greetFn = greeter.greet;\nconsole.log(greetFn());",
+    "options": [
+      "Declare the greet method as static",
+      "Add this.greet = this.greet.bind(this) in the constructor",
+      "Add a name parameter to the greet method",
+      "Convert the Greeter class to a function"
+    ],
+    "correctIndex": 1,
+    "explanation": "greetFn stores a reference to greeter.greet. When called standalone, this is the global object (or undefined) instead of the instance. Adding this.greet = this.greet.bind(this) in the constructor creates a method with this permanently bound to the instance. An alternative is using an arrow function class field (greet = () => ...).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind"
+  },
+  {
+    "id": "this-027",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "When comparing methods of fixing this binding in classes, which statement is correct?",
+    "options": [
+      "Prototype methods are copied per instance, resulting in low memory efficiency",
+      "Arrow function class fields create a new function per instance, but this is automatically bound",
+      "bind adds a bound method to the prototype, making it memory efficient",
+      "All three approaches use the same amount of memory"
+    ],
+    "correctIndex": 1,
+    "explanation": "Prototype methods are shared across all instances, making them memory efficient, but they are susceptible to this loss. Using bind in the constructor creates a new function per instance with a fixed this. Arrow function class fields (method = () => {}) also create a new function per instance but with the most concise syntax for automatic this binding. Both bind and arrow function approaches use more memory due to per-instance function creation.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields"
+  },
+  {
+    "id": "this-028",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "(function() {\n  console.log(this === undefined);\n})();",
+    "options": [
+      "Always true",
+      "Always false",
+      "true in strict mode, false in non-strict mode",
+      "ReferenceError"
+    ],
+    "correctIndex": 2,
+    "explanation": "An IIFE (Immediately Invoked Function Expression) uses the standalone call pattern, so the default binding rule applies. In strict mode, the default binding makes this undefined, so this === undefined is true. In non-strict mode, this refers to the global object (window/global), so it is false. Since ES modules are strict mode by default, true is output in module environments.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/IIFE"
+  },
+  {
+    "id": "this-029",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What happens when a constructor function explicitly returns an object?",
+    "options": [
+      "The returned object is ignored and this (the new instance) is always returned",
+      "Using return in a constructor causes a TypeError",
+      "Returning an object replaces this, but returning a primitive is ignored",
+      "Returning a primitive returns that value, but returning an object is ignored"
+    ],
+    "correctIndex": 2,
+    "explanation": "When a constructor function called with new explicitly returns an object, that object is returned instead of the newly created instance (this). However, if a primitive value (number, string, boolean, etc.) is returned, it is ignored and this is returned. Example: function Foo() { return { x: 1 }; } — new Foo() returns { x: 1 }. This behavior can be leveraged for factory patterns or singleton implementations.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new"
+  },
+  {
+    "id": "this-030",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, this.data cannot be accessed inside the then callback. What is the cause?",
+    "code": "const service = {\n  data: [],\n  fetchData() {\n    return fetch('/api/data')\n      .then(function(response) {\n        return response.json();\n      })\n      .then(function(result) {\n        this.data = result;\n      });\n  }\n};\nservice.fetchData();",
+    "options": [
+      "The fetch API does not return a Promise",
+      "The regular function callback in then has this bound to the global object (or undefined) instead of service",
+      "response.json() is asynchronous",
+      "The data property is declared as const and cannot be reassigned"
+    ],
+    "correctIndex": 1,
+    "explanation": "Regular function callbacks passed to Promise's then are invoked as standalone calls, so this refers to the global object (or undefined in strict mode) instead of the service object. This is the same this loss issue that occurs with setTimeout, addEventListener, and other callbacks. Solutions: 1) Use arrow functions: .then((result) => { this.data = result; }), 2) Use bind: .then(function(result) { ... }.bind(this)).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
   }
 ]

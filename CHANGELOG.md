@@ -6,6 +6,7 @@
 
 ### Features
 
+- **code**: Add 9 tests, coverage 95.8% → 99% (`5e40e5c`)
 - **content**: add 8 prototype questions (021-028) (`f512b6e`)
 - **code**: Add 12 tests for uncovered branches (`38372b3`)
 - **feature**: Add endless practice mode (`0629f64`)
@@ -13,6 +14,10 @@
 - **code**: Add 7 test files with 72 new tests (`7b49733`)
 - **content**: add 8 async questions (021-028) (`18cb005`)
 - **content**: add 8 promise questions (021-028) (`df39c74`)
+
+### Refactoring
+
+- **harness**: add product strategy and value-driven agent behavior (`faf7089`)
 
 ## 2026-03-25
 
