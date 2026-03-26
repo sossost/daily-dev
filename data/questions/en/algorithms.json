@@ -328,5 +328,170 @@
     "correctIndex": 1,
     "explanation": "Dynamic Programming applies when: 1) Optimal Substructure: the overall optimal solution is composed of optimal solutions to subproblems, and 2) Overlapping Subproblems: the same subproblems are repeated multiple times. Memoization or tables are used to prevent redundant calculations.",
     "sourceUrl": "https://en.wikipedia.org/wiki/Dynamic_programming"
+  },
+  {
+    "id": "algorithms-021",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "function removeDuplicates(arr) {\n  return [...new Set(arr)];\n}\nconsole.log(removeDuplicates([1, 2, 2, 3, 3, 3, 4]).length);",
+    "options": [
+      "7",
+      "3",
+      "4",
+      "6"
+    ],
+    "correctIndex": 2,
+    "explanation": "Set is a data structure that does not allow duplicates. Removing duplicates from [1, 2, 2, 3, 3, 3, 4] yields [1, 2, 3, 4], so the length is 4. Using the spread operator to convert a Set back to an array is an idiomatic way to deduplicate in JavaScript.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set"
+  },
+  {
+    "id": "algorithms-022",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the operating principle of a Stack data structure?",
+    "options": [
+      "FIFO (First In, First Out)",
+      "LIFO (Last In, First Out)",
+      "Random Access",
+      "Priority-based"
+    ],
+    "correctIndex": 1,
+    "explanation": "A stack operates on the LIFO (Last In, First Out) principle. The last element inserted is the first one removed. In JavaScript, using array methods push() and pop() implements stack behavior. The function call stack is a classic example of stack usage.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Stack"
+  },
+  {
+    "id": "algorithms-023",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function isBalanced(str) {\n  const stack = [];\n  const pairs = { ')': '(', ']': '[', '}': '{' };\n  for (const ch of str) {\n    if ('([{'.includes(ch)) {\n      stack.push(ch);\n    } else if (pairs[ch] != null) {\n      if (stack.pop() !== pairs[ch]) return false;\n    }\n  }\n  return stack.length === 0;\n}\nconsole.log(isBalanced('({[]})'));",
+    "options": [
+      "false",
+      "undefined",
+      "true",
+      "null"
+    ],
+    "correctIndex": 2,
+    "explanation": "In this bracket balance check, '({[]})' is properly nested. '(' → '{' → '[' are pushed onto the stack, then ']' matches '[' (pop), '}' matches '{' (pop), ')' matches '(' (pop). The stack is empty, so it returns true.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Stack_(abstract_data_type)#Expression_evaluation_and_syntax_parsing"
+  },
+  {
+    "id": "algorithms-024",
+    "topic": "algorithms",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement correctly describes the difference between Greedy algorithms and Dynamic Programming (DP)?",
+    "options": [
+      "Greedy is always slower than DP",
+      "DP cannot use recursion",
+      "Greedy makes locally optimal choices at each step, while DP considers solutions to all subproblems",
+      "DP only works with sorted input"
+    ],
+    "correctIndex": 2,
+    "explanation": "Greedy algorithms make the best choice at each step based on the current state and never backtrack. In contrast, DP finds optimal solutions for all subproblems and combines them for the overall optimal solution. Greedy is faster but does not always guarantee an optimal solution.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Greedy_algorithm"
+  },
+  {
+    "id": "algorithms-025",
+    "topic": "algorithms",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the problem with the following recursive function?",
+    "code": "function countDown(n) {\n  console.log(n);\n  countDown(n - 1);\n}",
+    "options": [
+      "A problem only occurs when n is a string",
+      "console.log prints undefined",
+      "There is no base case, causing a stack overflow",
+      "countDown is not hoisted"
+    ],
+    "correctIndex": 2,
+    "explanation": "This recursive function calls itself infinitely. Without a base case (e.g., if (n <= 0) return) to stop the recursion, the call stack fills up and throws a 'Maximum call stack size exceeded' error. Every recursive function must have a base case.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Recursion"
+  },
+  {
+    "id": "algorithms-026",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function permutations(arr) {\n  if (arr.length <= 1) return [arr];\n  const result = [];\n  for (let i = 0; i < arr.length; i++) {\n    const rest = [...arr.slice(0, i), ...arr.slice(i + 1)];\n    for (const perm of permutations(rest)) {\n      result.push([arr[i], ...perm]);\n    }\n  }\n  return result;\n}\nconsole.log(permutations([1, 2, 3]).length);",
+    "options": [
+      "3",
+      "6",
+      "9",
+      "8"
+    ],
+    "correctIndex": 1,
+    "explanation": "The number of permutations is n!. For 3 elements, the number of permutations is 3! = 3 × 2 × 1 = 6. This function uses a backtracking approach to recursively place each possible element at each position, generating all permutations.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Permutation"
+  },
+  {
+    "id": "algorithms-027",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is a collision in a hash table?",
+    "options": [
+      "An error that occurs when a key is deleted",
+      "A situation where two or more keys map to the same hash value (index)",
+      "A state where the hash table runs out of memory",
+      "A case where search time becomes O(n²)"
+    ],
+    "correctIndex": 1,
+    "explanation": "A hash collision occurs when different keys map to the same index through the hash function. Collisions are resolved using techniques like chaining or open addressing. JavaScript's Map object internally uses a hash table and handles collisions automatically.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Hash_table#Collision_resolution"
+  },
+  {
+    "id": "algorithms-028",
+    "topic": "algorithms",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the problem with the following binary search code?",
+    "code": "function binarySearch(arr, target) {\n  let left = 0;\n  let right = arr.length - 1;\n  while (left <= right) {\n    const mid = Math.floor((left + right) / 2);\n    if (arr[mid] < target) left = mid + 1;\n    else right = mid - 1;\n  }\n  return left;\n}",
+    "options": [
+      "The while condition should be left < right",
+      "It does not handle arr[mid] === target, so it cannot return the exact index",
+      "The initial value of right should be arr.length",
+      "An overflow occurs in the mid calculation"
+    ],
+    "correctIndex": 1,
+    "explanation": "This code does not separately handle the case where arr[mid] === target. Even when the target is found, it continues with right = mid - 1, returning the insertion point (lower bound) instead of the exact index. To find the exact index of a value, mid should be returned immediately when arr[mid] === target.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Binary_search_algorithm"
+  },
+  {
+    "id": "algorithms-029",
+    "topic": "algorithms",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which sorting algorithm guarantees O(n log n) time complexity?",
+    "options": [
+      "Quick Sort",
+      "Heap Sort",
+      "Bubble Sort",
+      "Insertion Sort"
+    ],
+    "correctIndex": 1,
+    "explanation": "Heap Sort guarantees O(n log n) in the best, average, and worst cases. Quick Sort averages O(n log n) but degrades to O(n²) in the worst case. Bubble Sort and Insertion Sort have average and worst-case complexities of O(n²). Heap Sort uses the heap data structure to provide consistent performance.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Heapsort"
+  },
+  {
+    "id": "algorithms-030",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is an 'in-place' algorithm in terms of space complexity?",
+    "options": [
+      "An algorithm with O(1) execution time",
+      "An algorithm that uses no additional memory at all",
+      "An algorithm that uses only O(1) or O(log n) additional space regardless of input size",
+      "An algorithm that does not modify the original array"
+    ],
+    "correctIndex": 2,
+    "explanation": "An in-place algorithm does not use additional memory proportional to the input size, requiring only O(1) or O(log n) auxiliary space (for recursion stack). Quick Sort and Heap Sort are classic in-place sorts, while Merge Sort requires O(n) additional space and is not in-place.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/In-place_algorithm"
   }
 ]

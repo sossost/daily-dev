@@ -328,5 +328,170 @@
     "correctIndex": 1,
     "explanation": "동적 프로그래밍은 1) 최적 부분 구조: 전체 최적해가 부분 문제의 최적해로 구성되고, 2) 중복 부분 문제: 같은 부분 문제가 여러 번 반복될 때 적용합니다. 메모이제이션이나 테이블을 통해 중복 계산을 방지합니다.",
     "sourceUrl": "https://en.wikipedia.org/wiki/Dynamic_programming"
+  },
+  {
+    "id": "algorithms-021",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function removeDuplicates(arr) {\n  return [...new Set(arr)];\n}\nconsole.log(removeDuplicates([1, 2, 2, 3, 3, 3, 4]).length);",
+    "options": [
+      "7",
+      "3",
+      "4",
+      "6"
+    ],
+    "correctIndex": 2,
+    "explanation": "Set은 중복을 허용하지 않는 자료구조입니다. [1, 2, 2, 3, 3, 3, 4]에서 중복을 제거하면 [1, 2, 3, 4]가 되어 길이는 4입니다. Set을 스프레드 연산자로 다시 배열로 변환하는 것은 JavaScript에서 중복 제거의 관용적 방법입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Set"
+  },
+  {
+    "id": "algorithms-022",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "스택(Stack) 자료구조의 동작 원칙은 무엇인가요?",
+    "options": [
+      "FIFO (First In, First Out)",
+      "LIFO (Last In, First Out)",
+      "임의 접근 (Random Access)",
+      "우선순위 기반 (Priority-based)"
+    ],
+    "correctIndex": 1,
+    "explanation": "스택은 LIFO(Last In, First Out) 원칙으로 동작합니다. 마지막에 삽입된 요소가 가장 먼저 제거됩니다. JavaScript에서 배열의 push()와 pop() 메서드를 사용하면 스택 동작을 구현할 수 있습니다. 함수 호출 스택이 대표적인 스택 활용 사례입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Stack"
+  },
+  {
+    "id": "algorithms-023",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function isBalanced(str) {\n  const stack = [];\n  const pairs = { ')': '(', ']': '[', '}': '{' };\n  for (const ch of str) {\n    if ('([{'.includes(ch)) {\n      stack.push(ch);\n    } else if (pairs[ch] != null) {\n      if (stack.pop() !== pairs[ch]) return false;\n    }\n  }\n  return stack.length === 0;\n}\nconsole.log(isBalanced('({[]})'));",
+    "options": [
+      "false",
+      "undefined",
+      "true",
+      "null"
+    ],
+    "correctIndex": 2,
+    "explanation": "괄호 균형 검사에서 '({[]})'는 올바르게 중첩되어 있습니다. '('→'{'→'['를 스택에 넣고, ']'→'['(pop), '}'→'{'(pop), ')'→'('(pop)으로 모두 매칭됩니다. 스택이 비어 있으므로 true를 반환합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Stack_(abstract_data_type)#Expression_evaluation_and_syntax_parsing"
+  },
+  {
+    "id": "algorithms-024",
+    "topic": "algorithms",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "그리디(Greedy) 알고리즘과 동적 프로그래밍(DP)의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "그리디는 항상 DP보다 느리다",
+      "DP는 재귀를 사용할 수 없다",
+      "그리디는 매 단계에서 지역 최적 선택을 하지만, DP는 모든 부분 문제의 해를 고려한다",
+      "DP는 정렬된 입력에서만 동작한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "그리디 알고리즘은 매 단계에서 현재 상태에서 가장 좋은 선택을 하며 되돌아가지 않습니다. 반면 DP는 모든 부분 문제의 최적해를 구하고 이를 조합하여 전체 최적해를 구합니다. 그리디가 더 빠르지만 항상 최적해를 보장하지는 않습니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Greedy_algorithm"
+  },
+  {
+    "id": "algorithms-025",
+    "topic": "algorithms",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 재귀 함수에서 발생하는 문제는 무엇인가요?",
+    "code": "function countDown(n) {\n  console.log(n);\n  countDown(n - 1);\n}",
+    "options": [
+      "n이 문자열일 때만 문제가 발생한다",
+      "console.log가 undefined를 출력한다",
+      "기저 조건(base case)이 없어 스택 오버플로우가 발생한다",
+      "countDown이 호이스팅되지 않는다"
+    ],
+    "correctIndex": 2,
+    "explanation": "이 재귀 함수는 자기 자신을 무한히 호출합니다. 재귀를 멈출 기저 조건(예: if (n <= 0) return)이 없기 때문에 호출 스택이 가득 차서 'Maximum call stack size exceeded' 에러가 발생합니다. 모든 재귀 함수에는 반드시 기저 조건이 필요합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Recursion"
+  },
+  {
+    "id": "algorithms-026",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function permutations(arr) {\n  if (arr.length <= 1) return [arr];\n  const result = [];\n  for (let i = 0; i < arr.length; i++) {\n    const rest = [...arr.slice(0, i), ...arr.slice(i + 1)];\n    for (const perm of permutations(rest)) {\n      result.push([arr[i], ...perm]);\n    }\n  }\n  return result;\n}\nconsole.log(permutations([1, 2, 3]).length);",
+    "options": [
+      "3",
+      "6",
+      "9",
+      "8"
+    ],
+    "correctIndex": 1,
+    "explanation": "순열(permutation)의 수는 n!입니다. 3개 요소의 순열 수는 3! = 3 × 2 × 1 = 6입니다. 이 함수는 백트래킹 방식으로 각 위치에 올 수 있는 요소를 재귀적으로 배치하여 모든 순열을 생성합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Permutation"
+  },
+  {
+    "id": "algorithms-027",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "해시 테이블에서 충돌(Collision)이란 무엇인가요?",
+    "options": [
+      "키가 삭제될 때 발생하는 에러",
+      "두 개 이상의 키가 같은 해시 값(인덱스)으로 매핑되는 상황",
+      "해시 테이블의 메모리가 부족한 상태",
+      "검색 시간이 O(n²)이 되는 경우"
+    ],
+    "correctIndex": 1,
+    "explanation": "해시 충돌은 서로 다른 키가 해시 함수를 통해 같은 인덱스로 매핑될 때 발생합니다. 체이닝(Chaining)이나 개방 주소법(Open Addressing)으로 해결합니다. JavaScript의 Map 객체는 내부적으로 해시 테이블을 사용하며 충돌을 자동으로 처리합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Hash_table#Collision_resolution"
+  },
+  {
+    "id": "algorithms-028",
+    "topic": "algorithms",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 이진 탐색 코드의 문제점은 무엇인가요?",
+    "code": "function binarySearch(arr, target) {\n  let left = 0;\n  let right = arr.length - 1;\n  while (left <= right) {\n    const mid = Math.floor((left + right) / 2);\n    if (arr[mid] < target) left = mid + 1;\n    else right = mid - 1;\n  }\n  return left;\n}",
+    "options": [
+      "while 조건이 left < right여야 한다",
+      "arr[mid] === target인 경우를 처리하지 않아 정확한 인덱스를 반환하지 못한다",
+      "right의 초기값이 arr.length여야 한다",
+      "mid 계산에서 오버플로우가 발생한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "이 코드는 arr[mid] === target인 경우를 별도로 처리하지 않습니다. target을 찾아도 right = mid - 1로 계속 진행하여, 삽입 위치(lower bound)를 반환합니다. 정확한 값의 인덱스를 찾으려면 arr[mid] === target일 때 mid를 즉시 반환해야 합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Binary_search_algorithm"
+  },
+  {
+    "id": "algorithms-029",
+    "topic": "algorithms",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "다음 중 O(n log n) 시간 복잡도를 보장하는 정렬 알고리즘은 무엇인가요?",
+    "options": [
+      "퀵 정렬(Quick Sort)",
+      "힙 정렬(Heap Sort)",
+      "버블 정렬(Bubble Sort)",
+      "삽입 정렬(Insertion Sort)"
+    ],
+    "correctIndex": 1,
+    "explanation": "힙 정렬은 최선, 평균, 최악 모두 O(n log n)을 보장합니다. 퀵 정렬은 평균 O(n log n)이지만 최악 O(n²)입니다. 버블 정렬과 삽입 정렬은 평균 및 최악이 O(n²)입니다. 힙 정렬은 힙 자료구조를 활용하여 일관된 성능을 제공합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Heapsort"
+  },
+  {
+    "id": "algorithms-030",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "공간 복잡도(Space Complexity)에서 '제자리(in-place)' 알고리즘이란 무엇인가요?",
+    "options": [
+      "실행 시간이 O(1)인 알고리즘",
+      "추가 메모리를 전혀 사용하지 않는 알고리즘",
+      "입력 크기에 관계없이 O(1) 또는 O(log n)의 추가 공간만 사용하는 알고리즘",
+      "원본 배열을 변경하지 않는 알고리즘"
+    ],
+    "correctIndex": 2,
+    "explanation": "제자리 알고리즘은 입력 크기에 비례하는 추가 메모리를 사용하지 않고, O(1) 또는 O(log n)(재귀 스택)의 보조 공간만 사용합니다. 퀵 정렬과 힙 정렬이 대표적인 제자리 정렬이며, 병합 정렬은 O(n) 추가 공간이 필요하므로 제자리가 아닙니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/In-place_algorithm"
   }
 ]
