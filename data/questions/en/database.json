@@ -325,5 +325,170 @@
     "correctIndex": 2,
     "explanation": "The COALESCE function returns the first non-NULL value from its argument list. It skips the two NULLs and returns 'hello', which is the third argument and the first non-NULL value. This function is commonly used for default value handling.",
     "sourceUrl": "https://www.postgresql.org/docs/current/functions-conditional.html#FUNCTIONS-COALESCE-NVL-IFNULL"
+  },
+  {
+    "id": "database-021",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of a Foreign Key in SQL?",
+    "options": [
+      "It uniquely identifies each row in a table",
+      "It references the primary key of another table to define relationships between tables",
+      "It restricts the data type of values stored in a column",
+      "It limits the maximum number of rows a table can store"
+    ],
+    "correctIndex": 1,
+    "explanation": "A Foreign Key is a column in one table that references the primary key of another table, defining a relationship between the two. It enforces referential integrity, ensuring that the referenced value must exist in the target table.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Foreign_key"
+  },
+  {
+    "id": "database-022",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the result of the following SQL query?\n\nscores table: id(1,2,3,4), value(10, 20, 30, 40)\n\nSELECT AVG(value) FROM scores;",
+    "code": "SELECT AVG(value) FROM scores;",
+    "options": [
+      "100",
+      "10",
+      "25",
+      "4"
+    ],
+    "correctIndex": 2,
+    "explanation": "The AVG function calculates the average of column values. The values are 10, 20, 30, and 40, with a sum of 100 and 4 rows, so the average is 100 / 4 = 25. AVG excludes NULL values from the calculation.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_count_avg_sum.asp"
+  },
+  {
+    "id": "database-023",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between a Clustered Index and a Non-Clustered Index?",
+    "options": [
+      "A clustered index can have multiple per table, while a non-clustered index allows only one",
+      "Only non-clustered indexes can be composed of multiple columns",
+      "A clustered index determines the physical sort order of data, while a non-clustered index stores pointers to data locations in a separate structure",
+      "Both indexes have the same structure with no performance difference"
+    ],
+    "correctIndex": 2,
+    "explanation": "A clustered index physically sorts the table data by the index key, so only one can exist per table. A non-clustered index stores index keys and pointers to data rows in a separate structure, allowing multiple per table.",
+    "sourceUrl": "https://learn.microsoft.com/en-us/sql/relational-databases/indexes/clustered-and-nonclustered-indexes-described"
+  },
+  {
+    "id": "database-024",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "The following SQL query does not retrieve the top 3 highest salaries as intended. What is the cause?\n\nSELECT name, salary FROM employees ORDER BY salary LIMIT 3;",
+    "code": "SELECT name, salary\nFROM employees\nORDER BY salary\nLIMIT 3;",
+    "options": [
+      "LIMIT must be used together with a WHERE clause",
+      "ORDER BY defaults to ascending (ASC) order, so it retrieves the 3 lowest salaries",
+      "LIMIT 3 means starting from the 3rd row",
+      "ORDER BY and LIMIT cannot be used together"
+    ],
+    "correctIndex": 1,
+    "explanation": "The default sort direction for ORDER BY is ascending (ASC). This query therefore returns the 3 employees with the lowest salaries. To get the top 3 highest salaries, you must specify ORDER BY salary DESC for descending order.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_orderby.asp"
+  },
+  {
+    "id": "database-025",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the result of the following SQL query?\n\nemployees table: id(1,2,3,4), dept('A','A','B','B'), salary(100,200,150,300)\n\nSELECT dept, salary, RANK() OVER (PARTITION BY dept ORDER BY salary DESC) as rnk FROM employees;",
+    "code": "SELECT dept, salary,\n  RANK() OVER (\n    PARTITION BY dept\n    ORDER BY salary DESC\n  ) as rnk\nFROM employees;",
+    "options": [
+      "A-200-1, A-100-2, B-300-1, B-150-2",
+      "A-100-1, A-200-2, B-150-1, B-300-2",
+      "A-200-1, A-100-1, B-300-1, B-150-1",
+      "A-200-1, B-300-1, A-100-2, B-150-2"
+    ],
+    "correctIndex": 0,
+    "explanation": "RANK() OVER (PARTITION BY dept ORDER BY salary DESC) ranks rows within each department by salary in descending order. In department A, 200 ranks 1st and 100 ranks 2nd. In department B, 300 ranks 1st and 150 ranks 2nd. Window functions assign ranks to each row without grouping.",
+    "sourceUrl": "https://www.postgresql.org/docs/current/functions-window.html"
+  },
+  {
+    "id": "database-026",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the core principle of MVCC (Multi-Version Concurrency Control)?",
+    "options": [
+      "It executes all transactions sequentially to eliminate concurrency issues entirely",
+      "It maintains multiple versions of data so that read operations do not block write operations",
+      "It uses locks to strictly control concurrent access",
+      "It creates a full copy of the database when a transaction begins"
+    ],
+    "correctIndex": 1,
+    "explanation": "MVCC maintains previous versions of data when modifications occur, allowing read transactions to access their own snapshot without conflicting with write transactions. Since reads don't block writes, high concurrency is achieved. Most modern DBMS like PostgreSQL and MySQL InnoDB use MVCC.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Multiversion_concurrency_control"
+  },
+  {
+    "id": "database-027",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "How many rows does the following SQL query return?\n\nA table: id(1,2) / B table: id(1,2,3)\n\nSELECT * FROM A CROSS JOIN B;",
+    "code": "SELECT * FROM A CROSS JOIN B;",
+    "options": [
+      "2 rows",
+      "3 rows",
+      "5 rows",
+      "6 rows"
+    ],
+    "correctIndex": 3,
+    "explanation": "CROSS JOIN produces the Cartesian product of two tables. Each row from table A is combined with every row from table B, resulting in 2 × 3 = 6 rows. It generates all possible combinations without any join condition, so caution is needed with large tables.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_join_cross.asp"
+  },
+  {
+    "id": "database-028",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference between Optimistic Locking and Pessimistic Locking?",
+    "options": [
+      "Optimistic locking always performs better than pessimistic locking",
+      "Pessimistic locking overwrites data without conflict detection",
+      "Optimistic locking assumes conflicts are rare and detects them at commit time, while pessimistic locking acquires locks immediately upon data access",
+      "Both approaches can only be implemented at the database level and not at the application level"
+    ],
+    "correctIndex": 2,
+    "explanation": "Optimistic locking assumes conflicts rarely occur and uses version numbers or timestamps to detect conflicts at commit time. Pessimistic locking acquires locks when data is read, blocking other transactions from accessing it. Optimistic is better for read-heavy workloads, while pessimistic suits write-conflict-prone scenarios.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Optimistic_concurrency_control"
+  },
+  {
+    "id": "database-029",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "The following SQL query produces an error. What is the cause?\n\nSELECT dept, COUNT(*) FROM employees;",
+    "code": "SELECT dept, COUNT(*)\nFROM employees;",
+    "options": [
+      "The COUNT function cannot be used without a WHERE clause",
+      "Using an aggregate function (COUNT) with a non-aggregate column (dept) requires a GROUP BY clause",
+      "COUNT(*) is invalid syntax and COUNT(1) should be used instead",
+      "A table alias must be specified after the FROM clause"
+    ],
+    "correctIndex": 1,
+    "explanation": "When using aggregate functions (COUNT, SUM, AVG, etc.) alongside non-aggregate columns in the SELECT clause, the non-aggregate columns must be specified in a GROUP BY clause. Adding GROUP BY dept correctly aggregates the row count per department.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_groupby.asp"
+  },
+  {
+    "id": "database-030",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which of the following correctly describes a database View?",
+    "options": [
+      "A view physically stores data, so data persists even after the source table is deleted",
+      "A view can only reference a single table and cannot include joins",
+      "A view is a stored query that does not physically store data and returns data from the source tables when queried",
+      "Once a view is created, its underlying query cannot be modified"
+    ],
+    "correctIndex": 2,
+    "explanation": "A View is a virtual table based on a stored query over one or more tables. It does not store data itself; instead, it executes the defined query and returns results when accessed. Views are used to simplify complex queries and control data access permissions.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/View_(SQL)"
   }
 ]

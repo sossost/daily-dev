@@ -325,5 +325,170 @@
     "correctIndex": 2,
     "explanation": "COALESCE 함수는 인자 목록에서 첫 번째 NULL이 아닌 값을 반환합니다. NULL, NULL을 건너뛰고 세 번째 인자인 'hello'가 첫 번째 비-NULL 값이므로 'hello'를 반환합니다. 기본값 처리에 자주 사용됩니다.",
     "sourceUrl": "https://www.postgresql.org/docs/current/functions-conditional.html#FUNCTIONS-COALESCE-NVL-IFNULL"
+  },
+  {
+    "id": "database-021",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "SQL에서 외래 키(Foreign Key)의 역할은 무엇인가요?",
+    "options": [
+      "테이블의 각 행을 고유하게 식별하는 역할",
+      "다른 테이블의 기본 키를 참조하여 테이블 간의 관계를 정의하는 역할",
+      "컬럼에 저장되는 데이터의 타입을 제한하는 역할",
+      "테이블에 저장할 수 있는 최대 행 수를 제한하는 역할"
+    ],
+    "correctIndex": 1,
+    "explanation": "외래 키(Foreign Key)는 한 테이블의 컬럼이 다른 테이블의 기본 키를 참조하여 두 테이블 간의 관계를 정의합니다. 이를 통해 참조 무결성(referential integrity)을 보장하며, 참조하는 값이 반드시 참조 대상 테이블에 존재해야 합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Foreign_key"
+  },
+  {
+    "id": "database-022",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 SQL 쿼리의 결과는 무엇인가요?\n\nscores 테이블: id(1,2,3,4), value(10, 20, 30, 40)\n\nSELECT AVG(value) FROM scores;",
+    "code": "SELECT AVG(value) FROM scores;",
+    "options": [
+      "100",
+      "10",
+      "25",
+      "4"
+    ],
+    "correctIndex": 2,
+    "explanation": "AVG 함수는 컬럼 값의 평균을 계산합니다. value 컬럼의 값은 10, 20, 30, 40이고, 합계는 100이며 행 수는 4개이므로 평균은 100 / 4 = 25입니다. AVG는 NULL 값을 제외하고 계산합니다.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_count_avg_sum.asp"
+  },
+  {
+    "id": "database-023",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "클러스터드 인덱스(Clustered Index)와 논클러스터드 인덱스(Non-Clustered Index)의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "클러스터드 인덱스는 테이블당 여러 개 생성할 수 있고, 논클러스터드 인덱스는 하나만 가능하다",
+      "논클러스터드 인덱스만 복합 컬럼으로 구성할 수 있다",
+      "클러스터드 인덱스는 데이터의 물리적 정렬 순서를 결정하고, 논클러스터드 인덱스는 별도의 인덱스 구조에서 데이터 위치를 가리킨다",
+      "두 인덱스는 동일한 구조로 성능 차이가 없다"
+    ],
+    "correctIndex": 2,
+    "explanation": "클러스터드 인덱스는 테이블의 데이터가 인덱스 키 순서로 물리적으로 정렬되므로 테이블당 하나만 존재할 수 있습니다. 논클러스터드 인덱스는 별도의 구조에 인덱스 키와 데이터 행의 포인터를 저장하며, 테이블당 여러 개 생성할 수 있습니다.",
+    "sourceUrl": "https://learn.microsoft.com/en-us/sql/relational-databases/indexes/clustered-and-nonclustered-indexes-described"
+  },
+  {
+    "id": "database-024",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 SQL 쿼리가 의도한 대로 상위 3개의 급여를 조회하지 못합니다. 원인은 무엇인가요?\n\nSELECT name, salary FROM employees ORDER BY salary LIMIT 3;",
+    "code": "SELECT name, salary\nFROM employees\nORDER BY salary\nLIMIT 3;",
+    "options": [
+      "LIMIT 절은 WHERE 절과 함께 사용해야 한다",
+      "ORDER BY의 기본 정렬이 오름차순(ASC)이므로 가장 낮은 급여 3개가 조회된다",
+      "LIMIT 3은 3번째 행부터 조회한다는 의미이다",
+      "ORDER BY와 LIMIT은 동시에 사용할 수 없다"
+    ],
+    "correctIndex": 1,
+    "explanation": "ORDER BY의 기본 정렬 방향은 오름차순(ASC)입니다. 따라서 이 쿼리는 급여가 가장 낮은 3명을 반환합니다. 상위 3개의 급여를 조회하려면 ORDER BY salary DESC로 내림차순 정렬을 명시해야 합니다.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_orderby.asp"
+  },
+  {
+    "id": "database-025",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 SQL 쿼리의 결과는 무엇인가요?\n\nemployees 테이블: id(1,2,3,4), dept('A','A','B','B'), salary(100,200,150,300)\n\nSELECT dept, salary, RANK() OVER (PARTITION BY dept ORDER BY salary DESC) as rnk FROM employees;",
+    "code": "SELECT dept, salary,\n  RANK() OVER (\n    PARTITION BY dept\n    ORDER BY salary DESC\n  ) as rnk\nFROM employees;",
+    "options": [
+      "A-200-1, A-100-2, B-300-1, B-150-2",
+      "A-100-1, A-200-2, B-150-1, B-300-2",
+      "A-200-1, A-100-1, B-300-1, B-150-1",
+      "A-200-1, B-300-1, A-100-2, B-150-2"
+    ],
+    "correctIndex": 0,
+    "explanation": "RANK() OVER (PARTITION BY dept ORDER BY salary DESC)는 각 부서(dept) 내에서 급여 내림차순으로 순위를 매깁니다. 부서 A에서는 200이 1위, 100이 2위이고, 부서 B에서는 300이 1위, 150이 2위입니다. 윈도우 함수는 그룹화 없이 각 행에 순위를 부여합니다.",
+    "sourceUrl": "https://www.postgresql.org/docs/current/functions-window.html"
+  },
+  {
+    "id": "database-026",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "MVCC(Multi-Version Concurrency Control)의 핵심 원리는 무엇인가요?",
+    "options": [
+      "모든 트랜잭션을 순차적으로 실행하여 동시성 문제를 원천 차단한다",
+      "데이터의 여러 버전을 유지하여 읽기 작업이 쓰기 작업을 차단하지 않게 한다",
+      "잠금(Lock)을 사용하여 동시 접근을 엄격하게 제어한다",
+      "트랜잭션이 시작될 때 전체 데이터베이스의 복사본을 생성한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "MVCC는 데이터가 수정될 때 이전 버전을 유지하여 읽기 트랜잭션이 쓰기 트랜잭션과 충돌하지 않도록 합니다. 각 트랜잭션은 자신의 스냅샷을 보므로, 읽기가 쓰기를 차단하지 않아 높은 동시성을 달성합니다. PostgreSQL, MySQL InnoDB 등 대부분의 현대 DBMS가 사용합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Multiversion_concurrency_control"
+  },
+  {
+    "id": "database-027",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 SQL 쿼리의 결과 행 수는 몇 개인가요?\n\nA 테이블: id(1,2) / B 테이블: id(1,2,3)\n\nSELECT * FROM A CROSS JOIN B;",
+    "code": "SELECT * FROM A CROSS JOIN B;",
+    "options": [
+      "2행",
+      "3행",
+      "5행",
+      "6행"
+    ],
+    "correctIndex": 3,
+    "explanation": "CROSS JOIN은 두 테이블의 카르테시안 곱(Cartesian Product)을 생성합니다. A 테이블의 각 행이 B 테이블의 모든 행과 결합되므로, 결과는 2 × 3 = 6행입니다. 조인 조건 없이 모든 가능한 조합을 만들어내며, 대용량 테이블에서는 주의가 필요합니다.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_join_cross.asp"
+  },
+  {
+    "id": "database-028",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "낙관적 잠금(Optimistic Locking)과 비관적 잠금(Pessimistic Locking)의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "낙관적 잠금은 항상 비관적 잠금보다 성능이 좋다",
+      "비관적 잠금은 충돌 감지 없이 데이터를 덮어쓴다",
+      "낙관적 잠금은 충돌이 드물다고 가정하고 커밋 시 충돌을 감지하며, 비관적 잠금은 데이터 접근 시 즉시 잠금을 획득한다",
+      "두 방식 모두 데이터베이스 레벨에서만 구현할 수 있고 애플리케이션 레벨에서는 불가능하다"
+    ],
+    "correctIndex": 2,
+    "explanation": "낙관적 잠금은 충돌이 거의 발생하지 않을 것으로 가정하고, 버전 번호나 타임스탬프를 사용하여 커밋 시점에 충돌을 감지합니다. 비관적 잠금은 데이터를 읽는 시점에 잠금을 획득하여 다른 트랜잭션의 접근을 차단합니다. 읽기가 많으면 낙관적, 쓰기 충돌이 잦으면 비관적 잠금이 유리합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Optimistic_concurrency_control"
+  },
+  {
+    "id": "database-029",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 SQL 쿼리에서 오류가 발생합니다. 원인은 무엇인가요?\n\nSELECT dept, COUNT(*) FROM employees;",
+    "code": "SELECT dept, COUNT(*)\nFROM employees;",
+    "options": [
+      "COUNT 함수는 WHERE 절 없이 사용할 수 없다",
+      "집계 함수(COUNT)와 비집계 컬럼(dept)을 함께 사용하려면 GROUP BY 절이 필요하다",
+      "COUNT(*)는 유효하지 않은 문법이며 COUNT(1)을 사용해야 한다",
+      "FROM 절 뒤에 반드시 별칭(alias)을 지정해야 한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "SELECT 절에서 집계 함수(COUNT, SUM, AVG 등)와 비집계 컬럼을 함께 사용할 때는 GROUP BY 절에 비집계 컬럼을 명시해야 합니다. GROUP BY dept를 추가하면 각 부서별 행 수를 올바르게 집계할 수 있습니다.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_groupby.asp"
+  },
+  {
+    "id": "database-030",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "데이터베이스에서 뷰(View)의 특징으로 올바른 것은 무엇인가요?",
+    "options": [
+      "뷰는 데이터를 물리적으로 저장하므로 원본 테이블 삭제 후에도 데이터가 유지된다",
+      "뷰는 하나의 테이블만 참조할 수 있으며 조인을 포함할 수 없다",
+      "뷰는 저장된 쿼리로서 데이터를 물리적으로 저장하지 않고 조회 시 원본 테이블의 데이터를 반환한다",
+      "뷰는 한 번 생성하면 원본 쿼리를 수정할 수 없다"
+    ],
+    "correctIndex": 2,
+    "explanation": "뷰(View)는 하나 이상의 테이블에 대한 쿼리를 저장한 가상 테이블입니다. 자체적으로 데이터를 저장하지 않으며, 조회 시 정의된 쿼리를 실행하여 결과를 반환합니다. 복잡한 쿼리를 단순화하고 접근 권한을 제어하는 데 활용됩니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/View_(SQL)"
   }
 ]
