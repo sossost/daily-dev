@@ -195,12 +195,12 @@ If validation fails → rollback → try different agent or skip.
 
 #### Step 6: Review
 
-Call the review agent to check code quality:
+Call the review agent and capture its output:
 
 ```bash
 DIFF=$(git diff; git ls-files --others --exclude-standard | while IFS= read -r f; do echo "=== NEW FILE: $f ==="; cat "$f"; done)
 
-claude -p "$(cat .harness/agents/review.md)
+REVIEW_OUTPUT=$(claude -p "$(cat .harness/agents/review.md)
 
 ## Changes to Review
 
@@ -213,11 +213,87 @@ If APPROVE, output: SUMMARY: {description}" \
   --allowedTools 'Bash(cat:*),Bash(ls:*),Bash(find:*),Read,Glob,Grep' \
   --dangerously-skip-permissions \
   --output-format text \
-  --max-turns 10
+  --max-turns 10)
 ```
 
-- If APPROVE → continue
-- If REJECT → attempt fix or rollback
+- If APPROVE → continue to Step 7
+- If REJECT → go to Step 6a (Fix Loop)
+
+#### Step 6a: Fix Loop
+
+When review rejects, feed the rejection reason back to the original agent for a targeted fix.
+
+**Parse the rejection reason:**
+```bash
+REJECT_REASON=$(echo "${REVIEW_OUTPUT}" | grep -A 100 "^REJECT" | tail -n +2)
+```
+
+**Re-call the SAME agent with fix context:**
+```bash
+claude -p "$(cat .harness/agents/{agent}.md)
+
+## Agent Rules
+1. Read existing files before writing. Never guess — verify first.
+2. Changes must not crash for existing users with old localStorage data.
+3. If you fail, explain WHY in your SUMMARY.
+4. Only modify files within src/, data/questions/, __tests__/.
+
+## Fix Required
+
+The reviewer rejected your previous changes for the following reason:
+
+${REJECT_REASON}
+
+IMPORTANT:
+- Fix ONLY the specific issues described above.
+- Do NOT regenerate or rewrite everything from scratch.
+- Do NOT add new content beyond what's needed for the fix.
+- Read the current state of the files first, then apply minimal targeted changes.
+
+Work directory: $(pwd)
+
+End your output with:
+SUMMARY: <short title, max 50 chars>
+DETAILS:
+<what was fixed>" \
+  --allowedTools 'Bash(git diff:*),Bash(git log:*),Bash(git status:*),Bash(git ls-files:*),Bash(cat:*),Bash(ls:*),Bash(find:*),Bash(wc:*),Bash(mkdir:*),Bash(head:*),Bash(tail:*),Read,Write,Edit,Glob,Grep' \
+  --dangerously-skip-permissions \
+  --output-format text \
+  --max-turns 20
+```
+
+**After fix: re-validate and re-review.**
+
+```bash
+# Re-validate
+bash .harness/scripts/validate.sh {agent}
+
+# Re-review
+DIFF=$(git diff; git ls-files --others --exclude-standard | while IFS= read -r f; do echo "=== NEW FILE: $f ==="; cat "$f"; done)
+
+REVIEW_OUTPUT=$(claude -p "$(cat .harness/agents/review.md)
+
+## Changes to Review
+
+\`\`\`diff
+${DIFF}
+\`\`\`
+
+## Previous Rejection Context
+The original changes were rejected for: ${REJECT_REASON}
+Verify that this specific issue has been resolved.
+
+Review and output APPROVE or REJECT with reason.
+If APPROVE, output: SUMMARY: {description}" \
+  --allowedTools 'Bash(cat:*),Bash(ls:*),Bash(find:*),Read,Glob,Grep' \
+  --dangerously-skip-permissions \
+  --output-format text \
+  --max-turns 10)
+```
+
+- If APPROVE → continue to Step 7
+- If still REJECT → rollback and try a different agent or skip
+- **Maximum 1 fix attempt per review rejection** — do not loop endlessly
 
 #### Step 7: Documentation
 
@@ -275,6 +351,8 @@ Skip notification for skipped/no-changes results.
 - Sub-agent produces no changes (ghost run) → try a different agent
 - Boundary/protected violation → rollback → try different agent
 - Validate fails → rollback → try different agent
-- Review rejects → attempt one fix, if still rejected → rollback
+- Review rejects → **Step 6a: pass rejection reason back to same agent for targeted fix** → re-validate → re-review → if still rejected → rollback
+- Fix loop validation fails → rollback → try different agent
 - All agents fail → update status.md with failure → send discord error → exit
 - Maximum 2 agent attempts per run to avoid infinite loops
+- Maximum 1 fix attempt per rejection — do not chain multiple fix loops
