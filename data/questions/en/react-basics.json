@@ -326,5 +326,169 @@
     "correctIndex": 1,
     "explanation": "When two sibling components need to share the same data, the state is moved (lifted up) to the common parent component. The parent owns the state and passes it down to children via props, so a change in one child is reflected in the other.",
     "sourceUrl": "https://react.dev/learn/sharing-state-between-components"
+  },
+  {
+    "id": "react-basics-021",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Why would you use Fragment (<>...</>) in React?",
+    "options": [
+      "To group multiple elements without adding extra DOM nodes",
+      "To double the rendering performance of a component",
+      "To automatically assign keys to child elements",
+      "To prevent CSS styles from being inherited by child elements"
+    ],
+    "correctIndex": 0,
+    "explanation": "Fragment allows you to group multiple child elements without creating an additional DOM node. Wrapping with a div adds unnecessary DOM hierarchy that can affect CSS layouts, but Fragment adds no node to the rendered output at all.",
+    "sourceUrl": "https://react.dev/reference/react/Fragment"
+  },
+  {
+    "id": "react-basics-022",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What count value is displayed after clicking the '+' button twice in the following code?",
+    "code": "function Counter() {\n  const [state, dispatch] = useReducer(\n    (state, action) => {\n      switch (action.type) {\n        case 'increment': return { count: state.count + action.step };\n        default: return state;\n      }\n    },\n    { count: 0 }\n  );\n\n  return (\n    <div>\n      <span>{state.count}</span>\n      <button onClick={() => dispatch({ type: 'increment', step: 3 })}>+</button>\n    </div>\n  );\n}",
+    "options": [
+      "2",
+      "6",
+      "3",
+      "0"
+    ],
+    "correctIndex": 1,
+    "explanation": "Each time dispatch is called, the reducer function executes. Since step is 3 on each click, after the first click count becomes 3, and after the second click it becomes 6. useReducer is useful for managing complex state logic clearly.",
+    "sourceUrl": "https://react.dev/reference/react/useReducer"
+  },
+  {
+    "id": "react-basics-023",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which rule about React custom hooks is correct?",
+    "options": [
+      "They must be defined inside a class component",
+      "The function name must start with 'use'",
+      "They must return JSX",
+      "They cannot call other hooks"
+    ],
+    "correctIndex": 1,
+    "explanation": "Custom hooks must be functions whose names start with 'use' so that React can enforce the Rules of Hooks. They can call other hooks (useState, useEffect, etc.) inside them and are used to reuse stateful logic between components. They do not need to return JSX.",
+    "sourceUrl": "https://react.dev/learn/reusing-logic-with-custom-hooks"
+  },
+  {
+    "id": "react-basics-024",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference between useLayoutEffect and useEffect?",
+    "options": [
+      "useLayoutEffect only runs on the server, while useEffect only runs on the client",
+      "useLayoutEffect does not support a dependency array",
+      "useEffect runs asynchronously, while useLayoutEffect always runs synchronously",
+      "useLayoutEffect runs synchronously before the browser paints, while useEffect runs after the browser paints"
+    ],
+    "correctIndex": 3,
+    "explanation": "useLayoutEffect fires synchronously after DOM changes but before the browser paints the screen. This allows you to measure layout or perform DOM mutations without visual flickering. useEffect fires asynchronously after painting and is suitable for most use cases.",
+    "sourceUrl": "https://react.dev/reference/react/useLayoutEffect"
+  },
+  {
+    "id": "react-basics-025",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the main purpose of using React.lazy with Suspense?",
+    "options": [
+      "To enable server-side rendering",
+      "To dynamically load components on demand through code splitting",
+      "To automatically cache component state",
+      "To provide error boundary functionality"
+    ],
+    "correctIndex": 1,
+    "explanation": "React.lazy uses dynamic import() to lazily load components. Suspense displays a fallback UI while the lazily loaded component is being prepared. This reduces initial bundle size and loads only the code the user actually needs.",
+    "sourceUrl": "https://react.dev/reference/react/lazy"
+  },
+  {
+    "id": "react-basics-026",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "How many times does the render count increase when the button is clicked in the following code?",
+    "code": "function App() {\n  const [count, setCount] = useState(0);\n  const [flag, setFlag] = useState(false);\n  const renderCount = useRef(0);\n  renderCount.current++;\n\n  function handleClick() {\n    setCount(c => c + 1);\n    setFlag(f => !f);\n  }\n\n  return (\n    <div>\n      <p>Renders: {renderCount.current}</p>\n      <button onClick={handleClick}>Click</button>\n    </div>\n  );\n}",
+    "options": [
+      "1 time (React 18's automatic batching combines both state updates into a single render)",
+      "2 times (each setState triggers a separate render)",
+      "0 times (useRef does not trigger re-renders)",
+      "3 times (number of setState calls + an additional render when the event handler completes)"
+    ],
+    "correctIndex": 0,
+    "explanation": "Starting with React 18, all state updates inside event handlers, setTimeout, and Promises are automatically batched. So when setCount and setFlag are called within the same event handler, they are combined into a single re-render. In React 17, only updates inside event handlers were batched.",
+    "sourceUrl": "https://react.dev/blog/2022/03/29/react-v18#new-feature-automatic-batching"
+  },
+  {
+    "id": "react-basics-027",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why doesn't filteredItems update when props.items changes in the following code?",
+    "code": "function ItemList({ items, query }) {\n  const [filteredItems, setFilteredItems] = useState(\n    items.filter(item => item.name.includes(query))\n  );\n\n  return (\n    <ul>\n      {filteredItems.map(item => <li key={item.id}>{item.name}</li>)}\n    </ul>\n  );\n}",
+    "options": [
+      "Because the filter method does not mutate the original array",
+      "Because items is an array of objects which fails shallow comparison",
+      "Because useState's initial value is only used on the first render, and subsequent prop changes are not reflected in state",
+      "Because setFilteredItems is never explicitly called, causing React to emit a warning"
+    ],
+    "correctIndex": 2,
+    "explanation": "The argument (initial value) to useState is only used when the component first mounts. On subsequent re-renders, it is ignored. When props change, state does not automatically update. In this case, instead of derived state, you should use useMemo to compute the filtered result on each render.",
+    "sourceUrl": "https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes"
+  },
+  {
+    "id": "react-basics-028",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the main use case for React Portal?",
+    "options": [
+      "To share component state globally",
+      "To render children into a DOM node outside the parent DOM hierarchy",
+      "To transfer data from the server to the client",
+      "To handle routing between components"
+    ],
+    "correctIndex": 1,
+    "explanation": "createPortal lets you render children into a DOM node that exists outside the parent component's DOM hierarchy. This is useful for UI elements like modals, tooltips, and dropdowns that need to visually break out of their parent container. Event bubbling still works normally along the React tree.",
+    "sourceUrl": "https://react.dev/reference/react-dom/createPortal"
+  },
+  {
+    "id": "react-basics-029",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is logged to the console when the button is clicked in the following code?",
+    "code": "function App() {\n  const [state, dispatch] = useReducer((s, a) => {\n    console.log('reducer called');\n    return s + a;\n  }, 0);\n\n  function handleClick() {\n    dispatch(1);\n    dispatch(1);\n    console.log('after dispatch');\n  }\n\n  return <button onClick={handleClick}>{state}</button>;\n}",
+    "options": [
+      "'reducer called', 'reducer called', 'after dispatch' in that order",
+      "'after dispatch', 'reducer called', 'reducer called' in that order",
+      "'reducer called', 'after dispatch', 'reducer called' in that order",
+      "Only 'after dispatch' is logged"
+    ],
+    "correctIndex": 0,
+    "explanation": "useReducer's dispatch synchronously calls the reducer to compute the next state. So the first dispatch(1) logs 'reducer called', then the second dispatch(1) logs 'reducer called' again, and finally 'after dispatch' is logged. However, the actual re-render is batched and occurs only once after the event handler completes.",
+    "sourceUrl": "https://react.dev/reference/react/useReducer"
+  },
+  {
+    "id": "react-basics-030",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about composition using the children prop vs inheritance in React is correct?",
+    "options": [
+      "Inheritance is preferred over composition in React",
+      "The children prop can only accept strings",
+      "Composition allows components to receive arbitrary JSX through children, enabling flexible UI construction",
+      "Inheritance is required to reuse code between components"
+    ],
+    "correctIndex": 2,
+    "explanation": "React recommends composition over inheritance. Through the children prop, components can receive arbitrary child elements that are not known in advance, allowing the creation of reusable and flexible components. In practice, there is almost never a need for component inheritance.",
+    "sourceUrl": "https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children"
   }
 ]

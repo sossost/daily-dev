@@ -326,5 +326,169 @@
     "correctIndex": 1,
     "explanation": "두 형제 컴포넌트가 같은 데이터를 공유해야 할 때, 공통 부모 컴포넌트로 상태를 이동(lifting state up)시킵니다. 부모가 상태를 소유하고 props로 자식들에게 전달하면, 한 자식의 변경이 다른 자식에도 반영됩니다.",
     "sourceUrl": "https://react.dev/learn/sharing-state-between-components"
+  },
+  {
+    "id": "react-basics-021",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "React에서 Fragment(<>...</>)를 사용하는 이유는?",
+    "options": [
+      "불필요한 DOM 노드를 추가하지 않고 여러 요소를 그룹화할 수 있다",
+      "컴포넌트의 렌더링 성능을 2배로 향상시킨다",
+      "자식 컴포넌트에 자동으로 key를 부여한다",
+      "CSS 스타일이 자식 요소에 상속되지 않도록 차단한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "Fragment는 추가적인 DOM 노드를 생성하지 않고 여러 자식 요소를 그룹화할 수 있게 합니다. div로 감싸면 불필요한 DOM 계층이 추가되어 CSS 레이아웃에 영향을 줄 수 있지만, Fragment는 렌더링 결과에 아무런 노드도 추가하지 않습니다.",
+    "sourceUrl": "https://react.dev/reference/react/Fragment"
+  },
+  {
+    "id": "react-basics-022",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 '+' 버튼을 두 번 클릭한 후 화면에 표시되는 count 값은?",
+    "code": "function Counter() {\n  const [state, dispatch] = useReducer(\n    (state, action) => {\n      switch (action.type) {\n        case 'increment': return { count: state.count + action.step };\n        default: return state;\n      }\n    },\n    { count: 0 }\n  );\n\n  return (\n    <div>\n      <span>{state.count}</span>\n      <button onClick={() => dispatch({ type: 'increment', step: 3 })}>+</button>\n    </div>\n  );\n}",
+    "options": [
+      "2",
+      "6",
+      "3",
+      "0"
+    ],
+    "correctIndex": 1,
+    "explanation": "useReducer의 dispatch가 호출될 때마다 reducer 함수가 실행됩니다. 각 클릭에서 step이 3이므로 첫 클릭 후 count는 3, 두 번째 클릭 후 6이 됩니다. useReducer는 복잡한 상태 로직을 명확하게 관리할 때 유용합니다.",
+    "sourceUrl": "https://react.dev/reference/react/useReducer"
+  },
+  {
+    "id": "react-basics-023",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "React 커스텀 훅의 규칙으로 올바른 것은?",
+    "options": [
+      "반드시 클래스 컴포넌트 내부에서 정의해야 한다",
+      "함수 이름이 반드시 'use'로 시작해야 한다",
+      "반드시 JSX를 반환해야 한다",
+      "다른 훅을 호출할 수 없다"
+    ],
+    "correctIndex": 1,
+    "explanation": "커스텀 훅은 'use'로 시작하는 함수여야 React가 훅 규칙(Rules of Hooks)을 적용합니다. 내부에서 다른 훅(useState, useEffect 등)을 호출할 수 있으며, 컴포넌트 간에 상태 로직을 재사용하는 데 사용됩니다. JSX를 반환할 필요는 없습니다.",
+    "sourceUrl": "https://react.dev/learn/reusing-logic-with-custom-hooks"
+  },
+  {
+    "id": "react-basics-024",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "useLayoutEffect와 useEffect의 차이점으로 올바른 것은?",
+    "options": [
+      "useLayoutEffect는 서버 사이드에서만 실행되고, useEffect는 클라이언트에서만 실행된다",
+      "useLayoutEffect는 의존성 배열을 지원하지 않는다",
+      "useEffect는 비동기적으로 실행되지만, useLayoutEffect는 항상 동기적으로 실행된다",
+      "useLayoutEffect는 브라우저가 화면을 그리기 전에 동기적으로 실행되고, useEffect는 화면을 그린 후에 실행된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "useLayoutEffect는 DOM 변경 후 브라우저가 화면을 페인트하기 전에 동기적으로 실행됩니다. 이를 통해 레이아웃 측정이나 DOM 조작 결과를 화면에 깜빡임 없이 반영할 수 있습니다. useEffect는 페인트 후에 비동기적으로 실행되므로 대부분의 경우에 적합합니다.",
+    "sourceUrl": "https://react.dev/reference/react/useLayoutEffect"
+  },
+  {
+    "id": "react-basics-025",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "React.lazy와 Suspense를 함께 사용하는 주된 목적은?",
+    "options": [
+      "서버 사이드 렌더링을 활성화하기 위해",
+      "코드 분할을 통해 컴포넌트를 필요할 때 동적으로 로드하기 위해",
+      "컴포넌트의 상태를 자동으로 캐싱하기 위해",
+      "에러 바운더리 기능을 제공하기 위해"
+    ],
+    "correctIndex": 1,
+    "explanation": "React.lazy는 동적 import()를 사용하여 컴포넌트를 지연 로드합니다. Suspense는 지연 로드되는 컴포넌트가 준비될 때까지 fallback UI를 표시합니다. 이를 통해 초기 번들 크기를 줄이고, 사용자가 실제로 필요로 하는 코드만 로드할 수 있습니다.",
+    "sourceUrl": "https://react.dev/reference/react/lazy"
+  },
+  {
+    "id": "react-basics-026",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 버튼을 클릭하면 렌더링 횟수는 몇 번 증가하나요?",
+    "code": "function App() {\n  const [count, setCount] = useState(0);\n  const [flag, setFlag] = useState(false);\n  const renderCount = useRef(0);\n  renderCount.current++;\n\n  function handleClick() {\n    setCount(c => c + 1);\n    setFlag(f => !f);\n  }\n\n  return (\n    <div>\n      <p>렌더링: {renderCount.current}</p>\n      <button onClick={handleClick}>클릭</button>\n    </div>\n  );\n}",
+    "options": [
+      "1번 (React 18의 자동 배칭으로 두 상태 업데이트가 하나의 렌더링으로 합쳐진다)",
+      "2번 (각 setState가 별도의 렌더링을 유발한다)",
+      "0번 (useRef는 리렌더링을 유발하지 않는다)",
+      "3번 (setState 호출 수 + 이벤트 핸들러 완료 시 추가 렌더링)"
+    ],
+    "correctIndex": 0,
+    "explanation": "React 18부터 모든 이벤트 핸들러, setTimeout, Promise 내부의 상태 업데이트가 자동으로 배칭됩니다. 따라서 setCount와 setFlag가 같은 이벤트 핸들러 내에서 호출되면 하나의 리렌더링으로 합쳐집니다. React 17에서는 이벤트 핸들러 내부만 배칭되었습니다.",
+    "sourceUrl": "https://react.dev/blog/2022/03/29/react-v18#new-feature-automatic-batching"
+  },
+  {
+    "id": "react-basics-027",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 props.items가 변경되어도 filteredItems가 업데이트되지 않는 이유는?",
+    "code": "function ItemList({ items, query }) {\n  const [filteredItems, setFilteredItems] = useState(\n    items.filter(item => item.name.includes(query))\n  );\n\n  return (\n    <ul>\n      {filteredItems.map(item => <li key={item.id}>{item.name}</li>)}\n    </ul>\n  );\n}",
+    "options": [
+      "filter 메서드가 원본 배열을 변경하지 않기 때문",
+      "items가 객체 배열이라 얕은 비교에 실패하기 때문",
+      "useState의 초기값은 첫 렌더링에서만 사용되고, 이후 props 변경은 state에 반영되지 않기 때문",
+      "setFilteredItems를 명시적으로 호출하지 않아서 React가 경고를 발생시키기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "useState의 인자(초기값)는 컴포넌트가 처음 마운트될 때만 사용됩니다. 이후 리렌더링에서는 무시됩니다. props가 변경되어도 state는 자동으로 업데이트되지 않습니다. 이 경우 파생 상태(derived state) 대신 useMemo를 사용하여 렌더링마다 필터링 결과를 계산하는 것이 올바른 패턴입니다.",
+    "sourceUrl": "https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes"
+  },
+  {
+    "id": "react-basics-028",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "React Portal의 주된 용도는?",
+    "options": [
+      "컴포넌트의 상태를 전역으로 공유하기 위해",
+      "부모 DOM 계층 외부의 DOM 노드에 자식을 렌더링하기 위해",
+      "서버에서 클라이언트로 데이터를 전송하기 위해",
+      "컴포넌트 간의 라우팅을 처리하기 위해"
+    ],
+    "correctIndex": 1,
+    "explanation": "createPortal을 사용하면 부모 컴포넌트의 DOM 계층 외부에 있는 다른 DOM 노드에 자식을 렌더링할 수 있습니다. 모달, 툴팁, 드롭다운 등 시각적으로 부모 컨테이너를 벗어나야 하는 UI에 유용합니다. 이벤트 버블링은 React 트리를 따라 정상적으로 동작합니다.",
+    "sourceUrl": "https://react.dev/reference/react-dom/createPortal"
+  },
+  {
+    "id": "react-basics-029",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드에서 버튼을 클릭하면 콘솔에 출력되는 결과는?",
+    "code": "function App() {\n  const [state, dispatch] = useReducer((s, a) => {\n    console.log('reducer called');\n    return s + a;\n  }, 0);\n\n  function handleClick() {\n    dispatch(1);\n    dispatch(1);\n    console.log('after dispatch');\n  }\n\n  return <button onClick={handleClick}>{state}</button>;\n}",
+    "options": [
+      "'reducer called', 'reducer called', 'after dispatch' 순으로 출력된다",
+      "'after dispatch', 'reducer called', 'reducer called' 순으로 출력된다",
+      "'reducer called', 'after dispatch', 'reducer called' 순으로 출력된다",
+      "'after dispatch'만 출력된다"
+    ],
+    "correctIndex": 0,
+    "explanation": "useReducer의 dispatch는 동기적으로 reducer를 호출하여 다음 상태를 계산합니다. 따라서 첫 번째 dispatch(1)에서 'reducer called'가 출력되고, 두 번째 dispatch(1)에서 다시 'reducer called'가 출력된 후, 'after dispatch'가 출력됩니다. 단, 리렌더링 자체는 이벤트 핸들러가 끝난 후 배칭되어 한 번만 발생합니다.",
+    "sourceUrl": "https://react.dev/reference/react/useReducer"
+  },
+  {
+    "id": "react-basics-030",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "React에서 children prop을 활용한 합성(composition)과 상속(inheritance)에 대한 설명으로 올바른 것은?",
+    "options": [
+      "React에서는 상속보다 합성이 권장되지 않는다",
+      "children prop은 문자열만 전달할 수 있다",
+      "합성을 사용하면 컴포넌트가 children을 통해 임의의 JSX를 받아 유연한 UI를 구성할 수 있다",
+      "상속을 사용해야 컴포넌트 간 코드를 재사용할 수 있다"
+    ],
+    "correctIndex": 2,
+    "explanation": "React에서는 상속 대신 합성(composition)을 권장합니다. children prop을 통해 컴포넌트는 미리 알 수 없는 임의의 자식 요소를 받을 수 있으며, 이를 통해 재사용 가능하고 유연한 컴포넌트를 만들 수 있습니다. 실무에서 컴포넌트 상속이 필요한 경우는 거의 없습니다.",
+    "sourceUrl": "https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children"
   }
 ]

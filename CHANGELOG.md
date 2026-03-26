@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 10 data-structures questions (021-030) (`9ea160c`)
 - **code**: Fix unhandled promise, add 8 tests (`8011da0`)
 - **content**: add 10 css-layout questions (021-030) (`ed1d042`)
 - **content**: add 10 algorithms questions (021-030) (`adec296`)
