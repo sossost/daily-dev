@@ -323,5 +323,169 @@
     "correctIndex": 3,
     "explanation": "According to the CSS specification: 1) If min-width is greater than max-width, min-width wins. 2) Otherwise, max-width takes priority over width (if width is greater than max-width, max-width is applied). 3) min-width takes priority over width (if width is less than min-width, min-width is applied).",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/min-width"
+  },
+  {
+    "id": "css-layout-021",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct role of the CSS gap property?",
+    "options": [
+      "It sets the spacing between items in a flex/grid container",
+      "It sets the outer margin of an element",
+      "It sets the inner padding of an element",
+      "It prevents margin collapsing between adjacent block elements"
+    ],
+    "correctIndex": 0,
+    "explanation": "The gap property sets the spacing between child items in a flex or grid container. Unlike margin, it does not create spacing on the outside of the first/last items, and margin collapsing issues do not occur, making it much more intuitive for managing layout spacing.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/gap"
+  },
+  {
+    "id": "css-layout-022",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "In the following CSS, what is the height of .box in pixels?",
+    "code": ".box {\n  width: 400px;\n  aspect-ratio: 2 / 1;\n}",
+    "options": [
+      "400px",
+      "200px",
+      "800px",
+      "100px"
+    ],
+    "correctIndex": 1,
+    "explanation": "aspect-ratio: 2 / 1 means the width-to-height ratio is 2:1. Since the width is 400px, the height is 400px / 2 = 200px. aspect-ratio only applies when no explicit height is set, and it is very useful for responsive media containers.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio"
+  },
+  {
+    "id": "css-layout-023",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between place-items and place-content in CSS Grid?",
+    "options": [
+      "Both have the same functionality and only differ in name",
+      "place-items aligns individual items within their cells, while place-content aligns the entire set of tracks within the container",
+      "place-content aligns individual items, while place-items aligns the entire grid",
+      "place-items handles only horizontal alignment, while place-content handles only vertical alignment"
+    ],
+    "correctIndex": 1,
+    "explanation": "place-items is a shorthand for align-items + justify-items, which aligns each item within its own cell. place-content is a shorthand for align-content + justify-content, which aligns the entire group of tracks within the container. The difference becomes clear when the container has extra space.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/place-items"
+  },
+  {
+    "id": "css-layout-024",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "How do you fix the problem where a parent element's height collapses to 0 when it contains floated children?",
+    "options": [
+      "Apply position: absolute to the parent",
+      "Remove float from children and add margin instead",
+      "Apply overflow: hidden or display: flow-root to the parent",
+      "Apply z-index: 1 to the parent"
+    ],
+    "correctIndex": 2,
+    "explanation": "Floated elements are taken out of the normal flow, so the parent does not recognize the height of its children. To fix this, you need to create a new Block Formatting Context (BFC) on the parent. overflow: hidden or display: flow-root creates a BFC that contains the floated children.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/display#flow-root"
+  },
+  {
+    "id": "css-layout-025",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "In the following CSS using grid-template-areas, what area does .sidebar occupy?",
+    "code": ".container {\n  display: grid;\n  grid-template-columns: 200px 1fr;\n  grid-template-rows: auto 1fr auto;\n  grid-template-areas:\n    \"header  header\"\n    \"sidebar content\"\n    \"footer  footer\";\n}\n.sidebar { grid-area: sidebar; }",
+    "options": [
+      "Second row of the first column, 200px wide",
+      "Second row of the second column, 1fr wide",
+      "Spans all rows in the first column",
+      "Occupies the entire second row"
+    ],
+    "correctIndex": 0,
+    "explanation": "In grid-template-areas, 'sidebar' is placed in the first column of the second row. Since the first column is defined as 200px in grid-template-columns, the sidebar's width is 200px. Using grid-area makes it easy to visually understand the layout structure.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas"
+  },
+  {
+    "id": "css-layout-026",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "In the following CSS with 3 .item elements, what is the final width of each item?",
+    "code": ".container {\n  display: flex;\n  width: 600px;\n}\n.item:nth-child(1) { flex: 1 1 200px; }\n.item:nth-child(2) { flex: 2 1 200px; }\n.item:nth-child(3) { flex: 1 1 200px; }",
+    "options": [
+      "200px, 200px, 200px",
+      "150px, 300px, 150px",
+      "200px, 400px, 200px",
+      "Base size 200px with 0px remaining to distribute, so all stay at 200px"
+    ],
+    "correctIndex": 3,
+    "explanation": "The total flex-basis is 200px x 3 = 600px, which exactly matches the container width. Since there is no remaining space, the flex-grow ratio is irrelevant, and each item keeps its flex-basis of 200px. flex-grow only matters when there is extra space to distribute.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow"
+  },
+  {
+    "id": "css-layout-027",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the correct difference between overflow: auto and overflow: scroll?",
+    "options": [
+      "Both always show scrollbars",
+      "auto only shows scrollbars when content overflows, while scroll always shows scrollbars",
+      "scroll only shows scrollbars when content overflows, while auto always shows them",
+      "auto only allows horizontal scrolling, while scroll only allows vertical scrolling"
+    ],
+    "correctIndex": 1,
+    "explanation": "overflow: auto shows scrollbars only when content exceeds the element's size. overflow: scroll always reserves space for and displays scrollbars, even when content does not overflow. In most cases, auto provides a better user experience.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/overflow"
+  },
+  {
+    "id": "css-layout-028",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What causes the layout to break in the following CSS using calc()?",
+    "code": ".sidebar { width: 250px; }\n.content { width: calc(100%-250px); }",
+    "options": [
+      "The subtraction operator cannot be used inside calc()",
+      "Missing spaces around the operator inside calc() causes a parsing error",
+      "Mixing % and px units is not allowed",
+      "calc() is not supported on the width property"
+    ],
+    "correctIndex": 1,
+    "explanation": "In the calc() function, the addition (+) and subtraction (-) operators must have spaces on both sides. calc(100%-250px) causes a parsing error and must be written as calc(100% - 250px). Spaces are not strictly required for multiplication (*) and division (/), but they are recommended for readability.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/calc"
+  },
+  {
+    "id": "css-layout-029",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Why do unintended gaps appear between inline-block elements?",
+    "options": [
+      "The browser adds default margin",
+      "Padding is automatically applied to inline-block",
+      "Whitespace (line breaks/spaces) in the HTML source code is rendered",
+      "It is a bug in display: inline-block"
+    ],
+    "correctIndex": 2,
+    "explanation": "Inline-block elements are treated like inline elements, so whitespace (line breaks, tabs, spaces) between tags in the HTML source is rendered as approximately 4px of space. To fix this, you can apply font-size: 0 to the parent, use flexbox/grid, or write the HTML tags without whitespace between them.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/display"
+  },
+  {
+    "id": "css-layout-030",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference between CSS contain: layout and contain: size?",
+    "options": [
+      "contain: layout isolates the element's internal layout from affecting the outside, while contain: size makes the element's size independent of its children",
+      "contain: size isolates the layout, while contain: layout fixes the size",
+      "Both serve to completely hide the element",
+      "contain: layout is only for GPU acceleration, while contain: size is only for CPU optimization"
+    ],
+    "correctIndex": 0,
+    "explanation": "contain: layout isolates internal layout changes from affecting external elements. contain: size makes the element's size determination ignore child elements, requiring explicit sizing. Both properties help the browser reduce the scope of layout recalculations, improving rendering performance.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/contain"
   }
 ]

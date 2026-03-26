@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 10 algorithms questions (021-030) (`adec296`)
 - **content**: add 10 this questions (021-030) (`3f406c7`)
 - **code**: Add 9 tests, coverage 95.8% → 99% (`5e40e5c`)
 - **content**: add 8 prototype questions (021-028) (`f512b6e`)

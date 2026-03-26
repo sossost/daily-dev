@@ -186,7 +186,7 @@
 - async.json — 28 questions
 - browser-api.json — 25 questions
 - closure.json — 30 questions
-- css-layout.json — 20 questions
+- css-layout.json — 30 questions
 - data-structures.json — 20 questions
 - database.json — 20 questions
 - design-patterns.json — 20 questions
@@ -209,7 +209,7 @@
 - async.json — 28 questions
 - browser-api.json — 25 questions
 - closure.json — 30 questions
-- css-layout.json — 20 questions
+- css-layout.json — 30 questions
 - data-structures.json — 20 questions
 - database.json — 20 questions
 - design-patterns.json — 20 questions
