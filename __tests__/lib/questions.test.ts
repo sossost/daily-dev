@@ -85,3 +85,36 @@ describe('getTopicQuestionCounts', () => {
     expect(total).toBe(getAllQuestions().length)
   })
 })
+
+describe('locale support', () => {
+  it('returns questions for ko locale', () => {
+    const questions = getAllQuestions('ko')
+    expect(questions.length).toBeGreaterThan(0)
+    expect(questions[0].id).toBeDefined()
+  })
+
+  it('returns questions for en locale explicitly', () => {
+    const questions = getAllQuestions('en')
+    expect(questions.length).toBe(getAllQuestions().length)
+  })
+
+  it('getQuestionsByTopic works with ko locale', () => {
+    const questions = getQuestionsByTopic('scope', 'ko')
+    expect(questions.length).toBeGreaterThan(0)
+    for (const q of questions) {
+      expect(q.topic).toBe('scope')
+    }
+  })
+
+  it('getQuestionById works with ko locale', () => {
+    const question = getQuestionById('scope-001', 'ko')
+    expect(question).not.toBeNull()
+    expect(question?.id).toBe('scope-001')
+  })
+
+  it('getTopicQuestionCounts works with ko locale', () => {
+    const counts = getTopicQuestionCounts('ko')
+    const total = Object.values(counts).reduce((sum, c) => sum + c, 0)
+    expect(total).toBe(getAllQuestions('ko').length)
+  })
+})

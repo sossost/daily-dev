@@ -187,6 +187,33 @@ describe('generateSession', () => {
     expect(reviews[0].id).toBe('scope-001')
     expect(reviews[1].id).toBe('scope-002')
   })
+
+  it('handles review questions with the same nextReview date', () => {
+    const srsRecords: Record<string, SRSRecord> = {
+      'scope-001': {
+        questionId: 'scope-001',
+        ease: 2.5,
+        interval: 1,
+        repetitions: 1,
+        nextReview: '2024-01-14',
+        lastReview: '2024-01-13',
+      },
+      'scope-002': {
+        questionId: 'scope-002',
+        ease: 2.5,
+        interval: 1,
+        repetitions: 1,
+        nextReview: '2024-01-14',
+        lastReview: '2024-01-13',
+      },
+    }
+
+    const reviews = selectReviewQuestions(srsRecords, '2024-01-15')
+    expect(reviews).toHaveLength(2)
+    const ids = reviews.map((q) => q.id)
+    expect(ids).toContain('scope-001')
+    expect(ids).toContain('scope-002')
+  })
 })
 
 describe('selectNewQuestions', () => {

@@ -157,6 +157,25 @@ describe('getDueByTopic with topicFilter', () => {
   })
 })
 
+describe('getUpcomingReviews with ko locale', () => {
+  it('uses Korean labels for today and tomorrow', () => {
+    const records: Record<string, SRSRecord> = {
+      'scope-001': makeRecord('scope-001', '2024-06-01'),
+    }
+
+    const result = getUpcomingReviews(records, 'ko')
+    expect(result[0].label).toBe('오늘')
+    expect(result[1].label).toBe('내일')
+    expect(result[0].count).toBe(1)
+  })
+
+  it('uses Korean day names for later dates', () => {
+    const result = getUpcomingReviews({}, 'ko')
+    // Day at index 2+ should include Korean day name
+    expect(result[2].label).toMatch(/\(.\)$/)
+  })
+})
+
 describe('getScheduleSummary', () => {
   it('returns zeros for empty records', () => {
     const summary = getScheduleSummary({})

@@ -44,6 +44,10 @@ export function useAuth() {
         if (data.user != null) {
           handleSignIn(data.user);
         }
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setState({ user: null, isLoading: false });
       });
 
     const {
