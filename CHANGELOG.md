@@ -6,6 +6,7 @@
 
 ### Features
 
+- **code**: Fix unhandled promise, add 8 tests (`8011da0`)
 - **content**: add 10 css-layout questions (021-030) (`ed1d042`)
 - **content**: add 10 algorithms questions (021-030) (`adec296`)
 - **content**: add 10 this questions (021-030) (`3f406c7`)
@@ -17,6 +18,10 @@
 - **code**: Add 7 test files with 72 new tests (`7b49733`)
 - **content**: add 8 async questions (021-028) (`18cb005`)
 - **content**: add 8 promise questions (021-028) (`df39c74`)
+
+### Bug Fixes
+
+- **harness**: add fix loop for review rejections (`c3c65f6`)
 
 ### Refactoring
 

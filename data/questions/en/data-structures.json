@@ -328,5 +328,170 @@
     "correctIndex": 3,
     "explanation": "TypedArray is a view built on top of an ArrayBuffer that can only store specific numeric types (Int32, Float64, etc.) with a size fixed at creation. Using contiguous memory blocks, it offers superior memory efficiency and performance over regular Arrays when processing large amounts of numeric data.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray"
+  },
+  {
+    "id": "data-structures-021",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const arr = [1, 2, 3, 4, 5];\narr.splice(1, 2);\nconsole.log(arr);",
+    "options": [
+      "[1, 4, 5]",
+      "[1, 2, 3]",
+      "[3, 4, 5]",
+      "[2, 3]"
+    ],
+    "correctIndex": 0,
+    "explanation": "splice(1, 2) removes 2 elements starting from index 1. From the original array [1, 2, 3, 4, 5], elements at index 1 (2) and index 2 (3) are removed, leaving [1, 4, 5]. splice is a method that directly mutates the original array.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice"
+  },
+  {
+    "id": "data-structures-022",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "In which situation is a Linked List more advantageous than an array in JavaScript?",
+    "options": [
+      "When quickly accessing elements at a specific position by index",
+      "When keeping data in a sorted state",
+      "When frequently inserting or deleting elements in the middle of the list",
+      "When minimizing memory usage"
+    ],
+    "correctIndex": 2,
+    "explanation": "In a linked list, each node holds a reference to the next node, so inserting or deleting in the middle only requires changing references (O(1)). In contrast, arrays require shifting remaining elements for mid-list insertions/deletions, which takes O(n).",
+    "sourceUrl": "https://javascript.info/data-types"
+  },
+  {
+    "id": "data-structures-023",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const map = new Map([\n  [1, 'one'],\n  [2, 'two'],\n  [3, 'three']\n]);\nconst keys = [...map.keys()];\nconst filtered = new Map([...map].filter(([k]) => k > 1));\nconsole.log(keys.length, filtered.size);",
+    "options": [
+      "3 3",
+      "2 2",
+      "3 2",
+      "2 3"
+    ],
+    "correctIndex": 2,
+    "explanation": "map.keys() returns an iterator of all keys [1, 2, 3], so keys.length is 3. [...map] converts the Map to an array of [key, value] pairs, and filter(([k]) => k > 1) keeps only entries with keys greater than 1. Keys 2 and 3 remain, so filtered.size is 2.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map"
+  },
+  {
+    "id": "data-structures-024",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why doesn't Object.freeze() work as intended in the following code?",
+    "code": "const config = Object.freeze({\n  api: { url: 'https://api.example.com', timeout: 3000 },\n  debug: false\n});\nconfig.api.timeout = 5000;\nconsole.log(config.api.timeout);",
+    "options": [
+      "Object.freeze() only works in strict mode",
+      "Object.freeze() only freezes top-level properties and does not freeze nested objects (shallow freeze)",
+      "The freeze is released because config is not declared with const",
+      "Numeric type properties are excluded from freeze"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.freeze() performs only a shallow freeze. Top-level properties (api, debug) cannot be changed, but properties of nested objects (the api object) can still be modified. The output is 5000. For deep freezing, you need to recursively apply Object.freeze() or use structuredClone followed by freeze.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze"
+  },
+  {
+    "id": "data-structures-025",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between a Stack and a Queue in JavaScript?",
+    "options": [
+      "Stack follows FIFO, Queue follows LIFO",
+      "Stack can be implemented with push/pop, Queue with push/shift using arrays",
+      "Stack allows index-based access to elements but Queue does not",
+      "Queue is natively supported in JavaScript but Stack is not"
+    ],
+    "correctIndex": 1,
+    "explanation": "A Stack follows the LIFO (Last In, First Out) principle using push() and pop() to add/remove from the end of the array. A Queue follows the FIFO (First In, First Out) principle using push() to add at the end and shift() to remove from the front. Both data structures can be implemented using JavaScript arrays.",
+    "sourceUrl": "https://javascript.info/array#methods-pop-push-shift-unshift"
+  },
+  {
+    "id": "data-structures-026",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Why can you create custom iterable objects using Symbol.iterator in JavaScript?",
+    "options": [
+      "Symbol.iterator is a method that automatically converts objects to arrays",
+      "Because for...of loops and the spread operator find traversal logic through the Symbol.iterator protocol",
+      "Because Symbol.iterator is defined by default on all objects",
+      "Because defining Symbol.iterator makes the object inherit from Array"
+    ],
+    "correctIndex": 1,
+    "explanation": "for...of, the spread operator (...), destructuring, and other constructs use the iterable protocol. When you define a [Symbol.iterator]() method on an object, it returns an iterator object whose next() method is repeatedly called to traverse values. This allows any object to be made iterable.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/iterator"
+  },
+  {
+    "id": "data-structures-027",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const obj = { a: 1, b: 2, c: 3 };\nconst entries = Object.entries(obj);\nconst fromEntries = Object.fromEntries(\n  entries.map(([k, v]) => [k, v * 10])\n);\nconsole.log(fromEntries.b, Object.keys(fromEntries).length);",
+    "options": [
+      "2 3",
+      "20 3",
+      "20 2",
+      "NaN 3"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.entries(obj) returns [['a', 1], ['b', 2], ['c', 3]]. Mapping each value multiplied by 10 gives [['a', 10], ['b', 20], ['c', 30]]. Object.fromEntries() converts it back to an object { a: 10, b: 20, c: 30 }, so fromEntries.b is 20 and there are 3 keys.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries"
+  },
+  {
+    "id": "data-structures-028",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the potential problem with the WeakRef-based cache in the following code?",
+    "code": "const cache = new Map();\nfunction getCached(key, compute) {\n  const ref = cache.get(key);\n  if (ref) {\n    const val = ref.deref();\n    if (val !== undefined) return val;\n  }\n  const result = compute();\n  cache.set(key, new WeakRef(result));\n  return result;\n}\nconst data = getCached('users', () => [1, 2, 3]);\nconst data2 = getCached('users', () => [4, 5, 6]);",
+    "options": [
+      "WeakRef cannot reference arrays, so an error occurs",
+      "The cache Map keys are strings, which are incompatible with WeakRef",
+      "Since garbage collection timing is non-deterministic, cache hit behavior is unpredictable",
+      "deref() always returns undefined, so the cache never works"
+    ],
+    "correctIndex": 2,
+    "explanation": "Objects wrapped in WeakRef can be garbage collected at any time when there are no other strong references. Since GC timing varies by engine and is non-deterministic, the same code may find the cache valid or already collected depending on the execution environment. This leads to difficult-to-debug and inconsistent behavior.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakRef"
+  },
+  {
+    "id": "data-structures-029",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What do Object.keys(), Object.values(), and Object.entries() return in JavaScript?",
+    "options": [
+      "An Iterator object",
+      "A Map object",
+      "A regular Array",
+      "A Generator object"
+    ],
+    "correctIndex": 2,
+    "explanation": "Object.keys() returns an array of key strings, Object.values() returns an array of values, and Object.entries() returns an array of [key, value] pairs. Unlike Map's keys(), values(), and entries() which return iterators, Object methods always return new arrays.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys"
+  },
+  {
+    "id": "data-structures-030",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between structuredClone() and JSON.parse(JSON.stringify()) for deep copying?",
+    "options": [
+      "The JSON approach is always faster than structuredClone",
+      "structuredClone correctly copies Date, Map, Set, RegExp, etc., while the JSON approach loses or transforms them",
+      "The JSON approach can handle circular references but structuredClone cannot",
+      "Both methods can perfectly copy objects containing functions"
+    ],
+    "correctIndex": 1,
+    "explanation": "structuredClone() uses the structured clone algorithm to correctly copy Date, Map, Set, RegExp, ArrayBuffer, and more, and also handles circular references. In contrast, JSON.parse(JSON.stringify()) converts Date to strings, turns Map/Set into empty objects, and throws an error on circular references. However, neither method can copy functions.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/structuredClone"
   }
 ]
