@@ -330,5 +330,171 @@
     "correctIndex": 2,
     "explanation": "The == algorithm follows defined rules: 1) If a boolean is present, convert it to a number first (true->1, false->0). 2) For string-number comparison, convert the string to a number. 3) For object-primitive comparison, convert the object to a primitive (ToPrimitive). 4) null and undefined are only equal to each other. Due to these complex rules, using === is recommended.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-021",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "console.log(!!0);\nconsole.log(!!'hello');\nconsole.log(!!null);\nconsole.log(!!undefined);",
+    "options": [
+      "false, true, false, false",
+      "true, false, true, true",
+      "false, false, false, false",
+      "true, true, false, false"
+    ],
+    "correctIndex": 0,
+    "explanation": "The double negation operator (!!) is an idiomatic pattern for converting values to booleans. The first ! converts the value to boolean and inverts it, and the second ! inverts it back to the original truthy/falsy as a boolean. 0, null, and undefined are falsy so they become false, while 'hello' is a non-empty string so it is truthy and becomes true. This produces the same result as Boolean() but is shorter.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT"
+  },
+  {
+    "id": "type-coercion-022",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "console.log(`${1 + 2}`);\nconsole.log(`${[1, 2, 3]}`);\nconsole.log(`${{}}`);\nconsole.log(`${undefined}`);",
+    "options": [
+      "'3', '1,2,3', '[object Object]', 'undefined'",
+      "'3', '[1,2,3]', '{}', ''",
+      "3, '1,2,3', '[object Object]', ''",
+      "'3', '123', '[object Object]', 'undefined'"
+    ],
+    "correctIndex": 0,
+    "explanation": "Template literal ${} interpolation converts the result of the inner expression to a string. 1+2 becomes 3 and is converted to the string '3'. The array [1,2,3] has Array.prototype.toString() called, yielding '1,2,3'. The empty object {} has Object.prototype.toString() called, yielding '[object Object]'. undefined is converted to the string 'undefined'. This uses the same ToString abstract operation as the String() function.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals"
+  },
+  {
+    "id": "type-coercion-023",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the return value of the || (logical OR) operator is correct?",
+    "options": [
+      "It always returns true or false",
+      "It returns the truthy operand as-is; if both are falsy, it returns the last value",
+      "It converts both operands to strings and concatenates them",
+      "It returns the boolean AND result of both operands"
+    ],
+    "correctIndex": 1,
+    "explanation": "JavaScript's || operator returns the original value, not a boolean. If the left operand is truthy, it returns the left value; if falsy, it returns the right value. For example, '' || 'default' returns 'default', and 'hello' || 'world' returns 'hello'. This feature was widely used for default value patterns, but ES2020's ?? (nullish coalescing) operator only checks for null/undefined, enabling more precise default value handling.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR"
+  },
+  {
+    "id": "type-coercion-024",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  valueOf() { return 42; },\n  toString() { return 'hello'; }\n};\nconsole.log(obj + 1);\nconsole.log(`${obj}`);\nconsole.log(obj == 42);",
+    "options": [
+      "43, 'hello', true",
+      "'hello1', 'hello', false",
+      "43, '42', true",
+      "43, 'hello', false"
+    ],
+    "correctIndex": 0,
+    "explanation": "Object type conversion is determined by the ToPrimitive abstract operation. The + operator uses a 'default' hint, so valueOf() is called first, returning 42. 42 + 1 = 43. Template literals use a 'string' hint, so toString() is called first, returning 'hello'. The == comparison also uses a 'default' hint, so valueOf() returns 42, and 42 == 42 is true. The key insight is that valueOf() and toString() call priority differs depending on the hint.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive"
+  },
+  {
+    "id": "type-coercion-025",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the difference between || and ?? (nullish coalescing) is correct?",
+    "options": [
+      "Both behave identically",
+      "|| returns the right operand when the left is falsy, while ?? returns the right operand only when the left is null or undefined",
+      "?? returns the right operand when the left is falsy, while || returns the right operand only when the left is null",
+      "|| always returns a boolean while ?? returns the original value"
+    ],
+    "correctIndex": 1,
+    "explanation": "The || operator returns the right operand if the left operand is falsy (0, '', false, null, undefined, NaN). The ?? operator returns the right operand only when the left is null or undefined. Therefore, 0 || 'default' returns 'default', but 0 ?? 'default' returns 0. When 0 or empty strings should be treated as valid values, ?? is more appropriate.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing"
+  },
+  {
+    "id": "type-coercion-026",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "In the following code, the array sort result is unexpected. What is the cause?",
+    "code": "const nums = [10, 9, 80, 7];\nconsole.log(nums.sort()); // [10, 7, 80, 9]",
+    "options": [
+      "sort() sorts the array in reverse order",
+      "sort() converts elements to strings by default and compares them by Unicode code point order",
+      "sort() sorts even numbers first",
+      "The array cannot be sorted because it is declared with const"
+    ],
+    "correctIndex": 1,
+    "explanation": "Array.prototype.sort() without a comparison function converts elements to strings and compares them by Unicode code point order. 10 becomes the string '10', which starts with '1', so it comes before '7', '8', and '9'. To sort numbers correctly, pass a comparison function like sort((a, b) => a - b). This is a classic pitfall caused by implicit string conversion in JavaScript.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort"
+  },
+  {
+    "id": "type-coercion-027",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about the role of Symbol.toPrimitive is correct?",
+    "options": [
+      "It defines a method used to convert objects to JSON",
+      "It defines a method called when an object is converted to a primitive, receiving a hint argument of 'number', 'string', or 'default'",
+      "It defines a method used to convert objects to arrays",
+      "It defines a method that modifies the object's prototype chain"
+    ],
+    "correctIndex": 1,
+    "explanation": "Symbol.toPrimitive is a well-known symbol introduced in ES2015 that is called when an object is converted to a primitive value. The hint argument indicates the conversion context: 'number' (arithmetic operations), 'string' (string contexts), 'default' (+ operator, == comparison). When Symbol.toPrimitive is defined, it takes priority over valueOf() and toString(). This allows complete customization of an object's type conversion behavior.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive"
+  },
+  {
+    "id": "type-coercion-028",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "console.log(true + true + true);\nconsole.log(true + '1');\nconsole.log([] == false);\nconsole.log([1] == 1);",
+    "options": [
+      "3, '11', false, false",
+      "3, 'true1', false, true",
+      "3, '11', true, false",
+      "3, 'true1', true, true"
+    ],
+    "correctIndex": 3,
+    "explanation": "In true + true + true, the + operator converts booleans to numbers. true is 1, so 1 + 1 + 1 = 3. In true + '1', one operand is a string, so true is converted to 'true', yielding 'true1'. For [] == false, ToPrimitive([]) yields '', ToNumber(false) yields 0, ToNumber('') yields 0, so 0 == 0 = true. For [1] == 1, ToPrimitive([1]) yields '1', ToNumber('1') yields 1, so 1 == 1 = true.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Addition"
+  },
+  {
+    "id": "type-coercion-029",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about the difference between String() and .toString() is correct?",
+    "options": [
+      "Both work identically on all values",
+      "String() safely converts any value to a string, but calling .toString() on null or undefined throws a TypeError",
+      ".toString() always returns '[object Object]'",
+      "String() can only be used on numbers"
+    ],
+    "correctIndex": 1,
+    "explanation": "String(null) safely returns 'null' and String(undefined) returns 'undefined'. However, null.toString() and undefined.toString() throw a TypeError because null and undefined are primitives that do not have properties. For other values, both behave identically. When the type of a value is uncertain, using String() is the safer choice.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String"
+  },
+  {
+    "id": "type-coercion-030",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, the condition behaves differently than intended. What is the cause?",
+    "code": "const count = 0;\nconst label = count || 'none';\nconsole.log(label); // 'none' (wanted to display 0)",
+    "options": [
+      "const variables cannot be used with the || operator",
+      "The || operator is designed to prioritize returning strings",
+      "The || operator returns the right operand when the left is falsy, and since 0 is falsy, 'none' is returned. Using ?? solves this",
+      "count is not defined"
+    ],
+    "correctIndex": 2,
+    "explanation": "The || operator returns the right operand when the left operand is falsy. 0 is falsy, so 0 || 'none' returns 'none'. However, 0 can be a valid numeric value. The ?? (nullish coalescing) operator only checks for null and undefined, so 0 ?? 'none' returns 0. This is a classic case where ?? should be used instead of ||.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing"
   }
 ]

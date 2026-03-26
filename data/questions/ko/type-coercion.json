@@ -330,5 +330,171 @@
     "correctIndex": 2,
     "explanation": "== 알고리즘은 정해진 규칙을 따릅니다: 1) 불리언이 있으면 먼저 숫자로 변환합니다(true→1, false→0). 2) 문자열과 숫자 비교 시 문자열을 숫자로 변환합니다. 3) 객체와 원시값 비교 시 객체를 원시값으로 변환합니다(ToPrimitive). 4) null과 undefined는 서로만 같습니다. 이 복잡한 규칙 때문에 ===를 사용하는 것이 권장됩니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-021",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(!!0);\nconsole.log(!!'hello');\nconsole.log(!!null);\nconsole.log(!!undefined);",
+    "options": [
+      "false, true, false, false",
+      "true, false, true, true",
+      "false, false, false, false",
+      "true, true, false, false"
+    ],
+    "correctIndex": 0,
+    "explanation": "이중 부정 연산자(!!)는 값을 불리언으로 변환하는 관용적 패턴입니다. 첫 번째 !가 값을 불리언으로 변환한 뒤 반전시키고, 두 번째 !가 다시 반전시켜 원래의 truthy/falsy를 불리언으로 확정합니다. 0, null, undefined는 falsy이므로 false가 되고, 'hello'는 비어있지 않은 문자열이므로 truthy라 true가 됩니다. Boolean() 함수와 동일한 결과를 내지만 !!가 더 짧아 자주 사용됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Logical_NOT"
+  },
+  {
+    "id": "type-coercion-022",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(`${1 + 2}`);\nconsole.log(`${[1, 2, 3]}`);\nconsole.log(`${{}}`);\nconsole.log(`${undefined}`);",
+    "options": [
+      "'3', '1,2,3', '[object Object]', 'undefined'",
+      "'3', '[1,2,3]', '{}', ''",
+      "3, '1,2,3', '[object Object]', ''",
+      "'3', '123', '[object Object]', 'undefined'"
+    ],
+    "correctIndex": 0,
+    "explanation": "템플릿 리터럴의 ${} 보간은 내부 표현식의 결과를 문자열로 변환합니다. 1+2는 3이 되고 문자열 '3'으로 변환됩니다. 배열 [1,2,3]은 Array.prototype.toString()이 호출되어 '1,2,3'이 됩니다. 빈 객체 {}는 Object.prototype.toString()이 호출되어 '[object Object]'가 됩니다. undefined는 문자열 'undefined'로 변환됩니다. 이는 String() 함수와 동일한 ToString 추상 연산을 사용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Template_literals"
+  },
+  {
+    "id": "type-coercion-023",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "|| (논리 OR) 연산자의 반환값에 대해 올바른 설명은?",
+    "options": [
+      "항상 true 또는 false를 반환한다",
+      "두 피연산자 중 truthy인 값을 그대로 반환하며, 모두 falsy면 마지막 값을 반환한다",
+      "두 피연산자를 문자열로 변환한 뒤 연결하여 반환한다",
+      "두 피연산자의 불리언 AND 결과를 반환한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "JavaScript의 || 연산자는 불리언이 아닌 원래 값을 반환합니다. 왼쪽 피연산자가 truthy이면 왼쪽 값을 그대로 반환하고, falsy이면 오른쪽 값을 반환합니다. 예를 들어 '' || 'default'는 'default'를, 'hello' || 'world'는 'hello'를 반환합니다. 이 특성은 기본값 패턴에 널리 사용되었지만, ES2020의 ?? (nullish coalescing) 연산자가 null/undefined만 체크하므로 더 정확한 기본값 처리가 가능합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Logical_OR"
+  },
+  {
+    "id": "type-coercion-024",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const obj = {\n  valueOf() { return 42; },\n  toString() { return 'hello'; }\n};\nconsole.log(obj + 1);\nconsole.log(`${obj}`);\nconsole.log(obj == 42);",
+    "options": [
+      "43, 'hello', true",
+      "'hello1', 'hello', false",
+      "43, '42', true",
+      "43, 'hello', false"
+    ],
+    "correctIndex": 0,
+    "explanation": "객체의 타입 변환은 ToPrimitive 추상 연산에 의해 결정됩니다. + 연산자는 hint가 'default'이므로 valueOf()를 먼저 호출하여 42를 얻고, 42 + 1 = 43입니다. 템플릿 리터럴은 hint가 'string'이므로 toString()을 먼저 호출하여 'hello'를 반환합니다. == 비교에서도 hint가 'default'이므로 valueOf()가 호출되어 42 == 42는 true입니다. hint에 따라 valueOf()와 toString() 호출 우선순위가 달라지는 것이 핵심입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive"
+  },
+  {
+    "id": "type-coercion-025",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "|| 연산자와 ?? (nullish coalescing) 연산자의 차이로 올바른 것은?",
+    "options": [
+      "둘 다 동일하게 동작한다",
+      "||는 왼쪽이 falsy이면 오른쪽을 반환하고, ??는 왼쪽이 null 또는 undefined일 때만 오른쪽을 반환한다",
+      "??는 왼쪽이 falsy이면 오른쪽을 반환하고, ||는 왼쪽이 null일 때만 오른쪽을 반환한다",
+      "||는 항상 불리언을 반환하고 ??는 원래 값을 반환한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "|| 연산자는 왼쪽 피연산자가 falsy(0, '', false, null, undefined, NaN)이면 오른쪽을 반환합니다. ?? 연산자는 왼쪽이 null 또는 undefined일 때만 오른쪽을 반환합니다. 따라서 0 || 'default'는 'default'이지만, 0 ?? 'default'는 0입니다. 0이나 빈 문자열을 유효한 값으로 취급해야 할 때 ??가 더 적합합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing"
+  },
+  {
+    "id": "type-coercion-026",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 배열 정렬 결과가 예상과 다릅니다. 원인은 무엇인가요?",
+    "code": "const nums = [10, 9, 80, 7];\nconsole.log(nums.sort()); // [10, 7, 80, 9]",
+    "options": [
+      "sort()가 배열을 역순으로 정렬하기 때문",
+      "sort()는 기본적으로 요소를 문자열로 변환한 뒤 유니코드 코드 포인트 순으로 비교하기 때문",
+      "sort()는 짝수를 먼저 정렬하기 때문",
+      "배열이 const로 선언되어 정렬할 수 없기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "Array.prototype.sort()는 비교 함수가 없으면 요소를 문자열로 변환한 뒤 유니코드 코드 포인트 순서로 비교합니다. 10은 문자열 '10'이 되어 '1'로 시작하므로 '7', '8', '9'보다 앞에 옵니다. 숫자를 올바르게 정렬하려면 sort((a, b) => a - b)처럼 비교 함수를 전달해야 합니다. 이는 JavaScript에서 암시적 문자열 변환이 일으키는 대표적인 함정입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/sort"
+  },
+  {
+    "id": "type-coercion-027",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Symbol.toPrimitive의 역할로 올바른 것은?",
+    "options": [
+      "객체를 JSON으로 변환할 때 사용되는 메서드를 정의한다",
+      "객체가 원시값으로 변환될 때 호출되는 메서드를 정의하며, hint 인자로 'number', 'string', 'default' 중 하나를 받는다",
+      "객체를 배열로 변환할 때 사용되는 메서드를 정의한다",
+      "객체의 프로토타입 체인을 변경하는 메서드를 정의한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Symbol.toPrimitive는 ES2015에서 도입된 well-known symbol로, 객체가 원시값으로 변환될 때 호출됩니다. hint 인자는 변환 컨텍스트를 나타냅니다: 'number'(산술 연산), 'string'(문자열 컨텍스트), 'default'(+ 연산자, == 비교). Symbol.toPrimitive가 정의되어 있으면 valueOf()나 toString()보다 우선 호출됩니다. 이를 통해 객체의 타입 변환 동작을 완전히 커스터마이징할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive"
+  },
+  {
+    "id": "type-coercion-028",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(true + true + true);\nconsole.log(true + '1');\nconsole.log([] == false);\nconsole.log([1] == 1);",
+    "options": [
+      "3, '11', false, false",
+      "3, 'true1', false, true",
+      "3, '11', true, false",
+      "3, 'true1', true, true"
+    ],
+    "correctIndex": 3,
+    "explanation": "true + true + true에서 + 연산자는 불리언을 숫자로 변환합니다. true는 1이므로 1 + 1 + 1 = 3입니다. true + '1'에서는 하나의 피연산자가 문자열이므로 true가 'true'로 변환되어 'true1'이 됩니다. [] == false는 ToPrimitive([])가 '', ToNumber(false)가 0, ToNumber('')가 0이므로 0 == 0 = true입니다. [1] == 1은 ToPrimitive([1])이 '1', ToNumber('1')이 1이므로 1 == 1 = true입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Addition"
+  },
+  {
+    "id": "type-coercion-029",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "String()과 .toString() 메서드의 차이로 올바른 것은?",
+    "options": [
+      "둘 다 모든 값에 동일하게 동작한다",
+      "String()은 모든 값을 안전하게 문자열로 변환하지만, null과 undefined에서 .toString()을 호출하면 TypeError가 발생한다",
+      ".toString()은 항상 '[object Object]'를 반환한다",
+      "String()은 숫자에만 사용할 수 있다"
+    ],
+    "correctIndex": 1,
+    "explanation": "String(null)은 'null', String(undefined)는 'undefined'를 안전하게 반환합니다. 하지만 null.toString()이나 undefined.toString()은 TypeError를 발생시킵니다. null과 undefined는 프로퍼티를 가지지 않는 원시값이기 때문입니다. 그 외의 값에서는 둘 다 동일하게 동작합니다. 값의 타입이 불확실할 때는 String()을 사용하는 것이 안전합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/String"
+  },
+  {
+    "id": "type-coercion-030",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 조건문이 의도와 다르게 동작합니다. 원인은 무엇인가요?",
+    "code": "const count = 0;\nconst label = count || 'none';\nconsole.log(label); // 'none' (0을 표시하고 싶었음)",
+    "options": [
+      "const 변수는 || 연산자와 함께 사용할 수 없기 때문",
+      "|| 연산자가 문자열을 우선 반환하도록 설계되었기 때문",
+      "|| 연산자는 왼쪽이 falsy이면 오른쪽을 반환하는데 0이 falsy이므로 'none'이 반환된다. ?? 연산자를 사용하면 해결된다",
+      "count가 정의되지 않았기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "|| 연산자는 왼쪽 피연산자가 falsy이면 오른쪽을 반환합니다. 0은 falsy이므로 0 || 'none'은 'none'이 됩니다. 하지만 0은 유효한 숫자값일 수 있습니다. ?? (nullish coalescing) 연산자는 null과 undefined만 체크하므로 0 ?? 'none'은 0을 반환합니다. 이는 || 대신 ??를 사용해야 하는 대표적인 사례입니다."  ,
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing"
   }
 ]
