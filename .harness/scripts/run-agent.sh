@@ -123,25 +123,42 @@ main() {
   # Step 1: Manager decides (lightweight)
   # ----------------------------------------
   log "Step 1: Manager deciding..."
+  local strategy_content=""
+  if [ -f "${HARNESS_DIR}/docs/strategy.md" ]; then
+    strategy_content="$(cat "${HARNESS_DIR}/docs/strategy.md")"
+  fi
+
   local decision
   decision="$(claude -p "Read .harness/docs/status.md and .harness/docs/codemap.md.
+
+## Strategy (READ THIS FIRST — this is the source of truth)
+
+${strategy_content}
 
 ## Dynamic Context
 
 ${context_content}
 
-Based on current project state AND the dynamic context above, decide which ONE agent to run: content, code, expansion, or feature. Pay attention to the Avoid Directives — do not pick an agent+approach that recently produced no changes or failed. Output ONLY the agent name, nothing else." \
+## Decision Rules (follow in order)
+1. Check strategy.md phase and constraints FIRST.
+2. If Approved Features list is empty → NEVER pick feature.
+3. Are there bugs or quality issues? → code
+4. Is any topic below 50 questions? → content
+5. Is there a genuinely missing interview topic? → expansion
+6. None of the above? → output 'skip'
+
+Pay attention to the Avoid Directives — do not pick an agent+approach that recently produced no changes or failed.
+Output ONLY one word: content, code, expansion, feature, or skip." \
     --dangerously-skip-permissions \
     --max-turns 5 2>&1)"
 
   # Extract agent name
   local agent
-  agent="$(echo "${decision}" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]' | grep -oE '(content|code|expansion|feature)' | head -1)"
+  agent="$(echo "${decision}" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]' | grep -oE '(content|code|expansion|feature|skip)' | head -1)"
 
-  if [ -z "${agent}" ]; then
-    log "Manager could not decide. Output: ${decision}"
-    notify "error" "❌ Manager failed" "Could not select agent"
-    exit 1
+  if [ "${agent}" = "skip" ] || [ -z "${agent}" ]; then
+    log "Manager decided to skip. Output: ${decision}"
+    exit 0
   fi
   log "Manager selected: ${agent}"
 
@@ -299,12 +316,90 @@ Review and output APPROVE or REJECT with reason." \
     --max-turns 10 2>&1)" || true
 
   if echo "${review_output}" | grep -q 'REJECT'; then
-    local reason
-    reason="$(echo "${review_output}" | grep -A1 'REJECT' | tail -1)"
-    log "Review REJECTED: ${reason}"
-    rollback
-    notify "warning" "⚠️ ${agent} 거부" "${reason}"
-    exit 1
+    local reject_reason
+    reject_reason="$(echo "${review_output}" | sed -n '/REJECT/,$ p' | tail -n +2)"
+    log "Review REJECTED: ${reject_reason}"
+
+    # ---- Fix Loop: feed rejection reason back to original agent ----
+    log "Step 5a: Attempting fix based on review feedback..."
+    local fix_output
+    fix_output="$(claude -p "$(cat "${HARNESS_DIR}/agents/${agent}.md")
+
+## Fix Required
+
+The reviewer rejected your previous changes for the following reason:
+
+${reject_reason}
+
+IMPORTANT:
+- Fix ONLY the specific issues described above.
+- Do NOT regenerate or rewrite everything from scratch.
+- Do NOT add new content beyond what's needed for the fix.
+- Read the current state of the files first, then apply minimal targeted changes.
+- Only modify files within src/, data/questions/, __tests__/, messages/.
+
+Work directory: ${PROJECT_DIR}
+
+End your output with:
+SUMMARY: fix — <what was fixed>" \
+      --allowedTools 'Bash(git diff:*),Bash(git log:*),Bash(git status:*),Bash(git ls-files:*),Bash(cat:*),Bash(ls:*),Bash(find:*),Bash(wc:*),Bash(head:*),Bash(tail:*),Read,Write,Edit,Glob,Grep' \
+      --dangerously-skip-permissions \
+      --max-turns 20 2>&1)" || true
+    log "Fix agent complete."
+
+    # Re-validate after fix
+    local fix_validate_passed=false
+    local fix_validate_output
+    fix_validate_output="$(bash "${HARNESS_DIR}/scripts/validate.sh" "${agent}" 2>&1)" && fix_validate_passed=true
+    echo "${fix_validate_output}" | tee -a "${LOG_FILE}"
+
+    if [ "${fix_validate_passed}" = false ]; then
+      log "Validation failed after fix attempt."
+      rollback
+      notify "error" "❌ ${agent} 실패" "Fix attempt failed validation: ${reject_reason}"
+      exit 1
+    fi
+
+    # Re-review after fix
+    diff_content="$(git diff 2>/dev/null; git ls-files --others --exclude-standard 2>/dev/null | while IFS= read -r f; do echo "=== NEW FILE: ${f} ==="; cat "${f}" 2>/dev/null || true; done)"
+    diff_size="$(echo "${diff_content}" | wc -c | tr -d '[:space:]')"
+    if [ "${diff_size}" -gt 50000 ]; then
+      diff_content="$(git diff --stat 2>/dev/null)"
+    fi
+
+    local re_review_output
+    re_review_output="$(claude -p "$(cat "${HARNESS_DIR}/agents/review.md")
+
+## Changes to Review
+
+\`\`\`diff
+${diff_content}
+\`\`\`
+
+## Previous Rejection Context
+The original changes were rejected for: ${reject_reason}
+Verify that this specific issue has been resolved.
+
+Review and output APPROVE or REJECT with reason." \
+      --allowedTools 'Bash(cat:*),Bash(ls:*),Bash(find:*),Read,Glob,Grep' \
+      --dangerously-skip-permissions \
+      --max-turns 10 2>&1)" || true
+
+    if echo "${re_review_output}" | grep -q 'REJECT'; then
+      local re_reason
+      re_reason="$(echo "${re_review_output}" | sed -n '/REJECT/,$ p' | tail -n +2)"
+      log "Re-review still REJECTED: ${re_reason}"
+      rollback
+      notify "warning" "⚠️ ${agent} 거부 (fix 후에도)" "원인: ${reject_reason}\n수정 후: ${re_reason}"
+      exit 1
+    fi
+    log "Re-review after fix: APPROVED"
+
+    # Update summary with fix info
+    summary="$(echo "${fix_output}" | grep -o 'SUMMARY: .*' | tail -1 | sed 's/^SUMMARY: //' || echo "${summary}")"
+    if [ "${#summary}" -gt 50 ]; then
+      summary="$(echo "${summary}" | cut -c1-47)..."
+    fi
   fi
   log "Review: APPROVED"
 
