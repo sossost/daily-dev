@@ -2,10 +2,17 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-03-27
+
+### Bug Fixes
+
+- **harness**: add strategy.md to manager + fix loop in run-agent.sh (`f87c950`)
+
 ## 2026-03-26
 
 ### Features
 
+- **content**: add 10 database questions (021-030) (`d667cbf`)
 - **content**: add 10 type-coercion questions (021-030) (`9cfb125`)
 - **content**: add 10 react-basics questions (021-030) (`60539c6`)
 - **content**: add 10 data-structures questions (021-030) (`9ea160c`)

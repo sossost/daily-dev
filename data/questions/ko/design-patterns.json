@@ -328,5 +328,170 @@
     "correctIndex": 3,
     "explanation": "상태 패턴과 전략 패턴은 구조적으로 유사하지만 의도가 다릅니다. 상태 패턴에서는 ConcreteState가 Context의 상태를 직접 변경할 수 있어 상태 전이가 자동으로 이루어집니다. 반면 전략 패턴에서는 클라이언트(외부 코드)가 어떤 전략을 사용할지 명시적으로 선택하고 교체합니다.",
     "sourceUrl": "https://refactoring.guru/design-patterns/state"
+  },
+  {
+    "id": "design-patterns-021",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "책임 연쇄(Chain of Responsibility) 패턴의 핵심 아이디어는 무엇인가요?",
+    "options": [
+      "요청을 핸들러 체인을 따라 전달하여 적절한 핸들러가 처리하도록 한다",
+      "모든 요청을 하나의 중앙 핸들러가 처리한다",
+      "요청을 병렬로 여러 핸들러에 동시에 전달한다",
+      "핸들러가 자신의 복사본을 생성하여 요청을 처리한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "책임 연쇄 패턴은 요청을 처리할 수 있는 핸들러들을 체인으로 연결하고, 요청이 체인을 따라 전달되면서 적절한 핸들러가 이를 처리합니다. Express의 미들웨어, DOM 이벤트 버블링이 이 패턴의 대표적인 JavaScript 활용 예입니다.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/chain-of-responsibility"
+  },
+  {
+    "id": "design-patterns-022",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 프로토타입(Prototype) 패턴 코드의 출력 결과는 무엇인가요?",
+    "code": "const carPrototype = {\n  drive() { return `${this.model} driving`; }\n};\nfunction createCar(model) {\n  const car = Object.create(carPrototype);\n  car.model = model;\n  return car;\n}\nconst a = createCar('Tesla');\nconst b = createCar('BMW');\nconsole.log(a.drive(), a.drive === b.drive);",
+    "options": [
+      "Tesla driving false",
+      "Tesla driving true",
+      "undefined driving true",
+      "에러: drive is not a function"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.create(carPrototype)로 생성된 객체는 carPrototype을 프로토타입으로 공유합니다. a.model은 'Tesla'이므로 a.drive()는 'Tesla driving'을 반환합니다. drive 메서드는 프로토타입에 한 번만 정의되어 a와 b가 같은 함수 참조를 공유하므로 a.drive === b.drive는 true입니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create"
+  },
+  {
+    "id": "design-patterns-023",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 널 객체(Null Object) 패턴 구현에서 의도와 다르게 동작하는 이유는 무엇인가요?",
+    "code": "class NullLogger {\n  log() {}\n  warn() {}\n  error() {}\n}\nfunction getLogger(debug) {\n  return debug ? console : new NullLogger();\n}\nconst logger = getLogger(false);\nlogger.info('test');",
+    "options": [
+      "NullLogger가 올바르게 인스턴스화되지 않기 때문",
+      "console 객체를 직접 반환할 수 없기 때문",
+      "NullLogger에 info 메서드가 정의되지 않아 TypeError가 발생하기 때문",
+      "getLogger 함수의 반환 타입이 일치하지 않기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "널 객체 패턴에서는 실제 객체가 가진 모든 메서드를 널 객체에도 구현해야 합니다. NullLogger에 log, warn, error만 정의하고 info를 누락했기 때문에, logger.info('test') 호출 시 TypeError가 발생합니다. 실제 객체의 인터페이스를 완전히 미러링하는 것이 이 패턴의 핵심입니다.",
+    "sourceUrl": "https://refactoring.guru/introduce-null-object"
+  },
+  {
+    "id": "design-patterns-024",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "컴포지트(Composite) 패턴과 일반 배열의 차이점은 무엇인가요?",
+    "options": [
+      "컴포지트 패턴은 배열보다 항상 빠르다",
+      "컴포지트 패턴은 단일 객체와 복합 객체를 동일한 인터페이스로 다룰 수 있게 한다",
+      "일반 배열은 중첩이 불가능하지만 컴포지트는 가능하다",
+      "컴포지트 패턴은 TypeScript에서만 구현할 수 있다"
+    ],
+    "correctIndex": 1,
+    "explanation": "컴포지트 패턴은 트리 구조로 객체를 구성하여, 개별 객체(Leaf)와 복합 객체(Composite)를 클라이언트가 동일한 인터페이스로 다룰 수 있게 합니다. React의 컴포넌트 트리나 DOM 트리가 대표적인 예로, 단일 요소와 중첩된 요소 그룹을 같은 방식으로 렌더링합니다.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/composite"
+  },
+  {
+    "id": "design-patterns-025",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 체인 패턴 코드의 출력 결과는 무엇인가요?",
+    "code": "function pipeline(...fns) {\n  return (input) => fns.reduce((acc, fn) => fn(acc), input);\n}\nconst process = pipeline(\n  x => x * 2,\n  x => x + 3,\n  x => x * x\n);\nconsole.log(process(5));",
+    "options": [
+      "169",
+      "65",
+      "28",
+      "56"
+    ],
+    "correctIndex": 0,
+    "explanation": "pipeline 함수는 여러 함수를 순차적으로 합성합니다. process(5) 실행 시: 첫 번째 함수 5 * 2 = 10, 두 번째 함수 10 + 3 = 13, 세 번째 함수 13 * 13 = 169. 이 파이프라인 패턴은 함수형 프로그래밍에서 데이터 변환을 체인으로 연결할 때 사용됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce"
+  },
+  {
+    "id": "design-patterns-026",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "미디에이터(Mediator) 패턴이 해결하는 핵심 문제는 무엇인가요?",
+    "options": [
+      "객체 생성 비용을 줄이는 문제",
+      "객체 간의 직접적인 의존성을 중재자 객체로 집중시켜 결합도를 낮추는 문제",
+      "알고리즘의 실행 순서를 변경하는 문제",
+      "데이터를 영구적으로 저장하는 문제"
+    ],
+    "correctIndex": 1,
+    "explanation": "미디에이터 패턴은 객체들이 서로 직접 통신하는 대신, 중재자 객체를 통해 간접적으로 소통하게 합니다. 이를 통해 객체 간의 복잡한 의존 관계를 단순화합니다. 채팅방 서버, Redux의 store, Express의 라우터 등이 미디에이터의 역할을 수행합니다.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/mediator"
+  },
+  {
+    "id": "design-patterns-027",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 지연 초기화(Lazy Initialization) 패턴 코드의 출력 결과는 무엇인가요?",
+    "code": "class HeavyResource {\n  static instance = null;\n  static getInstance() {\n    if (!HeavyResource.instance) {\n      HeavyResource.instance = new HeavyResource();\n      HeavyResource.instance.loaded = true;\n    }\n    return HeavyResource.instance;\n  }\n}\nconsole.log(HeavyResource.instance);\nconst res = HeavyResource.getInstance();\nconsole.log(res.loaded);",
+    "options": [
+      "null\ntrue",
+      "undefined\ntrue",
+      "null\nfalse",
+      "에러 발생"
+    ],
+    "correctIndex": 0,
+    "explanation": "지연 초기화 패턴은 객체가 실제로 필요할 때까지 생성을 미룹니다. HeavyResource.instance는 초기값이 null이므로 첫 번째 console.log는 null을 출력합니다. getInstance()를 호출하면 인스턴스가 생성되고 loaded가 true로 설정되므로 두 번째 출력은 true입니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static"
+  },
+  {
+    "id": "design-patterns-028",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 추상 팩토리 패턴 구현에서 버그의 원인은 무엇인가요?",
+    "code": "const themes = {\n  dark: { button: () => ({ bg: '#333' }), text: () => ({ color: '#fff' }) },\n  light: { button: () => ({ bg: '#fff' }), text: () => ({ color: '#000' }) }\n};\nfunction createUI(theme) {\n  const factory = themes[theme];\n  return { button: factory.button(), text: factory.text() };\n}\nconst ui = createUI('blue');\nconsole.log(ui.button.bg);",
+    "options": [
+      "themes 객체의 구조가 잘못되었기 때문",
+      "factory.button()이 객체 대신 함수를 반환하기 때문",
+      "themes['blue']가 undefined이므로 factory.button() 호출 시 TypeError가 발생하기 때문",
+      "createUI의 반환 값이 null이기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "themes 객체에 'blue' 키가 존재하지 않으므로 themes['blue']는 undefined입니다. undefined에서 button 속성에 접근하여 함수로 호출하면 TypeError가 발생합니다. 추상 팩토리 패턴에서는 유효하지 않은 팩토리 유형에 대한 방어 코드가 필요합니다.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/abstract-factory"
+  },
+  {
+    "id": "design-patterns-029",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "데코레이터 패턴과 프록시 패턴의 의도상 차이점은 무엇인가요?",
+    "options": [
+      "데코레이터는 동적으로 기능을 추가하고, 프록시는 접근을 제어한다",
+      "프록시는 여러 객체를 감쌀 수 있지만 데코레이터는 하나만 감싼다",
+      "데코레이터는 구조 패턴이고 프록시는 행동 패턴이다",
+      "두 패턴은 구현 방식만 다르고 의도는 동일하다"
+    ],
+    "correctIndex": 0,
+    "explanation": "데코레이터 패턴은 객체에 새로운 책임이나 기능을 동적으로 추가하는 것이 목적입니다. 프록시 패턴은 대상 객체에 대한 접근을 제어하는 것이 목적으로, 지연 로딩, 접근 권한 검사, 캐싱 등에 사용됩니다. 둘 다 구조 패턴이지만 해결하려는 문제가 다릅니다.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/proxy"
+  },
+  {
+    "id": "design-patterns-030",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "템플릿 메서드(Template Method) 패턴을 JavaScript에서 구현할 때 주의해야 할 점은 무엇인가요?",
+    "options": [
+      "JavaScript에서는 템플릿 메서드 패턴을 구현할 수 없다",
+      "반드시 class 문법을 사용해야 한다",
+      "하위 클래스가 오버라이드할 메서드를 호출하되, JavaScript에는 추상 메서드 강제가 없으므로 기본 구현 또는 에러를 던져야 한다",
+      "상위 클래스의 모든 메서드를 private으로 선언해야 한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "템플릿 메서드 패턴은 알고리즘의 골격을 상위 클래스에 정의하고 특정 단계를 하위 클래스가 재정의하게 합니다. Java와 달리 JavaScript에는 abstract 키워드가 없으므로, 오버라이드할 메서드에 기본 구현을 제공하거나 throw new Error('Not implemented')로 구현 강제를 시뮬레이션해야 합니다.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/template-method"
   }
 ]

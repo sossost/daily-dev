@@ -328,5 +328,170 @@
     "correctIndex": 3,
     "explanation": "The State and Strategy patterns are structurally similar but differ in intent. In the State pattern, ConcreteState objects can directly change the Context's state, allowing state transitions to happen automatically. In the Strategy pattern, the client (external code) explicitly selects and swaps which strategy to use.",
     "sourceUrl": "https://refactoring.guru/design-patterns/state"
+  },
+  {
+    "id": "design-patterns-021",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the core idea behind the Chain of Responsibility pattern?",
+    "options": [
+      "Pass a request along a chain of handlers until an appropriate handler processes it",
+      "All requests are processed by a single central handler",
+      "Requests are sent to multiple handlers simultaneously in parallel",
+      "A handler creates copies of itself to process each request"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Chain of Responsibility pattern links handlers in a chain and passes requests along it until a suitable handler processes the request. Express middleware and DOM event bubbling are representative JavaScript examples of this pattern.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/chain-of-responsibility"
+  },
+  {
+    "id": "design-patterns-022",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Prototype pattern code?",
+    "code": "const carPrototype = {\n  drive() { return `${this.model} driving`; }\n};\nfunction createCar(model) {\n  const car = Object.create(carPrototype);\n  car.model = model;\n  return car;\n}\nconst a = createCar('Tesla');\nconst b = createCar('BMW');\nconsole.log(a.drive(), a.drive === b.drive);",
+    "options": [
+      "Tesla driving false",
+      "Tesla driving true",
+      "undefined driving true",
+      "Error: drive is not a function"
+    ],
+    "correctIndex": 1,
+    "explanation": "Objects created with Object.create(carPrototype) share carPrototype as their prototype. Since a.model is 'Tesla', a.drive() returns 'Tesla driving'. The drive method is defined once on the prototype and shared by both a and b, so a.drive === b.drive is true.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create"
+  },
+  {
+    "id": "design-patterns-023",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the following Null Object pattern implementation behave unexpectedly?",
+    "code": "class NullLogger {\n  log() {}\n  warn() {}\n  error() {}\n}\nfunction getLogger(debug) {\n  return debug ? console : new NullLogger();\n}\nconst logger = getLogger(false);\nlogger.info('test');",
+    "options": [
+      "Because NullLogger is not instantiated correctly",
+      "Because the console object cannot be returned directly",
+      "Because NullLogger does not define an info method, causing a TypeError",
+      "Because the return type of getLogger is inconsistent"
+    ],
+    "correctIndex": 2,
+    "explanation": "In the Null Object pattern, the null object must implement all methods of the real object. NullLogger only defines log, warn, and error but omits info, so calling logger.info('test') throws a TypeError. Fully mirroring the real object's interface is the key to this pattern.",
+    "sourceUrl": "https://refactoring.guru/introduce-null-object"
+  },
+  {
+    "id": "design-patterns-024",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between the Composite pattern and a regular array?",
+    "options": [
+      "The Composite pattern is always faster than arrays",
+      "The Composite pattern allows treating individual objects and compositions of objects through the same interface",
+      "Regular arrays cannot be nested, but Composite can",
+      "The Composite pattern can only be implemented in TypeScript"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Composite pattern composes objects into tree structures so that clients can treat individual objects (Leaf) and compositions (Composite) through the same interface. React's component tree and the DOM tree are classic examples where single elements and nested groups of elements are rendered the same way.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/composite"
+  },
+  {
+    "id": "design-patterns-025",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following pipeline pattern code?",
+    "code": "function pipeline(...fns) {\n  return (input) => fns.reduce((acc, fn) => fn(acc), input);\n}\nconst process = pipeline(\n  x => x * 2,\n  x => x + 3,\n  x => x * x\n);\nconsole.log(process(5));",
+    "options": [
+      "169",
+      "65",
+      "28",
+      "56"
+    ],
+    "correctIndex": 0,
+    "explanation": "The pipeline function composes multiple functions sequentially. Running process(5): first function 5 * 2 = 10, second function 10 + 3 = 13, third function 13 * 13 = 169. This pipeline pattern is used in functional programming to chain data transformations.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce"
+  },
+  {
+    "id": "design-patterns-026",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What core problem does the Mediator pattern solve?",
+    "options": [
+      "Reducing the cost of object creation",
+      "Centralizing direct dependencies between objects through a mediator to reduce coupling",
+      "Changing the execution order of algorithms",
+      "Persisting data permanently"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Mediator pattern has objects communicate indirectly through a mediator object instead of communicating directly with each other. This simplifies complex dependency relationships between objects. Chat room servers, Redux's store, and Express's router all serve as mediators.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/mediator"
+  },
+  {
+    "id": "design-patterns-027",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following Lazy Initialization pattern code?",
+    "code": "class HeavyResource {\n  static instance = null;\n  static getInstance() {\n    if (!HeavyResource.instance) {\n      HeavyResource.instance = new HeavyResource();\n      HeavyResource.instance.loaded = true;\n    }\n    return HeavyResource.instance;\n  }\n}\nconsole.log(HeavyResource.instance);\nconst res = HeavyResource.getInstance();\nconsole.log(res.loaded);",
+    "options": [
+      "null\ntrue",
+      "undefined\ntrue",
+      "null\nfalse",
+      "Error occurs"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Lazy Initialization pattern defers object creation until it is actually needed. HeavyResource.instance starts as null, so the first console.log outputs null. Calling getInstance() creates the instance and sets loaded to true, so the second output is true.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static"
+  },
+  {
+    "id": "design-patterns-028",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the cause of the bug in the following Abstract Factory pattern implementation?",
+    "code": "const themes = {\n  dark: { button: () => ({ bg: '#333' }), text: () => ({ color: '#fff' }) },\n  light: { button: () => ({ bg: '#fff' }), text: () => ({ color: '#000' }) }\n};\nfunction createUI(theme) {\n  const factory = themes[theme];\n  return { button: factory.button(), text: factory.text() };\n}\nconst ui = createUI('blue');\nconsole.log(ui.button.bg);",
+    "options": [
+      "Because the structure of the themes object is incorrect",
+      "Because factory.button() returns a function instead of an object",
+      "Because themes['blue'] is undefined, so calling factory.button() throws a TypeError",
+      "Because the return value of createUI is null"
+    ],
+    "correctIndex": 2,
+    "explanation": "The themes object does not have a 'blue' key, so themes['blue'] is undefined. Attempting to access the button property on undefined and calling it as a function throws a TypeError. In the Abstract Factory pattern, defensive code for invalid factory types is necessary.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/abstract-factory"
+  },
+  {
+    "id": "design-patterns-029",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the key difference in intent between the Decorator pattern and the Proxy pattern?",
+    "options": [
+      "Decorator dynamically adds functionality, while Proxy controls access",
+      "Proxy can wrap multiple objects but Decorator wraps only one",
+      "Decorator is a structural pattern and Proxy is a behavioral pattern",
+      "Both patterns differ only in implementation, not intent"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Decorator pattern's purpose is to dynamically add new responsibilities or functionality to an object. The Proxy pattern's purpose is to control access to a target object, used for lazy loading, access control, caching, and more. Both are structural patterns but solve different problems.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/proxy"
+  },
+  {
+    "id": "design-patterns-030",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What must be considered when implementing the Template Method pattern in JavaScript?",
+    "options": [
+      "The Template Method pattern cannot be implemented in JavaScript",
+      "The class syntax must always be used",
+      "Since JavaScript has no abstract method enforcement, overridable methods must provide a default implementation or throw an error",
+      "All methods in the parent class must be declared as private"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Template Method pattern defines the skeleton of an algorithm in a parent class and lets subclasses override specific steps. Unlike Java, JavaScript has no abstract keyword, so overridable methods should provide a default implementation or throw new Error('Not implemented') to simulate enforcement.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/template-method"
   }
 ]
