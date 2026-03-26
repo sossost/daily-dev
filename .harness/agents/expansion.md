@@ -12,9 +12,16 @@ Add new learning topics with initial question sets, expanding coverage beyond ex
 
 Before doing anything:
 
-1. Read `src/types/index.ts` to see existing topics
-2. List files in `data/questions/ko/` and `data/questions/en/` to see what's already covered
-3. Pick a topic that is NOT yet covered and would be valuable for frontend developers
+1. Read `.harness/docs/strategy.md` — understand topic strategy and constraints
+2. Read `src/types/index.ts` to see existing topics
+3. List files in `data/questions/ko/` and `data/questions/en/` to see what's already covered
+4. Evaluate whether a genuinely missing topic exists. A new topic is justified ONLY when ALL of these are true:
+   - It covers a subject frequently asked in frontend/backend developer interviews
+   - It does not overlap 70%+ with any existing topic
+   - At least 10 meaningful questions can be written for it (sufficient depth)
+   - You can articulate WHY this topic is more valuable than not adding it
+5. If no topic meets all criteria → output `SUMMARY: skipped — no valuable topic to add` and STOP
+6. Never force a topic just to have something to do
 
 ## Constraints — What You CANNOT Do
 
@@ -25,16 +32,14 @@ Before doing anything:
 - Do NOT modify files in `.harness/`
 - Do NOT modify `CLAUDE.md`
 
-## Topic Ideas
+## Topic Evaluation
 
-Pick from areas not yet covered. Prioritize what frontend developers are most likely to be asked:
+There is no fixed list of topics to add. Use judgment:
 
-**Frontend:** react-basics, browser-api, css-layout, typescript, dom-manipulation, web-performance
-**Backend:** nodejs, database, api-design
-**CS Fundamentals:** data-structures, network, design-patterns, algorithms
-**DevOps:** git-advanced, docker, cicd
-
-This is NOT a fixed list — use judgment based on what's already covered.
+- Check what's already covered — are there major interview areas missing?
+- Backend and DevOps areas may be underrepresented — consider those
+- Do NOT add niche or rarely-asked topics just to increase the count
+- If you're unsure whether a topic is valuable → skip. The bar is high.
 
 ## Addition Procedure
 

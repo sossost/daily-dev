@@ -12,13 +12,30 @@ Generate high-quality JavaScript/frontend interview questions and improve existi
 
 Before doing anything:
 
-1. List all files in `data/questions/ko/` and `data/questions/en/` (questions are organized by locale)
-2. Count questions per topic
-3. Find the topic with the fewest questions — prioritize it
-4. Target: 30–50 questions per topic. If a topic has fewer than 30, add questions. If 30–50, add only if quality can be maintained. Stop at 50.
-5. If all topics are at 30+ and roughly balanced, focus on quality improvement of existing questions
-6. Add 5–10 questions per run (not more). Quality over quantity.
-7. When adding or modifying questions, update BOTH `data/questions/ko/{topic}.json` and `data/questions/en/{topic}.json`. Korean questions go in `ko/`, English translations go in `en/`. Both files must have matching IDs.
+1. Read `.harness/docs/strategy.md` — understand content strategy and current phase
+2. List all files in `data/questions/ko/` and `data/questions/en/` (questions are organized by locale)
+3. Count questions per topic
+4. Determine which stage each topic is in:
+
+### Content Stages (from strategy.md)
+
+| Stage | Condition | What to do |
+|-------|-----------|------------|
+| **Expand** | Topic < 50 questions | Add up to 10 per run. Basic quality bar. Prioritize topics with fewest questions. |
+| **Refine** | Topic 50–99 questions | FIRST review all existing questions for quality. Fix issues. Then add max 5 per run with enhanced quality bar. |
+| **Cap** | Topic = 100 questions | NO additions. Quality improvement only (fix errors, improve explanations, rebalance). |
+
+### Enhanced Quality Bar (Refine stage, 50+)
+
+- Explanation must teach the concept, not just restate the correct answer (min 50 chars, explains WHY)
+- All 4 options must be plausible to someone who doesn't know the answer — no obvious filler
+- The question must cover a concept not already tested by existing questions in the topic
+- Source URL must point to an authoritative reference (MDN, javascript.info, official docs)
+
+### General Rules
+
+5. When adding or modifying questions, update BOTH `data/questions/ko/{topic}.json` and `data/questions/en/{topic}.json`. Korean questions go in `ko/`, English translations go in `en/`. Both files must have matching IDs.
+6. If all topics are at 50+ and no quality issues found → output `SUMMARY: skipped — all topics at target` and STOP
 
 ## Constraints — What You CANNOT Do
 
@@ -70,14 +87,15 @@ Every question must match this structure:
 
 ## Quality Improvement
 
-When a topic has 30+ questions, improve quality instead of adding more:
+When a topic is in Refine (50+) or Cap (100) stage:
 
-- Review existing questions for accuracy
-- Improve explanations to be more educational
-- Ensure difficulty distribution is balanced
-- Replace weak questions with stronger alternatives
-- Verify all source URLs are valid and relevant
-- If a topic is at 50, do NOT add more — quality improvement only
+- Review ALL existing questions for accuracy before doing anything else
+- Fix incorrect answers immediately
+- Improve explanations to be educational (teach the concept, not just state the answer)
+- Ensure difficulty distribution is balanced (30% easy, 40% medium, 30% hard)
+- Replace weak questions with stronger alternatives (count stays the same)
+- Verify source URLs point to real, authoritative resources
+- If a topic is at 100 → quality improvement ONLY, zero additions
 
 ## Scope
 

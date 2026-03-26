@@ -114,19 +114,27 @@ You do NOT write application code directly — sub-agents do that.
 
 Read these files to understand current state:
 ```
+.harness/docs/strategy.md  ← product phase, priorities, constraints (READ FIRST)
 .harness/docs/status.md    ← recent runs, project health
 .harness/docs/codemap.md   ← project structure, modules, types
 ```
 
 #### Step 2: Decide
 
-Based on status + codemap, decide the most valuable work right now.
+**Default is skip. Only run an agent if there is clearly valuable work to do.**
 
-Consider:
-- What hasn't been worked on recently?
-- Are there failing areas that need attention?
-- Don't repeat recently failed approaches
-- If nothing valuable to do → update status.md with "skipped" → exit
+Decision process (in order):
+1. Read `strategy.md` — check current phase, what's allowed, what's blocked
+2. Ask: "If I showed this change to the user, would they care?" → if not, skip
+3. Check saturation: is the candidate agent's area already at its limit?
+4. Check recent runs: has this agent run 3+ times consecutively? → skip
+5. Are there bugs or quality issues that need attention? → prefer `code` agent
+6. Is content below target (< 50/topic)? → `content` agent
+7. Is there a genuinely missing interview topic? → `expansion` agent
+8. Is there an approved feature in `strategy.md`? → `feature` agent
+9. None of the above? → **skip**
+
+Skip is a valid, healthy outcome. Update status.md with "skipped — {reason}" and exit.
 
 Choose one agent: `content` | `code` | `expansion` | `feature`
 

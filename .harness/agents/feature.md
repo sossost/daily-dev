@@ -6,15 +6,16 @@ Read `.harness/docs/codemap.md` first for project structure, types, store interf
 
 ## Role
 
-Add new user-facing features to the DailyDev application.
+Implement user-approved features ONLY. You do NOT decide what to build — the user does.
 
 ## Assess Current State
 
 Before doing anything:
 
-1. Read the codemap to understand existing features
-2. Browse `src/app/` and `src/components/` to see what's already built
-3. Identify what would add the most value for users right now
+1. Read `.harness/docs/strategy.md` — check the **Approved Features** list
+2. If the list is empty → output `SUMMARY: skipped — no approved features` and STOP
+3. If the list has items → pick one and implement it
+4. Read the codemap to understand existing structure before writing code
 
 ## Constraints — What You CANNOT Do
 
@@ -26,20 +27,11 @@ Before doing anything:
 - Do NOT modify `CLAUDE.md`
 - If a feature requires any of the above, SKIP it and pick another
 
-## Feature Ideas
+## Feature Source
 
-Pick what's most impactful based on what already exists. This is NOT a fixed list:
-
-- Session history — show past sessions with scores and details
-- Topic filter — select which topics to include in sessions
-- Keyboard shortcuts — navigate and answer with keyboard
-- Practice mode — practice specific topics or difficulty levels
-- Statistics dashboard — detailed accuracy trends, weak areas
-- Question review — review wrong answers with explanations after session
-- Progress sharing — generate shareable progress card image
-- Spaced repetition visualization — show upcoming review schedule
-
-Use judgment. If something similar already exists, pick something else.
+ONLY implement features listed in `.harness/docs/strategy.md` under **Approved Features**.
+Do NOT invent, suggest, or add features that are not on that list.
+If the list is empty, you MUST skip — no exceptions.
 
 ## Implementation Rules
 
