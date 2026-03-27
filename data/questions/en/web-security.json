@@ -407,5 +407,170 @@
     "correctIndex": 1,
     "explanation": "Setting Access-Control-Allow-Credentials: true allows requests with credentials such as cookies. However, for security reasons, Access-Control-Allow-Origin cannot be set to '*' (wildcard) in this case, and the browser will reject it. A specific origin must be explicitly specified.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#credentialed_requests_and_wildcards"
+  },
+  {
+    "id": "web-security-026",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of the Referrer-Policy HTTP header?",
+    "options": [
+      "It controls how much URL information the browser includes in the Referer header when making requests",
+      "It sets a token for server-to-server authentication",
+      "It disables the browser's back button",
+      "It limits the number of redirects"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Referrer-Policy header controls how much URL information the browser includes in the Referer header with requests. For example, 'no-referrer' removes the Referer entirely, while 'strict-origin-when-cross-origin' sends only the origin for cross-origin requests. This prevents sensitive URL paths and query parameters from leaking to external sites.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy"
+  },
+  {
+    "id": "web-security-027",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the security vulnerability in the following code?",
+    "code": "const userCode = getQueryParam('code');\nconst result = eval(userCode);\ndocument.getElementById('output').textContent = result;",
+    "options": [
+      "A rendering error occurs because innerHTML should be used instead of textContent",
+      "A runtime error occurs because getQueryParam is not a standard browser API",
+      "An error occurs because getElementById returns null",
+      "eval() executes user input directly as JavaScript code, creating an arbitrary code execution vulnerability"
+    ],
+    "correctIndex": 3,
+    "explanation": "eval() executes the passed string as JavaScript code. If a user injects malicious code through the query parameter, it enables cookie theft, keylogging, page manipulation, and all kinds of attacks. eval() should never be used with user input — use safe alternatives like JSON.parse() instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#never_use_eval!"
+  },
+  {
+    "id": "web-security-028",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the security vulnerability in the following postMessage code?",
+    "code": "window.addEventListener('message', (event) => {\n  const data = JSON.parse(event.data);\n  if (data.action === 'updateProfile') {\n    updateUserProfile(data.payload);\n  }\n});",
+    "options": [
+      "JSON.parse can fail, so a try-catch is needed",
+      "event.data is not always a string, so JSON.parse cannot be used",
+      "event.origin is not validated, allowing messages from malicious iframes or external windows to be processed",
+      "onmessage should be used instead of addEventListener"
+    ],
+    "correctIndex": 2,
+    "explanation": "Messages received via postMessage can come from any origin. Without validating event.origin, a malicious iframe or a page opened via window.open can send arbitrary messages to manipulate profile data. You must always compare event.origin against a trusted origin before processing the message.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage#security_concerns"
+  },
+  {
+    "id": "web-security-029",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the security risk in the following React code?",
+    "code": "function Comment({ text }) {\n  return (\n    <div\n      dangerouslySetInnerHTML={{ __html: text }}\n    />\n  );\n}",
+    "options": [
+      "A p tag should be used instead of a div tag",
+      "dangerouslySetInnerHTML renders user input as HTML without sanitization, creating an XSS vulnerability",
+      "dangerouslySetInnerHTML is not a supported attribute in React",
+      "The __html key name is incorrect, causing a rendering error"
+    ],
+    "correctIndex": 1,
+    "explanation": "React's dangerouslySetInnerHTML — whose very name warns of its danger — inserts the HTML string directly into the DOM without escaping. If user-provided text contains <script> tags or event handlers, an XSS attack occurs. You must always sanitize the HTML with a library like DOMPurify before using it.",
+    "sourceUrl": "https://react.dev/reference/react-dom/components/common#dangerously-setting-the-inner-html"
+  },
+  {
+    "id": "web-security-030",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement correctly describes the difference between SameSite cookie attribute values Lax and Strict?",
+    "options": [
+      "Lax and Strict behave identically, only the names differ",
+      "Strict only works over HTTPS, while Lax also works over HTTP",
+      "Lax sends cookies on top-level navigation (GET) requests from external sites, while Strict does not send cookies even in that case",
+      "Lax sends cookies on all cross-origin requests, while Strict only blocks POST requests"
+    ],
+    "correctIndex": 2,
+    "explanation": "SameSite=Lax sends cookies on top-level navigation (GET requests) when clicking a link from an external site. In contrast, SameSite=Strict does not send cookies even in this case. Lax provides a balance between usability and security, and most browsers use it as the default SameSite value.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#lax"
+  },
+  {
+    "id": "web-security-031",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is a Server-Side Request Forgery (SSRF) attack?",
+    "options": [
+      "An attack that executes malicious scripts in a client's browser",
+      "An attack that tricks a server into making requests to internal or external resources specified by the attacker",
+      "An attack that forges a server's SSL certificate",
+      "An attack that poisons a server's DNS cache"
+    ],
+    "correctIndex": 1,
+    "explanation": "SSRF is an attack where an attacker manipulates a server-side application into making HTTP requests to unintended internal resources (e.g., internal APIs, metadata services, databases) or external resources. In cloud environments, it is particularly dangerous as attackers can access instance metadata APIs (169.254.169.254) to steal credentials. Defense requires URL whitelisting and network isolation.",
+    "sourceUrl": "https://owasp.org/www-community/attacks/Server_Side_Request_Forgery"
+  },
+  {
+    "id": "web-security-032",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the security issue in the following password verification code?",
+    "code": "function verifyPassword(input, stored) {\n  if (input.length !== stored.length) return false;\n  for (let i = 0; i < input.length; i++) {\n    if (input[i] !== stored[i]) return false;\n  }\n  return true;\n}",
+    "options": [
+      "Passwords are compared in plaintext — hashing is required",
+      "Array.every() should be used instead of a for loop",
+      "The case where input.length is 0 is not handled",
+      "== should be used instead of ==="
+    ],
+    "correctIndex": 0,
+    "explanation": "Storing and comparing passwords in plaintext is a critical security vulnerability. If the database is compromised, all passwords are exposed. Passwords must be stored using one-way hashing algorithms like bcrypt, scrypt, or Argon2, and verification should compare hashed values. Additionally, this code is vulnerable to timing attacks due to its early return pattern.",
+    "sourceUrl": "https://owasp.org/www-community/vulnerabilities/Password_Plaintext_Storage"
+  },
+  {
+    "id": "web-security-033",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the security issue in the following code?",
+    "code": "const url = new URL(window.location.href);\nconst name = url.searchParams.get('name');\ndocument.querySelector('#greeting').innerHTML = \n  `<h1>Welcome, ${name}!</h1>`;",
+    "options": [
+      "new URL() throws an error parsing an invalid URL",
+      "querySelector is slower than getElementById, causing performance issues",
+      "searchParams.get() returns null, displaying 'Welcome, null!'",
+      "The query parameter value is parsed as HTML, creating a DOM-based XSS vulnerability"
+    ],
+    "correctIndex": 3,
+    "explanation": "The name value from the URL query parameter is parsed as HTML through innerHTML. If an attacker sets ?name=<img src=x onerror=alert(document.cookie)>, the script executes. This is a classic example of DOM-based XSS that does not go through the server. Use textContent instead or sanitize the input.",
+    "sourceUrl": "https://owasp.org/www-community/attacks/DOM_Based_XSS"
+  },
+  {
+    "id": "web-security-034",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of the Permissions-Policy (formerly Feature-Policy) HTTP header?",
+    "options": [
+      "It manages user file system access permissions",
+      "It limits server CPU usage",
+      "It sets permissions for HTTP methods (GET, POST, etc.)",
+      "It controls the use of browser features like camera, microphone, and geolocation on a web page"
+    ],
+    "correctIndex": 3,
+    "explanation": "The Permissions-Policy header controls whether a web page and its embedded iframes can use powerful browser features such as camera, microphone, geolocation, and fullscreen. For example, setting Permissions-Policy: camera=() completely blocks camera access on the page. This prevents malicious third-party scripts from abusing these features.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permissions-Policy"
+  },
+  {
+    "id": "web-security-035",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement correctly describes the difference between encodeURIComponent() and HTML escaping?",
+    "options": [
+      "encodeURIComponent() escapes HTML special characters, while HTML escaping encodes URL special characters",
+      "Both transform the same characters and can be used interchangeably",
+      "Using only HTML escaping can completely prevent XSS, making encodeURIComponent() unnecessary",
+      "encodeURIComponent() percent-encodes special characters for URL components, while HTML escaping converts <, >, &, and \" into HTML entities"
+    ],
+    "correctIndex": 3,
+    "explanation": "encodeURIComponent() encodes special characters in values inserted into URLs using %XX format (e.g., & → %26). HTML escaping converts characters in HTML context (e.g., < → &lt;, > → &gt;, & → &amp;). Each encoding applies to a different context (URL vs. HTML), and using the wrong encoding for a given context leaves you vulnerable to injection attacks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent"
   }
 ]
