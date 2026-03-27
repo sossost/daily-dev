@@ -320,5 +320,168 @@
     "correctIndex": 0,
     "explanation": "git tag -a creates an annotated tag, which is a full Git object containing the tagger's name, email, date, and a message. In contrast, a lightweight tag is simply a pointer to a specific commit. Annotated tags are recommended for releases as they contain important metadata.",
     "sourceUrl": "https://git-scm.com/book/en/v2/Git-Basics-Tagging"
+  },
+  {
+    "id": "git-advanced-021",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the primary purpose of the git blame command?",
+    "options": [
+      "It shows the commit and author that last modified each line of a file",
+      "It automatically finds bugs in the code",
+      "It searches for specific keywords in commit messages",
+      "It analyzes the cause of conflicts between two branches"
+    ],
+    "correctIndex": 0,
+    "explanation": "git blame displays the commit hash, author, and date for the last modification of each line in a file. It is useful for tracking when and by whom specific code was changed. The -L option allows you to query a specific line range.",
+    "sourceUrl": "https://git-scm.com/docs/git-blame"
+  },
+  {
+    "id": "git-advanced-022",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of git stash list after running the following commands?\n\ngit stash push -m \"WIP: login\"\ngit stash push -m \"WIP: signup\"\ngit stash list",
+    "code": "git stash push -m \"WIP: login\"\ngit stash push -m \"WIP: signup\"\ngit stash list",
+    "options": [
+      "Only the last stash is shown because previous stashes are overwritten",
+      "stash@{0}: On main: WIP: login\nstash@{1}: On main: WIP: signup",
+      "The entries are displayed in no particular order",
+      "stash@{0}: On main: WIP: signup\nstash@{1}: On main: WIP: login"
+    ],
+    "correctIndex": 3,
+    "explanation": "git stash operates as a stack (LIFO — Last In, First Out). The most recently stashed item becomes stash@{0}, so 'WIP: signup' (pushed last) is stash@{0} and 'WIP: login' (pushed first) is stash@{1}.",
+    "sourceUrl": "https://git-scm.com/docs/git-stash"
+  },
+  {
+    "id": "git-advanced-023",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What does the git clean -fd command delete?",
+    "options": [
+      "It deletes files from the staging area",
+      "It reverts tracked files changed since the last commit",
+      "It removes local branches that were deleted on the remote",
+      "It deletes untracked files and directories"
+    ],
+    "correctIndex": 3,
+    "explanation": "git clean removes files from the working directory that are not tracked by Git. The -f flag forces execution (required by default), and -d includes untracked directories. Using -n (dry-run) first to preview what will be deleted is a safe practice.",
+    "sourceUrl": "https://git-scm.com/docs/git-clean"
+  },
+  {
+    "id": "git-advanced-024",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What does git rerere (Reuse Recorded Resolution) do?",
+    "options": [
+      "It automatically selects the remote version when a conflict occurs",
+      "It remembers how you resolved a conflict and automatically applies the same resolution if the same conflict recurs",
+      "It auto-reformats code to prevent merge conflicts",
+      "It shares conflict resolution history with the remote repository"
+    ],
+    "correctIndex": 1,
+    "explanation": "git rerere records your conflict resolutions and automatically reapplies them when the same conflict occurs again. This is especially useful in rebase workflows where you may encounter the same conflicts repeatedly. Enable it with git config rerere.enabled true.",
+    "sourceUrl": "https://git-scm.com/docs/git-rerere"
+  },
+  {
+    "id": "git-advanced-025",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Among the three git config scopes, which has the highest priority?",
+    "options": [
+      "--system (system-wide)",
+      "--global (user-wide)",
+      "--local (current repository)",
+      "All three scopes have equal priority"
+    ],
+    "correctIndex": 2,
+    "explanation": "git config has three scopes: system (all users), global (current user), and local (current repository). When the same setting exists in multiple scopes, local > global > system priority applies, so repository-specific settings always take precedence.",
+    "sourceUrl": "https://git-scm.com/docs/git-config"
+  },
+  {
+    "id": "git-advanced-026",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the result of git rebase --onto in the following scenario?\n\n# sub-feature was branched from feature, which was branched from main\ngit rebase --onto main feature sub-feature",
+    "code": "# A - B - C (main)\n#      \\\n#       D - E (feature)\n#            \\\n#             F - G (sub-feature)\n\ngit rebase --onto main feature sub-feature\n\n# Result?",
+    "options": [
+      "All sub-feature commits (D, E, F, G) are replayed onto main",
+      "The feature branch is merged into main",
+      "The sub-feature branch is deleted",
+      "Only the commits between feature and sub-feature (F, G) are replayed onto main"
+    ],
+    "correctIndex": 3,
+    "explanation": "git rebase --onto <newbase> <upstream> <branch> replays only the commits between upstream and branch onto newbase. In this case, only commits F and G (between feature and sub-feature) are replayed onto main, skipping the intermediate feature branch.",
+    "sourceUrl": "https://git-scm.com/docs/git-rebase"
+  },
+  {
+    "id": "git-advanced-027",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the primary purpose of a .gitattributes file?",
+    "options": [
+      "It specifies file patterns for Git to ignore",
+      "It configures per-branch access permissions",
+      "It defines per-path attributes such as line ending handling, diff methods, and merge strategies",
+      "It sets the remote repository URL"
+    ],
+    "correctIndex": 2,
+    "explanation": ".gitattributes controls Git's behavior on a per-path basis. Common uses include line ending conversion (text=auto), marking binary files (binary), configuring custom diff drivers, specifying merge strategies, and setting up Git LFS tracking.",
+    "sourceUrl": "https://git-scm.com/docs/gitattributes"
+  },
+  {
+    "id": "git-advanced-028",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In what scenario would you use git format-patch and git am together?",
+    "options": [
+      "To automatically apply code formatting",
+      "To create email-shareable patch files from commits and apply received patches as commits",
+      "To backup and restore branches as compressed archives",
+      "To automatically resolve merge conflicts"
+    ],
+    "correctIndex": 1,
+    "explanation": "git format-patch generates .patch files in email format from commits, preserving commit messages and author information. git am (apply mailbox) applies these patches as commits. This workflow is useful for contributing to open source projects without direct push access or sharing changes without network connectivity.",
+    "sourceUrl": "https://git-scm.com/docs/git-format-patch"
+  },
+  {
+    "id": "git-advanced-029",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What kind of output does the following command produce?\n\ngit log --oneline --graph --all",
+    "code": "git log --oneline --graph --all",
+    "options": [
+      "A date-sorted list of all branch commits",
+      "One-line commit entries for the current branch only",
+      "One-line commit entries for all branches with an ASCII art branch graph",
+      "A tree-structured view of full commit diffs"
+    ],
+    "correctIndex": 2,
+    "explanation": "--oneline abbreviates each commit to a single line, --graph visualizes the branch and merge structure with ASCII art, and --all includes all branches. This combination is the most commonly used way to get an overview of the entire project's branch history.",
+    "sourceUrl": "https://git-scm.com/docs/git-log"
+  },
+  {
+    "id": "git-advanced-030",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "How does git sparse-checkout differ from a regular clone?",
+    "options": [
+      "sparse-checkout fetches only some branches from the remote",
+      "sparse-checkout limits the commit history that is fetched",
+      "sparse-checkout fetches the full history but only checks out specific files/directories into the working directory",
+      "sparse-checkout checks out files in read-only mode"
+    ],
+    "correctIndex": 2,
+    "explanation": "git sparse-checkout allows you to check out only the directories you need in large monorepos. It maintains the full Git history while reducing disk usage and checkout time. Use git sparse-checkout set <path> to specify desired paths; --cone mode is the default.",
+    "sourceUrl": "https://git-scm.com/docs/git-sparse-checkout"
   }
 ]
