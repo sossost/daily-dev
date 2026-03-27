@@ -322,5 +322,168 @@
     "correctIndex": 0,
     "explanation": "sessionStorage retains data only for the duration of the page session, and data is deleted when the tab or browser is closed. In contrast, localStorage has no expiration and persists data permanently until the user explicitly deletes it or clears browser data.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage"
+  },
+  {
+    "id": "network-021",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the primary role of DNS (Domain Name System)?",
+    "options": [
+      "It translates domain names into IP addresses",
+      "It parses the HTML of web pages",
+      "It encrypts HTTP requests",
+      "It automatically assigns server ports"
+    ],
+    "correctIndex": 0,
+    "explanation": "DNS translates human-readable domain names (e.g., example.com) into IP addresses (e.g., 93.184.216.34) that computers understand. When a browser accesses a website, it first performs a DNS lookup to find the IP address associated with that domain.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/DNS"
+  },
+  {
+    "id": "network-022",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between TCP and UDP?",
+    "options": [
+      "TCP is connectionless, while UDP is connection-oriented",
+      "UDP guarantees data transmission order, but TCP does not",
+      "TCP guarantees reliable data delivery, but UDP does not",
+      "TCP and UDP are different names for the same protocol"
+    ],
+    "correctIndex": 2,
+    "explanation": "TCP (Transmission Control Protocol) establishes a connection through a 3-way handshake and provides reliable data delivery through packet ordering and retransmission. UDP (User Datagram Protocol) transmits data without establishing a connection, making it faster but without packet loss or ordering guarantees, making it ideal for real-time streaming and gaming.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/TCP"
+  },
+  {
+    "id": "network-023",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the difference between HTTP status codes 301 and 302?",
+    "options": [
+      "301 is a client error and 302 is a server error",
+      "301 is a permanent redirect and 302 is a temporary redirect",
+      "301 is only for GET requests, 302 is only for POST requests",
+      "301 is not cacheable, while 302 is always cached"
+    ],
+    "correctIndex": 1,
+    "explanation": "301 Moved Permanently indicates that the resource has permanently moved to a new URL, and search engines will update their index to the new URL. 302 Found is a temporary redirect — the original URL is still valid but temporarily points elsewhere. This distinction is crucial for SEO.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301"
+  },
+  {
+    "id": "network-024",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What value is logged to the console in the following code?",
+    "code": "const response = await fetch('https://api.example.com/data');\nconsole.log(typeof response.body);",
+    "options": [
+      "\"string\"",
+      "\"object\"",
+      "\"undefined\"",
+      "\"function\""
+    ],
+    "correctIndex": 1,
+    "explanation": "The body property of a fetch Response object returns a ReadableStream object, so typeof returns \"object\". To get the actual response data, you need to call methods like response.json() or response.text() to consume the stream. ReadableStream enables progressive processing of large responses.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Response/body"
+  },
+  {
+    "id": "network-025",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "The following code has a problem where the request can wait indefinitely without a timeout. What is the most appropriate solution?\n\nconst response = await fetch('https://api.example.com/slow-endpoint');",
+    "options": [
+      "fetch has a built-in 30-second timeout, so there is no problem",
+      "Use XMLHttpRequest's timeout property instead of fetch",
+      "Limiting response time on the server eliminates the need to change client code",
+      "Combine AbortController with setTimeout to cancel the request after a specified time"
+    ],
+    "correctIndex": 3,
+    "explanation": "The fetch API does not have a built-in timeout feature, so it can wait indefinitely if the server doesn't respond. By creating an AbortController and calling controller.abort() after a set time using setTimeout, you can cancel the request. This pattern is essential for user experience and resource management.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/AbortController"
+  },
+  {
+    "id": "network-026",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference between Server-Sent Events (SSE) and WebSocket?",
+    "options": [
+      "SSE enables bidirectional communication, while WebSocket is unidirectional",
+      "WebSocket operates over HTTP, while SSE uses its own protocol",
+      "SSE is unidirectional streaming from server to client, while WebSocket supports bidirectional communication",
+      "SSE and WebSocket use the same protocol with different APIs"
+    ],
+    "correctIndex": 2,
+    "explanation": "SSE (Server-Sent Events) is a unidirectional streaming technology over HTTP where the server sends events to the client. WebSocket switches to its own protocol (ws://) after an initial HTTP handshake to support bidirectional real-time communication. SSE has built-in automatic reconnection and event ID tracking, making it suitable for notifications and live feeds.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events"
+  },
+  {
+    "id": "network-027",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What value is logged to the console in the following code?",
+    "code": "const url = new URL('https://example.com:8080/path?name=test#section');\nconsole.log(url.origin);",
+    "options": [
+      "\"https://example.com:8080\"",
+      "\"https://example.com/path\"",
+      "\"https://example.com:8080/path?name=test#section\"",
+      "\"example.com:8080\""
+    ],
+    "correctIndex": 0,
+    "explanation": "The URL object's origin property returns a string combining the protocol (scheme), hostname, and port. It does not include the pathname, query parameters (search), or fragment (hash). This origin value is the core concept used for same-origin determination in CORS.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/URL/origin"
+  },
+  {
+    "id": "network-028",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What components make up an 'origin' in the Same-Origin Policy?",
+    "options": [
+      "Domain, path, and query parameters",
+      "Protocol, domain, and path",
+      "Domain, port, and cookies",
+      "Protocol, domain, and port"
+    ],
+    "correctIndex": 3,
+    "explanation": "In the Same-Origin Policy, a core web security concept, an 'origin' consists of three components: protocol (http/https), domain (hostname), and port number. All three must match for two URLs to be considered the same origin. For example, http://example.com and https://example.com are different origins because the protocol differs.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy"
+  },
+  {
+    "id": "network-029",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does an error occur when the server returns 204 No Content after the following POST request?\n\nconst response = await fetch('/api/data', { method: 'POST', body: JSON.stringify({ key: 'value' }) });\nconst data = await response.json();",
+    "options": [
+      "response.json() cannot be used with POST requests",
+      "A 204 status code causes response.ok to be false, automatically throwing an error",
+      "JSON.stringify generated an incorrectly formatted body",
+      "A 204 response has no body, so response.json() throws a SyntaxError trying to parse an empty string"
+    ],
+    "correctIndex": 3,
+    "explanation": "An HTTP 204 No Content response indicates the request succeeded but there is no response body. response.json() attempts to parse the empty body as JSON, resulting in a SyntaxError. When handling 204 responses, you should check response.status and skip body parsing.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/204"
+  },
+  {
+    "id": "network-030",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What value is logged to the console in the following code?",
+    "code": "const headers = new Headers();\nheaders.append('X-Custom', 'first');\nheaders.append('X-Custom', 'second');\nconsole.log(headers.get('X-Custom'));",
+    "options": [
+      "\"first\"",
+      "\"second\"",
+      "\"first, second\"",
+      "null"
+    ],
+    "correctIndex": 2,
+    "explanation": "Headers.append() does not overwrite an existing header with the same name. Instead, it appends the value separated by a comma and space. So get() returns \"first, second\". To overwrite a value, use set() instead of append().",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Headers/append"
   }
 ]

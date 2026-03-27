@@ -322,5 +322,168 @@
     "correctIndex": 0,
     "explanation": "sessionStorage는 페이지 세션 동안만 데이터를 유지하며, 탭이나 브라우저를 닫으면 데이터가 삭제됩니다. 반면 localStorage는 만료 기간이 없어 사용자가 명시적으로 삭제하거나 브라우저 데이터를 초기화하기 전까지 영구적으로 데이터를 유지합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Window/sessionStorage"
+  },
+  {
+    "id": "network-021",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "DNS(Domain Name System)의 주요 역할은 무엇인가요?",
+    "options": [
+      "도메인 이름을 IP 주소로 변환한다",
+      "웹 페이지의 HTML을 파싱한다",
+      "HTTP 요청을 암호화한다",
+      "서버의 포트를 자동으로 할당한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "DNS는 사람이 읽을 수 있는 도메인 이름(예: example.com)을 컴퓨터가 이해하는 IP 주소(예: 93.184.216.34)로 변환하는 시스템입니다. 브라우저가 웹사이트에 접속할 때 먼저 DNS 조회를 통해 해당 도메인의 IP 주소를 찾습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/DNS"
+  },
+  {
+    "id": "network-022",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "TCP와 UDP의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "TCP는 비연결형이고, UDP는 연결형이다",
+      "UDP는 데이터 전송 순서를 보장하지만, TCP는 보장하지 않는다",
+      "TCP는 신뢰성 있는 데이터 전송을 보장하지만, UDP는 보장하지 않는다",
+      "TCP와 UDP는 동일한 프로토콜의 다른 이름이다"
+    ],
+    "correctIndex": 2,
+    "explanation": "TCP(Transmission Control Protocol)는 3-way handshake를 통해 연결을 수립하고, 패킷 순서 보장과 재전송을 통해 신뢰성 있는 데이터 전송을 제공합니다. UDP(User Datagram Protocol)는 연결 수립 없이 데이터를 전송하여 빠르지만, 패킷 손실이나 순서 보장이 되지 않아 실시간 스트리밍이나 게임 등에 주로 사용됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/TCP"
+  },
+  {
+    "id": "network-023",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "HTTP 상태 코드 301과 302의 차이점은 무엇인가요?",
+    "options": [
+      "301은 클라이언트 에러이고, 302는 서버 에러이다",
+      "301은 영구 리다이렉트이고, 302는 임시 리다이렉트이다",
+      "301은 GET 요청에만, 302는 POST 요청에만 사용된다",
+      "301은 캐시 가능하지 않고, 302는 항상 캐시된다"
+    ],
+    "correctIndex": 1,
+    "explanation": "301 Moved Permanently는 리소스가 영구적으로 새 URL로 이동했음을 나타내며, 검색 엔진은 새 URL로 인덱스를 업데이트합니다. 302 Found는 임시 리다이렉트로, 원래 URL이 여전히 유효하지만 일시적으로 다른 곳을 가리킵니다. SEO에서 이 구분은 매우 중요합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Status/301"
+  },
+  {
+    "id": "network-024",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 콘솔에 출력되는 값은 무엇인가요?",
+    "code": "const response = await fetch('https://api.example.com/data');\nconsole.log(typeof response.body);",
+    "options": [
+      "\"string\"",
+      "\"object\"",
+      "\"undefined\"",
+      "\"function\""
+    ],
+    "correctIndex": 1,
+    "explanation": "fetch의 Response 객체에서 body 프로퍼티는 ReadableStream 객체를 반환하므로 typeof의 결과는 \"object\"입니다. 실제 응답 데이터를 얻으려면 response.json(), response.text() 등의 메서드를 호출하여 스트림을 읽어야 합니다. ReadableStream은 대용량 응답을 점진적으로 처리할 수 있게 해줍니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Response/body"
+  },
+  {
+    "id": "network-025",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 요청이 타임아웃 없이 무한히 대기할 수 있는 문제가 있습니다. 가장 적절한 해결 방법은 무엇인가요?\n\nconst response = await fetch('https://api.example.com/slow-endpoint');",
+    "options": [
+      "fetch는 자체적으로 30초 타임아웃이 있으므로 문제가 없다",
+      "fetch 대신 XMLHttpRequest의 timeout 속성을 사용한다",
+      "서버에서 응답 시간을 제한하면 클라이언트 코드를 변경할 필요가 없다",
+      "AbortController와 setTimeout을 조합하여 일정 시간 후 요청을 취소한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "fetch API는 기본적으로 타임아웃 기능을 내장하고 있지 않아 서버가 응답하지 않으면 무한히 대기할 수 있습니다. AbortController를 생성하고 setTimeout으로 일정 시간 후 controller.abort()를 호출하면 요청을 취소할 수 있습니다. 이 패턴은 사용자 경험과 리소스 관리에 매우 중요합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/AbortController"
+  },
+  {
+    "id": "network-026",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Server-Sent Events(SSE)와 WebSocket의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "SSE는 양방향 통신이 가능하지만 WebSocket은 단방향이다",
+      "WebSocket은 HTTP 프로토콜 위에서 동작하지만 SSE는 독자적인 프로토콜을 사용한다",
+      "SSE는 서버에서 클라이언트로의 단방향 스트리밍이고, WebSocket은 양방향 통신이다",
+      "SSE와 WebSocket은 동일한 프로토콜을 사용하며 API만 다르다"
+    ],
+    "correctIndex": 2,
+    "explanation": "SSE(Server-Sent Events)는 HTTP 프로토콜 위에서 서버가 클라이언트에게 일방적으로 이벤트를 보내는 단방향 스트리밍 기술입니다. WebSocket은 초기 HTTP 핸드셰이크 후 독자적인 프로토콜(ws://)로 전환하여 양방향 실시간 통신을 지원합니다. SSE는 자동 재연결과 이벤트 ID 추적 기능이 내장되어 알림이나 실시간 피드에 적합합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Server-sent_events/Using_server-sent_events"
+  },
+  {
+    "id": "network-027",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드에서 콘솔에 출력되는 값은 무엇인가요?",
+    "code": "const url = new URL('https://example.com:8080/path?name=test#section');\nconsole.log(url.origin);",
+    "options": [
+      "\"https://example.com:8080\"",
+      "\"https://example.com/path\"",
+      "\"https://example.com:8080/path?name=test#section\"",
+      "\"example.com:8080\""
+    ],
+    "correctIndex": 0,
+    "explanation": "URL 객체의 origin 프로퍼티는 프로토콜(scheme), 호스트명, 포트를 결합한 문자열을 반환합니다. 경로(pathname), 쿼리 파라미터(search), 프래그먼트(hash)는 포함되지 않습니다. 이 origin 값은 CORS에서 동일 출처 판별에 사용되는 핵심 개념입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/URL/origin"
+  },
+  {
+    "id": "network-028",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "동일 출처 정책(Same-Origin Policy)에서 '출처(origin)'를 구성하는 요소는 무엇인가요?",
+    "options": [
+      "도메인, 경로, 쿼리 파라미터",
+      "프로토콜, 도메인, 경로",
+      "도메인, 포트, 쿠키",
+      "프로토콜, 도메인, 포트"
+    ],
+    "correctIndex": 3,
+    "explanation": "웹 보안의 핵심인 동일 출처 정책에서 '출처'는 프로토콜(http/https), 도메인(호스트명), 포트 번호 세 가지로 구성됩니다. 이 세 요소가 모두 일치해야 동일 출처로 간주됩니다. 예를 들어 http://example.com과 https://example.com은 프로토콜이 다르므로 다른 출처입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/Security/Same-origin_policy"
+  },
+  {
+    "id": "network-029",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 POST 요청 후 서버가 204 No Content를 반환했을 때 에러가 발생하는 이유는 무엇인가요?\n\nconst response = await fetch('/api/data', { method: 'POST', body: JSON.stringify({ key: 'value' }) });\nconst data = await response.json();",
+    "options": [
+      "POST 요청에는 response.json()을 사용할 수 없다",
+      "204 상태 코드는 response.ok가 false이므로 자동으로 에러가 발생한다",
+      "JSON.stringify가 잘못된 형식의 body를 생성했기 때문이다",
+      "204 응답에는 body가 없으므로 response.json()이 빈 문자열을 파싱하려다 SyntaxError가 발생한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "HTTP 204 No Content 응답은 요청이 성공했지만 응답 body가 없음을 의미합니다. response.json()은 빈 body를 JSON으로 파싱하려고 시도하여 SyntaxError가 발생합니다. 204 응답을 처리할 때는 response.status를 확인하고 body 파싱을 건너뛰어야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Status/204"
+  },
+  {
+    "id": "network-030",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 콘솔에 출력되는 값은 무엇인가요?",
+    "code": "const headers = new Headers();\nheaders.append('X-Custom', 'first');\nheaders.append('X-Custom', 'second');\nconsole.log(headers.get('X-Custom'));",
+    "options": [
+      "\"first\"",
+      "\"second\"",
+      "\"first, second\"",
+      "null"
+    ],
+    "correctIndex": 2,
+    "explanation": "Headers.append()는 같은 이름의 헤더가 이미 존재하면 기존 값을 덮어쓰지 않고, 쉼표와 공백으로 구분하여 값을 추가합니다. 따라서 get()으로 조회하면 \"first, second\"가 반환됩니다. 값을 덮어쓰려면 append() 대신 set()을 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Headers/append"
   }
 ]

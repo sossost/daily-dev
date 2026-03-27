@@ -6,12 +6,16 @@
 
 ### Features
 
+- **seo**: add topic detail landing pages for all 23 topics (`06a9671`)
+- **seo**: add JSON-LD, per-page metadata, canonical URLs, and OG image optimization (`a19d09d`)
+- **content**: add 10 dom-manipulation questions (`ee44b2c`)
 - **content**: add 10 typescript questions (021-030) (`83a4061`)
 - **content**: add 10 nodejs questions (021-030) (`b2597e3`)
 - **content**: add 10 design-patterns questions (`98ee3dd`)
 
 ### Bug Fixes
 
+- **seo**: add fallback for topic pages without i18n description (`f7a400f`)
 - **harness**: add strategy.md to manager + fix loop in run-agent.sh (`f87c950`)
 
 ## 2026-03-26

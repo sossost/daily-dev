@@ -9,6 +9,7 @@
 - `AUTO_ADVANCE_MS` = `400`
 - `ANIMATION_DELAY_STEP` = `0.06`
 - `UPDATED_SESSION_KEY` = `'daily-dev-last-updated-session'`
+- `SAMPLE_COUNT` = `3`
 - `ANIMATION_DELAY_STEP` = `0.04`
 - `SESSION_LIMIT` = `10`
 - `LOCAL_STORAGE_PROGRESS_KEY` = `"daily-dev-progress"`
@@ -193,7 +194,7 @@
 - dom-manipulation.json — 30 questions
 - event-loop.json — 28 questions
 - git-advanced.json — 20 questions
-- network.json — 20 questions
+- network.json — 30 questions
 - nodejs.json — 30 questions
 - promise.json — 28 questions
 - prototype.json — 28 questions
@@ -216,7 +217,7 @@
 - dom-manipulation.json — 30 questions
 - event-loop.json — 28 questions
 - git-advanced.json — 20 questions
-- network.json — 20 questions
+- network.json — 30 questions
 - nodejs.json — 30 questions
 - promise.json — 28 questions
 - prototype.json — 28 questions
@@ -256,6 +257,10 @@
 - `UserProgress`
 
 ### src/lib/
+
+#### `buildLocaleUrl.ts`
+- `buildLocaleUrl` (locale: string, path: string = '/') → string
+- *deps*: lib/constants, i18n/routing
 
 #### `challenge-session.ts` — Challenge session generator — builds a large pool of random questions for timed challenge mode. Unlike SRS sessions, challenge mode is purely for speed practice and does not affect spaced repetition scheduling.
 - `generateChallengeSession` (topicFilter?: readonly Topic[],) → SessionQuestion[] — Generate a large pool of shuffled questions for challenge mode. Returns up to CHALLENGE_POOL_SIZE questions with shuffled options.
@@ -299,6 +304,10 @@
 - `FocusAnalysis`
 - `FocusTopicInfo`
 - *deps*: types, types, i18n/routing, lib/questions, lib/session, lib/shuffle
+
+#### `generatePageMetadata.ts`
+- `generatePageMetadata` (locale: string, pageKey: PageKey, path: string, options: Options = {},) → Promise<Metadata>
+- *deps*: lib/constants, i18n/routing, lib/buildLocaleUrl
 
 #### `practice-session.ts` — Practice session generator — builds a quiz session filtered by topics and difficulty. Unlike the standard SRS-driven session, practice mode lets users choose what to study.
 - `filterQuestions` (options: PracticeSessionOptions) → Question[] — Filter questions by selected topics and difficulty.
@@ -423,7 +432,7 @@
 - *deps*: lib/constants
 
 #### `sitemap.ts`
-- *deps*: i18n/routing, i18n/routing, lib/constants
+- *deps*: i18n/routing, lib/buildLocaleUrl, types
 
 ### src/components/
 
@@ -437,6 +446,10 @@
 
 #### `ErrorBoundary.tsx`
 - *deps*: lib/sentry
+
+#### `JsonLd.tsx`
+- `JsonLd` ({ locale }: JsonLdProps)
+- *deps*: lib/constants
 
 #### `LoginModal.tsx`
 - `LoginModal` ({ isOpen, onClose, onGoogle, onGitHub, }: LoginModalProps)
@@ -476,7 +489,7 @@
 
 #### `TopicProgressList.tsx`
 - `TopicProgressList` ({ topicStats }: TopicProgressListProps)
-- *deps*: types, i18n/routing, types, stores/useTopicFilterStore, lib/questions, components/common/CategoryAccordion
+- *deps*: types, i18n/routing, types, stores/useTopicFilterStore, lib/questions, components/common/CategoryAccordion, i18n/navigation
 
 ### src/components/quiz/
 
@@ -554,12 +567,20 @@
 
 ### src/app/[locale]/bookmarks/
 
+#### `layout.tsx`
+- `generateMetadata` ({ params }: Props) → Promise<Metadata>
+- *deps*: lib/generatePageMetadata
+
 #### `loading.tsx`
 
 #### `page.tsx`
 - *deps*: i18n/navigation, i18n/routing, stores/useBookmarkStore, hooks/useHydration, lib/questions, types, components/quiz/BookmarkButton, components/quiz/CodeBlock
 
 ### src/app/[locale]/challenge/
+
+#### `layout.tsx`
+- `generateMetadata` ({ params }: Props) → Promise<Metadata>
+- *deps*: lib/generatePageMetadata
 
 #### `loading.tsx`
 
@@ -568,6 +589,10 @@
 
 ### src/app/[locale]/endless/
 
+#### `layout.tsx`
+- `generateMetadata` ({ params }: Props) → Promise<Metadata>
+- *deps*: lib/generatePageMetadata
+
 #### `loading.tsx`
 
 #### `page.tsx`
@@ -575,12 +600,20 @@
 
 ### src/app/[locale]/focus/
 
+#### `layout.tsx`
+- `generateMetadata` ({ params }: Props) → Promise<Metadata>
+- *deps*: lib/generatePageMetadata
+
 #### `loading.tsx`
 
 #### `page.tsx`
 - *deps*: i18n/navigation, i18n/navigation, i18n/routing, stores/useSessionStore, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, hooks/useQuizKeyboard, lib/focus-session, lib/topics, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
 
 ### src/app/[locale]/history/
+
+#### `layout.tsx`
+- `generateMetadata` ({ params }: Props) → Promise<Metadata>
+- *deps*: lib/generatePageMetadata
 
 #### `loading.tsx`
 
@@ -593,7 +626,7 @@
 - `generateMetadata` ({ params }: Props) → Promise<Metadata>
 - `generateStaticParams` ()
 - `viewport` Viewport
-- *deps*: components/ErrorBoundary, components/SentryProvider, components/ToastProvider, components/DataProvider, components/ScrollToTop, lib/supabase/getUserId, lib/supabase/loadUserData, lib/constants, i18n/routing
+- *deps*: components/ErrorBoundary, components/SentryProvider, components/ToastProvider, components/DataProvider, components/ScrollToTop, lib/supabase/getUserId, lib/supabase/loadUserData, lib/constants, components/JsonLd, lib/buildLocaleUrl, i18n/routing
 
 #### `loading.tsx`
 
@@ -602,6 +635,10 @@
 
 ### src/app/[locale]/practice/
 
+#### `layout.tsx`
+- `generateMetadata` ({ params }: Props) → Promise<Metadata>
+- *deps*: lib/generatePageMetadata
+
 #### `loading.tsx`
 
 #### `page.tsx`
@@ -609,12 +646,20 @@
 
 ### src/app/[locale]/schedule/
 
+#### `layout.tsx`
+- `generateMetadata` ({ params }: Props) → Promise<Metadata>
+- *deps*: lib/generatePageMetadata
+
 #### `loading.tsx`
 
 #### `page.tsx`
 - *deps*: i18n/navigation, i18n/routing, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, lib/srs-schedule, lib/topics, components/stats/StatCard, components/schedule/ReviewTimeline, components/schedule/TopicDueList
 
 ### src/app/[locale]/session/
+
+#### `layout.tsx`
+- `generateMetadata` ({ params }: Props) → Promise<Metadata>
+- *deps*: lib/generatePageMetadata
 
 #### `loading.tsx`
 
@@ -629,12 +674,30 @@
 
 ### src/app/[locale]/stats/
 
+#### `layout.tsx`
+- `generateMetadata` ({ params }: Props) → Promise<Metadata>
+- *deps*: lib/generatePageMetadata
+
 #### `loading.tsx`
 
 #### `page.tsx`
 - *deps*: i18n/navigation, types, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, lib/topics, lib/stats, components/stats/AccuracyTrendChart, components/stats/WeakTopicsList, components/stats/StatCard, components/stats/TopicAccuracyBars, components/stats/ShareProgressButton
 
+### src/app/[locale]/topics/[topic]/
+
+#### `layout.tsx`
+- `generateStaticParams` ()
+- `generateMetadata` ({ params }: Props) → Promise<Metadata>
+- *deps*: types, lib/constants, lib/buildLocaleUrl, i18n/routing
+
+#### `page.tsx`
+- *deps*: i18n/navigation, i18n/routing, types, lib/questions, stores/useProgressStore, hooks/useHydration, components/topics/SampleQuestion
+
 ### src/app/[locale]/topics/
+
+#### `layout.tsx`
+- `generateMetadata` ({ params }: Props) → Promise<Metadata>
+- *deps*: lib/generatePageMetadata
 
 #### `loading.tsx`
 
@@ -642,6 +705,10 @@
 - *deps*: i18n/navigation, stores/useProgressStore, components/dashboard/TopicProgressList
 
 ### src/app/[locale]/wrong-answers/
+
+#### `layout.tsx`
+- `generateMetadata` ({ params }: Props) → Promise<Metadata>
+- *deps*: lib/generatePageMetadata
 
 #### `loading.tsx`
 
@@ -717,6 +784,12 @@
 #### `WeakTopicsList.tsx`
 - `WeakTopicsList` ({ weakTopics }: WeakTopicsListProps)
 - *deps*: lib/stats
+
+### src/components/topics/
+
+#### `SampleQuestion.tsx`
+- `SampleQuestion` ({ question }: SampleQuestionProps)
+- *deps*: types
 
 ### src/i18n/
 

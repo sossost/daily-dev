@@ -38,7 +38,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | DOM Manipulation | 30 |
 | Event Loop | 28 |
 | Git Advanced | 20 |
-| Network | 20 |
+| Network | 30 |
 | Node.js | 30 |
 | Promise | 28 |
 | Prototype | 28 |
@@ -50,7 +50,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Web Performance | 20 |
 | Web Security | 25 |
 
-**Total: 637 questions across 23 topics**
+**Total: 647 questions across 23 topics**
 
 ## Getting Started
 
