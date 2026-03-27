@@ -27,6 +27,8 @@ export default function TopicDetailPage() {
   const locale = isLocale(rawLocale) ? rawLocale : 'en'
   const isHydrated = useHydration()
   const topicStats = useProgressStore((s) => s.topicStats)
+  const descriptionKey = `description.${topic}` as const
+  const hasDescription = td.has(descriptionKey)
 
   if (topic == null || !isValidTopic(topic)) {
     return (
@@ -67,9 +69,11 @@ export default function TopicDetailPage() {
         </div>
       </div>
 
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
-        {td(`description.${topic}`)}
-      </p>
+      {hasDescription && (
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+          {td(descriptionKey)}
+        </p>
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-3 gap-3 mb-6">

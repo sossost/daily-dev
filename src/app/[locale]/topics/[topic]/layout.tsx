@@ -25,8 +25,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'Not Found' }
   }
 
-  const topicName = t(topic)
-  const description = td(`description.${topic}`)
+  const topicName = t.has(topic) ? t(topic) : topic
+  const descriptionKey = `description.${topic}` as const
+  const description = td.has(descriptionKey)
+    ? td(descriptionKey)
+    : `Practice ${topicName} questions on DailyDev`
   const path = `/topics/${topic}`
   const title = `${topicName} Quiz | DailyDev`
 
