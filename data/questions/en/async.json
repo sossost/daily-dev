@@ -462,5 +462,171 @@
     "correctIndex": 1,
     "explanation": "When a then callback returns a plain value, it is wrapped in Promise.resolve(value) and immediately (in the next microtask) passed to the next then. When a Promise is returned, the next then waits for that Promise to settle before executing. This allows sequential chaining of asynchronous operations.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "async-029",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const p = Promise.reject('error');\np.catch(e => console.log(e));",
+    "options": [
+      "error",
+      "undefined",
+      "Error: error",
+      "Unhandled Promise Rejection"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise.reject('error') creates a Promise rejected with the string 'error'. The .catch() handler receives the rejection reason as its argument and outputs it. Since the rejected value is a string (not an Error object), 'error' is printed as-is. In practice, rejecting with Error objects is recommended for better debugging with stack traces.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/reject"
+  },
+  {
+    "id": "async-030",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about top-level await is correct?",
+    "options": [
+      "It can be used in any JavaScript file",
+      "It can only be used in ES modules (ESM) and blocks module loading",
+      "It is only supported in Node.js, not in browsers",
+      "It can be used in CommonJS without an async function"
+    ],
+    "correctIndex": 1,
+    "explanation": "Top-level await allows using await at the top level of ES modules without wrapping in an async function. The module and any modules that import it will have their loading deferred until the awaited value resolves. It cannot be used in CommonJS modules or regular scripts. It is useful for dynamic imports, conditional initialization, and other setup tasks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#top-level_await"
+  },
+  {
+    "id": "async-031",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "async function foo() {\n  return await Promise.resolve('A');\n}\nasync function bar() {\n  return Promise.resolve('B');\n}\nfoo().then(v => console.log(typeof v, v));\nbar().then(v => console.log(typeof v, v));",
+    "options": [
+      "string A, object B",
+      "string A, string B",
+      "object A, string B",
+      "object A, object B"
+    ],
+    "correctIndex": 1,
+    "explanation": "In foo(), return await first awaits the Promise to get the value 'A', then returns it. In bar(), return Promise.resolve('B') returns the Promise directly, but async function return values are automatically unwrapped. In both cases, the .then() callback receives a string. The difference between return await and return is only meaningful inside try-catch blocks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "async-032",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code using map with async, the result is not what is expected. What is the cause?",
+    "code": "const ids = [1, 2, 3];\nconst results = ids.map(async (id) => {\n  const res = await fetch(`/api/items/${id}`);\n  return res.json();\n});\nconsole.log(results);",
+    "options": [
+      "map does not support async callbacks",
+      "results becomes an array of Promises instead of actual data",
+      "fetch does not work inside map",
+      "return is ignored in async callbacks"
+    ],
+    "correctIndex": 1,
+    "explanation": "Array.map() collects the return values of its callback into a new array. Since async functions always return a Promise, results becomes [Promise, Promise, Promise]. To get the actual data, use const results = await Promise.all(ids.map(async (id) => { ... })) to wait for all Promises to resolve.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map"
+  },
+  {
+    "id": "async-033",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between new Promise(executor) and Promise.resolve(value)?",
+    "options": [
+      "Both behave identically",
+      "Promise.resolve cannot handle errors",
+      "new Promise controls resolve/reject timing via the executor function, while Promise.resolve creates an immediately fulfilled Promise",
+      "new Promise is synchronous while Promise.resolve is asynchronous"
+    ],
+    "correctIndex": 2,
+    "explanation": "new Promise(executor) passes resolve and reject callbacks to the executor function, giving direct control over when the async operation completes or fails. Promise.resolve(value) is a shorthand that creates a Promise immediately fulfilled with the given value. Use new Promise when wrapping async operations, and Promise.resolve when converting a known value into a Promise.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "async-034",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const p = Promise.resolve(1)\n  .then(v => { throw new Error('fail'); })\n  .catch(e => 10)\n  .then(v => v * 2);\np.then(v => console.log(v));",
+    "options": [
+      "2",
+      "NaN",
+      "Error: fail",
+      "20"
+    ],
+    "correctIndex": 3,
+    "explanation": "Throwing an error in .then() rejects the returned Promise. The .catch() handles the error and returns 10, which puts the Promise back into a fulfilled state. The next .then() receives 10 * 2 = 20. The catch handler serves to recover the chain back to normal flow after handling the error.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch"
+  },
+  {
+    "id": "async-035",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What happens when resolve is called twice inside a Promise constructor?",
+    "options": [
+      "The Promise fulfills with the first resolve value and the second call is ignored",
+      "The second resolve value overwrites the first",
+      "An error is thrown",
+      "Both values are combined into an array and passed along"
+    ],
+    "correctIndex": 0,
+    "explanation": "Once a Promise is settled (fulfilled or rejected), its state cannot change. The first resolve() call fulfills the Promise, and any subsequent resolve() or reject() calls have no effect. This is the immutability guarantee of Promises. No error is thrown — the extra calls are silently ignored.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
+  },
+  {
+    "id": "async-036",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the problem with using forEach with async in the following code?",
+    "code": "async function processItems(items) {\n  items.forEach(async (item) => {\n    await saveToDatabase(item);\n  });\n  console.log('All saved!');\n}",
+    "options": [
+      "forEach cannot use async callbacks and throws a syntax error",
+      "saveToDatabase does not work inside forEach",
+      "forEach does not await the async callback's returned Promise, so 'All saved!' prints before saves complete",
+      "The items array is modified asynchronously causing an infinite loop"
+    ],
+    "correctIndex": 2,
+    "explanation": "Array.forEach() ignores its callback's return value. It does not await the Promises returned by async callbacks, so forEach completes immediately. 'All saved!' prints before any saves finish. Solutions: use a for...of loop for sequential processing, or Promise.all(items.map(...)) for parallel processing.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach"
+  },
+  {
+    "id": "async-037",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "Promise.resolve(1)\n  .then(v => v + 1)\n  .then(v => { console.log(v); })\n  .then(v => console.log(v));",
+    "options": [
+      "2, 2",
+      "1, 2",
+      "2, undefined",
+      "2, 3"
+    ],
+    "correctIndex": 2,
+    "explanation": "The first then returns 1 + 1 = 2. The second then executes console.log(2) outputting 2, but has no explicit return so it returns undefined. The third then receives undefined and outputs it. When a .then() callback does not return a value, undefined is passed to the next then in the chain.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "async-038",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference in error handling between errors inside a Promise executor and errors inside a then callback?",
+    "options": [
+      "Only executor errors can be caught with catch, then errors cannot",
+      "Only then errors can be caught with catch, executor errors cannot",
+      "Both must be handled with try-catch only",
+      "Both reject their respective Promise and can be handled with .catch()"
+    ],
+    "correctIndex": 3,
+    "explanation": "Errors thrown in a Promise constructor's executor automatically reject that Promise. Errors thrown in a .then() callback reject the new Promise returned by .then(). In both cases, the next .catch() in the chain handles the error. Promises provide a safe execution context that automatically converts synchronous errors into rejections.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
   }
 ]

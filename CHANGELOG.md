@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 10 browser-api questions (026-035) (`6c0382b`)
 - **content**: add 10 web-security questions (026-035) (`62afa1f`)
 
 ## 2026-03-27

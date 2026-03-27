@@ -462,5 +462,171 @@
     "correctIndex": 1,
     "explanation": "then 콜백에서 일반 값을 return하면 Promise.resolve(값)으로 감싸져 다음 then에 즉시(다음 마이크로태스크에서) 전달됩니다. Promise를 return하면 해당 Promise가 settle될 때까지 다음 then의 실행이 지연됩니다. 이를 통해 비동기 작업을 순차적으로 체이닝할 수 있습니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "async-029",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const p = Promise.reject('error');\np.catch(e => console.log(e));",
+    "options": [
+      "error",
+      "undefined",
+      "Error: error",
+      "Unhandled Promise Rejection"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise.reject('error')는 문자열 'error'로 거부된 Promise를 생성합니다. .catch() 핸들러가 거부 사유를 인자로 받아 출력합니다. reject에 전달한 값은 Error 객체가 아닌 문자열이므로 'error'가 그대로 출력됩니다. 실무에서는 디버깅을 위해 Error 객체를 전달하는 것이 권장됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/reject"
+  },
+  {
+    "id": "async-030",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "top-level await에 대한 설명으로 올바른 것은?",
+    "options": [
+      "모든 JavaScript 파일에서 사용할 수 있다",
+      "ES 모듈(ESM)에서만 사용할 수 있으며, 모듈 로딩을 블로킹한다",
+      "Node.js에서만 지원되고 브라우저에서는 사용할 수 없다",
+      "async 함수 없이도 CommonJS에서 사용할 수 있다"
+    ],
+    "correctIndex": 1,
+    "explanation": "top-level await는 ES 모듈(ESM)의 최상위 스코프에서 async 함수 없이 await를 사용할 수 있게 합니다. 해당 모듈과 이를 import하는 모듈의 로딩이 await가 완료될 때까지 지연됩니다. CommonJS 모듈이나 일반 스크립트에서는 사용할 수 없습니다. 동적 import, 조건부 초기화 등에 유용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/await#top-level_await"
+  },
+  {
+    "id": "async-031",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "async function foo() {\n  return await Promise.resolve('A');\n}\nasync function bar() {\n  return Promise.resolve('B');\n}\nfoo().then(v => console.log(typeof v, v));\nbar().then(v => console.log(typeof v, v));",
+    "options": [
+      "string A, object B",
+      "string A, string B",
+      "object A, string B",
+      "object A, object B"
+    ],
+    "correctIndex": 1,
+    "explanation": "foo()에서 return await는 Promise를 먼저 await하여 값 'A'를 얻은 후 반환합니다. bar()에서 return Promise.resolve('B')는 Promise를 직접 반환하지만, async 함수의 반환값은 자동으로 unwrap됩니다. 두 경우 모두 .then()에는 문자열이 전달됩니다. return await는 try-catch와 함께 사용할 때만 의미 있는 차이가 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "async-032",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 map과 async를 함께 사용했지만 기대한 결과가 나오지 않습니다. 원인은 무엇인가요?",
+    "code": "const ids = [1, 2, 3];\nconst results = ids.map(async (id) => {\n  const res = await fetch(`/api/items/${id}`);\n  return res.json();\n});\nconsole.log(results);",
+    "options": [
+      "map은 async 콜백을 지원하지 않기 때문",
+      "results가 실제 데이터가 아닌 Promise 배열이 되기 때문",
+      "fetch가 map 안에서 동작하지 않기 때문",
+      "async 콜백에서 return이 무시되기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "Array.map()은 콜백의 반환값을 모아 새 배열을 만듭니다. async 함수는 항상 Promise를 반환하므로, results는 [Promise, Promise, Promise]가 됩니다. 실제 데이터를 얻으려면 const results = await Promise.all(ids.map(async (id) => { ... }))처럼 Promise.all로 감싸야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/map"
+  },
+  {
+    "id": "async-033",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "new Promise(executor)와 Promise.resolve(value)의 차이로 올바른 것은?",
+    "options": [
+      "둘 다 동일하게 동작한다",
+      "Promise.resolve는 에러를 처리할 수 없다",
+      "new Promise는 executor 함수로 resolve/reject 시점을 제어하고, Promise.resolve는 즉시 이행된 Promise를 생성한다",
+      "new Promise는 동기적이고 Promise.resolve는 비동기적이다"
+    ],
+    "correctIndex": 2,
+    "explanation": "new Promise(executor)는 executor 함수에 resolve와 reject 콜백을 전달하여 비동기 작업의 완료/실패 시점을 직접 제어합니다. Promise.resolve(value)는 주어진 값으로 즉시 이행된 Promise를 생성하는 단축 메서드입니다. 비동기 작업을 Promise로 감쌀 때는 new Promise를, 이미 알고 있는 값을 Promise로 변환할 때는 Promise.resolve를 사용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "async-034",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const p = Promise.resolve(1)\n  .then(v => { throw new Error('fail'); })\n  .catch(e => 10)\n  .then(v => v * 2);\np.then(v => console.log(v));",
+    "options": [
+      "2",
+      "NaN",
+      "Error: fail",
+      "20"
+    ],
+    "correctIndex": 3,
+    "explanation": ".then()에서 에러를 throw하면 반환되는 Promise가 reject됩니다. .catch()가 이 에러를 처리하고 10을 반환하면, Promise는 다시 fulfilled 상태가 됩니다. 다음 .then()은 10 * 2 = 20을 받습니다. catch는 에러를 처리한 후 체인을 정상 흐름으로 복구하는 역할을 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch"
+  },
+  {
+    "id": "async-035",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Promise 생성자 안에서 resolve를 두 번 호출하면 어떻게 되나요?",
+    "options": [
+      "첫 번째 resolve 값으로 이행되고 두 번째 호출은 무시된다",
+      "두 번째 resolve 값으로 덮어써진다",
+      "에러가 발생한다",
+      "두 값이 배열로 합쳐져서 전달된다"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise는 한 번 settled(이행 또는 거부)되면 상태가 변경되지 않습니다. 첫 번째 resolve() 호출로 Promise가 이행되면, 이후의 resolve()나 reject() 호출은 아무 효과가 없습니다. 이것이 Promise의 불변성(immutability) 보장입니다. 에러도 발생하지 않고 조용히 무시됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
+  },
+  {
+    "id": "async-036",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 forEach와 async를 함께 사용했을 때 문제점은 무엇인가요?",
+    "code": "async function processItems(items) {\n  items.forEach(async (item) => {\n    await saveToDatabase(item);\n  });\n  console.log('All saved!');\n}",
+    "options": [
+      "forEach는 async 콜백을 사용할 수 없어 문법 에러가 발생한다",
+      "saveToDatabase가 forEach 안에서 동작하지 않는다",
+      "forEach는 async 콜백의 반환 Promise를 기다리지 않아 'All saved!'가 저장 완료 전에 출력된다",
+      "items 배열이 비동기적으로 수정되어 무한 루프가 발생한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Array.forEach()는 콜백의 반환값을 무시합니다. async 콜백이 반환하는 Promise를 await하지 않으므로 forEach는 즉시 완료됩니다. 'All saved!'는 실제 저장이 끝나기 전에 출력됩니다. 해결책: for...of 루프(순차 처리) 또는 Promise.all(items.map(...))(병렬 처리)을 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach"
+  },
+  {
+    "id": "async-037",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "Promise.resolve(1)\n  .then(v => v + 1)\n  .then(v => { console.log(v); })\n  .then(v => console.log(v));",
+    "options": [
+      "2, 2",
+      "1, 2",
+      "2, undefined",
+      "2, 3"
+    ],
+    "correctIndex": 2,
+    "explanation": "첫 번째 then에서 1 + 1 = 2를 반환합니다. 두 번째 then에서 console.log(2)를 실행하여 2가 출력되지만, 이 콜백은 명시적 return이 없으므로 undefined를 반환합니다. 세 번째 then은 undefined를 받아 출력합니다. .then() 콜백에서 값을 return하지 않으면 다음 then에 undefined가 전달됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "async-038",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Promise executor 내부의 에러와 then 콜백 내부의 에러 처리 차이는?",
+    "options": [
+      "executor 에러만 catch로 처리 가능하고 then 에러는 불가능하다",
+      "then 에러만 catch로 처리 가능하고 executor 에러는 불가능하다",
+      "둘 다 try-catch로만 처리해야 한다",
+      "둘 다 Promise를 reject시키며, .catch()로 처리할 수 있다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Promise 생성자의 executor에서 throw된 에러는 자동으로 해당 Promise를 reject시킵니다. .then() 콜백에서 throw된 에러는 .then()이 반환하는 새 Promise를 reject시킵니다. 두 경우 모두 체인의 다음 .catch()에서 처리할 수 있습니다. Promise는 내부의 동기 에러를 자동으로 잡아 rejection으로 변환하는 안전한 실행 컨텍스트를 제공합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise"
   }
 ]
