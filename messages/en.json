@@ -2,7 +2,53 @@
   "metadata": {
     "title": "DailyDev - 5 Min Daily Dev Practice",
     "description": "Practice core development concepts in just 5 minutes a day.",
-    "tagline": "5 min daily dev concepts"
+    "tagline": "5 min daily dev concepts",
+    "pages": {
+      "session": {
+        "title": "Daily Session | DailyDev",
+        "description": "Answer 10 questions in 5 minutes. Build your developer knowledge with daily spaced repetition practice."
+      },
+      "stats": {
+        "title": "Learning Stats | DailyDev",
+        "description": "Track your developer learning progress — accuracy, streaks, and topic mastery at a glance."
+      },
+      "topics": {
+        "title": "All Topics | DailyDev",
+        "description": "Explore 23 developer topics including JavaScript, TypeScript, React, Node.js, design patterns, and more."
+      },
+      "history": {
+        "title": "Session History | DailyDev",
+        "description": "Review your past quiz sessions, scores, and learning progress over time."
+      },
+      "bookmarks": {
+        "title": "Bookmarks | DailyDev",
+        "description": "Your saved developer questions for quick review and focused practice."
+      },
+      "schedule": {
+        "title": "SRS Schedule | DailyDev",
+        "description": "View your spaced repetition review schedule and upcoming questions."
+      },
+      "practice": {
+        "title": "Practice Mode | DailyDev",
+        "description": "Practice developer questions by topic and difficulty at your own pace."
+      },
+      "focus": {
+        "title": "Focus Mode | DailyDev",
+        "description": "Target your weak spots with AI-powered focus practice based on your accuracy data."
+      },
+      "challenge": {
+        "title": "Challenge Mode | DailyDev",
+        "description": "Test your speed and accuracy with timed developer quiz challenges."
+      },
+      "endless": {
+        "title": "Endless Mode | DailyDev",
+        "description": "Non-stop developer quiz questions — keep going as long as you want."
+      },
+      "wrongAnswers": {
+        "title": "Wrong Answers | DailyDev",
+        "description": "Review and retry the questions you got wrong to strengthen weak areas."
+      }
+    }
   },
   "common": {
     "home": "Home",

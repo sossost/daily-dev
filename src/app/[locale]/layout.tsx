@@ -10,6 +10,8 @@ import { ScrollToTop } from '@/components/ScrollToTop'
 import { getUserId } from '@/lib/supabase/getUserId'
 import { loadServerUserData } from '@/lib/supabase/loadUserData'
 import { SITE_URL } from '@/lib/constants'
+import { JsonLd } from '@/components/JsonLd'
+import { buildLocaleUrl } from '@/lib/buildLocaleUrl'
 import { routing } from '@/i18n/routing'
 
 type Props = {
@@ -22,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: 'metadata' })
 
   const alternateLanguages = Object.fromEntries(
-    routing.locales.map((l) => [l, `${SITE_URL}/${l}`]),
+    routing.locales.map((l) => [l, buildLocaleUrl(l)]),
   )
 
   return {
@@ -50,6 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [`${SITE_URL}/og.png`],
     },
     alternates: {
+      canonical: buildLocaleUrl(locale),
       languages: alternateLanguages,
     },
   }
@@ -89,6 +92,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
+        <JsonLd locale={locale} />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

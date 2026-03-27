@@ -2,7 +2,53 @@
   "metadata": {
     "title": "DailyDev - 매일 5분 개발 학습",
     "description": "매일 5분, 개발 핵심 개념을 학습하고 실력을 키워보세요.",
-    "tagline": "매일 5분, 개발 핵심 개념 학습"
+    "tagline": "매일 5분, 개발 핵심 개념 학습",
+    "pages": {
+      "session": {
+        "title": "데일리 세션 | DailyDev",
+        "description": "5분 안에 10문제를 풀고, 간격 반복 학습으로 개발 지식을 쌓아보세요."
+      },
+      "stats": {
+        "title": "학습 통계 | DailyDev",
+        "description": "정답률, 스트릭, 토픽별 숙련도 등 나의 학습 현황을 한눈에 확인하세요."
+      },
+      "topics": {
+        "title": "전체 토픽 | DailyDev",
+        "description": "JavaScript, TypeScript, React, Node.js, 디자인 패턴 등 23개 개발 토픽을 탐색하세요."
+      },
+      "history": {
+        "title": "세션 기록 | DailyDev",
+        "description": "지난 퀴즈 세션 기록과 점수, 학습 진행 상황을 확인하세요."
+      },
+      "bookmarks": {
+        "title": "북마크 | DailyDev",
+        "description": "저장한 개발 문제를 빠르게 복습하고 집중 연습하세요."
+      },
+      "schedule": {
+        "title": "SRS 일정 | DailyDev",
+        "description": "간격 반복 복습 일정과 예정된 문제를 확인하세요."
+      },
+      "practice": {
+        "title": "연습 모드 | DailyDev",
+        "description": "토픽과 난이도를 선택해 나만의 속도로 개발 문제를 연습하세요."
+      },
+      "focus": {
+        "title": "집중 모드 | DailyDev",
+        "description": "정답률 데이터 기반으로 취약한 부분을 집중 공략하세요."
+      },
+      "challenge": {
+        "title": "챌린지 모드 | DailyDev",
+        "description": "제한 시간 안에 개발 퀴즈를 풀며 속도와 정확도를 테스트하세요."
+      },
+      "endless": {
+        "title": "무한 모드 | DailyDev",
+        "description": "끝없이 이어지는 개발 퀴즈 — 원하는 만큼 계속 풀어보세요."
+      },
+      "wrongAnswers": {
+        "title": "오답 노트 | DailyDev",
+        "description": "틀렸던 문제를 다시 풀며 취약한 부분을 보강하세요."
+      }
+    }
   },
   "common": {
     "home": "홈",

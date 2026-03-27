@@ -1,31 +1,20 @@
 import type { MetadataRoute } from 'next'
-import type { Locale } from '@/i18n/routing'
 import { routing } from '@/i18n/routing'
-import { SITE_URL } from '@/lib/constants'
+import { buildLocaleUrl } from '@/lib/buildLocaleUrl'
 
-const STATIC_ROUTES = [
+/** Public pages only — user-specific pages (history, stats, bookmarks, schedule, wrong-answers) are noIndex. */
+const INDEXABLE_ROUTES = [
   '',
   '/session',
-  '/history',
-  '/stats',
-  '/schedule',
-  '/bookmarks',
   '/practice',
   '/focus',
   '/topics',
   '/challenge',
-  '/wrong-answers',
+  '/endless',
 ]
 
-function buildLocaleUrl(locale: Locale, route: string): string {
-  const path = locale === routing.defaultLocale
-    ? (route || '/')
-    : `/${locale}${route}`
-  return `${SITE_URL}${path}`
-}
-
 export default function sitemap(): MetadataRoute.Sitemap {
-  return STATIC_ROUTES.map((route) => {
+  return INDEXABLE_ROUTES.map((route) => {
     const languages = Object.fromEntries(
       routing.locales.map((locale) => [locale, buildLocaleUrl(locale, route)]),
     )
