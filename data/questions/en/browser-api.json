@@ -409,5 +409,170 @@
     "correctIndex": 3,
     "explanation": "In reality, it is the opposite. IndexedDB is a transaction-based database where all data operations are performed within transactions. localStorage has no concept of transactions and each operation executes independently. IndexedDB's transactions ensure data integrity and allow multiple operations to be performed atomically.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Terminology"
+  },
+  {
+    "id": "browser-api-026",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What values can document.visibilityState from the Page Visibility API return?",
+    "options": [
+      "active, inactive",
+      "visible, hidden",
+      "foreground, background",
+      "shown, minimized"
+    ],
+    "correctIndex": 1,
+    "explanation": "document.visibilityState returns one of two values: 'visible' or 'hidden'. It is 'visible' when the tab is in the foreground, and 'hidden' when the tab is minimized or another tab is active. Combined with the visibilitychange event, you can perform optimizations like pausing videos or stopping animations when the tab loses visibility.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilityState"
+  },
+  {
+    "id": "browser-api-027",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const file = new File(['Hello, World!'], 'greeting.txt', { type: 'text/plain' });\nconsole.log(file.name);\nconsole.log(file.size);\nconsole.log(file instanceof Blob);",
+    "options": [
+      "greeting.txt, 13, false",
+      "greeting, 13, true",
+      "greeting.txt, undefined, true",
+      "greeting.txt, 13, true"
+    ],
+    "correctIndex": 3,
+    "explanation": "The File object is a subclass of Blob, so file instanceof Blob is true. The first argument to the File constructor is a content array, and 'Hello, World!' is 13 bytes, so size is 13. The second argument 'greeting.txt' is set as the file name. The File API allows programmatic file creation in addition to handling user-uploaded files.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/File/File"
+  },
+  {
+    "id": "browser-api-028",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "The following code attempts to read a file using FileReader. What is the issue?",
+    "code": "const reader = new FileReader();\nconst file = new File(['test content'], 'test.txt');\nreader.readAsText(file);\nconsole.log(reader.result);",
+    "options": [
+      "readAsDataURL should be used instead of readAsText",
+      "A Blob should be used instead of File",
+      "readAsText works asynchronously, so reader.result is still null; the result should be read in the onload event",
+      "The file should be passed as an argument to the FileReader constructor"
+    ],
+    "correctIndex": 2,
+    "explanation": "All FileReader read methods (readAsText, readAsDataURL, readAsArrayBuffer) work asynchronously. When file reading completes, the load event fires, and only then can the result be retrieved from reader.result. Accessing it synchronously right after calling readAsText returns null because reading hasn't completed yet.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsText"
+  },
+  {
+    "id": "browser-api-029",
+    "topic": "browser-api",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which correctly describes the difference between window.postMessage() and BroadcastChannel?",
+    "options": [
+      "BroadcastChannel supports cross-origin communication, while postMessage only works within the same origin",
+      "postMessage can only send strings, while BroadcastChannel can also send objects",
+      "Both APIs have identical functionality and are interchangeable",
+      "postMessage sends messages to a specific window and supports cross-origin, while BroadcastChannel broadcasts to all contexts within the same origin"
+    ],
+    "correctIndex": 3,
+    "explanation": "window.postMessage() sends messages to a specific window reference and supports cross-origin communication via the targetOrigin parameter. It is useful for communicating with iframes or windows opened via window.open(). BroadcastChannel broadcasts messages to all tabs, windows, iframes, and Workers within the same origin. Both APIs use structured cloning to transfer objects.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage"
+  },
+  {
+    "id": "browser-api-030",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const mq = window.matchMedia('(min-width: 768px)');\nconsole.log(typeof mq.matches);\nconsole.log(typeof mq.media);",
+    "options": [
+      "boolean, string",
+      "string, string",
+      "boolean, object",
+      "object, string"
+    ],
+    "correctIndex": 0,
+    "explanation": "window.matchMedia() returns a MediaQueryList object. The matches property returns a boolean indicating whether the media query currently matches, and the media property returns the parsed media query as a string. Using addEventListener('change', ...) allows you to detect media query state changes as the viewport size changes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia"
+  },
+  {
+    "id": "browser-api-031",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Why is navigator.sendBeacon() more suitable than fetch() or XMLHttpRequest for sending data during page unload?",
+    "options": [
+      "Because sendBeacon can transmit larger data payloads",
+      "Because sendBeacon executes synchronously and is guaranteed to complete before the page closes",
+      "Because sendBeacon delegates transmission to the browser, which ensures delivery asynchronously without delaying page unload",
+      "Because sendBeacon can make cross-origin requests without CORS"
+    ],
+    "correctIndex": 2,
+    "explanation": "navigator.sendBeacon() delegates data transmission to the browser. Even after the page unloads, the browser completes the transmission in the background. fetch() or XMLHttpRequest requests may be cancelled during page unload, and sending synchronously delays page closure. It is primarily used for sending analytics data and logs.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon"
+  },
+  {
+    "id": "browser-api-032",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const event = new CustomEvent('build', {\n  detail: { time: Date.now(), version: '1.0' }\n});\n\nconsole.log(event.type);\nconsole.log(event.detail.version);\nconsole.log(event.bubbles);",
+    "options": [
+      "build, 1.0, true",
+      "build, 1.0, false",
+      "CustomEvent, 1.0, false",
+      "build, undefined, true"
+    ],
+    "correctIndex": 1,
+    "explanation": "The first argument to the CustomEvent constructor is the event type name, so event.type is 'build'. The detail property provides access to the passed object, including version. The default value of bubbles is false, so unless { bubbles: true } is explicitly set, the event does not bubble up the DOM tree.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent"
+  },
+  {
+    "id": "browser-api-033",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The following code attempts to generate a hash using the Web Crypto API. What is the issue?",
+    "code": "async function hashPassword(password) {\n  const hash = await crypto.subtle.digest('SHA-256', password);\n  return hash;\n}",
+    "options": [
+      "SHA-512 should be used instead of SHA-256",
+      "crypto.subtle is only available over HTTP",
+      "The second argument to digest must be an ArrayBuffer or TypedArray, not a string — it needs to be encoded with TextEncoder",
+      "crypto.subtle.digest is a synchronous function, so await should be removed"
+    ],
+    "correctIndex": 2,
+    "explanation": "The second argument to crypto.subtle.digest() must be a BufferSource (ArrayBuffer, TypedArray, or DataView). Passing a string directly throws a TypeError. You need to convert the string to a Uint8Array using new TextEncoder().encode(password) before passing it. Additionally, the return value is an ArrayBuffer, which may need to be converted to a hex string if needed.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest"
+  },
+  {
+    "id": "browser-api-034",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which object is used to transfer data during a drag operation in the Drag and Drop API?",
+    "options": [
+      "DragEvent.target",
+      "DragEvent.dragData",
+      "DragEvent.payload",
+      "DragEvent.dataTransfer"
+    ],
+    "correctIndex": 3,
+    "explanation": "The DataTransfer object is accessed through the dataTransfer property of DragEvent. Data is set using setData() and retrieved using getData(). The common pattern is to store data with setData('text/plain', value) at drag start (dragstart event) and read it with getData('text/plain') at drop (drop event).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer"
+  },
+  {
+    "id": "browser-api-035",
+    "topic": "browser-api",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which comparison between the Web Animations API (element.animate()) and CSS Transitions/Animations is correct?",
+    "options": [
+      "CSS animations always perform better than JavaScript",
+      "The Web Animations API cannot use GPU acceleration",
+      "The Web Animations API allows programmatic control such as pausing, changing playback rate, and detecting completion",
+      "CSS Transitions support keyframe-based animations but the Web Animations API does not"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Web Animations API provides fine-grained programmatic control through the Animation object created by element.animate(), including pause(), play(), reverse(), playbackRate changes, and a finished Promise. It uses the same rendering pipeline as CSS animations, so GPU acceleration applies equally. It is useful when CSS alone cannot handle dynamic conditional animation control.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API"
   }
 ]

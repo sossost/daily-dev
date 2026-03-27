@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-03-28
+
+### Features
+
+- **content**: add 10 web-security questions (026-035) (`62afa1f`)
+
 ## 2026-03-27
 
 ### Features
