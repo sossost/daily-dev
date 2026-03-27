@@ -325,5 +325,170 @@
     "correctIndex": 2,
     "explanation": "Calling process.exit() terminates the process immediately even if pending asynchronous operations (timers, I/O, etc.) have not completed. In contrast, natural termination occurs automatically when there is no more work for the event loop to process. Caution is needed as asynchronous operations like log writing may be missed with process.exit().",
     "sourceUrl": "https://nodejs.org/api/process.html#processexitcode"
+  },
+  {
+    "id": "nodejs-021",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct form of the error-first callback pattern in Node.js?",
+    "options": [
+      "callback(result, error)",
+      "callback(error, result)",
+      "callback({ error, result })",
+      "callback(result)"
+    ],
+    "correctIndex": 1,
+    "explanation": "In the Node.js error-first callback pattern, the first argument is the error object and the second argument is the result. When there is no error, the first argument is null. This pattern is consistently used as a convention throughout Node.js core modules like fs, http, and more.",
+    "sourceUrl": "https://nodejs.org/en/learn/asynchronous-work/javascript-asynchronous-programming-and-callbacks"
+  },
+  {
+    "id": "nodejs-022",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Node.js code?",
+    "code": "const path = require('path');\nconsole.log(path.join('/users', 'admin', '..', 'guest', 'docs'));",
+    "options": [
+      "/users/admin/../guest/docs",
+      "/users/guest/docs",
+      "/users/admin/guest/docs",
+      "users/guest/docs"
+    ],
+    "correctIndex": 1,
+    "explanation": "path.join() concatenates path segments and normalizes the result by resolving '..' references. '/users' + 'admin' + '..' causes '..' to cancel out 'admin', returning to '/users', then 'guest/docs' is appended to produce '/users/guest/docs'.",
+    "sourceUrl": "https://nodejs.org/api/path.html#pathjoinpaths"
+  },
+  {
+    "id": "nodejs-023",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Node.js code?",
+    "code": "// moduleA.js\nlet count = 0;\nmodule.exports = { increment: () => ++count, getCount: () => count };\n\n// main.js\nconst a = require('./moduleA');\nconst b = require('./moduleA');\na.increment();\na.increment();\nconsole.log(b.getCount());",
+    "options": [
+      "0",
+      "1",
+      "2",
+      "undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "Node.js caches modules in require.cache after the first load. Subsequent require() calls for the same module return the cached object. Therefore a and b reference the same module instance, and after calling a.increment() twice, b.getCount() also returns 2.",
+    "sourceUrl": "https://nodejs.org/api/modules.html#caching"
+  },
+  {
+    "id": "nodejs-024",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between path.resolve() and path.join() in Node.js?",
+    "options": [
+      "path.resolve() always returns an absolute path, while path.join() simply concatenates segments and may return a relative path",
+      "path.join() always returns an absolute path",
+      "path.resolve() only works on Windows",
+      "Both always return identical results"
+    ],
+    "correctIndex": 0,
+    "explanation": "path.resolve() processes paths from right to left until it constructs an absolute path. If no absolute segment is found, it prepends the current working directory, always returning an absolute path. path.join() simply concatenates segments with the platform separator.",
+    "sourceUrl": "https://nodejs.org/api/path.html#pathresolvepaths"
+  },
+  {
+    "id": "nodejs-025",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the following code not handle SIGTERM signals properly?",
+    "code": "const http = require('http');\nconst server = http.createServer((req, res) => {\n  res.end('OK');\n});\nserver.listen(3000);\n\nprocess.on('SIGTERM', () => {\n  console.log('Shutting down...');\n  process.exit(0);\n});",
+    "options": [
+      "SIGTERM events are not supported in Node.js",
+      "process.exit(1) should be used instead of process.exit(0)",
+      "server.close() should be called to gracefully close in-flight connections before exiting",
+      "The SIGTERM handler must be registered before server.listen()"
+    ],
+    "correctIndex": 2,
+    "explanation": "process.exit(0) terminates immediately, abruptly cutting off any in-flight HTTP requests. For graceful shutdown, server.close() should be called to stop accepting new connections and allow existing connections to complete before the process exits. This is an essential pattern for production servers.",
+    "sourceUrl": "https://nodejs.org/api/net.html#serverclosecallback"
+  },
+  {
+    "id": "nodejs-026",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following Node.js code?",
+    "code": "const { promisify } = require('util');\n\nfunction legacy(value, callback) {\n  if (value < 0) {\n    callback(new Error('negative'));\n  } else {\n    callback(null, value * 2);\n  }\n}\n\nconst promisified = promisify(legacy);\n\npromisified(5)\n  .then(result => console.log('A:', result))\n  .catch(err => console.log('B:', err.message));\n\npromisified(-1)\n  .then(result => console.log('C:', result))\n  .catch(err => console.log('D:', err.message));",
+    "options": [
+      "A: 10 followed by D: negative",
+      "A: 10 followed by C: -2",
+      "B: negative followed by D: negative",
+      "D: negative followed by A: 10"
+    ],
+    "correctIndex": 0,
+    "explanation": "util.promisify() converts error-first callback functions into Promise-based functions. legacy(5, cb) calls cb(null, 10), which resolves to 10, outputting 'A: 10'. legacy(-1, cb) calls cb(Error('negative')), which rejects, outputting 'D: negative'.",
+    "sourceUrl": "https://nodejs.org/api/util.html#utilpromisifyoriginal"
+  },
+  {
+    "id": "nodejs-027",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "When does backpressure occur in Node.js streams, and what is the correct way to handle it?",
+    "options": [
+      "It occurs when the read stream is too slow, and write speed should be increased",
+      "It occurs when the read stream is faster than the write stream — when write() returns false, writing should pause until the drain event",
+      "It only occurs with network latency and timeouts should be increased",
+      "It occurs when memory is low and highWaterMark should always be set to maximum"
+    ],
+    "correctIndex": 1,
+    "explanation": "Backpressure occurs when a Readable produces data faster than a Writable can consume it. When writable.write() returns false, the internal buffer has reached highWaterMark, so additional writes should stop until the 'drain' event fires. Using pipe() handles this automatically.",
+    "sourceUrl": "https://nodejs.org/en/learn/modules/backpressuring-in-streams"
+  },
+  {
+    "id": "nodejs-028",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the following code using AbortController for fetch cancellation not work correctly?",
+    "code": "async function fetchWithTimeout(url, ms) {\n  const controller = new AbortController();\n  setTimeout(() => controller.abort(), ms);\n  try {\n    const res = await fetch(url, { signal: controller.signal });\n    return await res.json();\n  } catch (err) {\n    if (err.name === 'AbortError') {\n      return { error: 'timeout' };\n    }\n    throw err;\n  }\n}",
+    "options": [
+      "AbortController is not supported in Node.js",
+      "http.request should be used instead of fetch",
+      "Even when the request completes successfully, the setTimeout timer remains active and can delay process termination",
+      "TimeoutError should be checked instead of AbortError"
+    ],
+    "correctIndex": 2,
+    "explanation": "Even when the request succeeds before the timeout, the setTimeout timer remains in the event loop, which can prevent the Node.js process from terminating naturally. The timer should be cleaned up with clearTimeout(), or AbortSignal.timeout(ms) can be used instead to avoid this issue.",
+    "sourceUrl": "https://nodejs.org/api/globals.html#class-abortcontroller"
+  },
+  {
+    "id": "nodejs-029",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What information do os.cpus() and os.freemem() return in Node.js?",
+    "options": [
+      "os.cpus() returns CPU temperature, and os.freemem() returns total memory",
+      "os.cpus() returns an array of CPU core info, and os.freemem() returns available system memory in bytes",
+      "os.cpus() returns CPU utilization, and os.freemem() returns free disk space",
+      "Both return the process's own resource usage"
+    ],
+    "correctIndex": 1,
+    "explanation": "os.cpus() returns an array of objects containing model, speed, and usage time information for each logical CPU core. os.freemem() returns the amount of available system memory in bytes. These provide system-level information — to check the process's own memory usage, use process.memoryUsage() instead.",
+    "sourceUrl": "https://nodejs.org/api/os.html#oscpus"
+  },
+  {
+    "id": "nodejs-030",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "When does the unhandledRejection event occur in Node.js?",
+    "options": [
+      "When a synchronous error occurs without a try-catch block",
+      "When an EventEmitter's error event has no listener",
+      "When a Promise is rejected but no .catch() handler or try-catch is attached",
+      "When an error occurs in a setTimeout callback"
+    ],
+    "correctIndex": 2,
+    "explanation": "The unhandledRejection event fires when a Promise is rejected but has no .catch() handler or async/await try-catch to handle it. Since Node.js 15, unhandled Promise rejections terminate the process by default, making it important to add proper error handling to all Promises.",
+    "sourceUrl": "https://nodejs.org/api/process.html#event-unhandledrejection"
   }
 ]

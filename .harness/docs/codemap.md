@@ -194,7 +194,7 @@
 - event-loop.json — 28 questions
 - git-advanced.json — 20 questions
 - network.json — 20 questions
-- nodejs.json — 20 questions
+- nodejs.json — 30 questions
 - promise.json — 28 questions
 - prototype.json — 28 questions
 - react-basics.json — 30 questions
@@ -217,7 +217,7 @@
 - event-loop.json — 28 questions
 - git-advanced.json — 20 questions
 - network.json — 20 questions
-- nodejs.json — 20 questions
+- nodejs.json — 30 questions
 - promise.json — 28 questions
 - prototype.json — 28 questions
 - react-basics.json — 30 questions

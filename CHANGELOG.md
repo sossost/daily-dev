@@ -4,6 +4,10 @@
 
 ## 2026-03-27
 
+### Features
+
+- **content**: add 10 design-patterns questions (`98ee3dd`)
+
 ### Bug Fixes
 
 - **harness**: add strategy.md to manager + fix loop in run-agent.sh (`f87c950`)
