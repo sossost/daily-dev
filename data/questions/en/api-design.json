@@ -403,5 +403,168 @@
     "correctIndex": 1,
     "explanation": "Path parameters (/users/:id) are used to uniquely identify a specific resource. Query parameters (/users?role=admin&sort=name) are used to filter, sort, and paginate resource collections. This distinction clarifies the meaning of URIs and improves API consistency.",
     "sourceUrl": "https://restfulapi.net/resource-naming/"
+  },
+  {
+    "id": "api-design-026",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What does the HTTP response header Cache-Control: no-store mean?",
+    "options": [
+      "Cached data can be used without revalidation",
+      "The response must not be stored in any cache",
+      "Cache data is automatically deleted when it expires",
+      "Caching is enabled but max-age is set to 0"
+    ],
+    "correctIndex": 1,
+    "explanation": "Cache-Control: no-store instructs that the response must not be stored in any cache, including browsers and intermediate proxies. It is used for APIs handling sensitive information like personal data or financial data. Unlike no-cache, no-store prohibits storing the response entirely.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control"
+  },
+  {
+    "id": "api-design-027",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the order of console output in the following code?",
+    "code": "const controller = new AbortController();\nsetTimeout(() => controller.abort(), 0);\n\nfetch('/api/slow', { signal: controller.signal })\n  .then(() => console.log('A'))\n  .catch(() => console.log('B'));\n\nconsole.log('C');",
+    "options": [
+      "A → C",
+      "C → A",
+      "C → B",
+      "B → C"
+    ],
+    "correctIndex": 2,
+    "explanation": "console.log('C') is synchronous code and executes immediately, so 'C' is logged first. setTimeout schedules abort() as a macrotask after 0ms, and the fetch catch handler is processed in the microtask queue, logging 'B'. Since fetch is aborted, the catch handler runs instead of then.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort"
+  },
+  {
+    "id": "api-design-028",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What concurrency problem can occur with the following API design?\n\nGET /api/account/balance → { balance: 1000 }\nPUT /api/account/balance → { balance: 900 }",
+    "options": [
+      "GET requests are slower than PUT requests",
+      "If two clients read the balance simultaneously and each withdraws, one withdrawal can be lost",
+      "The PUT method cannot be used to modify a balance",
+      "Negative values cannot be stored in the balance field"
+    ],
+    "correctIndex": 1,
+    "explanation": "If two clients simultaneously read a balance of 1000 and each withdraws 100, both send PUT requests with balance: 900, resulting in a final balance of 900 instead of the correct 800. This is known as the 'Lost Update' problem and can be solved using optimistic locking (ETag/If-Match) or transaction patterns.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Match"
+  },
+  {
+    "id": "api-design-029",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which correctly describes the difference between Webhooks and Polling in API design?",
+    "options": [
+      "Webhooks push data to the client's URL when an event occurs, while Polling requires the client to periodically check the server for changes",
+      "Polling is more suitable for real-time notifications, while Webhooks are suitable for batch processing",
+      "Webhooks are a separate communication method that does not use the HTTP protocol",
+      "Polling uses fewer server resources, while Webhooks create more server load"
+    ],
+    "correctIndex": 0,
+    "explanation": "Webhooks are a push-based approach where the server sends HTTP POST requests to a pre-registered client URL when specific events occur. Polling is a pull-based approach where the client calls the server API at set intervals to check for changes. Webhooks are more efficient by eliminating unnecessary requests, but require the client to expose a publicly accessible endpoint.",
+    "sourceUrl": "https://docs.github.com/en/webhooks/about-webhooks"
+  },
+  {
+    "id": "api-design-030",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the primary purpose of an API Idempotency Key?",
+    "options": [
+      "To increase the authentication level of API requests",
+      "To ensure duplicate requests caused by network failures produce the same result",
+      "To encrypt the data in the request body",
+      "To improve the server's response speed"
+    ],
+    "correctIndex": 1,
+    "explanation": "An idempotency key is a unique key included by the client in the request header so that the server does not process duplicate requests with the same key during network timeouts or retries. For example, in a payment API, resending with the same idempotency key causes the server to return the previous result, preventing double charges.",
+    "sourceUrl": "https://stripe.com/docs/api/idempotent_requests"
+  },
+  {
+    "id": "api-design-031",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the value of the 'Content-Type' header in the following code?",
+    "code": "const headers = new Headers();\nheaders.append('Content-Type', 'text/plain');\nheaders.append('Content-Type', 'application/json');\nconsole.log(headers.get('Content-Type'));",
+    "options": [
+      "'text/plain, application/json'",
+      "'application/json'",
+      "'text/plain'",
+      "null"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Headers append() method does not overwrite existing values but adds them separated by a comma. So the result is 'text/plain, application/json'. To replace the value, use the set() method instead of append(). This behavior is useful for headers like Accept that allow multiple values.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Headers/append"
+  },
+  {
+    "id": "api-design-032",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the problem with the following Circuit Breaker implementation?\n\nlet failures = 0;\nasync function callAPI(url) {\n  if (failures > 5) throw new Error('Circuit open');\n  try {\n    return await fetch(url);\n  } catch (e) {\n    failures++;\n    throw e;\n  }\n}",
+    "options": [
+      "The Promise returned by fetch is not handled correctly",
+      "Once the circuit opens, it can never close again, permanently blocking the service",
+      "The failures variable should be declared with const",
+      "Errors should not be re-thrown in the catch block"
+    ],
+    "correctIndex": 1,
+    "explanation": "In this implementation, once failures exceeds 5, the circuit opens but there is no mechanism to reset the failure counter. A proper Circuit Breaker pattern requires timer-based recovery logic that transitions to a 'Half-Open' state after a certain time, sends test requests, and closes the circuit if they succeed.",
+    "sourceUrl": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+  },
+  {
+    "id": "api-design-033",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the main benefit of the OpenAPI (Swagger) specification?",
+    "options": [
+      "It optimizes the API's runtime performance",
+      "It defines the API contract in a machine-readable format, enabling auto-generation of documentation, client code, and tests",
+      "It automatically applies authentication and authorization to APIs",
+      "It automatically caches API responses to reduce server load"
+    ],
+    "correctIndex": 1,
+    "explanation": "The OpenAPI specification defines API endpoints, parameters, response formats, and more in a standardized JSON/YAML format. This enables automatic generation of interactive documentation (Swagger UI), client SDKs in various languages, and test stubs, making the contract between API producers and consumers explicit.",
+    "sourceUrl": "https://swagger.io/specification/"
+  },
+  {
+    "id": "api-design-034",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What cache option should be used for the second fetch call to bypass the cache in the following code?",
+    "code": "// First request (cached)\nawait fetch('/api/data');\n\n// Second request (bypass cache)\nawait fetch('/api/data', { cache: '???' });",
+    "options": [
+      "'default'",
+      "'no-store'",
+      "'only-if-cached'",
+      "'force-cache'"
+    ],
+    "correctIndex": 1,
+    "explanation": "cache: 'no-store' completely ignores the cache and always sends a fresh request to the server. 'default' follows normal cache behavior, 'force-cache' uses the cache regardless of expiration, and 'only-if-cached' only responds if the resource is in the cache.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Request/cache"
+  },
+  {
+    "id": "api-design-035",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between HTTP status codes 401 Unauthorized and 403 Forbidden?",
+    "options": [
+      "401 means the client is not authenticated, while 403 means the client is authenticated but lacks permission",
+      "401 is a server error and 403 is a client error",
+      "401 is used when a resource doesn't exist, and 403 when a resource has been deleted",
+      "401 and 403 have the same meaning and are interchangeable"
+    ],
+    "correctIndex": 0,
+    "explanation": "401 Unauthorized, despite its name, actually means 'authentication failure' — the client has not proven their identity. 403 Forbidden means the client is authenticated but does not have authorization to access the resource. For example, a regular user accessing an admin API would receive a 403.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
   }
 ]

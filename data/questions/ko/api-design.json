@@ -403,5 +403,168 @@
     "correctIndex": 1,
     "explanation": "경로 파라미터(/users/:id)는 특정 리소스를 고유하게 식별하는 데 사용합니다. 쿼리 파라미터(/users?role=admin&sort=name)는 리소스 컬렉션을 필터링, 정렬, 페이지네이션하는 데 사용합니다. 이러한 구분은 URI의 의미를 명확하게 하고 API의 일관성을 높입니다.",
     "sourceUrl": "https://restfulapi.net/resource-naming/"
+  },
+  {
+    "id": "api-design-026",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "HTTP 응답 헤더 Cache-Control: no-store의 의미는 무엇인가요?",
+    "options": [
+      "캐시된 데이터를 재검증 없이 사용할 수 있다",
+      "응답을 어떤 캐시에도 저장하지 않는다",
+      "캐시 데이터가 만료되면 자동으로 삭제된다",
+      "캐시를 사용하되 max-age를 0으로 설정한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Cache-Control: no-store는 응답을 브라우저나 중간 프록시 등 어떤 캐시에도 저장하지 말라는 지시입니다. 개인 정보나 금융 데이터처럼 민감한 정보를 다루는 API에서 사용합니다. no-cache와 다르게, no-store는 아예 저장 자체를 금지합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Cache-Control"
+  },
+  {
+    "id": "api-design-027",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 콘솔에 출력되는 순서는 무엇인가요?",
+    "code": "const controller = new AbortController();\nsetTimeout(() => controller.abort(), 0);\n\nfetch('/api/slow', { signal: controller.signal })\n  .then(() => console.log('A'))\n  .catch(() => console.log('B'));\n\nconsole.log('C');",
+    "options": [
+      "A → C",
+      "C → A",
+      "C → B",
+      "B → C"
+    ],
+    "correctIndex": 2,
+    "explanation": "console.log('C')는 동기 코드이므로 즉시 실행되어 'C'가 먼저 출력됩니다. setTimeout은 매크로태스크로 0ms 후 abort()를 호출하고, fetch의 catch 핸들러는 마이크로태스크 큐에서 처리되어 'B'가 출력됩니다. fetch가 abort되었으므로 then이 아닌 catch가 실행됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/AbortController/abort"
+  },
+  {
+    "id": "api-design-028",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 API 설계에서 동시성 문제가 발생할 수 있는 시나리오는 무엇인가요?\n\nGET /api/account/balance → { balance: 1000 }\nPUT /api/account/balance → { balance: 900 }",
+    "options": [
+      "GET 요청이 PUT 요청보다 느리다",
+      "두 클라이언트가 동시에 잔액을 읽고 각각 출금하면 하나의 출금이 무시될 수 있다",
+      "PUT 메서드는 잔액 수정에 사용할 수 없다",
+      "balance 필드에 음수가 저장될 수 없다"
+    ],
+    "correctIndex": 1,
+    "explanation": "두 클라이언트가 동시에 잔액 1000을 읽고 각각 100을 출금하면, 둘 다 balance: 900으로 PUT 요청을 보내 최종 잔액이 900이 됩니다. 실제로는 800이 되어야 합니다. 이를 'Lost Update' 문제라 하며, 낙관적 잠금(ETag/If-Match)이나 트랜잭션 패턴으로 해결할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/If-Match"
+  },
+  {
+    "id": "api-design-029",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "API 설계에서 Webhook과 Polling 방식의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "Webhook은 서버가 이벤트 발생 시 클라이언트의 URL로 데이터를 전송하고, Polling은 클라이언트가 주기적으로 서버에 변경을 확인한다",
+      "Polling은 실시간 알림에 더 적합하고, Webhook은 배치 처리에 적합하다",
+      "Webhook은 HTTP 프로토콜을 사용하지 않는 별도의 통신 방식이다",
+      "Polling은 서버 리소스를 적게 사용하고, Webhook은 서버 부하가 크다"
+    ],
+    "correctIndex": 0,
+    "explanation": "Webhook은 서버가 특정 이벤트 발생 시 미리 등록된 클라이언트 URL로 HTTP POST 요청을 보내는 푸시 방식입니다. Polling은 클라이언트가 정해진 간격으로 서버에 API를 호출하여 변경사항을 확인하는 풀 방식입니다. Webhook은 불필요한 요청을 줄여 효율적이지만, 클라이언트가 수신 가능한 엔드포인트를 공개해야 합니다.",
+    "sourceUrl": "https://docs.github.com/en/webhooks/about-webhooks"
+  },
+  {
+    "id": "api-design-030",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "API 멱등성 키(Idempotency Key)의 주요 목적은 무엇인가요?",
+    "options": [
+      "API 요청의 인증 수준을 높인다",
+      "네트워크 장애로 인한 중복 요청이 동일한 결과를 보장하게 한다",
+      "요청 본문의 데이터를 암호화한다",
+      "서버의 응답 속도를 향상시킨다"
+    ],
+    "correctIndex": 1,
+    "explanation": "멱등성 키는 클라이언트가 고유한 키를 요청 헤더에 포함시켜, 네트워크 타임아웃이나 재시도 시 서버가 동일한 키의 요청을 중복 처리하지 않도록 합니다. 예를 들어 결제 API에서 같은 멱등성 키로 재요청하면 서버는 이전 결과를 반환하여 이중 결제를 방지합니다.",
+    "sourceUrl": "https://stripe.com/docs/api/idempotent_requests"
+  },
+  {
+    "id": "api-design-031",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드에서 headers 객체의 'Content-Type' 값은 무엇인가요?",
+    "code": "const headers = new Headers();\nheaders.append('Content-Type', 'text/plain');\nheaders.append('Content-Type', 'application/json');\nconsole.log(headers.get('Content-Type'));",
+    "options": [
+      "'text/plain, application/json'",
+      "'application/json'",
+      "'text/plain'",
+      "null"
+    ],
+    "correctIndex": 0,
+    "explanation": "Headers의 append() 메서드는 기존 값을 덮어쓰지 않고 쉼표로 구분하여 값을 추가합니다. 따라서 'text/plain, application/json'이 됩니다. 값을 교체하려면 append() 대신 set() 메서드를 사용해야 합니다. 이는 Accept 같은 여러 값을 허용하는 헤더에서 유용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Headers/append"
+  },
+  {
+    "id": "api-design-032",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 Circuit Breaker 구현에서 문제점은 무엇인가요?\n\nlet failures = 0;\nasync function callAPI(url) {\n  if (failures > 5) throw new Error('Circuit open');\n  try {\n    return await fetch(url);\n  } catch (e) {\n    failures++;\n    throw e;\n  }\n}",
+    "options": [
+      "fetch가 반환하는 Promise를 올바르게 처리하지 않았다",
+      "Circuit이 한번 열리면 다시 닫힐 수 없어 서비스가 영구 차단된다",
+      "failures 변수를 const로 선언해야 한다",
+      "catch 블록에서 에러를 다시 던지면 안 된다"
+    ],
+    "correctIndex": 1,
+    "explanation": "이 구현에서는 failures가 5를 초과하면 Circuit이 열리지만, 실패 카운터를 리셋하는 메커니즘이 없습니다. 올바른 Circuit Breaker 패턴에는 일정 시간 후 'Half-Open' 상태로 전환하여 테스트 요청을 보내고, 성공하면 Circuit을 닫는 타이머 기반 복구 로직이 필요합니다.",
+    "sourceUrl": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+  },
+  {
+    "id": "api-design-033",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "OpenAPI(Swagger) 명세의 주요 이점은 무엇인가요?",
+    "options": [
+      "API의 런타임 성능을 최적화한다",
+      "API 계약을 기계가 읽을 수 있는 형식으로 정의하여 문서, 클라이언트 코드, 테스트를 자동 생성할 수 있다",
+      "API에 자동으로 인증 및 권한 부여를 적용한다",
+      "API 응답을 자동으로 캐싱하여 서버 부하를 줄인다"
+    ],
+    "correctIndex": 1,
+    "explanation": "OpenAPI 명세는 API의 엔드포인트, 파라미터, 응답 형식 등을 표준화된 JSON/YAML 형식으로 정의합니다. 이를 통해 인터랙티브 문서(Swagger UI), 다양한 언어의 클라이언트 SDK, 테스트 스텁 등을 자동으로 생성할 수 있어, API 생산자와 소비자 간의 계약을 명확하게 합니다.",
+    "sourceUrl": "https://swagger.io/specification/"
+  },
+  {
+    "id": "api-design-034",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 두 번째 fetch 호출이 캐시를 사용하지 않도록 하려면 어떤 cache 옵션을 사용해야 하나요?",
+    "code": "// 첫 번째 요청 (캐시됨)\nawait fetch('/api/data');\n\n// 두 번째 요청 (캐시 무시)\nawait fetch('/api/data', { cache: '???' });",
+    "options": [
+      "'default'",
+      "'no-store'",
+      "'only-if-cached'",
+      "'force-cache'"
+    ],
+    "correctIndex": 1,
+    "explanation": "cache: 'no-store'는 캐시를 완전히 무시하고 항상 서버에 새로운 요청을 보냅니다. 'default'는 일반적인 캐시 동작을, 'force-cache'는 캐시가 있으면 만료 여부와 관계없이 사용하며, 'only-if-cached'는 캐시에 있는 경우에만 응답합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Request/cache"
+  },
+  {
+    "id": "api-design-035",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "HTTP 상태 코드 401 Unauthorized와 403 Forbidden의 차이점은 무엇인가요?",
+    "options": [
+      "401은 인증되지 않은 상태이고, 403은 인증되었지만 권한이 없는 상태이다",
+      "401은 서버 오류이고, 403은 클라이언트 오류이다",
+      "401은 리소스가 없을 때, 403은 리소스가 삭제되었을 때 사용한다",
+      "401과 403은 동일한 의미이며 호환 가능하다"
+    ],
+    "correctIndex": 0,
+    "explanation": "401 Unauthorized는 이름과 달리 '인증(authentication) 실패'를 의미합니다. 클라이언트가 자신이 누구인지 증명하지 못한 상태입니다. 403 Forbidden은 인증은 되었지만 해당 리소스에 대한 권한(authorization)이 없는 상태입니다. 예를 들어 일반 사용자가 관리자 API에 접근하면 403을 반환합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Status/403"
   }
 ]
