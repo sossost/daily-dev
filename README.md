@@ -40,7 +40,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Git Advanced | 30 |
 | Network | 30 |
 | Node.js | 30 |
-| Promise | 28 |
+| Promise | 38 |
 | Prototype | 28 |
 | React Basics | 30 |
 | Scope | 30 |
@@ -50,7 +50,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Web Performance | 30 |
 | Web Security | 35 |
 
-**Total: 717 questions across 23 topics**
+**Total: 727 questions across 23 topics**
 
 ## Getting Started
 

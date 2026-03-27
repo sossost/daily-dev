@@ -461,5 +461,170 @@
     "correctIndex": 1,
     "explanation": "Promise.resolve() returns the argument as-is if it is already a Promise (specifically, a Promise from the same constructor). new Promise(resolve => resolve(value)) always creates a new Promise object. When the value is a plain non-Promise value, both expressions behave identically. This difference matters for avoiding unnecessary Promise wrapping and optimizing performance.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "promise-029",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "Promise.all([]).then(v => console.log(v));",
+    "options": [
+      "undefined",
+      "[]",
+      "Promise { <pending> }",
+      "A TypeError is thrown"
+    ],
+    "correctIndex": 1,
+    "explanation": "Passing an empty array to Promise.all() returns an immediately fulfilled Promise with an empty array ([]) as the value. This is the identity element behavior for empty input — since there are no Promises to reject, it immediately succeeds. In contrast, Promise.race([]) with an empty array stays pending forever.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+  },
+  {
+    "id": "promise-030",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What happens when an error is synchronously thrown inside a Promise executor function?",
+    "options": [
+      "The Promise is rejected with that error",
+      "A global error occurs and the program terminates",
+      "The error is ignored and the Promise stays pending",
+      "The executor function is re-executed"
+    ],
+    "correctIndex": 0,
+    "explanation": "When an error is thrown inside new Promise((resolve, reject) => { ... }), the Promise constructor automatically catches it and rejects the Promise with that error. This has the same effect as explicitly calling reject(error). Thanks to this behavior, errors inside the executor are safely converted to Promise rejections without needing try/catch.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
+  },
+  {
+    "id": "promise-031",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "async function foo() {\n  return 'hello';\n}\n\nconst result = foo();\nconsole.log(result instanceof Promise);\nconsole.log(typeof result);",
+    "options": [
+      "false, string",
+      "true, object",
+      "true, string",
+      "false, object"
+    ],
+    "correctIndex": 1,
+    "explanation": "async functions always return a Promise. Even though 'hello' is returned, it is automatically wrapped as Promise.resolve('hello'). Therefore result is a Promise instance — instanceof Promise is true, and typeof is 'object'. To access the async function's return value, you must use await or .then().",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "promise-032",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between sequential await in a for...of loop and parallel execution with Promise.all()?",
+    "options": [
+      "Sequential await completes each task before starting the next, while Promise.all starts all tasks simultaneously for parallel execution",
+      "Promise.all runs sequentially but processes faster",
+      "Sequential await is always faster than Promise.all",
+      "Both approaches have identical execution order and performance"
+    ],
+    "correctIndex": 0,
+    "explanation": "Using await in a for...of loop means each async operation completes before the next one starts (sequential execution). Promise.all(items.map(fn)) starts all async operations immediately and waits for all to complete (parallel execution). For independent tasks, parallel processing with Promise.all significantly reduces total elapsed time. Use sequential execution only when order matters or there are dependencies between tasks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of"
+  },
+  {
+    "id": "promise-033",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the problem in the following code?",
+    "code": "function timeout(ms) {\n  return new Promise((_, reject) => {\n    setTimeout(() => reject(new Error('Timeout')), ms);\n  });\n}\n\nasync function fetchWithTimeout(url) {\n  const result = await Promise.race([\n    fetch(url),\n    timeout(5000)\n  ]);\n  return result.json();\n}",
+    "options": [
+      "Promise.race cannot accept an array as argument",
+      "Even if fetch succeeds, the timeout timer keeps running and may cause an unhandled rejection later",
+      "result.json() does not execute synchronously",
+      "The timeout function should use resolve instead of reject"
+    ],
+    "correctIndex": 1,
+    "explanation": "Promise.race() returns the result of the first settled Promise but does not cancel the remaining Promises. If fetch succeeds within 5 seconds, the result is returned, but the timeout's setTimeout continues running and will reject after 5 seconds. With no handler for this rejection, an unhandled rejection occurs. Use AbortController to cancel the fetch, or attach .catch() to the timeout Promise to solve this.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/AbortController"
+  },
+  {
+    "id": "promise-034",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const p = Promise.resolve('A');\n\np.then(v => console.log(v + '1'));\np.then(v => console.log(v + '2'));\np.then(v => console.log(v + '3'));",
+    "options": [
+      "A1",
+      "A3",
+      "A1, A2, A3",
+      "A1, A3, A2"
+    ],
+    "correctIndex": 2,
+    "explanation": "Attaching multiple then handlers to the same Promise creates branching, not chaining. Each then independently receives the same fulfillment value 'A'. They execute in the order registered in the microtask queue: A1, A2, A3. This differs from chaining (then().then().then()), where each handler receives the previous handler's return value instead of the original Promise's value.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises#chaining"
+  },
+  {
+    "id": "promise-035",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What happens when an empty array is passed to Promise.race()?",
+    "options": [
+      "It immediately fulfills with undefined",
+      "A TypeError is thrown",
+      "It immediately fulfills with an empty array",
+      "It stays pending forever"
+    ],
+    "correctIndex": 3,
+    "explanation": "Promise.race([]) with an empty array returns a Promise that stays pending forever because there are no Promises to settle. This contrasts with Promise.all([]), which immediately fulfills with an empty array. Since race returns the 'fastest result' and there are no Promises to compete, the result is never determined. This behavior can be an unintentional source of memory leaks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race"
+  },
+  {
+    "id": "promise-036",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What causes the unintended behavior in the following code?",
+    "code": "async function retryFetch(url, retries = 3) {\n  for (let i = 0; i < retries; i++) {\n    const res = await fetch(url).catch(() => null);\n    if (res) return res.json();\n  }\n  throw new Error('All retries failed');\n}",
+    "options": [
+      "await cannot be used in a for loop",
+      "catch(() => null) does not handle errors correctly",
+      "Even when res is truthy, HTTP error statuses (4xx, 5xx) are not checked, so failed responses are treated as successes",
+      "res.json() does not return a Promise"
+    ],
+    "correctIndex": 2,
+    "explanation": "fetch() only rejects on network errors. HTTP 4xx and 5xx responses do not cause rejection — they return a normal Response object. So even when res is not null (no network error), it could still be a server error response. You must check res.ok or res.status to handle HTTP errors. This is one of the most common mistakes with the fetch API.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#checking_that_the_fetch_was_successful"
+  },
+  {
+    "id": "promise-037",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between returning a value and returning a Promise from a then callback?",
+    "options": [
+      "Returning a value is processed synchronously, returning a Promise is processed asynchronously",
+      "Returning a value wraps it with Promise.resolve() and passes it to the next then, returning a Promise makes the chain wait until it settles",
+      "Returning a Promise passes the nested Promise as-is",
+      "Returning a value or a Promise behaves identically"
+    ],
+    "correctIndex": 1,
+    "explanation": "When a then callback returns a plain value, it is wrapped with Promise.resolve(value) and passed to the next then immediately (in the next microtask). When a Promise is returned, the chain waits until that Promise fulfills or rejects, then passes the fulfilled value to the next then. Thanks to this automatic flattening, returning a Promise does not create nesting, enabling clean chaining.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "promise-038",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Can a Promise's state be changed after it has been settled (fulfilled or rejected)?",
+    "options": [
+      "Calling resolve again changes it to a new value",
+      "Calling reject can change a fulfilled state to rejected",
+      "A Promise's state cannot be changed once settled (immutable)",
+      "The state can be changed within a then handler"
+    ],
+    "correctIndex": 2,
+    "explanation": "A Promise's state transitions only once from pending to either fulfilled or rejected. Any subsequent calls to resolve or reject are ignored. This immutability is a core design principle of Promises, ensuring that async operation results are predictable and stable. This guarantees that multiple then handlers always receive the same value.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
   }
 ]

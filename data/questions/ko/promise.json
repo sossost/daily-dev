@@ -461,5 +461,170 @@
     "correctIndex": 1,
     "explanation": "Promise.resolve()는 인자가 이미 Promise(정확히는 같은 생성자의 Promise)인 경우 새 Promise를 생성하지 않고 그 인자를 그대로 반환합니다. 반면 new Promise(resolve => resolve(value))는 항상 새 Promise 객체를 생성합니다. value가 Promise가 아닌 일반 값일 때는 두 표현의 동작이 동일합니다. 이 차이는 불필요한 Promise 래핑을 방지하고 성능을 최적화하는 데 중요합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "promise-029",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "Promise.all([]).then(v => console.log(v));",
+    "options": [
+      "undefined",
+      "[]",
+      "Promise { <pending> }",
+      "TypeError가 발생한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Promise.all()에 빈 배열을 전달하면 즉시 이행(fulfilled)된 Promise를 반환하며, 이행 값은 빈 배열([])입니다. 이는 빈 입력에 대한 항등원(identity element) 동작으로, 빈 배열에는 거부될 Promise가 없으므로 즉시 성공합니다. 반면 Promise.race([])에 빈 배열을 전달하면 영원히 pending 상태로 남습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+  },
+  {
+    "id": "promise-030",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Promise executor 함수 내부에서 동기적으로 에러를 throw하면 어떻게 되나요?",
+    "options": [
+      "Promise가 해당 에러로 거부(rejected)된다",
+      "전역 에러가 발생하여 프로그램이 종료된다",
+      "에러가 무시되고 Promise는 pending 상태로 남는다",
+      "executor 함수가 다시 실행된다"
+    ],
+    "correctIndex": 0,
+    "explanation": "new Promise((resolve, reject) => { ... }) 내부에서 에러를 throw하면, Promise 생성자가 이를 자동으로 catch하여 해당 에러로 Promise를 reject합니다. 이는 reject(error)를 명시적으로 호출하는 것과 동일한 효과입니다. 덕분에 executor 내부에서 try/catch 없이도 에러가 안전하게 Promise rejection으로 변환됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
+  },
+  {
+    "id": "promise-031",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "async function foo() {\n  return 'hello';\n}\n\nconst result = foo();\nconsole.log(result instanceof Promise);\nconsole.log(typeof result);",
+    "options": [
+      "false, string",
+      "true, object",
+      "true, string",
+      "false, object"
+    ],
+    "correctIndex": 1,
+    "explanation": "async 함수는 항상 Promise를 반환합니다. 'hello'라는 문자열을 return하더라도 자동으로 Promise.resolve('hello')로 래핑됩니다. 따라서 result는 Promise 인스턴스이며 instanceof Promise는 true, typeof는 'object'입니다. async 함수의 반환값에 접근하려면 await 또는 .then()을 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "promise-032",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "for...of 루프에서 순차적 await와 Promise.all()을 사용한 병렬 실행의 차이점으로 올바른 것은?",
+    "options": [
+      "순차적 await는 각 작업을 하나씩 완료한 후 다음 작업을 시작하고, Promise.all은 모든 작업을 동시에 시작하여 병렬로 실행한다",
+      "Promise.all은 순차적으로 실행하지만 더 빠르게 처리한다",
+      "순차적 await가 Promise.all보다 항상 빠르다",
+      "두 방식은 실행 순서와 성능이 동일하다"
+    ],
+    "correctIndex": 0,
+    "explanation": "for...of에서 await를 사용하면 각 비동기 작업이 완료된 후에 다음 작업이 시작됩니다(순차 실행). 반면 Promise.all(items.map(fn))은 모든 비동기 작업을 즉시 시작하고 모두 완료될 때까지 기다립니다(병렬 실행). 독립적인 작업은 Promise.all로 병렬 처리하면 전체 소요 시간이 크게 줄어듭니다. 순서가 중요하거나 의존성이 있는 경우에만 순차 실행을 사용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/for-await...of"
+  },
+  {
+    "id": "promise-033",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 발생하는 문제는 무엇인가요?",
+    "code": "function timeout(ms) {\n  return new Promise((_, reject) => {\n    setTimeout(() => reject(new Error('Timeout')), ms);\n  });\n}\n\nasync function fetchWithTimeout(url) {\n  const result = await Promise.race([\n    fetch(url),\n    timeout(5000)\n  ]);\n  return result.json();\n}",
+    "options": [
+      "Promise.race가 배열을 인자로 받을 수 없다",
+      "fetch가 성공해도 timeout의 타이머가 계속 실행되어 나중에 unhandled rejection이 발생할 수 있다",
+      "result.json()이 동기적으로 실행되지 않기 때문이다",
+      "timeout 함수가 reject 대신 resolve를 사용해야 한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Promise.race()는 가장 먼저 settled된 Promise의 결과를 반환하지만, 나머지 Promise를 취소하지 않습니다. fetch가 5초 이내에 성공하면 result를 받지만, timeout의 setTimeout은 여전히 실행 중이며 5초 후 reject합니다. 이 rejection에 핸들러가 없으므로 unhandled rejection이 발생합니다. AbortController를 사용하여 fetch를 취소하거나, timeout Promise에 .catch()를 연결하여 이 문제를 해결할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/AbortController"
+  },
+  {
+    "id": "promise-034",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const p = Promise.resolve('A');\n\np.then(v => console.log(v + '1'));\np.then(v => console.log(v + '2'));\np.then(v => console.log(v + '3'));",
+    "options": [
+      "A1",
+      "A3",
+      "A1, A2, A3",
+      "A1, A3, A2"
+    ],
+    "correctIndex": 2,
+    "explanation": "같은 Promise에 여러 then 핸들러를 등록하면 체이닝이 아닌 분기(branching)가 됩니다. 각 then은 독립적으로 같은 이행 값 'A'를 받습니다. 마이크로태스크 큐에 등록된 순서대로 실행되므로 A1, A2, A3 순으로 출력됩니다. 이는 체이닝(then().then().then())과 다르게, 각 핸들러가 이전 핸들러의 반환값이 아닌 원래 Promise의 값을 받습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Using_promises#chaining"
+  },
+  {
+    "id": "promise-035",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Promise.race()에 빈 배열을 전달하면 어떻게 되나요?",
+    "options": [
+      "즉시 undefined로 이행된다",
+      "TypeError가 발생한다",
+      "즉시 빈 배열로 이행된다",
+      "영원히 pending 상태로 남는다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Promise.race([])에 빈 배열을 전달하면 settled될 Promise가 없으므로 반환된 Promise는 영원히 pending 상태로 남습니다. 이는 Promise.all([])이 즉시 빈 배열로 이행되는 것과 대조적입니다. race는 '가장 빠른 결과'를 반환하는데, 경쟁할 Promise가 없으면 결과가 영원히 결정되지 않습니다. 이 동작은 의도치 않은 메모리 누수의 원인이 될 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/race"
+  },
+  {
+    "id": "promise-036",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 의도와 다르게 동작하는 원인은 무엇인가요?",
+    "code": "async function retryFetch(url, retries = 3) {\n  for (let i = 0; i < retries; i++) {\n    const res = await fetch(url).catch(() => null);\n    if (res) return res.json();\n  }\n  throw new Error('All retries failed');\n}",
+    "options": [
+      "for 루프에서 await를 사용할 수 없다",
+      "catch(() => null)이 에러를 올바르게 처리하지 못한다",
+      "res가 truthy하더라도 HTTP 에러 상태(4xx, 5xx)를 검사하지 않아 실패한 응답을 성공으로 처리한다",
+      "res.json()이 Promise를 반환하지 않기 때문이다"
+    ],
+    "correctIndex": 2,
+    "explanation": "fetch()는 네트워크 에러에서만 reject됩니다. HTTP 4xx, 5xx 응답은 reject되지 않고 정상적으로 Response 객체를 반환합니다. 따라서 res가 null이 아니더라도(네트워크 에러가 아니더라도) 서버 에러 응답일 수 있습니다. res.ok 또는 res.status를 검사하여 HTTP 에러를 처리해야 합니다. 이는 fetch API에서 가장 흔한 실수 중 하나입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Fetch_API/Using_Fetch#checking_that_the_fetch_was_successful"
+  },
+  {
+    "id": "promise-037",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "then 콜백에서 값을 return하는 것과 Promise를 return하는 것의 차이점은?",
+    "options": [
+      "값을 반환하면 동기적으로 처리되고, Promise를 반환하면 비동기적으로 처리된다",
+      "값을 반환하면 자동으로 Promise.resolve()로 래핑되어 다음 then에 전달되고, Promise를 반환하면 해당 Promise가 settled될 때까지 체인이 대기한다",
+      "Promise를 반환하면 중첩된 Promise가 그대로 전달된다",
+      "값을 반환하든 Promise를 반환하든 동작이 동일하다"
+    ],
+    "correctIndex": 1,
+    "explanation": "then 콜백에서 일반 값을 반환하면 Promise.resolve(value)로 래핑되어 다음 then에 즉시(다음 마이크로태스크에서) 전달됩니다. Promise를 반환하면 해당 Promise가 이행 또는 거부될 때까지 체인이 대기하며, 이행 값이 다음 then에 전달됩니다. 이 자동 플래트닝(flattening) 덕분에 Promise를 반환해도 중첩되지 않고 깔끔한 체이닝이 가능합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "promise-038",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Promise가 한번 settled(이행 또는 거부)된 후에 다시 상태를 변경할 수 있나요?",
+    "options": [
+      "resolve를 다시 호출하면 새로운 값으로 변경된다",
+      "reject를 호출하면 이행된 상태를 거부로 변경할 수 있다",
+      "Promise의 상태는 한번 settled되면 변경할 수 없다(불변)",
+      "then 핸들러 내에서 상태를 변경할 수 있다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Promise의 상태는 pending에서 fulfilled 또는 rejected로 한번만 전환됩니다. 한번 settled된 후에는 resolve나 reject를 다시 호출해도 무시됩니다. 이 불변성(immutability)은 Promise의 핵심 설계 원칙으로, 비동기 작업의 결과가 예측 가능하고 안정적임을 보장합니다. 이를 통해 여러 then 핸들러가 항상 동일한 값을 받게 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise"
   }
 ]
