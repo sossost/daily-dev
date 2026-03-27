@@ -7,6 +7,7 @@ import { CATEGORIES_WITH_FALLBACK } from '@/types'
 import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
 import { getTopicQuestionCounts } from '@/lib/questions'
 import { CategoryAccordion } from '@/components/common/CategoryAccordion'
+import { Link } from '@/i18n/navigation'
 
 const TOPIC_COLORS: Record<Topic, string> = {
   scope: 'bg-rose-500',
@@ -73,9 +74,10 @@ export function TopicProgressList({ topicStats }: TopicProgressListProps) {
                     : 0
 
                 return (
-                  <div
+                  <Link
                     key={topic}
-                    className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-4"
+                    href={`/topics/${topic}`}
+                    className="block bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-4 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
                   >
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
@@ -91,7 +93,7 @@ export function TopicProgressList({ topicStats }: TopicProgressListProps) {
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
-                  </div>
+                  </Link>
                 )
               })}
             </div>
