@@ -325,5 +325,168 @@
     "correctIndex": 1,
     "explanation": "HTTP/2 multiplexing handles multiple requests/responses simultaneously over a single TCP connection. In HTTP/1.1, only one request per connection was processed, requiring optimizations like file bundling, CSS sprites, and domain sharding to reduce request count. In HTTP/2, these hacks can actually hurt cache efficiency, making it more effective to serve smaller module-level resources.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/HTTP_2"
+  },
+  {
+    "id": "web-performance-021",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of the <link rel=\"preload\"> resource hint?",
+    "options": [
+      "It downloads resources needed soon on the current page with high priority",
+      "It prefetches resources that may be needed on the next page with low priority",
+      "It performs DNS lookups for external domains in advance",
+      "It stores resources in the Service Worker cache"
+    ],
+    "correctIndex": 0,
+    "explanation": "preload downloads resources that are needed soon on the current page but discovered late by the browser (fonts, hero images, etc.) with high priority. prefetch fetches resources for the next navigation at low priority, and preconnect establishes connections to external domains in advance.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload"
+  },
+  {
+    "id": "web-performance-022",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the benefit of using dynamic import in the following code?",
+    "code": "button.addEventListener('click', async () => {\n  const { Chart } = await import('./chart.js');\n  const chart = new Chart(canvas, config);\n  chart.render();\n});",
+    "options": [
+      "If the Chart module throws an error, a fallback UI is automatically rendered",
+      "The Chart module is not included in the initial bundle and is loaded as a separate chunk on click, reducing initial load time",
+      "import() loads the module in a Web Worker so it doesn't block the main thread",
+      "Dynamic import executes modules faster than static import"
+    ],
+    "correctIndex": 1,
+    "explanation": "Dynamic import() is the core of code splitting. When the bundler encounters import(), it splits that module into a separate chunk, and a network request is only made when the code actually executes. This reduces the initial JavaScript bundle size, improving First Contentful Paint and Time to Interactive.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import"
+  },
+  {
+    "id": "web-performance-023",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the most appropriate response when 'Long Task' warnings repeatedly appear in the DevTools Performance tab?",
+    "options": [
+      "Change all JavaScript to async scripts",
+      "Enable hardware acceleration in the browser",
+      "Break long tasks into smaller units and yield to the main thread using setTimeout or requestIdleCallback to reduce blocking",
+      "Long Tasks are ignorable warnings that require no action"
+    ],
+    "correctIndex": 2,
+    "explanation": "A Long Task blocks the main thread for more than 50ms, delaying user input responses and directly affecting the INP score. By breaking large tasks into smaller units and yielding control to the browser using setTimeout(fn, 0) or scheduler.yield(), user events can be processed in between, significantly improving perceived responsiveness.",
+    "sourceUrl": "https://web.dev/articles/optimize-long-tasks"
+  },
+  {
+    "id": "web-performance-024",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between debounce and throttle in event handler optimization?",
+    "options": [
+      "Debounce and throttle behave identically",
+      "Throttle completely blocks event firing, while debounce only delays it",
+      "Debounce executes once after events stop for a set duration, while throttle executes periodically at regular intervals",
+      "Debounce can only be used for scroll events, and throttle only for input events"
+    ],
+    "correctIndex": 2,
+    "explanation": "Debounce executes only once after continuous events have stopped for a specified time (ideal for search autocomplete). Throttle executes at most once per specified interval (ideal for scroll position updates). Both reduce excessive function calls to improve performance but suit different use cases.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Debounce"
+  },
+  {
+    "id": "web-performance-025",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the performance benefit of the following Web Worker code?",
+    "code": "// main.js\nconst worker = new Worker('worker.js');\nworker.postMessage(largeDataSet);\nworker.onmessage = (e) => {\n  renderResults(e.data);\n};\n\n// worker.js\nself.onmessage = (e) => {\n  const result = heavyComputation(e.data);\n  self.postMessage(result);\n};",
+    "options": [
+      "heavyComputation runs on a separate thread, keeping the main thread's UI responsive",
+      "The Web Worker uses the GPU to speed up computation",
+      "postMessage passes data via shared memory with no copy cost",
+      "The Worker accesses the DOM directly for improved rendering performance"
+    ],
+    "correctIndex": 0,
+    "explanation": "Web Workers run JavaScript on a separate background thread from the main thread. Moving heavy computation (sorting, encryption, parsing, etc.) to a Worker keeps the main thread unblocked so the UI remains smooth and responsive. However, Workers cannot access the DOM and exchange data with the main thread via postMessage using structured clone.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers"
+  },
+  {
+    "id": "web-performance-026",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "How does the CSS content-visibility: auto property improve rendering performance?",
+    "options": [
+      "It changes the element to display: none, completely removing it from the DOM",
+      "It automatically adjusts the element's z-index to optimize paint order",
+      "It automatically removes JavaScript event listeners to save memory",
+      "It skips layout, style, and paint work for elements outside the viewport, reducing initial rendering cost"
+    ],
+    "correctIndex": 3,
+    "explanation": "content-visibility: auto skips rendering work (layout, paint) for elements that are outside the viewport. The elements remain in the DOM, but the browser defers rendering of off-screen parts, significantly reducing initial rendering time for long pages. When used with contain-intrinsic-size, scrollbar stability is also maintained.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/content-visibility"
+  },
+  {
+    "id": "web-performance-027",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "Why are Transferable objects used in the following code?",
+    "code": "const buffer = new ArrayBuffer(1024 * 1024 * 50); // 50MB\nconst worker = new Worker('processor.js');\n\n// Normal transfer\n// worker.postMessage(buffer);\n\n// Transferable transfer\nworker.postMessage(buffer, [buffer]);\nconsole.log(buffer.byteLength); // 0",
+    "options": [
+      "Using Transferable allows the Worker to access the DOM",
+      "The buffer is compressed before being sent to the Worker, saving network bandwidth",
+      "Ownership of the buffer is transferred to the Worker with no copy, and the original can no longer be used",
+      "Transferable works identically to SharedArrayBuffer, allowing simultaneous access from both sides"
+    ],
+    "correctIndex": 2,
+    "explanation": "Normal postMessage copies data using the structured clone algorithm, which is expensive for large data. With Transferable, ownership of the data is transferred rather than copied, so no copy occurs. However, the original context can no longer access the buffer (byteLength becomes 0). The performance difference is dramatic for large data like 50MB being sent to a Worker.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Transferable_objects"
+  },
+  {
+    "id": "web-performance-028",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why should srcset and sizes be used for responsive images?",
+    "options": [
+      "srcset is needed to automatically convert image formats to WebP",
+      "srcset and sizes allow the browser to select the optimal image for the viewport size and resolution, reducing unnecessary bandwidth waste",
+      "The sizes attribute replaces the role of the image's alt text",
+      "srcset is used to enable image lazy loading"
+    ],
+    "correctIndex": 1,
+    "explanation": "srcset provides multiple image candidates of different sizes, and sizes tells the browser how large the image will be displayed at each viewport condition. The browser uses this information along with the device pixel ratio (DPR) to select the most appropriate image. For example, loading a 400px image instead of a 2000px image on mobile significantly reduces data transfer and improves loading speed.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#srcset"
+  },
+  {
+    "id": "web-performance-029",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between Cache-First and Network-First caching strategies in Service Workers?",
+    "options": [
+      "Cache-First checks the cache first and falls back to network if not found, suitable for static assets; Network-First tries the network first and falls back to cache on failure, suitable for APIs where fresh data matters",
+      "Both strategies use only cache and never make network requests",
+      "Cache-First only works offline, and Network-First only works online",
+      "Network-First is always faster than Cache-First"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cache-First (Cache Falling Back to Network) returns the cached response immediately for fast loading, and only makes a network request when the cache misses. It's suitable for static assets like CSS, JS, and images that don't change often. Network-First prioritizes fetching fresh data, using the cache as a fallback when the network fails. It's suitable for API responses and frequently updated content.",
+    "sourceUrl": "https://developer.chrome.com/docs/workbox/caching-strategies-overview"
+  },
+  {
+    "id": "web-performance-030",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which metric has the highest weight in the Lighthouse performance score?",
+    "options": [
+      "First Contentful Paint (FCP)",
+      "Speed Index",
+      "Cumulative Layout Shift (CLS)",
+      "Total Blocking Time (TBT)"
+    ],
+    "correctIndex": 3,
+    "explanation": "As of Lighthouse 10, Total Blocking Time (TBT) has the highest weight at 30%. TBT measures the total time the main thread was blocked for more than 50ms between FCP and Time to Interactive. It has a high correlation with real-user interaction responsiveness (INP), and optimizing long JavaScript execution significantly improves both TBT and the overall performance score.",
+    "sourceUrl": "https://developer.chrome.com/docs/lighthouse/performance/performance-scoring"
   }
 ]

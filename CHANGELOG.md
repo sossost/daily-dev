@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 10 git-advanced questions (021-030) (`053cd4b`)
 - **content**: add 10 network questions (021-030) (`390eb27`)
 - **seo**: add topic detail landing pages for all 23 topics (`06a9671`)
 - **seo**: add JSON-LD, per-page metadata, canonical URLs, and OG image optimization (`a19d09d`)
