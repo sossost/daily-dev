@@ -327,5 +327,170 @@
     "correctIndex": 3,
     "explanation": "이 코드는 정상적으로 동작합니다. NodeList는 forEach()를 지원하며, style 속성에 숫자를 할당하면 자동으로 문자열로 변환됩니다. 단위가 없는 CSS 속성(order, z-index, opacity 등)은 숫자를 직접 할당할 수 있습니다. querySelectorAll은 정적 NodeList를 반환합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/NodeList/forEach"
+  },
+  {
+    "id": "dom-manipulation-021",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "element.closest() 메서드의 동작으로 올바른 것은?",
+    "options": [
+      "자식 요소 중 가장 가까운 매칭 요소를 반환한다",
+      "자기 자신부터 시작하여 조상 방향으로 CSS 선택자에 매칭되는 가장 가까운 요소를 반환한다",
+      "형제 요소 중 가장 가까운 매칭 요소를 반환한다",
+      "문서 전체에서 가장 가까운 매칭 요소를 반환한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "closest()는 자기 자신부터 시작하여 부모, 조부모 순으로 DOM 트리를 올라가며 CSS 선택자에 매칭되는 첫 번째 요소를 반환합니다. 자기 자신이 선택자에 매칭되면 자기 자신을 반환합니다. 매칭되는 요소가 없으면 null을 반환합니다. 이벤트 위임 시 특정 부모 요소를 찾는 데 유용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/closest"
+  },
+  {
+    "id": "dom-manipulation-022",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "const div = document.createElement('div');\nconst p = document.createElement('p');\ndiv.appendChild(p);\n\nconsole.log(div.contains(p), p.contains(div));",
+    "options": [
+      "true, true",
+      "false, false",
+      "true, false",
+      "false, true"
+    ],
+    "correctIndex": 2,
+    "explanation": "contains() 메서드는 호출한 노드가 인자로 전달된 노드를 자손으로 포함하고 있는지 확인합니다. div는 p를 자식으로 포함하므로 div.contains(p)는 true입니다. 반대로 p는 div를 포함하지 않으므로 p.contains(div)는 false입니다. contains()는 자기 자신에 대해서도 true를 반환합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Node/contains"
+  },
+  {
+    "id": "dom-manipulation-023",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 의도대로 동작하지 않는 이유는?",
+    "code": "const list = document.querySelectorAll('.item');\nfor (let i = 0; i < list.length; i++) {\n  list[i].addEventListener('click', function() {\n    list[i].classList.toggle('active');\n  });\n}",
+    "options": [
+      "querySelectorAll이 반환하는 NodeList에는 인덱스 접근이 불가능하다",
+      "let 대신 var를 사용해야 한다",
+      "classList.toggle은 존재하지 않는 메서드이다",
+      "코드에 문제가 없다 — let을 사용했으므로 각 반복의 i가 올바르게 캡처된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "이 코드는 정상적으로 동작합니다. let으로 선언한 i는 블록 스코프를 가지므로 각 반복마다 새로운 바인딩이 생성됩니다. 따라서 클릭 핸들러 안의 i가 올바른 인덱스를 참조합니다. var를 사용했다면 클로저 문제로 모든 핸들러가 마지막 인덱스를 참조하게 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/let"
+  },
+  {
+    "id": "dom-manipulation-024",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "DOMContentLoaded 이벤트와 load 이벤트의 차이점은?",
+    "options": [
+      "DOMContentLoaded는 HTML 파싱 완료 후 발생하고, load는 모든 리소스 로드 후 발생한다",
+      "load가 DOMContentLoaded보다 항상 먼저 발생한다",
+      "두 이벤트는 동시에 발생한다",
+      "DOMContentLoaded는 이미지 로드 완료 후 발생한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "DOMContentLoaded는 HTML 문서가 완전히 파싱되고 DOM 트리가 구성된 직후 발생합니다. 스타일시트, 이미지, 서브프레임 등의 외부 리소스 로딩을 기다리지 않습니다. load 이벤트는 모든 리소스(이미지, 스타일시트, 스크립트 등)가 완전히 로드된 후 발생합니다. 따라서 DOMContentLoaded가 항상 먼저 발생합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Document/DOMContentLoaded_event"
+  },
+  {
+    "id": "dom-manipulation-025",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "const div = document.createElement('div');\ndiv.innerHTML = '<p>Hello</p>';\nconst p = div.firstElementChild;\n\ndiv.innerHTML = '<span>World</span>';\nconsole.log(p.textContent, p.parentNode);",
+    "options": [
+      "World, [object HTMLDivElement]",
+      "Hello, null",
+      "Hello, [object HTMLDivElement]",
+      "TypeError: Cannot read properties of null"
+    ],
+    "correctIndex": 1,
+    "explanation": "innerHTML을 재설정하면 기존 자식 노드가 모두 제거되고 새로운 노드로 대체됩니다. 이전에 참조했던 p 요소는 DOM 트리에서 분리되지만, JavaScript 변수가 참조하고 있으므로 가비지 컬렉션되지 않습니다. p.textContent는 여전히 'Hello'이지만, parentNode는 null이 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/innerHTML"
+  },
+  {
+    "id": "dom-manipulation-026",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "element.remove() 메서드에 대한 설명으로 올바른 것은?",
+    "options": [
+      "자식 요소를 모두 제거한다",
+      "해당 요소를 DOM 트리에서 제거한다",
+      "요소의 속성을 모두 제거한다",
+      "요소의 이벤트 리스너를 제거한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "element.remove()는 해당 요소를 부모 노드에서 제거합니다. 이전에는 parentNode.removeChild(element)를 사용해야 했지만, remove()를 사용하면 부모 참조 없이 요소 자체에서 직접 제거할 수 있어 코드가 간결해집니다. 제거된 요소는 메모리에 남아있어 다시 삽입할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/remove"
+  },
+  {
+    "id": "dom-manipulation-027",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "const div = document.createElement('div');\ndiv.innerHTML = '<ul><li>1</li><li>2</li><li>3</li></ul>';\nconst items = div.getElementsByTagName('li');\n\nwhile (items.length > 0) {\n  items[0].remove();\n}\n\nconsole.log(div.innerHTML);",
+    "options": [
+      "<ul><li>1</li><li>2</li><li>3</li></ul>",
+      "<ul></ul>",
+      "빈 문자열",
+      "무한 루프 발생"
+    ],
+    "correctIndex": 1,
+    "explanation": "getElementsByTagName()은 라이브(live) HTMLCollection을 반환합니다. items[0].remove()로 첫 번째 li를 제거하면 컬렉션이 자동으로 갱신되어 items.length가 줄어듭니다. while 루프가 items.length > 0인 동안 반복하므로 모든 li가 제거됩니다. ul 요소는 그대로 남아 '<ul></ul>'이 출력됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/getElementsByTagName"
+  },
+  {
+    "id": "dom-manipulation-028",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 getComputedStyle이 기대한 값을 반환하지 않는 이유는?",
+    "code": "const div = document.createElement('div');\ndiv.style.width = '100px';\nconst computed = window.getComputedStyle(div);\nconsole.log(computed.width); // ''가 출력됨",
+    "options": [
+      "getComputedStyle은 인라인 스타일을 읽을 수 없기 때문이다",
+      "width 대신 getPropertyValue('width')를 사용해야 한다",
+      "요소가 DOM에 연결되지 않아 브라우저가 레이아웃을 계산하지 않기 때문이다",
+      "getComputedStyle의 인자로 요소 대신 선택자 문자열을 전달해야 한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "getComputedStyle()은 브라우저가 실제로 계산한 스타일 값을 반환합니다. 요소가 DOM 트리에 추가되지 않으면 브라우저가 레이아웃을 수행하지 않으므로, 계산된 값이 빈 문자열이 됩니다. document.body.appendChild(div)로 DOM에 추가한 후 호출하면 '100px'이 반환됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Window/getComputedStyle"
+  },
+  {
+    "id": "dom-manipulation-029",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "outerHTML과 innerHTML의 차이점은?",
+    "options": [
+      "outerHTML은 요소 자체를 포함한 HTML을 반환하고, innerHTML은 자식의 HTML만 반환한다",
+      "innerHTML은 요소 자체를 포함하고, outerHTML은 자식만 반환한다",
+      "두 속성은 동일한 결과를 반환한다",
+      "outerHTML은 읽기 전용이고 수정할 수 없다"
+    ],
+    "correctIndex": 0,
+    "explanation": "innerHTML은 요소의 자식 노드들을 HTML 문자열로 반환합니다. outerHTML은 요소 자체를 포함한 전체 HTML을 반환합니다. 예를 들어 <div><span>hi</span></div>에서 div.innerHTML은 '<span>hi</span>'이고, div.outerHTML은 '<div><span>hi</span></div>'입니다. outerHTML에 값을 할당하면 해당 요소 자체가 대체됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/outerHTML"
+  },
+  {
+    "id": "dom-manipulation-030",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "requestAnimationFrame을 DOM 조작에 사용하는 이유로 올바른 것은?",
+    "options": [
+      "DOM 변경을 동기적으로 즉시 적용하기 위해",
+      "setTimeout(fn, 0)보다 항상 먼저 실행되기 때문에",
+      "브라우저의 다음 리페인트 직전에 콜백을 실행하여 부드러운 애니메이션을 구현하기 위해",
+      "마이크로태스크 큐에서 실행되어 다른 작업보다 우선순위가 높기 때문에"
+    ],
+    "correctIndex": 2,
+    "explanation": "requestAnimationFrame(rAF)은 브라우저가 다음 리페인트를 수행하기 직전에 콜백을 실행합니다. 일반적으로 초당 60회(60fps) 호출되며, 디스플레이 주사율에 맞춰 최적화됩니다. setTimeout과 달리 브라우저가 비활성 탭에서는 호출을 멈춰 리소스를 절약합니다. DOM 애니메이션이나 레이아웃 변경을 rAF 안에서 수행하면 프레임 드롭 없이 부드러운 렌더링이 가능합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Window/requestAnimationFrame"
   }
 ]

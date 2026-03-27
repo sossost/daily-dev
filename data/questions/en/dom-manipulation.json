@@ -327,5 +327,170 @@
     "correctIndex": 3,
     "explanation": "This code works correctly. NodeList supports forEach(), and when a number is assigned to a style property, it is automatically converted to a string. CSS properties without units (order, z-index, opacity, etc.) can have numbers assigned directly. querySelectorAll returns a static NodeList.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach"
+  },
+  {
+    "id": "dom-manipulation-021",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct behavior of the element.closest() method?",
+    "options": [
+      "It returns the nearest matching element among child elements",
+      "Starting from itself, it traverses up the ancestor chain and returns the nearest element matching the CSS selector",
+      "It returns the nearest matching element among sibling elements",
+      "It returns the nearest matching element in the entire document"
+    ],
+    "correctIndex": 1,
+    "explanation": "closest() starts from the element itself and traverses up through parent, grandparent, and so on, returning the first element that matches the CSS selector. If the element itself matches, it returns itself. If no matching element is found, it returns null. This is particularly useful for finding a specific parent element during event delegation.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/closest"
+  },
+  {
+    "id": "dom-manipulation-022",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const div = document.createElement('div');\nconst p = document.createElement('p');\ndiv.appendChild(p);\n\nconsole.log(div.contains(p), p.contains(div));",
+    "options": [
+      "true, true",
+      "false, false",
+      "true, false",
+      "false, true"
+    ],
+    "correctIndex": 2,
+    "explanation": "The contains() method checks whether the node it is called on contains the given node as a descendant. Since div has p as a child, div.contains(p) is true. Conversely, p does not contain div, so p.contains(div) is false. Note that contains() also returns true when called on itself (node.contains(node) is true).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Node/contains"
+  },
+  {
+    "id": "dom-manipulation-023",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why doesn't the following code work as intended?",
+    "code": "const list = document.querySelectorAll('.item');\nfor (let i = 0; i < list.length; i++) {\n  list[i].addEventListener('click', function() {\n    list[i].classList.toggle('active');\n  });\n}",
+    "options": [
+      "NodeList returned by querySelectorAll does not support index access",
+      "var should be used instead of let",
+      "classList.toggle is not a valid method",
+      "There is no problem — using let correctly captures i for each iteration"
+    ],
+    "correctIndex": 3,
+    "explanation": "This code works correctly. Variables declared with let have block scope, so a new binding is created for each iteration. Therefore, the i inside the click handler correctly references the right index. If var had been used instead, all handlers would reference the last index value due to closure behavior.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let"
+  },
+  {
+    "id": "dom-manipulation-024",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between the DOMContentLoaded event and the load event?",
+    "options": [
+      "DOMContentLoaded fires after HTML parsing is complete, while load fires after all resources are loaded",
+      "load always fires before DOMContentLoaded",
+      "Both events fire at the same time",
+      "DOMContentLoaded fires after images have finished loading"
+    ],
+    "correctIndex": 0,
+    "explanation": "DOMContentLoaded fires as soon as the HTML document has been fully parsed and the DOM tree has been constructed. It does not wait for external resources like stylesheets, images, or subframes to finish loading. The load event fires after all resources (images, stylesheets, scripts, etc.) have been completely loaded. Therefore, DOMContentLoaded always fires first.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event"
+  },
+  {
+    "id": "dom-manipulation-025",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const div = document.createElement('div');\ndiv.innerHTML = '<p>Hello</p>';\nconst p = div.firstElementChild;\n\ndiv.innerHTML = '<span>World</span>';\nconsole.log(p.textContent, p.parentNode);",
+    "options": [
+      "World, [object HTMLDivElement]",
+      "Hello, null",
+      "Hello, [object HTMLDivElement]",
+      "TypeError: Cannot read properties of null"
+    ],
+    "correctIndex": 1,
+    "explanation": "Reassigning innerHTML removes all existing child nodes and replaces them with new ones. The previously referenced p element is detached from the DOM tree, but since a JavaScript variable still holds a reference to it, it is not garbage collected. p.textContent is still 'Hello', but parentNode becomes null since it is no longer part of any DOM tree.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML"
+  },
+  {
+    "id": "dom-manipulation-026",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct description of the element.remove() method?",
+    "options": [
+      "It removes all child elements",
+      "It removes the element from the DOM tree",
+      "It removes all attributes from the element",
+      "It removes all event listeners from the element"
+    ],
+    "correctIndex": 1,
+    "explanation": "element.remove() removes the element from its parent node. Previously, you had to use parentNode.removeChild(element), but remove() allows you to directly remove the element without needing a parent reference, resulting in more concise code. The removed element remains in memory and can be reinserted.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/remove"
+  },
+  {
+    "id": "dom-manipulation-027",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const div = document.createElement('div');\ndiv.innerHTML = '<ul><li>1</li><li>2</li><li>3</li></ul>';\nconst items = div.getElementsByTagName('li');\n\nwhile (items.length > 0) {\n  items[0].remove();\n}\n\nconsole.log(div.innerHTML);",
+    "options": [
+      "<ul><li>1</li><li>2</li><li>3</li></ul>",
+      "<ul></ul>",
+      "Empty string",
+      "Infinite loop occurs"
+    ],
+    "correctIndex": 1,
+    "explanation": "getElementsByTagName() returns a live HTMLCollection. When items[0].remove() removes the first li, the collection automatically updates and items.length decreases. The while loop continues as long as items.length > 0, so all li elements are removed. The ul element remains, resulting in '<ul></ul>' being output.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/getElementsByTagName"
+  },
+  {
+    "id": "dom-manipulation-028",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does getComputedStyle not return the expected value in the following code?",
+    "code": "const div = document.createElement('div');\ndiv.style.width = '100px';\nconst computed = window.getComputedStyle(div);\nconsole.log(computed.width); // '' is logged",
+    "options": [
+      "Because getComputedStyle cannot read inline styles",
+      "Because getPropertyValue('width') should be used instead of .width",
+      "Because the element is not attached to the DOM, so the browser does not compute the layout",
+      "Because a selector string should be passed to getComputedStyle instead of an element"
+    ],
+    "correctIndex": 2,
+    "explanation": "getComputedStyle() returns the style values that the browser has actually computed. If the element has not been added to the DOM tree, the browser does not perform layout calculations, so the computed value is an empty string. After adding it to the DOM with document.body.appendChild(div), calling getComputedStyle would return '100px'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle"
+  },
+  {
+    "id": "dom-manipulation-029",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between outerHTML and innerHTML?",
+    "options": [
+      "outerHTML returns the HTML including the element itself, while innerHTML returns only the children's HTML",
+      "innerHTML includes the element itself, while outerHTML returns only the children",
+      "Both properties return the same result",
+      "outerHTML is read-only and cannot be modified"
+    ],
+    "correctIndex": 0,
+    "explanation": "innerHTML returns the child nodes of an element as an HTML string. outerHTML returns the complete HTML including the element itself. For example, for <div><span>hi</span></div>, div.innerHTML is '<span>hi</span>' while div.outerHTML is '<div><span>hi</span></div>'. Assigning a value to outerHTML replaces the element itself.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/outerHTML"
+  },
+  {
+    "id": "dom-manipulation-030",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the correct reason for using requestAnimationFrame for DOM manipulation?",
+    "options": [
+      "To apply DOM changes synchronously and immediately",
+      "Because it always executes before setTimeout(fn, 0)",
+      "To execute the callback just before the browser's next repaint for smooth animations",
+      "Because it runs in the microtask queue and has higher priority than other tasks"
+    ],
+    "correctIndex": 2,
+    "explanation": "requestAnimationFrame (rAF) executes its callback just before the browser performs the next repaint. It is typically called 60 times per second (60fps) and is optimized to match the display's refresh rate. Unlike setTimeout, the browser pauses rAF calls in inactive tabs to conserve resources. Performing DOM animations and layout changes inside rAF enables smooth rendering without frame drops.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame"
   }
 ]
