@@ -192,7 +192,7 @@
 - database.json — 30 questions
 - design-patterns.json — 30 questions
 - dom-manipulation.json — 30 questions
-- event-loop.json — 28 questions
+- event-loop.json — 38 questions
 - git-advanced.json — 30 questions
 - network.json — 30 questions
 - nodejs.json — 30 questions
@@ -215,7 +215,7 @@
 - database.json — 30 questions
 - design-patterns.json — 30 questions
 - dom-manipulation.json — 30 questions
-- event-loop.json — 28 questions
+- event-loop.json — 38 questions
 - git-advanced.json — 30 questions
 - network.json — 30 questions
 - nodejs.json — 30 questions

@@ -462,5 +462,170 @@
     "correctIndex": 2,
     "explanation": "Web Workers run in separate threads with their own event loops. Communication between the main thread and Workers happens via message passing through postMessage/onmessage. Workers cannot access the DOM. Offloading heavy computation to Workers keeps the main thread's event loop unblocked, maintaining smooth UI.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"
+  },
+  {
+    "id": "event-loop-029",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What does the 'run-to-completion' principle mean in JavaScript?",
+    "options": [
+      "Once a function starts executing, no other code can interrupt it until it completes",
+      "All asynchronous operations must complete simultaneously",
+      "The event loop runs without ever stopping",
+      "Multiple functions can execute on the call stack simultaneously"
+    ],
+    "correctIndex": 0,
+    "explanation": "JavaScript's run-to-completion principle means that once a task starts executing, it cannot be interrupted by another task until it finishes. When a function is running on the call stack, the event loop does not process other callbacks until that function returns. This eliminates shared-state concurrency issues but means long synchronous operations can block the entire thread.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop"
+  },
+  {
+    "id": "event-loop-030",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output order of the following code?",
+    "code": "setTimeout(() => console.log('A'), 10);\nsetTimeout(() => console.log('B'), 0);\nPromise.resolve()\n  .then(() => console.log('C'))\n  .then(() => console.log('D'));",
+    "options": [
+      "C, D, A, B",
+      "B, C, D, A",
+      "C, D, B, A",
+      "B, A, C, D"
+    ],
+    "correctIndex": 2,
+    "explanation": "Microtasks execute before macrotasks. The Promise.then callback 'C' runs first as a microtask, followed by the chained 'D' also as a microtask. Then from the macrotask queue, 'B' (0ms delay) executes before 'A' (10ms delay). setTimeout's delay represents the minimum time before the callback is queued, so shorter delays are queued first.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/setTimeout"
+  },
+  {
+    "id": "event-loop-031",
+    "topic": "event-loop",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function recursive() {\n  return recursive();\n}\ntry {\n  recursive();\n} catch (e) {\n  console.log('caught');\n}\nconsole.log('end');",
+    "options": [
+      "try-catch cannot catch infinite recursion",
+      "The recursive function returns undefined",
+      "A stack overflow (Maximum call stack size exceeded) occurs, but it is caught by catch, so both 'caught' and 'end' are printed",
+      "The event loop automatically stops the recursion"
+    ],
+    "correctIndex": 2,
+    "explanation": "Actually, both 'caught' and 'end' are printed. Infinite recursion exceeds the call stack's maximum size and throws a RangeError (Maximum call stack size exceeded). The try-catch catches this error, printing 'caught', and then the synchronous code 'end' executes normally. A stack overflow does not stop the event loop itself — if the error is properly handled, execution continues.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Too_much_recursion"
+  },
+  {
+    "id": "event-loop-032",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between Node.js's process.nextTick() and the browser's queueMicrotask()?",
+    "options": [
+      "Both are registered in the macrotask queue",
+      "process.nextTick uses a separate nextTick queue processed before the microtask queue, while queueMicrotask uses the standard microtask queue",
+      "queueMicrotask always executes before process.nextTick",
+      "process.nextTick executes synchronously, while queueMicrotask executes asynchronously"
+    ],
+    "correctIndex": 1,
+    "explanation": "In Node.js, process.nextTick() callbacks are placed in a separate nextTick queue that is processed after the current operation completes but before the microtask (Promise.then) queue. So process.nextTick callbacks execute before Promise.then callbacks. queueMicrotask() is a W3C standard API that registers in the same microtask queue as Promise.then. In Node.js, the priority order is: nextTick > microtask > macrotask.",
+    "sourceUrl": "https://nodejs.org/en/learn/asynchronous-work/understanding-processnexttick"
+  },
+  {
+    "id": "event-loop-033",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output order of the following code?",
+    "code": "Promise.resolve().then(() => {\n  console.log('A');\n  queueMicrotask(() => console.log('B'));\n});\nqueueMicrotask(() => {\n  console.log('C');\n  Promise.resolve().then(() => console.log('D'));\n});",
+    "options": [
+      "A, C, B, D",
+      "A, B, C, D",
+      "C, A, D, B",
+      "A, C, D, B"
+    ],
+    "correctIndex": 0,
+    "explanation": "Both callbacks are microtasks. They execute in registration order: first the Promise.then outputs 'A' and queues 'B' as a microtask. Then the queueMicrotask callback outputs 'C' and queues 'D' as a microtask. Since the microtask queue keeps draining, 'B' and 'D' execute in that order.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "event-loop-034",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about setTimeout's minimum delay in browsers is correct?",
+    "options": [
+      "setTimeout(fn, 0) always executes exactly after 0ms",
+      "When nested setTimeout calls exceed 5 levels, browsers enforce a minimum 4ms delay",
+      "The minimum delay is always 1ms across all browsers",
+      "setTimeout's delay is included in microtask processing time"
+    ],
+    "correctIndex": 1,
+    "explanation": "According to the HTML spec, when setTimeout/setInterval is nested beyond 5 levels, browsers enforce a minimum 4ms delay (clamping). This prevents nested timers from consuming excessive CPU. So recursively calling setTimeout(fn, 0) runs quickly for the first 4 calls, but subsequent calls are spaced at least 4ms apart.",
+    "sourceUrl": "https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html#timers"
+  },
+  {
+    "id": "event-loop-035",
+    "topic": "event-loop",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Why does the following code unexpectedly log 5 for every iteration?",
+    "code": "for (var i = 0; i < 5; i++) {\n  setTimeout(() => console.log(i), 100);\n}",
+    "options": [
+      "setTimeout ignores the callback",
+      "var has function scope, so after the loop completes i is 5, and all callbacks reference the same i",
+      "setTimeout's delay is too short and fires before the loop",
+      "console.log executes asynchronously"
+    ],
+    "correctIndex": 1,
+    "explanation": "Variables declared with var have function scope, not block scope. All five setTimeout callbacks share a closure over the same i variable. By the time the callbacks execute, the for loop has completed and i is 5. Solution: use let instead of var, which creates a new binding for each iteration, producing 0, 1, 2, 3, 4.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "event-loop-036",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between MessageChannel and setTimeout(fn, 0)?",
+    "options": [
+      "MessageChannel messages are classified as microtasks",
+      "setTimeout(fn, 0) is always faster than MessageChannel",
+      "MessageChannel's onmessage is a macrotask but is not subject to setTimeout's 4ms minimum delay clamping, enabling faster macrotask scheduling",
+      "Both execute with identical priority"
+    ],
+    "correctIndex": 2,
+    "explanation": "MessageChannel's onmessage event is classified as a macrotask, but unlike setTimeout, it is not subject to the 4ms minimum delay clamping for nested calls. This is why React's Scheduler and other libraries use MessageChannel instead of setTimeout(fn, 0) for more precise macrotask scheduling.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel"
+  },
+  {
+    "id": "event-loop-037",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What does the term 'task' mean in the context of the event loop?",
+    "options": [
+      "It refers only to Promise callbacks",
+      "It refers only to synchronous code running on the call stack",
+      "It refers only to work executed in Web Workers",
+      "A unit of work processed by the event loop, including script execution, event callbacks, and setTimeout callbacks"
+    ],
+    "correctIndex": 3,
+    "explanation": "In the HTML spec, a task is a structured unit of work that the event loop processes. This includes initial script execution, dispatching DOM event callbacks, and executing setTimeout/setInterval callbacks. The event loop processes one task at a time, drains the microtask queue after each task, and performs rendering if needed.",
+    "sourceUrl": "https://html.spec.whatwg.org/multipage/webappapis.html#concept-task"
+  },
+  {
+    "id": "event-loop-038",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output order of the following code?",
+    "code": "async function first() {\n  console.log('1');\n  await second();\n  console.log('2');\n}\nasync function second() {\n  console.log('3');\n  await Promise.resolve();\n  console.log('4');\n}\nfirst();\nconsole.log('5');",
+    "options": [
+      "1, 3, 5, 4, 2",
+      "1, 3, 4, 5, 2",
+      "1, 3, 5, 2, 4",
+      "1, 5, 3, 4, 2"
+    ],
+    "correctIndex": 0,
+    "explanation": "Calling first() synchronously outputs '1'. Then await second() calls second(), which synchronously outputs '3'. Inside second(), await Promise.resolve() registers the rest of second() ('4') as a microtask. Control returns to first(), but since second() hasn't completed, first()'s await also suspends. Synchronous code '5' executes. Then microtask '4' runs completing second(), which resolves first()'s await, and '2' executes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
   }
 ]
