@@ -330,5 +330,173 @@
     "correctIndex": 3,
     "explanation": "infer 키워드는 조건부 타입의 extends 절에서만 사용할 수 있으며, 패턴 매칭처럼 타입의 일부를 추출하여 새로운 타입 변수로 캡처합니다. 위 예시에서 infer R은 함수의 반환 타입을 R로 캡처하여 사용합니다. 이는 컴파일 타임에 평가됩니다.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#inferring-within-conditional-types"
+  },
+  {
+    "id": "typescript-021",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "TypeScript의 `enum`에 대한 설명으로 올바른 것은?",
+    "options": [
+      "enum은 컴파일 후 완전히 제거되어 런타임에 존재하지 않는다",
+      "문자열 enum은 자동 증가 기능을 지원한다",
+      "enum은 타입으로만 사용할 수 있고 값으로는 사용할 수 없다",
+      "숫자 enum의 멤버는 기본적으로 0부터 자동 증가하는 값을 가진다"
+    ],
+    "correctIndex": 3,
+    "explanation": "숫자 enum은 첫 번째 멤버가 기본적으로 0으로 초기화되며, 이후 멤버는 1씩 자동 증가합니다. 예를 들어 enum Direction { Up, Down, Left, Right }에서 Up=0, Down=1, Left=2, Right=3이 됩니다. enum은 const enum이 아닌 한 컴파일 후에도 JavaScript 객체로 남아 런타임에 접근 가능합니다. 문자열 enum은 자동 증가가 없어 각 멤버에 명시적 값을 지정해야 합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/enums.html"
+  },
+  {
+    "id": "typescript-022",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 `typeof arr`의 타입은 무엇인가요?",
+    "code": "const arr = [1, 2, 3] as const;",
+    "options": [
+      "number[]",
+      "readonly number[]",
+      "readonly [1, 2, 3]",
+      "[1, 2, 3]"
+    ],
+    "correctIndex": 2,
+    "explanation": "as const 단언은 배열을 readonly 튜플로 만들어 각 요소의 리터럴 타입을 보존합니다. [1, 2, 3] as const의 타입은 readonly [1, 2, 3]이 됩니다. 일반 배열 리터럴은 number[]로 추론되지만, as const를 사용하면 길이, 순서, 각 요소의 정확한 값까지 타입에 반영됩니다. readonly이므로 push, pop 등 변경 메서드를 호출할 수 없습니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#literal-types"
+  },
+  {
+    "id": "typescript-023",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 컴파일 에러가 발생하는 이유와 해결 방법은?",
+    "code": "interface Config {\n  [key: string]: string;\n}\n\nconst config: Config = {\n  host: 'localhost',\n  port: 3000,\n};",
+    "options": [
+      "인덱스 시그니처가 있으면 추가 속성을 정의할 수 없다",
+      "port의 값 3000은 number인데 인덱스 시그니처가 string만 허용하므로 에러가 발생한다",
+      "Config 인터페이스에 host와 port 속성이 명시적으로 정의되지 않았다",
+      "객체 리터럴에 인덱스 시그니처를 적용할 수 없다"
+    ],
+    "correctIndex": 1,
+    "explanation": "인덱스 시그니처 [key: string]: string은 모든 속성의 값이 string 타입이어야 함을 의미합니다. port에 할당된 3000은 number이므로 'Type number is not assignable to type string' 에러가 발생합니다. 해결 방법은 인덱스 시그니처를 [key: string]: string | number로 변경하거나, port를 '3000' 문자열로 변경하는 것입니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/objects.html#index-signatures"
+  },
+  {
+    "id": "typescript-024",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "TypeScript에서 함수 오버로드와 유니온 타입 매개변수의 차이점은?",
+    "code": "// 오버로드 방식\nfunction parse(input: string): string[];\nfunction parse(input: number): number[];\nfunction parse(input: string | number) {\n  return typeof input === 'string'\n    ? input.split(',')\n    : [input];\n}\n\n// 유니온 방식\nfunction parse2(input: string | number): string[] | number[] {\n  return typeof input === 'string'\n    ? input.split(',')\n    : [input];\n}",
+    "options": [
+      "오버로드는 입력과 출력의 타입 관계를 정확히 매핑하고, 유니온은 모든 반환 타입의 합집합을 반환한다",
+      "유니온 방식이 더 정확한 타입 추론을 제공한다",
+      "오버로드는 런타임에 다른 함수를 호출하고, 유니온은 하나의 함수만 사용한다",
+      "둘은 완전히 동일한 타입 검사 결과를 제공한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "함수 오버로드를 사용하면 string을 전달하면 string[]을, number를 전달하면 number[]을 반환한다는 정확한 매핑이 가능합니다. 유니온 방식에서는 string을 전달해도 반환 타입이 string[] | number[]로 넓어져, 호출부에서 추가적인 타입 좁히기가 필요합니다. 오버로드는 구현부(implementation signature)가 외부에 노출되지 않으며, 오버로드 시그니처들만 호출 가능합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/functions.html#function-overloads"
+  },
+  {
+    "id": "typescript-025",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드에서 `Result` 타입은 무엇인가요?",
+    "code": "type Flatten<T> = T extends Array<infer U> ? U : T;\n\ntype Result = Flatten<string[][]>;",
+    "options": [
+      "string",
+      "never",
+      "string[][]",
+      "string[]"
+    ],
+    "correctIndex": 3,
+    "explanation": "Flatten<T>는 T가 배열이면 요소 타입 U를 추출하고, 아니면 T를 그대로 반환합니다. string[][]는 Array<string[]>이므로 infer U는 string[]를 캡처합니다. 따라서 Flatten<string[][]>의 결과는 string[]입니다. 한 단계만 펼치기 때문에 string이 아닌 string[]가 됩니다. 재귀적으로 완전히 펼치려면 type DeepFlatten<T> = T extends Array<infer U> ? DeepFlatten<U> : T와 같이 재귀 조건부 타입을 사용해야 합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#inferring-within-conditional-types"
+  },
+  {
+    "id": "typescript-026",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "TypeScript의 매핑된 타입(Mapped Types)에 대한 설명으로 올바른 것은?",
+    "code": "type Readonly<T> = {\n  readonly [P in keyof T]: T[P];\n};",
+    "options": [
+      "매핑된 타입은 런타임에 새 객체를 생성한다",
+      "in 키워드는 JavaScript의 in 연산자와 동일한 동작을 한다",
+      "매핑된 타입은 기존 타입의 각 속성을 순회하며 새로운 타입을 생성하는 타입 수준의 변환이다",
+      "매핑된 타입은 인터페이스에서만 사용할 수 있다"
+    ],
+    "correctIndex": 2,
+    "explanation": "매핑된 타입은 [P in keyof T] 구문으로 타입 T의 모든 속성 키를 순회하며 각 속성을 변환하여 새 타입을 만듭니다. 이는 컴파일 타임에 평가되는 타입 수준의 연산입니다. TypeScript의 Readonly, Partial, Required, Record 등 내장 유틸리티 타입이 모두 매핑된 타입으로 구현되어 있습니다. + 또는 - 수정자로 readonly나 optional(?)을 추가하거나 제거할 수 있습니다(예: -readonly, -?).",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/mapped-types.html"
+  },
+  {
+    "id": "typescript-027",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드에서 `pair`의 타입은 무엇인가요?",
+    "code": "const pair: [string, number] = ['hello', 42];\nconst first = pair[0];\nconst second = pair[1];",
+    "options": [
+      "first: string, second: number",
+      "first: string | number, second: string | number",
+      "first: unknown, second: unknown",
+      "first: any, second: any"
+    ],
+    "correctIndex": 0,
+    "explanation": "튜플 타입 [string, number]은 각 위치의 타입을 정확히 지정합니다. 인덱스 0은 string, 인덱스 1은 number로 추론되므로 first는 string, second는 number입니다. 일반 배열 (string | number)[]과 달리, 튜플은 각 위치별 타입 정보를 유지하여 더 정확한 타입 추론이 가능합니다. React의 useState 훅이 [state, setState] 튜플을 반환하는 것이 대표적인 활용 예시입니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/objects.html#tuple-types"
+  },
+  {
+    "id": "typescript-028",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 컴파일 에러가 발생하는 이유는?",
+    "code": "interface Animal {\n  name: string;\n}\n\ninterface Dog extends Animal {\n  breed: string;\n}\n\nconst dogs: Dog[] = [\n  { name: 'Rex', breed: 'Labrador' },\n  { name: 'Max', breed: 'Poodle' },\n];\n\nconst animals: readonly Animal[] = dogs;\nanimals[0] = { name: 'Cat' };",
+    "options": [
+      "Dog[]는 readonly Animal[]에 할당할 수 없다",
+      "readonly 배열에는 인덱스로 요소를 재할당할 수 없다",
+      "Animal 인터페이스에 breed 속성이 없어 할당이 실패한다",
+      "extends로 인터페이스를 확장하면 배열 할당이 불가능하다"
+    ],
+    "correctIndex": 1,
+    "explanation": "readonly Animal[]은 ReadonlyArray<Animal>과 동일하며, 인덱스를 통한 요소 재할당, push, pop 등 배열을 변경하는 모든 연산이 금지됩니다. Dog[]는 readonly Animal[]에 할당 가능합니다(Dog은 Animal의 하위 타입이고, readonly 배열은 공변적). 하지만 animals[0] = { name: 'Cat' }는 readonly 배열의 요소를 변경하려는 시도이므로 컴파일 에러가 발생합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/objects.html#readonly-array-types"
+  },
+  {
+    "id": "typescript-029",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "TypeScript의 `satisfies` 연산자의 역할은?",
+    "code": "type Colors = Record<string, [number, number, number] | string>;\n\nconst palette = {\n  red: [255, 0, 0],\n  green: '#00ff00',\n} satisfies Colors;",
+    "options": [
+      "타입 단언(as)과 동일하게 타입을 강제 변환한다",
+      "런타임에 타입 검사를 수행하여 에러를 던진다",
+      "타입 호환성을 검증하면서도 추론된 타입을 유지하여 더 정확한 자동 완성이 가능하다",
+      "인터페이스 구현(implements)과 동일한 역할을 한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "satisfies 연산자(TypeScript 4.9+)는 값이 특정 타입과 호환되는지 검증하면서도 값의 추론된 타입을 그대로 유지합니다. 위 예시에서 palette.red는 [number, number, number]로, palette.green은 string으로 정확히 추론됩니다. 타입 어노테이션(: Colors)을 사용하면 palette.red가 [number, number, number] | string으로 넓어져 toUpperCase() 등을 바로 호출할 수 없지만, satisfies를 사용하면 가능합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html#the-satisfies-operator"
+  },
+  {
+    "id": "typescript-030",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "TypeScript에서 `type`을 사용한 선언 병합(declaration merging)이 가능한가?",
+    "options": [
+      "type과 interface 모두 선언 병합을 지원한다",
+      "interface만 선언 병합을 지원하며, 동일 이름의 type을 두 번 선언하면 에러가 발생한다",
+      "type만 선언 병합을 지원하며, interface는 extends로만 확장할 수 있다",
+      "선언 병합은 TypeScript에서 지원되지 않는 기능이다"
+    ],
+    "correctIndex": 1,
+    "explanation": "선언 병합(declaration merging)은 interface의 고유한 기능입니다. 동일한 이름의 interface를 여러 번 선언하면 자동으로 하나의 interface로 병합됩니다. 반면 type 별칭은 동일한 스코프에서 같은 이름을 두 번 선언하면 'Duplicate identifier' 컴파일 에러가 발생합니다. 선언 병합은 외부 라이브러리의 타입을 확장하거나(예: Window 인터페이스에 속성 추가), 전역 타입을 보강(augment)할 때 유용합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/declaration-merging.html"
   }
 ]

@@ -201,7 +201,7 @@
 - scope.json — 30 questions
 - this.json — 30 questions
 - type-coercion.json — 30 questions
-- typescript.json — 20 questions
+- typescript.json — 30 questions
 - web-performance.json — 20 questions
 - web-security.json — 25 questions
 - algorithms.json — 30 questions
@@ -224,7 +224,7 @@
 - scope.json — 30 questions
 - this.json — 30 questions
 - type-coercion.json — 30 questions
-- typescript.json — 20 questions
+- typescript.json — 30 questions
 - web-performance.json — 20 questions
 - web-security.json — 25 questions
 

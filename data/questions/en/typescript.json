@@ -330,5 +330,173 @@
     "correctIndex": 3,
     "explanation": "The infer keyword can only be used in the extends clause of conditional types. It works like pattern matching, extracting part of a type and capturing it in a new type variable. In the example above, infer R captures the function's return type as R. This is evaluated at compile time.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#inferring-within-conditional-types"
+  },
+  {
+    "id": "typescript-021",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about TypeScript `enum` is correct?",
+    "options": [
+      "Enums are completely removed after compilation and do not exist at runtime",
+      "String enums support auto-incrementing",
+      "Enums can only be used as types, not as values",
+      "Numeric enum members default to auto-incrementing values starting from 0"
+    ],
+    "correctIndex": 3,
+    "explanation": "Numeric enums start with the first member initialized to 0 by default, with subsequent members auto-incrementing by 1. For example, in enum Direction { Up, Down, Left, Right }, Up=0, Down=1, Left=2, Right=3. Unless declared as const enum, enums remain as JavaScript objects after compilation and are accessible at runtime. String enums do not auto-increment, requiring explicit values for each member.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/enums.html"
+  },
+  {
+    "id": "typescript-022",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the type of `arr` in the following code?",
+    "code": "const arr = [1, 2, 3] as const;",
+    "options": [
+      "number[]",
+      "readonly number[]",
+      "readonly [1, 2, 3]",
+      "[1, 2, 3]"
+    ],
+    "correctIndex": 2,
+    "explanation": "The as const assertion turns the array into a readonly tuple, preserving the literal type of each element. The type of [1, 2, 3] as const is readonly [1, 2, 3]. A regular array literal would be inferred as number[], but as const captures the length, order, and exact values of each element in the type. Since it's readonly, mutation methods like push and pop cannot be called.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#literal-types"
+  },
+  {
+    "id": "typescript-023",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does a compile error occur in the following code and how should it be fixed?",
+    "code": "interface Config {\n  [key: string]: string;\n}\n\nconst config: Config = {\n  host: 'localhost',\n  port: 3000,\n};",
+    "options": [
+      "Additional properties cannot be defined when an index signature exists",
+      "port's value 3000 is a number but the index signature only allows string, causing an error",
+      "The host and port properties are not explicitly defined in the Config interface",
+      "Index signatures cannot be applied to object literals"
+    ],
+    "correctIndex": 1,
+    "explanation": "The index signature [key: string]: string means all property values must be of type string. The value 3000 assigned to port is a number, causing a 'Type number is not assignable to type string' error. The fix is to change the index signature to [key: string]: string | number, or change port to the string '3000'.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/objects.html#index-signatures"
+  },
+  {
+    "id": "typescript-024",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between function overloads and union type parameters in TypeScript?",
+    "code": "// Overload approach\nfunction parse(input: string): string[];\nfunction parse(input: number): number[];\nfunction parse(input: string | number) {\n  return typeof input === 'string'\n    ? input.split(',')\n    : [input];\n}\n\n// Union approach\nfunction parse2(input: string | number): string[] | number[] {\n  return typeof input === 'string'\n    ? input.split(',')\n    : [input];\n}",
+    "options": [
+      "Overloads precisely map input-to-output type relationships, while unions return the union of all return types",
+      "The union approach provides more accurate type inference",
+      "Overloads call different functions at runtime, unions use a single function",
+      "Both provide completely identical type checking results"
+    ],
+    "correctIndex": 0,
+    "explanation": "Function overloads allow precise mapping: passing a string returns string[], passing a number returns number[]. With the union approach, passing a string still gives a return type of string[] | number[], requiring additional type narrowing at the call site. The implementation signature of overloads is not exposed externally — only the overload signatures are callable.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/functions.html#function-overloads"
+  },
+  {
+    "id": "typescript-025",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the `Result` type in the following code?",
+    "code": "type Flatten<T> = T extends Array<infer U> ? U : T;\n\ntype Result = Flatten<string[][]>;",
+    "options": [
+      "string",
+      "never",
+      "string[][]",
+      "string[]"
+    ],
+    "correctIndex": 3,
+    "explanation": "Flatten<T> extracts the element type U if T is an array, otherwise returns T as-is. string[][] is Array<string[]>, so infer U captures string[]. Therefore Flatten<string[][]> results in string[]. It only flattens one level, so the result is string[] not string. For recursive deep flattening, you would need type DeepFlatten<T> = T extends Array<infer U> ? DeepFlatten<U> : T.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#inferring-within-conditional-types"
+  },
+  {
+    "id": "typescript-026",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about TypeScript Mapped Types is correct?",
+    "code": "type Readonly<T> = {\n  readonly [P in keyof T]: T[P];\n};",
+    "options": [
+      "Mapped types create new objects at runtime",
+      "The in keyword behaves the same as JavaScript's in operator",
+      "Mapped types iterate over each property of an existing type to produce a new type as a type-level transformation",
+      "Mapped types can only be used with interfaces"
+    ],
+    "correctIndex": 2,
+    "explanation": "Mapped types use [P in keyof T] syntax to iterate over all property keys of type T and transform each property to create a new type. This is a type-level operation evaluated at compile time. TypeScript's built-in utility types like Readonly, Partial, Required, and Record are all implemented as mapped types. The + or - modifiers can add or remove readonly or optional (?) (e.g., -readonly, -?).",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/mapped-types.html"
+  },
+  {
+    "id": "typescript-027",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What are the types of `first` and `second` in the following code?",
+    "code": "const pair: [string, number] = ['hello', 42];\nconst first = pair[0];\nconst second = pair[1];",
+    "options": [
+      "first: string, second: number",
+      "first: string | number, second: string | number",
+      "first: unknown, second: unknown",
+      "first: any, second: any"
+    ],
+    "correctIndex": 0,
+    "explanation": "The tuple type [string, number] precisely specifies the type at each position. Index 0 is inferred as string and index 1 as number, so first is string and second is number. Unlike a regular array (string | number)[], tuples maintain per-position type information for more accurate type inference. React's useState hook returning a [state, setState] tuple is a classic use case.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/objects.html#tuple-types"
+  },
+  {
+    "id": "typescript-028",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does a compile error occur in the following code?",
+    "code": "interface Animal {\n  name: string;\n}\n\ninterface Dog extends Animal {\n  breed: string;\n}\n\nconst dogs: Dog[] = [\n  { name: 'Rex', breed: 'Labrador' },\n  { name: 'Max', breed: 'Poodle' },\n];\n\nconst animals: readonly Animal[] = dogs;\nanimals[0] = { name: 'Cat' };",
+    "options": [
+      "Dog[] cannot be assigned to readonly Animal[]",
+      "Elements cannot be reassigned by index in a readonly array",
+      "Assignment fails because Animal interface lacks the breed property",
+      "Interface extension with extends makes array assignment impossible"
+    ],
+    "correctIndex": 1,
+    "explanation": "readonly Animal[] is equivalent to ReadonlyArray<Animal>, which prohibits all array-mutating operations including index reassignment, push, and pop. Dog[] can be assigned to readonly Animal[] (Dog is a subtype of Animal, and readonly arrays are covariant). However, animals[0] = { name: 'Cat' } attempts to mutate the readonly array, causing a compile error.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/objects.html#readonly-array-types"
+  },
+  {
+    "id": "typescript-029",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of TypeScript's `satisfies` operator?",
+    "code": "type Colors = Record<string, [number, number, number] | string>;\n\nconst palette = {\n  red: [255, 0, 0],\n  green: '#00ff00',\n} satisfies Colors;",
+    "options": [
+      "It forcefully converts types like type assertions (as)",
+      "It performs runtime type checking and throws errors",
+      "It validates type compatibility while preserving the inferred type for more accurate autocomplete",
+      "It serves the same role as interface implements"
+    ],
+    "correctIndex": 2,
+    "explanation": "The satisfies operator (TypeScript 4.9+) validates that a value is compatible with a given type while preserving the value's inferred type. In the example, palette.red is precisely inferred as [number, number, number] and palette.green as string. With a type annotation (: Colors), palette.red would widen to [number, number, number] | string, preventing direct calls to methods like toUpperCase() on palette.green — but with satisfies, this works correctly.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html#the-satisfies-operator"
+  },
+  {
+    "id": "typescript-030",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Can declaration merging be done with `type` in TypeScript?",
+    "options": [
+      "Both type and interface support declaration merging",
+      "Only interface supports declaration merging; declaring the same type name twice causes an error",
+      "Only type supports declaration merging; interface can only be extended with extends",
+      "Declaration merging is not a supported feature in TypeScript"
+    ],
+    "correctIndex": 1,
+    "explanation": "Declaration merging is a feature unique to interfaces. Declaring the same interface name multiple times automatically merges them into one. In contrast, declaring a type alias with the same name twice in the same scope causes a 'Duplicate identifier' compile error. Declaration merging is useful for extending external library types (e.g., adding properties to the Window interface) or augmenting global types.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/declaration-merging.html"
   }
 ]
