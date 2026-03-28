@@ -496,5 +496,171 @@
     "correctIndex": 0,
     "explanation": "compose(f, g) returns a function that computes f(g(x)). doubleThenAdd(3) is addOne(double(3)) = addOne(6) = 7. addThenDouble(3) is double(addOne(3)) = double(4) = 8. The returned function captures f and g via closure, executing the correct function composition at call time. This pattern is the foundation of Function Composition in functional programming.",
     "sourceUrl": "https://javascript.info/closure"
+  },
+  {
+    "id": "closure-031",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "[10, 20, 30].forEach(function(val) {\n  setTimeout(function() {\n    console.log(val);\n  }, 0);\n});",
+    "options": [
+      "10, 20, 30",
+      "30, 30, 30",
+      "undefined, undefined, undefined",
+      "0, 1, 2"
+    ],
+    "correctIndex": 0,
+    "explanation": "The forEach callback receives a new parameter val for each iteration. Each setTimeout callback captures its own val via closure. Unlike var, function parameters create a new binding per call, so 10, 20, 30 are output in order. This is why the classic for-var closure problem does not occur with forEach.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach"
+  },
+  {
+    "id": "closure-032",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function makeTimer() {\n  let elapsed = 0;\n  const id = setInterval(() => {\n    elapsed++;\n    if (elapsed >= 3) clearInterval(id);\n  }, 100);\n  return () => elapsed;\n}\nconst getElapsed = makeTimer();\nsetTimeout(() => console.log(getElapsed()), 500);",
+    "options": [
+      "0",
+      "5",
+      "3",
+      "undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "Both the setInterval callback and the returned function share the same elapsed variable via closure. setInterval increments elapsed every 100ms and stops at 3 via clearInterval. After 500ms, getElapsed() is called, and elapsed has stopped at 3, so 3 is output. This demonstrates multiple async callbacks sharing a single closure variable.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/setInterval"
+  },
+  {
+    "id": "closure-033",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about arrow functions and closures is correct?",
+    "options": [
+      "Arrow functions do not form closures",
+      "Arrow functions capture their lexical environment just like regular functions, forming closures",
+      "Arrow functions can only capture global variables",
+      "Arrow function closures capture only this and no other variables"
+    ],
+    "correctIndex": 1,
+    "explanation": "Arrow functions, like regular functions, store the lexical environment at creation time in their [[Environment]] internal slot, forming closures. The key difference is that arrow functions do not have their own this binding — they lexically capture this from the enclosing scope. In terms of variable capture, they work identically to regular functions.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions"
+  },
+  {
+    "id": "closure-034",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following debounce implementation, why is the timer not properly reset?",
+    "code": "function debounce(fn, delay) {\n  return function(...args) {\n    let timer;\n    clearTimeout(timer);\n    timer = setTimeout(() => fn(...args), delay);\n  };\n}\nconst log = debounce(console.log, 300);\nlog('a');\nlog('b');\nlog('c'); // 'a', 'b', 'c' are all output",
+    "options": [
+      "clearTimeout executes asynchronously",
+      "let timer is declared inside the returned function, so a new variable is created each call and cannot reference the previous timer",
+      "The arrow function cannot capture timer",
+      "The setTimeout delay value is ignored"
+    ],
+    "correctIndex": 1,
+    "explanation": "Because let timer is declared inside the returned function, a new timer variable is created on every call. clearTimeout(timer) always receives undefined (the initial value), so it never cancels the previous timer. The correct implementation declares let timer in the debounce function scope (above the return), so all calls share the same timer through closure.",
+    "sourceUrl": "https://javascript.info/closure"
+  },
+  {
+    "id": "closure-035",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the difference between variable capture in closures and this binding is correct?",
+    "options": [
+      "this is also lexically captured by closures",
+      "Closure variables are determined by the lexical environment at definition time, but a regular function's this is determined at call time",
+      "Both closure variables and this are determined at call time",
+      "A regular function's this is always the global object"
+    ],
+    "correctIndex": 1,
+    "explanation": "Variables captured by closures are statically determined by the lexical environment where the function is defined (lexical scoping). In contrast, a regular function's this is dynamically determined by how the function is called (dynamic binding). This is why using this inside closures requires caution about the calling context. Arrow functions solve this by lexically capturing this.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this"
+  },
+  {
+    "id": "closure-036",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function outer() {\n  let x = 10;\n  function middle() {\n    let y = 20;\n    function inner() {\n      let z = 30;\n      return x + y + z;\n    }\n    x = 100;\n    return inner;\n  }\n  return middle;\n}\nconst mid = outer();\nconst inn = mid();\nconsole.log(inn());",
+    "options": [
+      "60",
+      "150",
+      "130",
+      "160"
+    ],
+    "correctIndex": 1,
+    "explanation": "Through the scope chain, inner captures y from middle and x from outer via closure. The crucial point is that closures capture the variable binding itself, not the value at capture time. When middle() executes, x is reassigned to 100 before inner is returned. When inn() is called, x is already 100, so the result is 100 + 20 + 30 = 150.",
+    "sourceUrl": "https://javascript.info/closure"
+  },
+  {
+    "id": "closure-037",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about what closures capture is correct?",
+    "options": [
+      "Closures copy and store the variable's value at capture time",
+      "Closures capture a reference to the variable binding itself, so subsequent changes are reflected",
+      "Closures can only capture primitive types, not objects",
+      "Closures can only capture variables declared with const"
+    ],
+    "correctIndex": 1,
+    "explanation": "Closures capture a reference to the variable binding, not a snapshot of the value. This means if the outer variable changes, the closure sees the updated value, and vice versa — changes made inside the closure are visible outside. This is why closures can modify let/var variables, and it is the principle behind the counter pattern.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-038",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In the following React component, why does handleClick always log the initial count value (0)?",
+    "code": "function Counter() {\n  const [count, setCount] = useState(0);\n  useEffect(() => {\n    document.addEventListener('click', handleClick);\n    return () => document.removeEventListener('click', handleClick);\n  }, []);\n  function handleClick() {\n    console.log(count);\n  }\n  // ...\n}",
+    "options": [
+      "useState operates asynchronously",
+      "document.addEventListener copies the count value",
+      "The empty dependency array ([]) in useEffect causes handleClick to capture the initial render's count (0) via closure and never update",
+      "handleClick is not an arrow function"
+    ],
+    "correctIndex": 2,
+    "explanation": "When the useEffect dependency array is empty ([]), the effect runs only on the initial render. The handleClick registered at that time captures the initial count (0) via closure. Even when count changes through setCount and re-renders occur, the already-registered event listener's handleClick still references the old closure. This is known as the 'stale closure' problem and can be solved by adding count to the dependency array or using useRef.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-039",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "function createGreeting(greeting) {\n  return function(name) {\n    return `${greeting}, ${name}!`;\n  };\n}\nconst sayHi = createGreeting('Hi');\nconst sayBye = createGreeting('Bye');\nconsole.log(sayHi('Alice'));\nconsole.log(sayBye('Bob'));",
+    "options": [
+      "Hi, Alice! / Bye, Bob!",
+      "Bye, Alice! / Bye, Bob!",
+      "Hi, Bob! / Bye, Alice!",
+      "undefined, Alice! / undefined, Bob!"
+    ],
+    "correctIndex": 0,
+    "explanation": "createGreeting('Hi') returns a function that captures greeting='Hi' via closure. createGreeting('Bye') creates a separate lexical environment capturing greeting='Bye'. sayHi('Alice') combines 'Hi' and 'Alice' to return 'Hi, Alice!', and sayBye('Bob') combines 'Bye' and 'Bob' to return 'Bye, Bob!'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-040",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about the difference between closure-based singletons and ES6 module scope singletons is correct?",
+    "options": [
+      "Closure singletons hide the instance in an IIFE requiring explicit getInstance() calls, while ES6 module singletons are automatic because each module is evaluated only once so an exported instance is inherently a singleton",
+      "ES6 modules create a new instance on every import",
+      "Closure singletons must store the instance in a global variable",
+      "Both patterns work identically with no differences"
+    ],
+    "correctIndex": 0,
+    "explanation": "Closure singletons hide the instance inside an IIFE and expose it through getInstance(). This pattern was useful before ES6 when there was no module scope. ES6 modules are evaluated only once by the runtime, so an instance created at the module's top level and exported is shared across all imports. The ES6 module approach is more concise and also benefits from static analysis by build tools.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules"
   }
 ]

@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 10 prototype questions (029-038) (`4da87d0`)
 - **content**: add 10 promise questions (029-038) (`1f44e49`)
 - **content**: fix — rephrase 031 question, add correctIndex 3 (`c695435`)
 - **content**: add 10 async questions (029-038) (`b0a235c`)
