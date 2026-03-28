@@ -463,5 +463,170 @@
     "correctIndex": 0,
     "explanation": "Object.keys()는 객체 자신의 열거 가능한(enumerable) 프로퍼티 이름만 반환합니다. Object.getOwnPropertyNames()는 열거 가능 여부에 관계없이 객체 자신의 모든 문자열 프로퍼티 이름을 반환합니다. 예를 들어 배열의 length는 열거 불가능하므로 Object.keys에는 포함되지 않지만 getOwnPropertyNames에는 포함됩니다. 둘 다 프로토타입 프로퍼티는 포함하지 않습니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyNames"
+  },
+  {
+    "id": "prototype-029",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Symbol.hasInstance를 사용하면 어떤 동작을 커스터마이징할 수 있나요?",
+    "options": [
+      "Object.keys()의 반환 결과를 변경할 수 있다",
+      "instanceof 연산자의 판별 로직을 커스터마이징할 수 있다",
+      "for...in 루프의 순회 순서를 변경할 수 있다",
+      "JSON.stringify()의 직렬화 동작을 변경할 수 있다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Symbol.hasInstance는 instanceof 연산자가 사용하는 정적 메서드를 정의하는 Well-known Symbol입니다. 클래스에 static [Symbol.hasInstance](instance) 메서드를 정의하면 instanceof의 기본 프로토타입 체인 검사 대신 사용자 정의 로직으로 판별할 수 있습니다. 예: class Even { static [Symbol.hasInstance](num) { return num % 2 === 0; } } → 4 instanceof Even은 true입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Symbol/hasInstance"
+  },
+  {
+    "id": "prototype-030",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const proto = { x: 1, y: 2 };\nconst child = Object.create(proto);\nchild.z = 3;\nconst copied = Object.assign({}, child);\nconsole.log(copied.x);\nconsole.log(copied.z);\nconsole.log(Object.getPrototypeOf(copied) === proto);",
+    "options": [
+      "1, 3, true",
+      "undefined, 3, false",
+      "1, 3, false",
+      "undefined, 3, true"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.assign()은 소스 객체의 자체(own) 열거 가능한 프로퍼티만 복사합니다. child의 자체 프로퍼티는 z뿐이고, x와 y는 프로토타입에서 상속받은 것이므로 복사되지 않습니다. 결과 객체 copied는 {}를 타겟으로 했으므로 Object.prototype을 프로토타입으로 가지며, proto와는 관계가 없습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/assign"
+  },
+  {
+    "id": "prototype-031",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "프로토타입 오염(Prototype Pollution)이란 무엇인가요?",
+    "options": [
+      "프로토타입 체인이 너무 길어져 스택 오버플로우가 발생하는 현상",
+      "프로토타입 객체가 가비지 컬렉션되어 메모리 누수가 발생하는 현상",
+      "공격자가 Object.prototype 등 공유 프로토타입에 프로퍼티를 주입하여 모든 객체의 동작에 영향을 미치는 보안 취약점",
+      "ES6 class를 사용하지 않아 발생하는 성능 저하 현상"
+    ],
+    "correctIndex": 2,
+    "explanation": "프로토타입 오염은 공격자가 사용자 입력을 통해 Object.prototype이나 다른 공유 프로토타입 객체에 악의적인 프로퍼티를 삽입하는 보안 취약점입니다. 예를 들어 obj['__proto__']['isAdmin'] = true 같은 코드가 실행되면 모든 객체에서 isAdmin이 true로 조회될 수 있습니다. 이를 방지하려면 사용자 입력의 키 검증, Object.create(null) 사용, Map 사용 등의 대책이 필요합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Inheritance_and_the_prototype_chain"
+  },
+  {
+    "id": "prototype-032",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const parent = { list: [1, 2, 3] };\nconst child = Object.create(parent);\nchild.list.push(4);\nconsole.log(parent.list.length);\nconsole.log(child.hasOwnProperty('list'));",
+    "options": [
+      "3, true",
+      "4, true",
+      "3, false",
+      "4, false"
+    ],
+    "correctIndex": 3,
+    "explanation": "child.list는 child 자체에 list 프로퍼티가 없으므로 프로토타입 체인을 통해 parent.list를 참조합니다. push()는 해당 배열을 직접 변경(mutate)합니다. 프로퍼티 섀도잉이 일어나지 않고 원본 배열이 수정되므로 parent.list.length는 4가 됩니다. child에 자체 list 프로퍼티가 생성된 것이 아니므로 hasOwnProperty('list')는 false입니다.",
+    "sourceUrl": "https://javascript.info/prototype-inheritance"
+  },
+  {
+    "id": "prototype-033",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "클래스의 static 메서드와 prototype 메서드의 차이점은?",
+    "options": [
+      "static 메서드는 인스턴스에서만, prototype 메서드는 클래스에서만 호출할 수 있다",
+      "둘 다 인스턴스에서 호출할 수 있으며 차이가 없다",
+      "static 메서드는 클래스 자체에서 호출하고, prototype 메서드는 인스턴스에서 호출한다",
+      "prototype 메서드는 ES6에서 제거되었다"
+    ],
+    "correctIndex": 2,
+    "explanation": "static 메서드는 생성자 함수(클래스) 자체의 프로퍼티로, 인스턴스가 아닌 클래스에서 직접 호출합니다(예: Array.isArray()). prototype 메서드는 Constructor.prototype에 정의되어 모든 인스턴스가 프로토타입 체인을 통해 공유합니다(예: [].map()). static 메서드 내의 this는 클래스 자체를, prototype 메서드 내의 this는 인스턴스를 가리킵니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Classes/static"
+  },
+  {
+    "id": "prototype-034",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const Serializable = {\n  toJSON() { return { ...this, _type: this.constructor.name }; }\n};\nconst Printable = {\n  toString() { return JSON.stringify(this); }\n};\nfunction createUser(name) {\n  return Object.assign(Object.create(Serializable), Printable, { name });\n}\nconst u = createUser('Kim');\nconsole.log(u.toJSON()._type);\nconsole.log(typeof u.toString);",
+    "options": [
+      "User, undefined",
+      "Object, function",
+      "createUser, function",
+      "Kim, string"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.create(Serializable)는 Serializable을 프로토타입으로 하는 객체를 만듭니다. Object.assign으로 Printable과 {name}을 자체 프로퍼티로 복사합니다. toJSON 내의 this.constructor는 Object(일반 객체의 기본 constructor)이므로 _type은 'Object'입니다. toString은 Printable에서 복사된 자체 메서드이므로 typeof는 'function'입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/assign"
+  },
+  {
+    "id": "prototype-035",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Object.hasOwn()이 obj.hasOwnProperty()보다 권장되는 이유는?",
+    "options": [
+      "Object.hasOwn()이 더 빠르기 때문",
+      "Object.hasOwn()은 프로토타입 프로퍼티도 검사하기 때문",
+      "Object.create(null)로 만든 객체에서도 안전하게 사용할 수 있기 때문",
+      "Object.hasOwn()은 심볼 프로퍼티도 검사하기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "Object.create(null)로 만든 객체는 Object.prototype을 상속하지 않아 hasOwnProperty 메서드가 존재하지 않습니다. 이런 객체에서 obj.hasOwnProperty()를 호출하면 TypeError가 발생합니다. Object.hasOwn(obj, prop)은 정적 메서드이므로 프로토타입 체인에 의존하지 않아 모든 객체에서 안전하게 자체 프로퍼티를 검사할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn"
+  },
+  {
+    "id": "prototype-036",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 Object.defineProperty로 정의한 프로퍼티가 for...in에서 보이지 않습니다. 원인은 무엇인가요?",
+    "code": "function Config() {}\nObject.defineProperty(Config.prototype, 'version', {\n  value: '1.0',\n  writable: false,\n  enumerable: false\n});\nconst c = new Config();\nconsole.log(c.version); // '1.0'\nfor (const key in c) {\n  console.log(key); // 아무것도 출력되지 않음\n}",
+    "options": [
+      "Object.defineProperty는 프로토타입에 프로퍼티를 추가할 수 없기 때문",
+      "writable: false로 설정하면 프로퍼티가 숨겨지기 때문",
+      "enumerable: false로 설정된 프로퍼티는 for...in에서 열거되지 않기 때문",
+      "Config 생성자에 프로퍼티가 정의되지 않았기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "Object.defineProperty()로 프로퍼티를 정의할 때 enumerable: false로 설정하면 해당 프로퍼티는 for...in, Object.keys(), JSON.stringify() 등에서 열거되지 않습니다. 프로퍼티 자체는 존재하여 직접 접근은 가능하지만(c.version → '1.0'), 열거 과정에서는 건너뜁니다. 이는 내장 객체의 메서드(Array.prototype.map 등)가 for...in에서 보이지 않는 것과 같은 원리입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty"
+  },
+  {
+    "id": "prototype-037",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 화살표 함수로 정의한 메서드가 예상대로 동작하지 않습니다. 원인은 무엇인가요?",
+    "code": "function Counter() {\n  this.count = 0;\n}\nCounter.prototype.increment = () => {\n  this.count++;\n  return this.count;\n};\nconst c = new Counter();\nconsole.log(c.increment()); // NaN",
+    "options": [
+      "prototype에는 메서드를 추가할 수 없기 때문",
+      "화살표 함수는 자체 this를 가지지 않아 프로토타입 메서드에서 인스턴스를 참조할 수 없기 때문",
+      "increment 메서드가 count 프로퍼티보다 먼저 호출되었기 때문",
+      "this.count++는 문법 오류이기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "화살표 함수는 자체 this 바인딩을 갖지 않고 정의 시점의 외부 스코프의 this를 캡처합니다. 모듈 스코프나 전역에서 정의된 화살표 함수의 this는 모듈 최상위의 this(undefined 또는 전역 객체)가 됩니다. 따라서 c.increment()를 호출해도 this가 c를 가리키지 않아 this.count가 undefined가 되고 ++연산 결과 NaN이 됩니다. 프로토타입 메서드는 일반 함수나 메서드 축약으로 정의해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/Arrow_functions"
+  },
+  {
+    "id": "prototype-038",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "in 연산자와 hasOwnProperty()의 차이점은?",
+    "options": [
+      "in은 프로토타입 체인을 포함하여 검사하고, hasOwnProperty는 자체 프로퍼티만 검사한다",
+      "둘 다 프로토타입 체인을 포함하여 검사한다",
+      "hasOwnProperty가 프로토타입 체인을 포함하여 검사하고, in은 자체 프로퍼티만 검사한다",
+      "둘 다 자체 프로퍼티만 검사한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "'key' in obj 연산자는 프로토타입 체인 전체를 포함하여 프로퍼티 존재 여부를 검사합니다. obj.hasOwnProperty('key')는 프로토타입을 무시하고 객체 자체의 프로퍼티만 검사합니다. 예를 들어 const obj = {}에서 'toString' in obj는 true(Object.prototype에서 상속)이지만, obj.hasOwnProperty('toString')은 false입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/in"
   }
 ]
