@@ -23,6 +23,14 @@ log() {
   echo "[$(date '+%H:%M:%S')] $1" | tee -a "${LOG_FILE}"
 }
 
+# Run claude with a hard timeout (seconds). Uses perl alarm since macOS lacks timeout(1).
+# Exit code 124 on timeout (matches GNU timeout behavior).
+timeout_claude() {
+  local secs="$1"
+  shift
+  perl -e "alarm(${secs}); exec @ARGV" -- "$@"
+}
+
 notify() {
   local status="$1" title="$2" body="${3:-}"
   local webhook_url="${DISCORD_WEBHOOK_URL:-}"
@@ -129,7 +137,7 @@ main() {
   fi
 
   local decision
-  decision="$(claude -p "Read .harness/docs/status.md and .harness/docs/codemap.md.
+  decision="$(timeout_claude 300 claude -p "Read .harness/docs/status.md and .harness/docs/codemap.md.
 
 ## Strategy (READ THIS FIRST — this is the source of truth)
 
@@ -188,7 +196,7 @@ DETAILS:
 <what changed, counts, stats>"
 
   local agent_output
-  agent_output="$(claude -p "${agent_prompt}" \
+  agent_output="$(timeout_claude 2700 claude -p "${agent_prompt}" \
     --allowedTools 'Bash(git diff:*),Bash(git log:*),Bash(git status:*),Bash(git ls-files:*),Bash(cat:*),Bash(ls:*),Bash(find:*),Bash(wc:*),Bash(mkdir:*),Bash(head:*),Bash(tail:*),Read,Write,Edit,Glob,Grep' \
     --dangerously-skip-permissions \
     --max-turns 50 2>&1)" || true
@@ -256,7 +264,7 @@ DETAILS:
 
     # Send errors to a fix agent
     local fix_output
-    fix_output="$(claude -p "You are a build-error fixer. Fix the errors below with MINIMAL changes. Do NOT refactor, add features, or change architecture. Only fix the exact errors shown.
+    fix_output="$(timeout_claude 1200 claude -p "You are a build-error fixer. Fix the errors below with MINIMAL changes. Do NOT refactor, add features, or change architecture. Only fix the exact errors shown.
 
 ## Errors
 
@@ -302,7 +310,7 @@ Work directory: ${PROJECT_DIR}" \
   fi
 
   local review_output
-  review_output="$(claude -p "$(cat "${HARNESS_DIR}/agents/review.md")
+  review_output="$(timeout_claude 900 claude -p "$(cat "${HARNESS_DIR}/agents/review.md")
 
 ## Changes to Review
 
@@ -323,7 +331,7 @@ Review and output APPROVE or REJECT with reason." \
     # ---- Fix Loop: feed rejection reason back to original agent ----
     log "Step 5a: Attempting fix based on review feedback..."
     local fix_output
-    fix_output="$(claude -p "$(cat "${HARNESS_DIR}/agents/${agent}.md")
+    fix_output="$(timeout_claude 1800 claude -p "$(cat "${HARNESS_DIR}/agents/${agent}.md")
 
 ## Fix Required
 
@@ -368,7 +376,7 @@ SUMMARY: fix — <what was fixed>" \
     fi
 
     local re_review_output
-    re_review_output="$(claude -p "$(cat "${HARNESS_DIR}/agents/review.md")
+    re_review_output="$(timeout_claude 900 claude -p "$(cat "${HARNESS_DIR}/agents/review.md")
 
 ## Changes to Review
 
@@ -447,7 +455,7 @@ Review and output APPROVE or REJECT with reason." \
   # Step 7: Update status + notify
   # ----------------------------------------
   log "Step 7: Updating status..."
-  claude -p "Read .harness/docs/status.md. Update it: last run was ${agent}, result success, summary '${summary}'. Add to recent runs table. Update project health if needed. Write the updated file. ALL text in status.md must be in English." \
+  timeout_claude 300 claude -p "Read .harness/docs/status.md. Update it: last run was ${agent}, result success, summary '${summary}'. Add to recent runs table. Update project health if needed. Write the updated file. ALL text in status.md must be in English." \
     --dangerously-skip-permissions \
     --max-turns 5 2>&1 | tee -a "${LOG_FILE}" || true
 
