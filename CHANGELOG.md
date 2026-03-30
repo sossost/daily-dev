@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-03-31
+
+### Features
+
+- **content**: fix — design-patterns-038 answer and explanation (`e809976`)
+
 ## 2026-03-30
 
 ### Features

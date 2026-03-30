@@ -492,5 +492,170 @@
     "correctIndex": 2,
     "explanation": "requestAnimationFrame (rAF) executes its callback just before the browser performs the next repaint. It is typically called 60 times per second (60fps) and is optimized to match the display's refresh rate. Unlike setTimeout, the browser pauses rAF calls in inactive tabs to conserve resources. Performing DOM animations and layout changes inside rAF enables smooth rendering without frame drops.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame"
+  },
+  {
+    "id": "dom-manipulation-031",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which of the following is NOT a valid position value for the first argument of insertAdjacentHTML()?",
+    "options": [
+      "beforebegin",
+      "afterbegin",
+      "innerend",
+      "afterend"
+    ],
+    "correctIndex": 2,
+    "explanation": "insertAdjacentHTML() supports 4 positions: 'beforebegin' (before the element), 'afterbegin' (before the first child), 'beforeend' (after the last child), and 'afterend' (after the element). 'innerend' is not a valid position value. Unlike innerHTML, it inserts HTML without destroying the existing DOM, which is better for performance.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML"
+  },
+  {
+    "id": "dom-manipulation-032",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const div = document.createElement('div');\nconst span = document.createElement('span');\nconst p = document.createElement('p');\ndiv.appendChild(span);\nspan.replaceWith(p);\nconsole.log(div.firstElementChild.tagName, span.parentNode);",
+    "options": [
+      "SPAN, [object HTMLDivElement]",
+      "P, null",
+      "P, [object HTMLDivElement]",
+      "SPAN, null"
+    ],
+    "correctIndex": 1,
+    "explanation": "replaceWith() replaces the element it is called on with the given node(s). Since span was replaced by p, the first child of div is now p. The replaced span is detached from the DOM, so its parentNode becomes null. replaceWith() can also accept multiple nodes and strings as arguments.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/replaceWith"
+  },
+  {
+    "id": "dom-manipulation-033",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of the element.matches() method?",
+    "options": [
+      "It returns a boolean indicating whether the element matches the given CSS selector",
+      "It returns child elements that match the CSS selector",
+      "It returns all matching elements as an array",
+      "It compares whether two elements are the same node"
+    ],
+    "correctIndex": 0,
+    "explanation": "matches() checks whether the element matches the given CSS selector and returns true or false. It is particularly useful in event delegation to check whether event.target is a specific element. For example, event.target.matches('.btn') checks whether the clicked element has the .btn class.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/matches"
+  },
+  {
+    "id": "dom-manipulation-034",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why is the content inside the template not displayed on screen in the following code?",
+    "code": "document.body.innerHTML = `\n  <template id=\"tmpl\">\n    <div class=\"card\">Hello</div>\n  </template>\n`;\nconst tmpl = document.getElementById('tmpl');\nconsole.log(tmpl.children.length);",
+    "options": [
+      "The content of a template tag is not rendered, and must be accessed via content.children instead of children",
+      "Template tags cannot be accessed from JavaScript",
+      "Templates created via innerHTML are ignored",
+      "Div elements cannot be placed inside a template"
+    ],
+    "correctIndex": 0,
+    "explanation": "The content of an HTML <template> element is inert and not rendered. Its internal content is accessed through the content property, which is a DocumentFragment. tmpl.children.length is 0, but tmpl.content.children.length is 1. To use it, clone it with document.importNode(tmpl.content, true) and then insert it into the DOM.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template"
+  },
+  {
+    "id": "dom-manipulation-035",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const ul = document.createElement('ul');\nconst li1 = document.createElement('li');\nconst li2 = document.createElement('li');\nli1.textContent = 'A';\nli2.textContent = 'B';\nul.appendChild(li1);\nli1.after(li2);\nconsole.log(ul.children.length, ul.lastElementChild.textContent);",
+    "options": [
+      "2, B",
+      "1, A",
+      "2, A",
+      "1, B"
+    ],
+    "correctIndex": 0,
+    "explanation": "The after() method inserts nodes right after the element it is called on. li1.after(li2) inserts li2 right after li1. Therefore, ul has two children (li1 and li2), and the last element child li2 has textContent 'B'. The before() method works in the opposite direction, inserting before the element.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/after"
+  },
+  {
+    "id": "dom-manipulation-036",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between offsetWidth and getBoundingClientRect().width?",
+    "options": [
+      "offsetWidth includes decimal points, while getBoundingClientRect().width returns only integers",
+      "getBoundingClientRect().width does not reflect CSS transforms, but offsetWidth does",
+      "offsetWidth returns a rounded integer value, while getBoundingClientRect().width returns a precise floating-point value",
+      "Both values are always identical"
+    ],
+    "correctIndex": 2,
+    "explanation": "offsetWidth returns the element's layout width as a rounded integer (including border and padding). getBoundingClientRect().width returns a precise floating-point value and reflects the actual rendered size after CSS transforms (such as scale) are applied. Use getBoundingClientRect() when precise size calculations are needed.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetWidth"
+  },
+  {
+    "id": "dom-manipulation-037",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why doesn't the following code remove all children as intended?",
+    "code": "const parent = document.createElement('div');\nparent.innerHTML = '<span>1</span><span>2</span><span>3</span>';\nconst children = parent.children;\nfor (let i = 0; i < children.length; i++) {\n  children[i].remove();\n}",
+    "options": [
+      "The remove() method cannot be called on children elements",
+      "children is a live collection, so removing elements shifts indices and causes some elements to be skipped",
+      "const should be used instead of let",
+      "Elements created via innerHTML cannot be removed with remove()"
+    ],
+    "correctIndex": 1,
+    "explanation": "children is a live HTMLCollection. When children[0] is removed, the previous children[1] becomes children[0] and the length decreases. But i increments to 1, so it processes the new children[1] (originally children[2]), skipping the middle element. Solutions: use while (parent.firstChild) parent.firstChild.remove(), or create a static array with [...children] before iterating.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/children"
+  },
+  {
+    "id": "dom-manipulation-038",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const div = document.createElement('div');\ndiv.innerHTML = '<p>one</p><p>two</p><p>three</p>';\nconst ps = div.querySelectorAll('p');\ndiv.replaceChildren(ps[2], ps[0]);\nconsole.log(div.innerHTML);",
+    "options": [
+      "<p>one</p><p>two</p><p>three</p>",
+      "<p>three</p><p>one</p>",
+      "<p>one</p><p>three</p>",
+      "<p>two</p>"
+    ],
+    "correctIndex": 1,
+    "explanation": "replaceChildren() removes all existing child nodes and replaces them with the nodes passed as arguments. ps[2] is 'three' and ps[0] is 'one', so they are inserted in that order. Since querySelectorAll returns a static NodeList, the references to ps[0] and ps[2] remain valid despite DOM changes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/replaceChildren"
+  },
+  {
+    "id": "dom-manipulation-039",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What does element.scrollIntoView({ behavior: 'smooth' }) do?",
+    "options": [
+      "It removes the element from the DOM and reinserts it at the top of the viewport",
+      "It scrolls with a smooth animation so the element becomes visible in the viewport",
+      "It changes the element's CSS position to fixed",
+      "It resizes the viewport to fit the element"
+    ],
+    "correctIndex": 1,
+    "explanation": "scrollIntoView() scrolls the page so that the element becomes visible to the user. The behavior: 'smooth' option applies a smooth scrolling animation instead of an instant jump. The block and inline options can also be used to specify vertical and horizontal alignment positions. It does not modify the DOM structure or CSS.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView"
+  },
+  {
+    "id": "dom-manipulation-040",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference between createTreeWalker() and querySelectorAll()?",
+    "options": [
+      "querySelectorAll() returns a live collection, while createTreeWalker() returns a static snapshot",
+      "createTreeWalker() can traverse all node types including text and comment nodes, while querySelectorAll() returns only Element nodes",
+      "createTreeWalker() supports CSS selectors, while querySelectorAll() does not",
+      "Both APIs return the same results"
+    ],
+    "correctIndex": 1,
+    "explanation": "createTreeWalker() is a low-level API that can traverse various node types using NodeFilter, including text nodes (NodeFilter.SHOW_TEXT) and comment nodes (NodeFilter.SHOW_COMMENT). querySelectorAll() returns only Element nodes matching CSS selectors as a static NodeList. TreeWalker can define complex traversal conditions using custom filter functions, making it useful for fine-grained DOM tree exploration.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Document/createTreeWalker"
   }
 ]
