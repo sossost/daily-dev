@@ -158,7 +158,7 @@ ${context_content}
 Pay attention to the Avoid Directives — do not pick an agent+approach that recently produced no changes or failed.
 Output ONLY one word: content, code, expansion, feature, or skip." \
     --dangerously-skip-permissions \
-    --max-turns 5 2>&1)"
+    --max-turns 5 2>&1)" || true
 
   # Extract agent name
   local agent
