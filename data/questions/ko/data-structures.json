@@ -493,5 +493,171 @@
     "correctIndex": 1,
     "explanation": "structuredClone()은 구조적 복제 알고리즘을 사용하여 Date, Map, Set, RegExp, ArrayBuffer 등을 올바르게 복사하고 순환 참조도 처리합니다. 반면 JSON.parse(JSON.stringify())는 Date를 문자열로 변환하고, Map/Set은 빈 객체가 되며, 순환 참조에서 에러가 발생합니다. 단, 두 방법 모두 함수는 복사할 수 없습니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/structuredClone"
+  },
+  {
+    "id": "data-structures-031",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const arr = [1, [2, 3], [4, [5, 6]]];\nconst flat1 = arr.flat();\nconst flat2 = arr.flat(Infinity);\nconsole.log(flat1.length, flat2.length);",
+    "options": [
+      "3 6",
+      "6 6",
+      "4 6",
+      "5 6"
+    ],
+    "correctIndex": 3,
+    "explanation": "flat()은 기본적으로 깊이 1까지만 평탄화합니다. [1, [2, 3], [4, [5, 6]]]에서 깊이 1만 풀면 [1, 2, 3, 4, [5, 6]]으로 길이가 5입니다. flat(Infinity)는 모든 중첩을 풀어 [1, 2, 3, 4, 5, 6]으로 길이가 6입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/flat"
+  },
+  {
+    "id": "data-structures-032",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "JavaScript의 Proxy를 사용하여 객체에 대한 기본 동작을 가로챌 수 있습니다. Proxy의 주요 사용 사례로 적절하지 않은 것은 무엇인가요?",
+    "options": [
+      "객체 프로퍼티 접근 시 유효성 검사 추가",
+      "존재하지 않는 프로퍼티 접근 시 기본값 반환",
+      "객체의 프로토타입 체인을 완전히 제거",
+      "프로퍼티 변경 시 로깅이나 반응형 업데이트 트리거"
+    ],
+    "correctIndex": 2,
+    "explanation": "Proxy는 get, set, has, deleteProperty 등의 트랩(trap)을 통해 객체 동작을 가로채고 커스터마이즈할 수 있습니다. 유효성 검사, 기본값 제공, 변경 감지 등은 대표적인 사용 사례입니다. 그러나 프로토타입 체인 자체를 제거하는 것은 Proxy의 용도가 아니며, Object.create(null)로 프로토타입 없는 객체를 만드는 것이 올바른 방법입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Proxy"
+  },
+  {
+    "id": "data-structures-033",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function* range(start, end) {\n  for (let i = start; i < end; i++) {\n    yield i;\n  }\n}\nconst nums = [...range(1, 5)];\nconsole.log(nums, nums.length);",
+    "options": [
+      "[1, 2, 3, 4] 4",
+      "[1, 2, 3, 4, 5] 5",
+      "[0, 1, 2, 3, 4] 5",
+      "[1, 2, 3] 3"
+    ],
+    "correctIndex": 0,
+    "explanation": "제너레이터 함수 range는 start부터 end 미만까지 값을 yield합니다. range(1, 5)는 1, 2, 3, 4를 순서대로 생성합니다. 스프레드 연산자(...)로 이터러블을 배열로 변환하면 [1, 2, 3, 4]가 되고, length는 4입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/function*"
+  },
+  {
+    "id": "data-structures-034",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 Array.from()을 사용한 변환이 예상과 다르게 동작하는 이유는 무엇인가요?",
+    "code": "const arrayLike = { 0: 'a', 1: 'b', 2: 'c' };\nconst arr = Array.from(arrayLike);\nconsole.log(arr);",
+    "options": [
+      "Array.from()은 이터러블만 변환할 수 있어 에러가 발생한다",
+      "객체의 키가 문자열이라 숫자 인덱스로 인식되지 않는다",
+      "Array.from()은 일반 객체를 변환할 수 없어 null이 반환된다",
+      "length 프로퍼티가 없어서 빈 배열이 생성된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Array.from()은 유사 배열 객체(array-like object)를 변환할 때 length 프로퍼티를 기준으로 배열을 생성합니다. length가 없으면 0으로 간주되어 빈 배열 []이 반환됩니다. { 0: 'a', 1: 'b', 2: 'c', length: 3 }처럼 length를 명시해야 ['a', 'b', 'c']가 생성됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/from"
+  },
+  {
+    "id": "data-structures-035",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "ES2025에서 추가된 Set 메서드 중, 두 Set의 교집합을 구하는 메서드는 무엇인가요?",
+    "options": [
+      "Set.prototype.union()",
+      "Set.prototype.difference()",
+      "Set.prototype.intersection()",
+      "Set.prototype.symmetricDifference()"
+    ],
+    "correctIndex": 2,
+    "explanation": "ES2025에서 Set에 여러 집합 연산 메서드가 추가되었습니다. intersection()은 두 Set의 공통 요소만 포함하는 새 Set을 반환합니다. union()은 합집합, difference()는 차집합, symmetricDifference()는 대칭 차집합을 반환합니다. 이전에는 수동으로 filter와 has를 조합해야 했던 작업이 간결해졌습니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/intersection"
+  },
+  {
+    "id": "data-structures-036",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const arr = [10, 20, 30, 40, 50];\nconsole.log(arr.at(-1), arr.at(-2));",
+    "options": [
+      "undefined undefined",
+      "10 20",
+      "50 40",
+      "50 50"
+    ],
+    "correctIndex": 2,
+    "explanation": "Array.prototype.at() 메서드는 음수 인덱스를 지원합니다. at(-1)은 마지막 요소(50)를, at(-2)는 뒤에서 두 번째 요소(40)를 반환합니다. 기존의 arr[arr.length - 1] 패턴보다 간결하게 뒤에서부터 요소에 접근할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/at"
+  },
+  {
+    "id": "data-structures-037",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "JavaScript에서 ArrayBuffer와 DataView의 관계에 대한 설명으로 올바른 것은 무엇인가요?",
+    "options": [
+      "ArrayBuffer는 데이터를 직접 읽고 쓸 수 있으며, DataView는 필요하지 않다",
+      "DataView는 하나의 ArrayBuffer에서 여러 숫자 타입을 혼합하여 읽고 쓸 수 있는 뷰를 제공한다",
+      "ArrayBuffer는 문자열 데이터를 저장하기 위해 설계된 자료구조이다",
+      "DataView는 ArrayBuffer 없이 독립적으로 메모리를 할당한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "ArrayBuffer는 고정 크기의 원시 바이너리 데이터 버퍼로, 직접 읽거나 쓸 수 없습니다. DataView는 ArrayBuffer 위의 뷰로, getInt8(), getFloat32() 등 다양한 숫자 타입을 혼합하여 같은 버퍼의 다른 위치에서 읽고 쓸 수 있습니다. 이는 네트워크 프로토콜이나 바이너리 파일 파싱에 유용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/DataView"
+  },
+  {
+    "id": "data-structures-038",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 Map의 forEach와 일반 객체의 for...in 루프가 다르게 동작하는 이유는 무엇인가요?",
+    "code": "const map = new Map([[1, 'one'], [2, 'two']]);\nmap.forEach((value, key) => {\n  console.log(typeof key);\n});\n\nconst obj = { 1: 'one', 2: 'two' };\nfor (const key in obj) {\n  console.log(typeof key);\n}",
+    "options": [
+      "Map은 'number'를, 객체는 'string'을 출력한다",
+      "둘 다 'number'를 출력한다",
+      "둘 다 'string'을 출력한다",
+      "Map은 'string'을, 객체는 'number'를 출력한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "Map은 키의 원래 타입을 유지하므로 숫자 1, 2는 number 타입 그대로 저장됩니다. 반면 일반 객체의 키는 항상 문자열(또는 Symbol)로 변환됩니다. 따라서 for...in으로 순회하면 typeof key는 'string'입니다. 이것이 Map이 다양한 키 타입을 지원하는 이유 중 하나입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Map#objects_vs._maps"
+  },
+  {
+    "id": "data-structures-039",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "희소 배열(sparse array)에 대한 설명으로 올바른 것은 무엇인가요?",
+    "code": "const sparse = [1, , , 4];\nconsole.log(sparse.length);\nconsole.log(1 in sparse);",
+    "options": [
+      "length는 2이고, 1 in sparse는 true이다",
+      "length는 4이고, 1 in sparse는 true이다",
+      "length는 4이고, 1 in sparse는 false이다",
+      "length는 3이고, 1 in sparse는 false이다"
+    ],
+    "correctIndex": 2,
+    "explanation": "희소 배열은 일부 인덱스에 값이 할당되지 않은 '빈 슬롯(empty slot)'을 가집니다. [1, , , 4]의 length는 4이지만, 인덱스 1과 2에는 값이 없습니다. in 연산자는 해당 인덱스에 실제로 값이 존재하는지 확인하므로, 1 in sparse는 false입니다. 빈 슬롯은 undefined와 다르며, forEach 같은 메서드는 빈 슬롯을 건너뜁니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Indexed_collections#sparse_arrays"
+  },
+  {
+    "id": "data-structures-040",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "JavaScript에서 배열의 unshift()와 shift()를 사용하여 Deque(양방향 큐)를 구현할 때의 성능 문제는 무엇인가요?",
+    "options": [
+      "unshift()와 shift()는 메모리를 해제하지 않아 메모리 누수가 발생한다",
+      "배열 앞에서의 삽입/삭제는 모든 요소의 인덱스를 재조정해야 하므로 O(n) 시간이 소요된다",
+      "unshift()는 최대 하나의 요소만 추가할 수 있다",
+      "shift()는 비동기로 동작하여 순서가 보장되지 않는다"
+    ],
+    "correctIndex": 1,
+    "explanation": "배열의 unshift()와 shift()는 배열의 앞쪽에서 요소를 추가/제거합니다. 이때 나머지 모든 요소의 인덱스를 하나씩 밀거나 당겨야 하므로 O(n) 시간 복잡도를 가집니다. 반면 push()와 pop()은 끝에서만 작업하므로 O(1)입니다. 대량의 데이터에서 양방향 큐가 필요하면 연결 리스트 기반 구현이 더 효율적입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/unshift"
   }
 ]

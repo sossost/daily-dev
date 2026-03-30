@@ -493,5 +493,171 @@
     "correctIndex": 1,
     "explanation": "structuredClone() uses the structured clone algorithm to correctly copy Date, Map, Set, RegExp, ArrayBuffer, and more, and also handles circular references. In contrast, JSON.parse(JSON.stringify()) converts Date to strings, turns Map/Set into empty objects, and throws an error on circular references. However, neither method can copy functions.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/structuredClone"
+  },
+  {
+    "id": "data-structures-031",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const arr = [1, [2, 3], [4, [5, 6]]];\nconst flat1 = arr.flat();\nconst flat2 = arr.flat(Infinity);\nconsole.log(flat1.length, flat2.length);",
+    "options": [
+      "3 6",
+      "6 6",
+      "4 6",
+      "5 6"
+    ],
+    "correctIndex": 3,
+    "explanation": "flat() flattens only one level deep by default. [1, [2, 3], [4, [5, 6]]] flattened one level becomes [1, 2, 3, 4, [5, 6]] with length 5. flat(Infinity) flattens all nesting to produce [1, 2, 3, 4, 5, 6] with length 6.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat"
+  },
+  {
+    "id": "data-structures-032",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "JavaScript's Proxy can intercept default behavior on objects. Which of the following is NOT a common use case for Proxy?",
+    "options": [
+      "Adding validation when accessing object properties",
+      "Returning default values when accessing non-existent properties",
+      "Completely removing an object's prototype chain",
+      "Triggering logging or reactive updates when properties change"
+    ],
+    "correctIndex": 2,
+    "explanation": "Proxy can intercept and customize object behavior through traps like get, set, has, and deleteProperty. Validation, default values, and change detection are typical use cases. However, removing the prototype chain is not a Proxy use case — Object.create(null) is the correct way to create a prototype-less object.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy"
+  },
+  {
+    "id": "data-structures-033",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function* range(start, end) {\n  for (let i = start; i < end; i++) {\n    yield i;\n  }\n}\nconst nums = [...range(1, 5)];\nconsole.log(nums, nums.length);",
+    "options": [
+      "[1, 2, 3, 4] 4",
+      "[1, 2, 3, 4, 5] 5",
+      "[0, 1, 2, 3, 4] 5",
+      "[1, 2, 3] 3"
+    ],
+    "correctIndex": 0,
+    "explanation": "The generator function range yields values from start up to (but not including) end. range(1, 5) yields 1, 2, 3, 4 in sequence. The spread operator (...) converts the iterable to an array [1, 2, 3, 4], and the length is 4.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*"
+  },
+  {
+    "id": "data-structures-034",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the Array.from() conversion behave unexpectedly in the following code?",
+    "code": "const arrayLike = { 0: 'a', 1: 'b', 2: 'c' };\nconst arr = Array.from(arrayLike);\nconsole.log(arr);",
+    "options": [
+      "Array.from() can only convert iterables, so an error occurs",
+      "The object keys are strings, so they are not recognized as numeric indices",
+      "Array.from() cannot convert plain objects, so null is returned",
+      "Without a length property, an empty array is created"
+    ],
+    "correctIndex": 3,
+    "explanation": "Array.from() uses the length property as the basis for creating an array from array-like objects. Without length, it defaults to 0, producing an empty array []. Adding length: 3 to the object ({ 0: 'a', 1: 'b', 2: 'c', length: 3 }) would correctly produce ['a', 'b', 'c'].",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from"
+  },
+  {
+    "id": "data-structures-035",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Among the Set methods added in ES2025, which method computes the intersection of two Sets?",
+    "options": [
+      "Set.prototype.union()",
+      "Set.prototype.difference()",
+      "Set.prototype.intersection()",
+      "Set.prototype.symmetricDifference()"
+    ],
+    "correctIndex": 2,
+    "explanation": "ES2025 added several set operation methods to Set. intersection() returns a new Set containing only the elements common to both Sets. union() returns the union, difference() returns the set difference, and symmetricDifference() returns the symmetric difference. Previously, these operations required manually combining filter and has.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/intersection"
+  },
+  {
+    "id": "data-structures-036",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const arr = [10, 20, 30, 40, 50];\nconsole.log(arr.at(-1), arr.at(-2));",
+    "options": [
+      "undefined undefined",
+      "10 20",
+      "50 40",
+      "50 50"
+    ],
+    "correctIndex": 2,
+    "explanation": "Array.prototype.at() supports negative indices. at(-1) returns the last element (50), and at(-2) returns the second-to-last element (40). This provides a more concise way to access elements from the end compared to the arr[arr.length - 1] pattern.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at"
+  },
+  {
+    "id": "data-structures-037",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the correct description of the relationship between ArrayBuffer and DataView in JavaScript?",
+    "options": [
+      "ArrayBuffer can directly read and write data, making DataView unnecessary",
+      "DataView provides a view that can read and write mixed numeric types from a single ArrayBuffer",
+      "ArrayBuffer is a data structure designed for storing string data",
+      "DataView allocates memory independently without an ArrayBuffer"
+    ],
+    "correctIndex": 1,
+    "explanation": "ArrayBuffer is a fixed-size raw binary data buffer that cannot be directly read or written. DataView is a view over an ArrayBuffer that allows reading and writing various numeric types (getInt8(), getFloat32(), etc.) at different positions in the same buffer. This is useful for parsing network protocols or binary files.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView"
+  },
+  {
+    "id": "data-structures-038",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Why do Map's forEach and a plain object's for...in loop behave differently in the following code?",
+    "code": "const map = new Map([[1, 'one'], [2, 'two']]);\nmap.forEach((value, key) => {\n  console.log(typeof key);\n});\n\nconst obj = { 1: 'one', 2: 'two' };\nfor (const key in obj) {\n  console.log(typeof key);\n}",
+    "options": [
+      "Map outputs 'number', object outputs 'string'",
+      "Both output 'number'",
+      "Both output 'string'",
+      "Map outputs 'string', object outputs 'number'"
+    ],
+    "correctIndex": 0,
+    "explanation": "Map preserves the original type of keys, so numeric keys 1 and 2 remain as number type. In contrast, plain object keys are always converted to strings (or Symbols). Therefore, iterating with for...in gives typeof key as 'string'. This is one reason Map supports diverse key types.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#objects_vs._maps"
+  },
+  {
+    "id": "data-structures-039",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which of the following is correct about sparse arrays?",
+    "code": "const sparse = [1, , , 4];\nconsole.log(sparse.length);\nconsole.log(1 in sparse);",
+    "options": [
+      "length is 2 and 1 in sparse is true",
+      "length is 4 and 1 in sparse is true",
+      "length is 4 and 1 in sparse is false",
+      "length is 3 and 1 in sparse is false"
+    ],
+    "correctIndex": 2,
+    "explanation": "Sparse arrays have 'empty slots' at some indices where no value has been assigned. [1, , , 4] has a length of 4, but indices 1 and 2 have no values. The in operator checks whether a value actually exists at that index, so 1 in sparse is false. Empty slots differ from undefined — methods like forEach skip empty slots entirely.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Indexed_collections#sparse_arrays"
+  },
+  {
+    "id": "data-structures-040",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the performance issue when implementing a Deque (double-ended queue) using array's unshift() and shift() in JavaScript?",
+    "options": [
+      "unshift() and shift() do not release memory, causing memory leaks",
+      "Inserting/removing at the front requires re-indexing all elements, resulting in O(n) time",
+      "unshift() can only add one element at a time",
+      "shift() operates asynchronously, so order is not guaranteed"
+    ],
+    "correctIndex": 1,
+    "explanation": "Array's unshift() and shift() add/remove elements at the front of the array. This requires shifting all remaining elements' indices by one, resulting in O(n) time complexity. In contrast, push() and pop() operate at the end with O(1). For large datasets requiring a double-ended queue, a linked list-based implementation is more efficient.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/unshift"
   }
 ]

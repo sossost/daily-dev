@@ -188,7 +188,7 @@
 - browser-api.json — 35 questions
 - closure.json — 40 questions
 - css-layout.json — 40 questions
-- data-structures.json — 30 questions
+- data-structures.json — 40 questions
 - database.json — 30 questions
 - design-patterns.json — 30 questions
 - dom-manipulation.json — 30 questions
@@ -211,7 +211,7 @@
 - browser-api.json — 35 questions
 - closure.json — 40 questions
 - css-layout.json — 40 questions
-- data-structures.json — 30 questions
+- data-structures.json — 40 questions
 - database.json — 30 questions
 - design-patterns.json — 30 questions
 - dom-manipulation.json — 30 questions
