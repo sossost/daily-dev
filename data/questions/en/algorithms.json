@@ -493,5 +493,171 @@
     "correctIndex": 2,
     "explanation": "An in-place algorithm does not use additional memory proportional to the input size, requiring only O(1) or O(log n) auxiliary space (for recursion stack). Quick Sort and Heap Sort are classic in-place sorts, while Merge Sort requires O(n) additional space and is not in-place.",
     "sourceUrl": "https://en.wikipedia.org/wiki/In-place_algorithm"
+  },
+  {
+    "id": "algorithms-031",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the operating principle of a Queue data structure?",
+    "options": [
+      "FIFO (First In, First Out)",
+      "LIFO (Last In, First Out)",
+      "Random Access",
+      "Min First"
+    ],
+    "correctIndex": 0,
+    "explanation": "A queue operates on the FIFO (First In, First Out) principle. The first element inserted is the first one removed. In JavaScript, using array methods push() and shift() implements queue behavior. BFS (Breadth-First Search) is a classic algorithm that uses a queue.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/shift"
+  },
+  {
+    "id": "algorithms-032",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "function reverseString(str) {\n  return str.split('').reduce((rev, ch) => ch + rev, '');\n}\nconsole.log(reverseString('hello'));",
+    "options": [
+      "hello",
+      "olleh",
+      "oellh",
+      "lehol"
+    ],
+    "correctIndex": 1,
+    "explanation": "reduce iterates through each character, prepending the current character (ch) to the accumulator (rev). The progression is: 'h' → 'eh' → 'leh' → 'lleh' → 'olleh'. This is a functional implementation of string reversal using the LIFO principle of a stack.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce"
+  },
+  {
+    "id": "algorithms-033",
+    "topic": "algorithms",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "When representing a graph, which approach is more suitable for a sparse graph (few edges) — an adjacency list or an adjacency matrix?",
+    "options": [
+      "Adjacency matrix — because it can quickly check all vertex pairs",
+      "Both use the same amount of space",
+      "Adjacency matrix — because it is simpler to implement",
+      "Adjacency list — because it uses only O(V + E) space"
+    ],
+    "correctIndex": 3,
+    "explanation": "An adjacency list stores only existing edges, using O(V + E) space. An adjacency matrix always requires O(V²) space. For sparse graphs with few edges, an adjacency list is more memory-efficient, while for dense graphs, an adjacency matrix may be preferable.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Adjacency_list"
+  },
+  {
+    "id": "algorithms-034",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function countingSort(arr, max) {\n  const count = new Array(max + 1).fill(0);\n  for (const num of arr) count[num]++;\n  const result = [];\n  for (let i = 0; i <= max; i++) {\n    for (let j = 0; j < count[i]; j++) {\n      result.push(i);\n    }\n  }\n  return result;\n}\nconsole.log(countingSort([4, 2, 2, 8, 3, 3, 1], 8).join(','));",
+    "options": [
+      "4,2,2,8,3,3,1",
+      "1,2,3,4,8",
+      "1,2,2,3,3,4,8",
+      "8,4,3,3,2,2,1"
+    ],
+    "correctIndex": 2,
+    "explanation": "Counting sort counts the occurrences of each value and then outputs them in order. Iterating through the count array and outputting each index according to its count produces an ascending sorted result. It runs in O(n + k) time since it is not comparison-based, but requires significant memory when the range of values (k) is large.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Counting_sort"
+  },
+  {
+    "id": "algorithms-035",
+    "topic": "algorithms",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the problem with the following linked list cycle detection code?",
+    "code": "function hasCycle(head) {\n  let slow = head;\n  let fast = head;\n  while (fast != null) {\n    slow = slow.next;\n    fast = fast.next.next;\n    if (slow === fast) return true;\n  }\n  return false;\n}",
+    "options": [
+      "slow and fast should not start at the same point",
+      "When fast.next is null, accessing fast.next.next causes a TypeError",
+      "The while condition should be slow != null",
+      "== should be used instead of ==="
+    ],
+    "correctIndex": 1,
+    "explanation": "When fast is the last node in the list, fast.next is null. Accessing fast.next.next then attempts to read a property of null, causing a TypeError. The while condition should be changed to fast != null && fast.next != null.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Cycle_detection#Floyd's_tortoise_and_hare"
+  },
+  {
+    "id": "algorithms-036",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the maximum number of child nodes each node can have in a binary tree?",
+    "options": [
+      "1",
+      "Unlimited",
+      "2",
+      "3"
+    ],
+    "correctIndex": 2,
+    "explanation": "A binary tree is a tree structure where each node can have at most 2 child nodes (left and right). A Binary Search Tree (BST) adds the rule that the left child is less than the parent and the right child is greater than the parent.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Binary_tree"
+  },
+  {
+    "id": "algorithms-037",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function inorder(node) {\n  if (node == null) return [];\n  return [...inorder(node.left), node.val, ...inorder(node.right)];\n}\nconst tree = {\n  val: 4,\n  left: { val: 2, left: { val: 1, left: null, right: null }, right: { val: 3, left: null, right: null } },\n  right: { val: 6, left: { val: 5, left: null, right: null }, right: { val: 7, left: null, right: null } }\n};\nconsole.log(inorder(tree).join(','));",
+    "options": [
+      "4,2,1,3,6,5,7",
+      "1,2,3,4,5,6,7",
+      "1,3,2,5,7,6,4",
+      "4,2,6,1,3,5,7"
+    ],
+    "correctIndex": 1,
+    "explanation": "Inorder traversal visits nodes in left → node → right order. When performed on a Binary Search Tree, the values are visited in ascending sorted order. The traversal order is: 1→2→3→4→5→6→7.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Tree_traversal#In-order_(LNR)"
+  },
+  {
+    "id": "algorithms-038",
+    "topic": "algorithms",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about Topological Sort is correct?",
+    "options": [
+      "It is always possible even in graphs with cycles",
+      "It can only be used on undirected graphs",
+      "The result is always unique",
+      "It orders vertices of a DAG so that all edges point in one direction"
+    ],
+    "correctIndex": 3,
+    "explanation": "Topological sort is only possible on DAGs (Directed Acyclic Graphs) and orders vertices so that for every edge (u, v), u comes before v. It is widely used in build system dependency resolution and task scheduling. If the graph has a cycle, topological sort is impossible.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Topological_sorting"
+  },
+  {
+    "id": "algorithms-039",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function isPowerOfTwo(n) {\n  if (n <= 0) return false;\n  return (n & (n - 1)) === 0;\n}\nconsole.log([1, 2, 3, 4, 5, 8, 16].filter(isPowerOfTwo).length);",
+    "options": [
+      "3",
+      "4",
+      "5",
+      "7"
+    ],
+    "correctIndex": 2,
+    "explanation": "Powers of two have exactly one bit set in binary (e.g., 1=1, 2=10, 4=100, 8=1000). The expression n & (n-1) is a bit manipulation trick that clears the lowest set bit. For powers of two, this results in 0. The values 1, 2, 4, 8, and 16 qualify, so the count is 5.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_AND"
+  },
+  {
+    "id": "algorithms-040",
+    "topic": "algorithms",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the problem with the following dynamic array resize code?",
+    "code": "class DynamicArray {\n  constructor() {\n    this.data = new Array(4);\n    this.size = 0;\n    this.capacity = 4;\n  }\n  push(val) {\n    if (this.size === this.capacity) {\n      this.capacity += 1;\n      const newData = new Array(this.capacity);\n      for (let i = 0; i < this.size; i++) newData[i] = this.data[i];\n      this.data = newData;\n    }\n    this.data[this.size++] = val;\n  }\n}",
+    "options": [
+      "The newData array is not initialized with zeros",
+      "++this.size should be used instead of this.size++",
+      "Increasing capacity by 1 causes O(n) copying on every insertion, making overall performance O(n²)",
+      "this.data must be set to null for garbage collection to work"
+    ],
+    "correctIndex": 2,
+    "explanation": "Increasing capacity by 1 means every time the array is full, all elements must be copied, resulting in O(n²) time for n push operations. Doubling the capacity (this.capacity *= 2) achieves amortized O(1) per push through geometric expansion. This is why JavaScript arrays and structures like ArrayList use a doubling strategy.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Dynamic_array#Geometric_expansion_and_amortized_cost"
   }
 ]

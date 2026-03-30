@@ -2,10 +2,24 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-03-30
+
+### Bug Fixes
+
+- **harness**: add || true to grep in agent extraction to prevent set -e exit on no match (`2acbe9f`)
+- **harness**: add || true to manager claude call to prevent set -e exit on non-zero (`e869d4b`)
+
+### Chores
+
+- **harness**: add manager decision debug logging (`1a75c97`)
+- **harness**: remove consecutive-run skip rule (`56f652d`)
+- **harness**: add per-call timeout to prevent claude -p hang (`cfd84af`)
+
 ## 2026-03-28
 
 ### Features
 
+- **content**: add 10 closure questions (031-040) (`68a29ef`)
 - **content**: add 10 prototype questions (029-038) (`4da87d0`)
 - **content**: add 10 promise questions (029-038) (`1f44e49`)
 - **content**: fix — rephrase 031 question, add correctIndex 3 (`c695435`)
