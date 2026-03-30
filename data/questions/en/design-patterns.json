@@ -493,5 +493,170 @@
     "correctIndex": 2,
     "explanation": "The Template Method pattern defines the skeleton of an algorithm in a parent class and lets subclasses override specific steps. Unlike Java, JavaScript has no abstract keyword, so overridable methods should provide a default implementation or throw new Error('Not implemented') to simulate enforcement.",
     "sourceUrl": "https://refactoring.guru/design-patterns/template-method"
+  },
+  {
+    "id": "design-patterns-031",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the main purpose of the Mixin pattern in JavaScript?",
+    "options": [
+      "To compose methods from multiple sources into an object without class inheritance",
+      "To remove the prototype chain for better performance",
+      "To make all objects immutable",
+      "To convert asynchronous code to synchronous"
+    ],
+    "correctIndex": 0,
+    "explanation": "Mixins allow composing methods from multiple objects or classes into a single object without an inheritance hierarchy. In JavaScript, this is implemented using Object.assign() or the spread operator, overcoming the limitation of single inheritance and improving code reusability.",
+    "sourceUrl": "https://javascript.info/mixins"
+  },
+  {
+    "id": "design-patterns-032",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Mixin pattern code?",
+    "code": "const Serializable = {\n  serialize() { return JSON.stringify(this); }\n};\nconst Validatable = {\n  validate() { return this.name != null; }\n};\nclass User {\n  constructor(name) { this.name = name; }\n}\nObject.assign(User.prototype, Serializable, Validatable);\nconst u = new User('Alice');\nconsole.log(u.validate(), typeof u.serialize());",
+    "options": [
+      "true 'string'",
+      "false 'object'",
+      "Error: validate is not a function",
+      "true 'object'"
+    ],
+    "correctIndex": 0,
+    "explanation": "Object.assign copies the methods from Serializable and Validatable to User.prototype. Since u.name is 'Alice', validate() returns true. serialize() calls JSON.stringify(this) which returns a string, so typeof returns 'string'.",
+    "sourceUrl": "https://javascript.info/mixins"
+  },
+  {
+    "id": "design-patterns-033",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the problem in the following Registry pattern implementation?",
+    "code": "const registry = new Map();\nfunction register(name, factory) {\n  registry.set(name, factory);\n}\nfunction create(name, ...args) {\n  const factory = registry.get(name);\n  return factory(...args);\n}\nregister('user', (name) => ({ name }));\nconst item = create('product', 'Laptop');\nconsole.log(item.name);",
+    "options": [
+      "Because registry.set does not work on Map",
+      "Because 'product' is not registered, factory is undefined, and calling undefined as a function throws a TypeError",
+      "Because the rest parameter in create is used incorrectly",
+      "Because the factory function is an arrow function and has no this binding"
+    ],
+    "correctIndex": 1,
+    "explanation": "Only 'user' is registered in the registry, but create('product', ...) requests an unregistered 'product'. registry.get('product') returns undefined, and calling undefined as a function throws a TypeError. Defensive handling for unregistered keys is essential in the Registry pattern.",
+    "sourceUrl": "https://www.patterns.dev/vanilla/factory-pattern"
+  },
+  {
+    "id": "design-patterns-034",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the key difference between the Repository pattern and direct database queries?",
+    "options": [
+      "The Repository pattern abstracts data access logic, separating it from business logic",
+      "Direct queries are always slower",
+      "The Repository pattern can only be used with NoSQL",
+      "Direct queries do not support transactions"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Repository pattern provides an abstraction layer over data storage access. Business logic can work with data as if it were a collection of domain objects without knowing database query details. This makes it easy to swap data sources or mock them during testing.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Abstraction"
+  },
+  {
+    "id": "design-patterns-035",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the role of clearTimeout in the following Debounce pattern code?",
+    "code": "function debounce(fn, delay) {\n  let timer = null;\n  return function(...args) {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn(...args), delay);\n  };\n}\nconst log = debounce(console.log, 300);\nlog('a');\nlog('b');\nlog('c');",
+    "options": [
+      "It cancels the previous timer to ensure only the last call executes",
+      "It executes all calls immediately",
+      "It resets the delay value to 0",
+      "It permanently blocks the execution of fn"
+    ],
+    "correctIndex": 0,
+    "explanation": "In the Debounce pattern, clearTimeout cancels the previously scheduled timer. On consecutive calls, each previous timer is cancelled and a new one is set, so only the last call executes after the delay period with no further calls. In this code, only 'c' would be logged after 300ms.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/setTimeout"
+  },
+  {
+    "id": "design-patterns-036",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following Visitor pattern code?",
+    "code": "const nodes = [\n  { type: 'text', value: 'hello' },\n  { type: 'number', value: 42 },\n  { type: 'text', value: 'world' }\n];\nconst visitor = {\n  text: (node) => node.value.toUpperCase(),\n  number: (node) => node.value * 2\n};\nconst result = nodes.map(n => visitor[n.type](n));\nconsole.log(result.join(', '));",
+    "options": [
+      "hello, 42, world",
+      "HELLO, 84, WORLD",
+      "Error: visitor[n.type] is not a function",
+      "HELLO, 42, WORLD"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Visitor pattern applies different operations based on an object's type. Iterating through nodes, the matching visitor function is called for each node. Text nodes are transformed with toUpperCase(), and the number node's value is doubled. The result is ['HELLO', 84, 'WORLD'], which joins to 'HELLO, 84, WORLD'.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/visitor"
+  },
+  {
+    "id": "design-patterns-037",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Why is the Revealing Module pattern preferred over the standard Module pattern?",
+    "options": [
+      "Because it executes faster",
+      "Because it is compatible with ES Modules",
+      "Because the public API is clearly visible in the return object, improving readability",
+      "Because it protects private variables more securely"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Revealing Module pattern defines all functions and variables as private, then maps only the ones to be exposed in the return object. This concentrates the module's public interface in a single return statement, making it easy to see what is public and what is private at a glance.",
+    "sourceUrl": "https://www.patterns.dev/vanilla/module-pattern"
+  },
+  {
+    "id": "design-patterns-038",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the following currying implementation not work as intended?",
+    "code": "function curry(fn) {\n  return function curried(...args) {\n    if (args.length >= fn.length) {\n      return fn(...args);\n    }\n    return (...more) => curried(...args, ...more);\n  };\n}\nconst add = curry((a, b, c) => a + b + c);\nconst sum = curry((...nums) => nums.reduce((s, n) => s + n, 0));\nconsole.log(add(1)(2)(3));\nconsole.log(sum(1)(2)(3));",
+    "options": [
+      "Both add and sum correctly output 6",
+      "add outputs 6, but sum(1) immediately returns 1 because fn.length is 0, and then sum(1)(2) throws a TypeError since 1 is not a function",
+      "Both functions throw a TypeError",
+      "add throws an error while sum works correctly"
+    ],
+    "correctIndex": 1,
+    "explanation": "A function using rest parameters (...nums) has a length property of 0. The curry function checks args.length >= fn.length to decide when to invoke the original function. For sum, since fn.length is 0, the very first call sum(1) satisfies the condition and returns fn(1), which evaluates to [1].reduce((s, n) => s + n, 0) = 1. Attempting sum(1)(2) then tries to call 1(2), throwing a TypeError because 1 is not a function. Currying only works safely with functions that have a fixed number of parameters.",
+    "sourceUrl": "https://javascript.info/currying-partials"
+  },
+  {
+    "id": "design-patterns-039",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between Event Sourcing and the standard CRUD pattern?",
+    "options": [
+      "CRUD stores only the current state, while Event Sourcing stores the complete history of state change events",
+      "Event Sourcing is read-only and CRUD is write-only",
+      "CRUD is only used with NoSQL and Event Sourcing only with SQL",
+      "Event Sourcing is a pattern used only on the client side"
+    ],
+    "correctIndex": 0,
+    "explanation": "The CRUD pattern directly modifies the current state (Create, Read, Update, Delete). Event Sourcing stores all events in order instead of directly changing state, and derives the current state by replaying these events. This enables complete change history tracking, point-in-time restoration, and audit logging.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/State_machine"
+  },
+  {
+    "id": "design-patterns-040",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "When is the Object Pool pattern useful?",
+    "options": [
+      "When objects are created once and never reused",
+      "When all objects are immutable",
+      "When object creation is expensive and creation/destruction is frequent, making reuse efficient",
+      "When setting up the prototype chain"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Object Pool pattern maintains a pool of pre-created objects, lending them out when needed and accepting them back for reuse. For expensive-to-create objects like database connections, threads, or DOM elements that are used frequently, this reduces garbage collection overhead and improves performance.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/object-pool"
   }
 ]
