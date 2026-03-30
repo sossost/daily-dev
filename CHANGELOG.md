@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 10 dom-manipulation questions (`4fbfbfb`)
 - **content**: fix — design-patterns-038 answer and explanation (`e809976`)
 
 ## 2026-03-30

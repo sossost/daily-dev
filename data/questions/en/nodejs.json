@@ -490,5 +490,171 @@
     "correctIndex": 2,
     "explanation": "The unhandledRejection event fires when a Promise is rejected but has no .catch() handler or async/await try-catch to handle it. Since Node.js 15, unhandled Promise rejections terminate the process by default, making it important to add proper error handling to all Promises.",
     "sourceUrl": "https://nodejs.org/api/process.html#event-unhandledrejection"
+  },
+  {
+    "id": "nodejs-031",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What are the first two elements of the process.argv array in Node.js?",
+    "options": [
+      "The first and second command-line arguments",
+      "The Node.js executable path and the executing script file path",
+      "The script file path and the first command-line argument",
+      "The Node.js version and platform information"
+    ],
+    "correctIndex": 1,
+    "explanation": "process.argv[0] is the absolute path of the Node.js executable (e.g., /usr/local/bin/node), and process.argv[1] is the path of the JavaScript file being executed. User-provided command-line arguments start from process.argv[2].",
+    "sourceUrl": "https://nodejs.org/api/process.html#processargv"
+  },
+  {
+    "id": "nodejs-032",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following Node.js code?",
+    "code": "const EventEmitter = require('events');\nconst emitter = new EventEmitter();\n\nemitter.once('ping', () => console.log('A'));\nemitter.on('ping', () => console.log('B'));\n\nemitter.emit('ping');\nemitter.emit('ping');",
+    "options": [
+      "A B A B",
+      "A B B",
+      "A A B B",
+      "B A B"
+    ],
+    "correctIndex": 1,
+    "explanation": "A listener registered with once() executes only on the first emit and is then automatically removed. A listener registered with on() executes every time. So the first emit outputs A and B, and the second emit outputs only B.",
+    "sourceUrl": "https://nodejs.org/api/events.html#emitteronceeventname-listener"
+  },
+  {
+    "id": "nodejs-033",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Node.js code?",
+    "code": "const crypto = require('crypto');\nconst hash1 = crypto.createHash('sha256').update('hello').digest('hex');\nconst hash2 = crypto.createHash('sha256').update('hello').digest('hex');\nconsole.log(hash1 === hash2);\nconsole.log(typeof hash1);",
+    "options": [
+      "false string",
+      "true string",
+      "true object",
+      "false object"
+    ],
+    "correctIndex": 1,
+    "explanation": "SHA-256 is a deterministic hash function, so the same input ('hello') always produces the same hash value. digest('hex') returns the hash result as a hexadecimal string, so typeof returns 'string'. Therefore hash1 === hash2 is true and typeof hash1 is 'string'.",
+    "sourceUrl": "https://nodejs.org/api/crypto.html#class-hash"
+  },
+  {
+    "id": "nodejs-034",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why are stream errors not properly handled in the following code?",
+    "code": "const fs = require('fs');\nconst zlib = require('zlib');\n\nconst source = fs.createReadStream('input.txt');\nconst gzip = zlib.createGzip();\nconst destination = fs.createWriteStream('output.gz');\n\nsource.pipe(gzip).pipe(destination);",
+    "options": [
+      "pipeline() should be used instead of pipe()",
+      "The gzip stream is not compatible with pipe()",
+      "Errors in the pipe chain are not propagated — error handlers must be added to each stream, or stream.pipeline() should be used",
+      "An encoding option is required for createWriteStream"
+    ],
+    "correctIndex": 2,
+    "explanation": "pipe() forwards data but does not automatically propagate errors. If an error occurs in an intermediate stream (gzip) or the source, the destination stream is not automatically cleaned up, which can lead to resource leaks. Using stream.pipeline() handles error propagation and stream cleanup automatically.",
+    "sourceUrl": "https://nodejs.org/api/stream.html#streampipelinesource-transforms-destination-callback"
+  },
+  {
+    "id": "nodejs-035",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between fs.readFileSync() and fs.promises.readFile() in Node.js?",
+    "options": [
+      "readFileSync() blocks the event loop, while promises.readFile() operates asynchronously without blocking",
+      "promises.readFile() uses callbacks, while readFileSync() returns a Promise",
+      "readFileSync() can only read binary files",
+      "Both have identical performance and only differ in syntax"
+    ],
+    "correctIndex": 0,
+    "explanation": "fs.readFileSync() blocks the event loop until the file read completes, which delays processing of other requests in a server environment. fs.promises.readFile() returns a Promise and operates asynchronously, allowing the event loop to handle other tasks during file I/O.",
+    "sourceUrl": "https://nodejs.org/api/fs.html#fspromisesreadfilepath-options"
+  },
+  {
+    "id": "nodejs-036",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Node.js code?",
+    "code": "const { Readable } = require('stream');\n\nconst readable = Readable.from(['a', 'b', 'c']);\nconst chunks = [];\n\nreadable.on('data', (chunk) => chunks.push(chunk));\nreadable.on('end', () => console.log(chunks.join('-')));",
+    "options": [
+      "abc",
+      "a-b-c",
+      "[a,b,c]",
+      "a b c"
+    ],
+    "correctIndex": 1,
+    "explanation": "Readable.from() creates a Readable stream from an iterable (array). Each array element is emitted as an individual chunk, so the 'data' event fires 3 times. The chunks array collects ['a', 'b', 'c'], and join('-') produces 'a-b-c'.",
+    "sourceUrl": "https://nodejs.org/api/stream.html#streamreadablefromiterable-options"
+  },
+  {
+    "id": "nodejs-037",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What core problem does AsyncLocalStorage solve in Node.js?",
+    "options": [
+      "Sharing callback functions between asynchronous operations",
+      "Tracking asynchronous context (request IDs, user info, etc.) throughout callback chains without explicit parameter passing",
+      "Guaranteeing execution order of asynchronous operations",
+      "Synchronizing data between multiple threads"
+    ],
+    "correctIndex": 1,
+    "explanation": "AsyncLocalStorage automatically propagates context data throughout the entire execution chain of asynchronous operations. For example, an HTTP request ID can be accessed in all async callbacks of that request without passing it as a parameter to every function call. This is essential for logging, tracing, and authentication context propagation.",
+    "sourceUrl": "https://nodejs.org/api/async_context.html#class-asynclocalstorage"
+  },
+  {
+    "id": "nodejs-038",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "When analyzing the result of process.memoryUsage(), which metric is most important for detecting memory leaks and why?",
+    "code": "const mem = process.memoryUsage();\nconsole.log({\n  rss: mem.rss,\n  heapTotal: mem.heapTotal,\n  heapUsed: mem.heapUsed,\n  external: mem.external\n});",
+    "options": [
+      "rss — it represents total memory allocated to the process by the OS (including code, stack, and heap), most accurately reflecting actual memory usage",
+      "heapTotal — the total heap memory reserved by V8, which always matches actual usage",
+      "external — memory used by external Node.js libraries, which is the source of most memory issues",
+      "heapUsed — the memory currently in use on the V8 heap, which is the key metric for detecting JavaScript object memory leaks"
+    ],
+    "correctIndex": 3,
+    "explanation": "heapUsed represents the size of memory actually allocated to JavaScript objects on the V8 heap. Memory leaks primarily occur when JavaScript objects are not released, so monitoring whether heapUsed continuously increases over time is key to detecting memory leaks. rss represents total process memory but includes areas beyond the heap.",
+    "sourceUrl": "https://nodejs.org/api/process.html#processmemoryusage"
+  },
+  {
+    "id": "nodejs-039",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the default load balancing strategy of the Node.js Cluster module (except on Linux)?",
+    "options": [
+      "Round-robin — the master process distributes new connections to workers in order",
+      "Random distribution — a worker is selected randomly",
+      "Least connections — connections are sent to the worker with the fewest active connections",
+      "Weighted — connections are distributed to workers based on CPU usage"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Node.js Cluster module uses round-robin scheduling by default (except on Linux, where the OS kernel handles distribution). The master process accepts new connections and distributes them to worker processes in turn. This strategy can be changed using cluster.schedulingPolicy.",
+    "sourceUrl": "https://nodejs.org/api/cluster.html#how-it-works"
+  },
+  {
+    "id": "nodejs-040",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following Node.js code?",
+    "code": "const { EventEmitter } = require('events');\n\nclass DB extends EventEmitter {\n  connect() {\n    this.emit('connected');\n    return this;\n  }\n}\n\nconst db = new DB();\ndb.on('connected', () => console.log('A'));\ndb.connect();\ndb.on('connected', () => console.log('B'));\ndb.connect();",
+    "options": [
+      "A A B",
+      "A B A B",
+      "A A",
+      "A B"
+    ],
+    "correctIndex": 0,
+    "explanation": "When the first connect() is called, only the 'A' listener is registered, so 'A' is output. Then the 'B' listener is added. When the second connect() is called, both 'A' and 'B' listeners execute in registration order, outputting 'A' then 'B'. The total output is A A B.",
+    "sourceUrl": "https://nodejs.org/api/events.html#class-eventemitter"
   }
 ]
