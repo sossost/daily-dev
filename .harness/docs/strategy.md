@@ -79,7 +79,6 @@ Rule: If a change would be visible in a screenshot, the code agent must NOT do i
 
 The manager MUST skip (run no agent) when:
 - All agents are saturated/blocked and no approved features exist
-- The same agent ran 3 times consecutively with diminishing returns
 - The previous run was skipped and no external state change has occurred (no new commits, no strategy update)
 
 **Skip is a valid, healthy outcome — not a failure.** An unnecessary commit is worse than no commit.
