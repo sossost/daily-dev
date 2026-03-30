@@ -4,6 +4,10 @@
 
 ## 2026-03-30
 
+### Features
+
+- **content**: add 10 algorithms questions (`849399d`)
+
 ### Bug Fixes
 
 - **harness**: add || true to grep in agent extraction to prevent set -e exit on no match (`2acbe9f`)
