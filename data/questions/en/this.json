@@ -497,5 +497,171 @@
     "correctIndex": 1,
     "explanation": "Regular function callbacks passed to Promise's then are invoked as standalone calls, so this refers to the global object (or undefined in strict mode) instead of the service object. This is the same this loss issue that occurs with setTimeout, addEventListener, and other callbacks. Solutions: 1) Use arrow functions: .then((result) => { this.data = result; }), 2) Use bind: .then(function(result) { ... }.bind(this)).",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "this-031",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the value of this at the top-level scope of an ES module?",
+    "options": [
+      "The window object",
+      "The module object",
+      "An empty object {}",
+      "undefined"
+    ],
+    "correctIndex": 3,
+    "explanation": "ES modules automatically run in strict mode, and at the top-level scope of a module, this is undefined. This differs from CommonJS modules where this refers to module.exports. In a browser's regular script (<script> tag), top-level this refers to window, but in <script type=\"module\">, it is undefined.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules"
+  },
+  {
+    "id": "this-032",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const proto = {\n  greet() {\n    return this.name;\n  }\n};\nconst obj = Object.create(proto);\nobj.name = 'Kim';\nconsole.log(obj.greet());",
+    "options": [
+      "Kim",
+      "undefined",
+      "TypeError",
+      "null"
+    ],
+    "correctIndex": 0,
+    "explanation": "The object created via Object.create(proto) has proto as its prototype. When obj.greet() is called, the greet method is found on the prototype chain from proto, but this is bound to the calling object — obj. Therefore this.name returns 'Kim' from obj. The this in prototype methods is always determined by the calling object.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create"
+  },
+  {
+    "id": "this-033",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In the following code, undefined is output. What is the cause?",
+    "code": "const api = {\n  baseUrl: 'https://api.example.com',\n  getUrl(path) {\n    return `${this.baseUrl}${path}`;\n  }\n};\nconst { getUrl } = api;\nconsole.log(getUrl('/users'));",
+    "options": [
+      "Destructuring cannot be used on object methods",
+      "The path parameter is not a string",
+      "Destructuring a method extracts the function reference without preserving the this binding to the original object",
+      "Template literals cannot use this"
+    ],
+    "correctIndex": 2,
+    "explanation": "Destructuring assignment (const { getUrl } = api) extracts only the function reference without maintaining the binding to the original object. It works the same as const getUrl = api.getUrl. When the extracted function is called standalone, this is the global object (or undefined in strict mode), so this.baseUrl is undefined. Solutions: use getUrl.bind(api) or maintain the method call pattern with api.getUrl('/users').",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment"
+  },
+  {
+    "id": "this-034",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What do arrow function class fields and bind in the constructor have in common?",
+    "options": [
+      "Both add methods to the prototype",
+      "Both create a new function object per instance to fix this",
+      "Both use zero additional memory",
+      "Both allow using the super keyword"
+    ],
+    "correctIndex": 1,
+    "explanation": "Arrow function class fields (method = () => {}) and bind in the constructor (this.method = this.method.bind(this)) both create a separate function object per instance. This permanently binds this to that instance. Both approaches add the function directly to the instance rather than the prototype, using more memory than prototype methods but allowing safe passing as callbacks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields"
+  },
+  {
+    "id": "this-035",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "class Calculator {\n  value = 0;\n  static create() {\n    console.log(this === Calculator);\n  }\n}\nCalculator.create();",
+    "options": [
+      "false",
+      "TypeError",
+      "undefined",
+      "true"
+    ],
+    "correctIndex": 3,
+    "explanation": "In a static method, this refers to the class itself, not an instance. When Calculator.create() is called, this is bound to the Calculator class (constructor function). This follows the same principle as regular method calls where this is the object before the dot (.). Using this in static methods allows accessing other static methods and properties of the same class.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static"
+  },
+  {
+    "id": "this-036",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the role of the receiver parameter in Proxy handler methods (traps)?",
+    "options": [
+      "It provides the object on which the property access originally occurred (the proxy or an object inheriting from it)",
+      "It refers to the handler object passed to the Proxy constructor",
+      "It is always identical to the target object",
+      "It is a reference for calling other traps from within a trap function"
+    ],
+    "correctIndex": 0,
+    "explanation": "In Proxy get/set traps, the receiver is the object on which the property access actually occurred. Usually this is the proxy itself, but if an object has the proxy as its prototype and a property is accessed on it, the receiver is that child object. Passing this receiver to Reflect.get(target, prop, receiver) ensures that getters inside the target have the correct this. This enables proper this behavior across prototype chains.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/get"
+  },
+  {
+    "id": "this-037",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "function greet() {\n  return this.name;\n}\nconst result = greet.call({ name: 'Park' });\nconsole.log(result);",
+    "options": [
+      "undefined",
+      "TypeError",
+      "Park",
+      "null"
+    ],
+    "correctIndex": 2,
+    "explanation": "Function.prototype.call() binds the first argument as this inside the function and invokes it immediately. greet.call({ name: 'Park' }) sets this to { name: 'Park' } and calls greet. Therefore this.name returns 'Park'. call is a primary method for explicit binding, temporarily specifying this when executing a function.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call"
+  },
+  {
+    "id": "this-038",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, this.prefix is undefined inside the map callback. What is the cause?",
+    "code": "const formatter = {\n  prefix: '> ',\n  formatAll(items) {\n    return items.map(function(item) {\n      return this.prefix + item;\n    });\n  }\n};\nconsole.log(formatter.formatAll(['a', 'b']));",
+    "options": [
+      "The map method cannot accept callback functions",
+      "The items array is empty",
+      "The prefix property is not a string",
+      "The regular function callback in map has this bound to the global object instead of formatter"
+    ],
+    "correctIndex": 3,
+    "explanation": "Regular function callbacks passed to Array.prototype.map are invoked as standalone calls, so this refers to the global object (or undefined in strict mode). There are three solutions: 1) Use an arrow function: items.map(item => this.prefix + item), 2) Pass thisArg as map's second argument: items.map(function(item) { ... }, this), 3) Use bind: items.map(function(item) { ... }.bind(this)).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map"
+  },
+  {
+    "id": "this-039",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference between this in regular function declarations and class methods?",
+    "options": [
+      "Class methods always run in strict mode, so this is undefined when called standalone",
+      "Regular function declarations always run in strict mode",
+      "Class method this is always fixed to the instance",
+      "Both follow identical this binding rules"
+    ],
+    "correctIndex": 0,
+    "explanation": "The class body always runs in strict mode. Therefore, when a class method is stored in a variable and called standalone, this is undefined rather than the global object. Regular function declarations without a 'use strict' directive run in non-strict mode, where standalone calls have this pointing to the global object (window). This difference means that this loss in class methods can cause TypeError (accessing properties on undefined).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes"
+  },
+  {
+    "id": "this-040",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const builder = {\n  result: '',\n  add(str) {\n    this.result += str;\n    return this;\n  },\n  build() {\n    return this.result;\n  }\n};\nconsole.log(builder.add('Hello').add(' World').build());",
+    "options": [
+      "undefined",
+      "Hello World",
+      "TypeError",
+      "Hello"
+    ],
+    "correctIndex": 1,
+    "explanation": "Method chaining works by returning this from each method, enabling consecutive method calls on the same object. builder.add('Hello') returns this (builder), then .add(' World') is called making result 'Hello World'. Finally .build() returns the result string. This pattern is used extensively in libraries like jQuery, Lodash, and many builder APIs.",
+    "sourceUrl": "https://javascript.info/object-methods"
   }
 ]

@@ -497,5 +497,171 @@
     "correctIndex": 1,
     "explanation": "Promise의 then에 전달된 일반 함수 콜백은 단독 호출되므로, this는 서비스 객체가 아닌 전역 객체(strict mode에서는 undefined)를 가리킵니다. 이는 setTimeout, addEventListener 등 모든 콜백에서 발생하는 동일한 this 손실 문제입니다. 해결 방법: 1) 화살표 함수 .then((result) => { this.data = result; }) 사용, 2) .then(function(result) { ... }.bind(this)) 사용.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "this-031",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "ES 모듈의 최상위 스코프에서 this의 값은 무엇인가요?",
+    "options": [
+      "window 객체",
+      "module 객체",
+      "빈 객체 {}",
+      "undefined"
+    ],
+    "correctIndex": 3,
+    "explanation": "ES 모듈은 자동으로 strict mode로 실행되며, 모듈의 최상위 스코프에서 this는 undefined입니다. 이는 CommonJS 모듈에서 this가 module.exports를 가리키는 것과 다릅니다. 브라우저의 일반 스크립트(<script> 태그)에서는 최상위 this가 window를 가리키지만, <script type=\"module\">에서는 undefined입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Modules"
+  },
+  {
+    "id": "this-032",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const proto = {\n  greet() {\n    return this.name;\n  }\n};\nconst obj = Object.create(proto);\nobj.name = 'Kim';\nconsole.log(obj.greet());",
+    "options": [
+      "Kim",
+      "undefined",
+      "TypeError",
+      "null"
+    ],
+    "correctIndex": 0,
+    "explanation": "Object.create(proto)로 생성된 obj는 proto를 프로토타입으로 가집니다. obj.greet()를 호출하면 프로토타입 체인을 통해 proto의 greet 메서드가 실행되지만, this는 메서드를 호출한 객체인 obj에 바인딩됩니다. 따라서 this.name은 obj의 name인 'Kim'을 반환합니다. 프로토타입 메서드의 this는 항상 호출 객체를 기준으로 결정됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/create"
+  },
+  {
+    "id": "this-033",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 undefined가 출력됩니다. 원인은 무엇인가요?",
+    "code": "const api = {\n  baseUrl: 'https://api.example.com',\n  getUrl(path) {\n    return `${this.baseUrl}${path}`;\n  }\n};\nconst { getUrl } = api;\nconsole.log(getUrl('/users'));",
+    "options": [
+      "구조 분해 할당은 객체의 메서드에 사용할 수 없기 때문",
+      "path 매개변수가 문자열이 아니기 때문",
+      "구조 분해 할당으로 메서드를 추출하면 this 바인딩이 원본 객체에서 분리되기 때문",
+      "템플릿 리터럴에서 this를 사용할 수 없기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "구조 분해 할당(const { getUrl } = api)은 함수 참조만 추출하며, 원본 객체와의 바인딩 관계를 유지하지 않습니다. const getUrl = api.getUrl과 동일하게 동작합니다. 추출된 함수를 단독 호출하면 this는 전역(또는 strict mode에서 undefined)이 되어 this.baseUrl이 undefined가 됩니다. 해결 방법: getUrl.bind(api)를 사용하거나 api.getUrl('/users')처럼 메서드 호출 패턴을 유지합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment"
+  },
+  {
+    "id": "this-034",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "클래스 필드의 화살표 함수와 constructor에서 bind를 사용하는 방식의 공통점으로 올바른 것은?",
+    "options": [
+      "둘 다 프로토타입에 메서드를 추가한다",
+      "둘 다 인스턴스마다 새 함수 객체를 생성하여 this를 고정한다",
+      "둘 다 메모리를 전혀 사용하지 않는다",
+      "둘 다 super 키워드를 사용할 수 있다"
+    ],
+    "correctIndex": 1,
+    "explanation": "화살표 함수 클래스 필드(method = () => {})와 constructor에서의 bind(this.method = this.method.bind(this)) 모두 인스턴스마다 별도의 함수 객체를 생성합니다. 이로 인해 this가 해당 인스턴스에 영구적으로 바인딩됩니다. 두 방식 모두 프로토타입이 아닌 인스턴스에 직접 함수를 추가하므로, 프로토타입 메서드보다 메모리를 더 사용하지만 콜백으로 안전하게 전달할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Classes/Public_class_fields"
+  },
+  {
+    "id": "this-035",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "class Calculator {\n  value = 0;\n  static create() {\n    console.log(this === Calculator);\n  }\n}\nCalculator.create();",
+    "options": [
+      "false",
+      "TypeError",
+      "undefined",
+      "true"
+    ],
+    "correctIndex": 3,
+    "explanation": "static 메서드에서 this는 인스턴스가 아니라 클래스 자체를 가리킵니다. Calculator.create()를 호출하면 this는 Calculator 클래스(생성자 함수)에 바인딩됩니다. 이는 일반 메서드 호출에서 점(.) 앞의 객체가 this가 되는 것과 동일한 원리입니다. static 메서드에서 this를 사용하면 같은 클래스의 다른 static 메서드나 프로퍼티에 접근할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Classes/static"
+  },
+  {
+    "id": "this-036",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Proxy의 handler 메서드(trap)에서 receiver 매개변수의 역할로 올바른 것은?",
+    "options": [
+      "프로퍼티 접근 시 원래 this가 될 객체(프록시 또는 프록시를 상속한 객체)를 전달받는다",
+      "Proxy 생성자에 전달된 handler 객체를 가리킨다",
+      "항상 target 객체와 동일하다",
+      "trap 함수 내에서 다른 trap을 호출하기 위한 참조이다"
+    ],
+    "correctIndex": 0,
+    "explanation": "Proxy의 get/set trap에서 receiver는 프로퍼티 접근이 실제로 발생한 객체입니다. 보통은 프록시 자체이지만, 프록시를 프로토타입으로 가진 객체에서 프로퍼티에 접근하면 receiver는 그 하위 객체가 됩니다. Reflect.get(target, prop, receiver)에 이 receiver를 전달하면 getter 내부의 this가 올바른 객체를 가리키게 됩니다. 이를 통해 프로토타입 체인에서 this가 올바르게 동작합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/get"
+  },
+  {
+    "id": "this-037",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function greet() {\n  return this.name;\n}\nconst result = greet.call({ name: 'Park' });\nconsole.log(result);",
+    "options": [
+      "undefined",
+      "TypeError",
+      "Park",
+      "null"
+    ],
+    "correctIndex": 2,
+    "explanation": "Function.prototype.call()은 첫 번째 인자로 전달된 객체를 함수 내부의 this로 바인딩하여 즉시 실행합니다. greet.call({ name: 'Park' })은 this를 { name: 'Park' }으로 설정하고 greet을 호출합니다. 따라서 this.name은 'Park'을 반환합니다. call은 일시적으로 this를 지정하여 함수를 실행할 때 사용하는 대표적인 명시적 바인딩 방법입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Function/call"
+  },
+  {
+    "id": "this-038",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 map 콜백 내부의 this.prefix가 undefined입니다. 원인은 무엇인가요?",
+    "code": "const formatter = {\n  prefix: '> ',\n  formatAll(items) {\n    return items.map(function(item) {\n      return this.prefix + item;\n    });\n  }\n};\nconsole.log(formatter.formatAll(['a', 'b']));",
+    "options": [
+      "map 메서드는 콜백 함수를 받을 수 없기 때문",
+      "items 배열이 비어있기 때문",
+      "prefix 프로퍼티가 문자열이 아니기 때문",
+      "map의 일반 함수 콜백에서 this가 formatter가 아닌 전역으로 바인딩되기 때문"
+    ],
+    "correctIndex": 3,
+    "explanation": "Array.prototype.map에 전달된 일반 함수 콜백은 단독으로 호출되므로 this가 전역(strict mode에서는 undefined)을 가리킵니다. 해결 방법은 세 가지입니다: 1) 화살표 함수 사용: items.map(item => this.prefix + item), 2) map의 두 번째 인자로 thisArg 전달: items.map(function(item) { ... }, this), 3) bind 사용: items.map(function(item) { ... }.bind(this)).",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/map"
+  },
+  {
+    "id": "this-039",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "일반 함수 선언과 클래스 메서드에서 this의 차이로 올바른 것은?",
+    "options": [
+      "클래스 메서드는 항상 strict mode에서 실행되므로, 단독 호출 시 this가 undefined가 된다",
+      "일반 함수 선언은 항상 strict mode에서 실행된다",
+      "클래스 메서드의 this는 항상 인스턴스에 고정되어 있다",
+      "둘 다 동일한 this 바인딩 규칙을 따른다"
+    ],
+    "correctIndex": 0,
+    "explanation": "클래스 본문(class body)은 항상 strict mode에서 실행됩니다. 따라서 클래스 메서드를 변수에 저장하고 단독 호출하면 this는 전역 객체가 아닌 undefined가 됩니다. 반면 일반 함수 선언은 'use strict' 지시문이 없으면 비엄격 모드에서 실행되어, 단독 호출 시 this가 전역 객체(window)를 가리킵니다. 이 차이 때문에 클래스 메서드에서 this 손실 시 TypeError가 발생할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Classes"
+  },
+  {
+    "id": "this-040",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const builder = {\n  result: '',\n  add(str) {\n    this.result += str;\n    return this;\n  },\n  build() {\n    return this.result;\n  }\n};\nconsole.log(builder.add('Hello').add(' World').build());",
+    "options": [
+      "undefined",
+      "Hello World",
+      "TypeError",
+      "Hello"
+    ],
+    "correctIndex": 1,
+    "explanation": "메서드 체이닝(method chaining)은 각 메서드에서 return this를 사용하여 같은 객체를 반환함으로써 연속적인 메서드 호출을 가능하게 합니다. builder.add('Hello')는 this(builder)를 반환하고, 이어서 .add(' World')가 호출되어 result가 'Hello World'가 됩니다. 마지막 .build()는 result 문자열을 반환합니다. jQuery, Lodash 등 많은 라이브러리가 이 패턴을 활용합니다.",
+    "sourceUrl": "https://javascript.info/object-methods"
   }
 ]

@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: fix — scope-034 factual error & correctIndex ... (`d5db7fe`)
 - **content**: add 10 nodejs questions (`7a950c7`)
 - **content**: add 10 dom-manipulation questions (`4fbfbfb`)
 - **content**: fix — design-patterns-038 answer and explanation (`e809976`)
