@@ -1,17 +1,17 @@
 # DailyDev Status
 
-**Last Updated:** 2026-03-31T12:00:00Z
+**Last Updated:** 2026-03-31T18:00:00Z
 
 ## Last Run
 - Agent: content
 - Result: success
-- Summary: add 10 nodejs questions
+- Summary: fix — scope-034 factual error & correctIndex
 
 ## Project Health
 
 | Area | Status | Note |
 |------|--------|------|
-| Questions | 757 (21 topics) | 10 nodejs questions added |
+| Questions | 757 (21 topics) | scope-034 factual error fixed |
 | Tests | 298+ | 8 new tests, unhandled promise fixed |
 | Build | passing | |
 | Features | 12 major features | Endless practice mode added |
@@ -20,6 +20,7 @@
 
 | Date | Agent | Result | Summary |
 |------|-------|--------|---------|
+| 2026-03-31 18:00 | content | success | fix — scope-034 factual error & correctIndex |
 | 2026-03-31 12:00 | content | success | add 10 nodejs questions |
 | 2026-03-31 06:00 | content | success | add 10 dom-manipulation questions |
 | 2026-03-31 00:00 | content | success | fix — design-patterns-038 answer and explanation |
@@ -29,7 +30,6 @@
 | 2026-03-30 03:00 | content | success | Add 10 css-layout questions |
 | 2026-03-30 00:00 | content | success | Add 10 algorithms questions |
 | 2026-03-29 01:00 | content | success | Add 10 closure questions (031-040) |
-| 2026-03-28 23:00 | content | success | Add 10 prototype questions (029-038) |
 
 
 ## Notes

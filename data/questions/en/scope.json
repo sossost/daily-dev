@@ -495,5 +495,172 @@
     "correctIndex": 3,
     "explanation": "In strict mode, assigning a value to a variable without var, let, or const does not create an implicit global variable — instead, it throws a ReferenceError. In non-strict mode, writing x = 10 without a keyword creates a global variable, but strict mode prevents this mistake.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode"
+  },
+  {
+    "id": "scope-031",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "var x = 1;\nvar x = 2;\nconsole.log(x);\n\nlet y = 1;\nlet y = 2;",
+    "options": [
+      "2 is printed, then SyntaxError",
+      "1, 1",
+      "2, 2",
+      "SyntaxError (entire code does not execute)"
+    ],
+    "correctIndex": 3,
+    "explanation": "let does not allow redeclaration in the same scope and causes a SyntaxError. Crucially, this error is detected at the parsing stage, so the entire code — including the var x redeclaration — never executes. While var allows redeclaration in the same scope, the let SyntaxError blocks the entire script.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let#redeclarations"
+  },
+  {
+    "id": "scope-032",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the scoping behavior of class declarations in JavaScript is correct?",
+    "options": [
+      "class has block scope and is subject to the TDZ (Temporal Dead Zone)",
+      "class is not hoisted, so it cannot be used before declaration",
+      "class has function scope like var",
+      "class can only be declared in the global scope"
+    ],
+    "correctIndex": 0,
+    "explanation": "Class declarations have block scope, just like let and const. They are hoisted but remain uninitialized in the TDZ, so accessing a class before its declaration throws a ReferenceError. This ensures safe initialization order, especially in inheritance hierarchies.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/class#hoisting"
+  },
+  {
+    "id": "scope-033",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function foo(x = y, y = 1) {\n  console.log(x, y);\n}\nfoo();",
+    "options": [
+      "undefined, 1",
+      "1, 1",
+      "ReferenceError",
+      "NaN, 1"
+    ],
+    "correctIndex": 2,
+    "explanation": "Default parameters are evaluated left to right, and each parameter forms its own scope. When x's default value references y, y has not yet been initialized (it is in the TDZ), so a ReferenceError is thrown. Reversing the order to (y = 1, x = y) would work correctly.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters#scope_effects"
+  },
+  {
+    "id": "scope-034",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "The developer expects the output to be 'hello', but undefined is logged. What is the cause?",
+    "code": "function greet() {\n  if (false) {\n    var message = 'hello';\n  }\n  console.log(message);\n}\ngreet();",
+    "options": [
+      "var is hoisted to the function scope, but the assignment inside the unreachable if block never executes",
+      "console.log runs before the if statement is evaluated",
+      "The if block creates a separate function scope for var",
+      "var cannot be used inside an if statement"
+    ],
+    "correctIndex": 0,
+    "explanation": "Variables declared with var are hoisted to the top of their function scope regardless of where they appear — even inside unreachable code blocks. The declaration var message is hoisted and initialized to undefined, but since the if (false) block never executes, the assignment message = 'hello' never runs. This demonstrates why let/const with block scope are preferred over var.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/var#hoisting"
+  },
+  {
+    "id": "scope-035",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "if (true) {\n  var a = 10;\n  let b = 20;\n}\nconsole.log(a);\nconsole.log(b);",
+    "options": [
+      "10, 20",
+      "10 is printed, then ReferenceError",
+      "undefined, undefined",
+      "ReferenceError (code does not execute)"
+    ],
+    "correctIndex": 1,
+    "explanation": "var a has function scope (global scope here), so it is accessible outside the if block and prints 10. let b has block scope and is only valid within the if block. Accessing b outside the block throws a ReferenceError.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let"
+  },
+  {
+    "id": "scope-036",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the output regarding the scope of a Named Function Expression's name?",
+    "code": "const foo = function bar() {\n  console.log(typeof bar);\n};\nfoo();\nconsole.log(typeof bar);",
+    "options": [
+      "foo() prints 'function', outer prints 'function'",
+      "foo() prints 'undefined', outer prints 'undefined'",
+      "foo() prints 'function', outer prints 'undefined'",
+      "SyntaxError is thrown"
+    ],
+    "correctIndex": 2,
+    "explanation": "The name of a Named Function Expression (NFE) — bar in this case — has a special scope: it is only accessible inside the function body. Inside the function, typeof bar is 'function', but outside, bar is not defined so typeof bar is 'undefined'. NFE names are useful for recursion and debugging.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/function#named_function_expression"
+  },
+  {
+    "id": "scope-037",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about globalThis is correct?",
+    "options": [
+      "globalThis is a global object available only in browsers",
+      "globalThis always returns undefined",
+      "globalThis cannot be used in strict mode",
+      "globalThis is the standard way to reference the global object regardless of environment"
+    ],
+    "correctIndex": 3,
+    "explanation": "globalThis was introduced in ES2020 as a standard way to reference the global object regardless of the execution environment. It returns window in browsers, global in Node.js, and self in Web Workers. Previously, different global object names had to be used depending on the environment, but globalThis provides unified access.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis"
+  },
+  {
+    "id": "scope-038",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "let i = 0;\nfor (let i = i; i < 3; i++) {\n  // loop\n}\nconsole.log(i);",
+    "options": [
+      "3",
+      "0",
+      "ReferenceError",
+      "undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "In the for statement's initialization, let i = i declares a new block-scoped variable i while simultaneously referencing itself. The new i is not yet initialized (it is in the TDZ), so reading the right-hand side i throws a ReferenceError. The outer i = 0 is shadowed by the inner declaration.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for#lexical_declarations_in_the_initialization_block"
+  },
+  {
+    "id": "scope-039",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "A ReferenceError occurs when trying to use the class in the following code. What is the cause?",
+    "code": "const dog = new Animal('Dog');\nclass Animal {\n  constructor(name) {\n    this.name = name;\n  }\n}",
+    "options": [
+      "class declarations are subject to the TDZ and cannot be used before declaration",
+      "this cannot be used in a constructor",
+      "class syntax is not supported in JavaScript",
+      "It should be called without the new keyword"
+    ],
+    "correctIndex": 0,
+    "explanation": "Class declarations are hoisted like let/const but are subject to the TDZ (Temporal Dead Zone). Using a class before its declaration throws a ReferenceError. This is different from function declarations, which are fully hoisted and can be called before their declaration.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/class#hoisting"
+  },
+  {
+    "id": "scope-040",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct description of the scoping difference between these two code blocks?\n\nA: { function greet() { return 'hi'; } }\nB: { const greet = () => 'hi'; }",
+    "options": [
+      "Both A and B prevent access to greet outside the block",
+      "A allows access to greet outside the block in non-strict mode, but B only allows access inside the block",
+      "Both A and B allow access to greet outside the block",
+      "A only allows access inside the block, but B allows access outside the block"
+    ],
+    "correctIndex": 1,
+    "explanation": "Function declarations inside blocks have inconsistent behavior in non-strict mode — in some environments they are accessible outside the block. Arrow functions assigned with const always follow block scope and are inaccessible outside. In strict mode, function declarations also follow block scope.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function#block-level_function_declaration"
   }
 ]

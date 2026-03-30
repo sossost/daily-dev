@@ -495,5 +495,172 @@
     "correctIndex": 3,
     "explanation": "strict mode에서는 var, let, const 등의 선언 키워드 없이 변수에 값을 할당하면 암묵적 전역 변수가 생성되지 않고 ReferenceError가 발생합니다. 비엄격 모드에서는 선언 없이 x = 10이라고 쓰면 전역 변수가 되지만, strict mode는 이런 실수를 방지합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Strict_mode"
+  },
+  {
+    "id": "scope-031",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "var x = 1;\nvar x = 2;\nconsole.log(x);\n\nlet y = 1;\nlet y = 2;",
+    "options": [
+      "2가 출력된 후 SyntaxError 발생",
+      "1, 1",
+      "2, 2",
+      "SyntaxError (코드 전체 실행 불가)"
+    ],
+    "correctIndex": 3,
+    "explanation": "let은 같은 스코프 내에서 재선언이 불가능하며 SyntaxError를 발생시킵니다. 중요한 점은 이 에러가 코드 파싱 단계에서 감지되므로, var x의 재선언 부분을 포함한 코드 전체가 실행되지 않습니다. var는 같은 스코프 내에서 재선언이 가능하지만, let의 SyntaxError가 전체 스크립트를 차단합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/let#redeclarations"
+  },
+  {
+    "id": "scope-032",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "JavaScript에서 class 선언의 스코프 특성으로 올바른 것은?",
+    "options": [
+      "class는 블록 스코프를 가지며 TDZ(Temporal Dead Zone)가 적용된다",
+      "class는 호이스팅되지 않아 선언 전에 사용할 수 없다",
+      "class는 var처럼 함수 스코프를 가진다",
+      "class는 전역에서만 선언 가능하다"
+    ],
+    "correctIndex": 0,
+    "explanation": "class 선언은 let/const와 마찬가지로 블록 스코프를 가집니다. 호이스팅은 되지만 초기화되지 않은 상태로 TDZ에 놓이므로, 선언문 이전에 접근하면 ReferenceError가 발생합니다. 이는 클래스가 상속 구조에서 안전하게 초기화 순서를 보장하기 위함입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/class#hoisting"
+  },
+  {
+    "id": "scope-033",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function foo(x = y, y = 1) {\n  console.log(x, y);\n}\nfoo();",
+    "options": [
+      "undefined, 1",
+      "1, 1",
+      "ReferenceError",
+      "NaN, 1"
+    ],
+    "correctIndex": 2,
+    "explanation": "함수의 기본 매개변수(default parameters)는 왼쪽에서 오른쪽 순서로 평가되며, 각 매개변수는 자체적인 스코프를 형성합니다. x의 기본값으로 y를 참조할 때 y는 아직 초기화되지 않은 상태(TDZ)이므로 ReferenceError가 발생합니다. 순서를 바꿔 (y = 1, x = y)로 하면 정상 동작합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/Default_parameters#scope_effects"
+  },
+  {
+    "id": "scope-034",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "개발자는 'hello'가 출력되길 기대했지만 undefined가 출력됩니다. 원인은 무엇인가요?",
+    "code": "function greet() {\n  if (false) {\n    var message = 'hello';\n  }\n  console.log(message);\n}\ngreet();",
+    "options": [
+      "var가 함수 스코프로 호이스팅되지만, 실행되지 않는 if 블록 내의 할당은 실행되지 않기 때문",
+      "console.log가 if 문 평가 전에 실행되기 때문",
+      "if 블록이 var에 대해 별도의 함수 스코프를 생성하기 때문",
+      "if 문 내에서는 var를 사용할 수 없기 때문"
+    ],
+    "correctIndex": 0,
+    "explanation": "var로 선언된 변수는 코드의 위치에 관계없이, 심지어 실행되지 않는 코드 블록 내에 있더라도 함수 스코프 최상단으로 호이스팅됩니다. var message 선언은 호이스팅되어 undefined로 초기화되지만, if (false) 블록 내부의 message = 'hello' 할당은 실행되지 않습니다. 이것이 블록 스코프를 가진 let/const가 var보다 선호되는 이유입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/var#hoisting"
+  },
+  {
+    "id": "scope-035",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "if (true) {\n  var a = 10;\n  let b = 20;\n}\nconsole.log(a);\nconsole.log(b);",
+    "options": [
+      "10, 20",
+      "10 출력 후 ReferenceError",
+      "undefined, undefined",
+      "ReferenceError (코드 실행 불가)"
+    ],
+    "correctIndex": 1,
+    "explanation": "var a는 함수 스코프(여기서는 전역 스코프)를 가지므로 if 블록 외부에서 접근 가능하여 10이 출력됩니다. let b는 블록 스코프를 가지므로 if 블록 내에서만 유효합니다. 블록 외부에서 b에 접근하면 ReferenceError가 발생합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/let"
+  },
+  {
+    "id": "scope-036",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Named Function Expression의 이름 스코프에 대한 설명으로 올바른 것은?",
+    "code": "const foo = function bar() {\n  console.log(typeof bar);\n};\nfoo();\nconsole.log(typeof bar);",
+    "options": [
+      "foo()는 'function', 외부는 'function'을 출력한다",
+      "foo()는 'undefined', 외부는 'undefined'를 출력한다",
+      "foo()는 'function', 외부는 'undefined'를 출력한다",
+      "SyntaxError가 발생한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Named Function Expression(NFE)의 이름(bar)은 함수 본문 내부에서만 접근 가능한 특별한 스코프를 가집니다. 함수 내부에서 typeof bar는 'function'이지만, 외부에서 bar는 정의되지 않아 typeof bar는 'undefined'입니다. NFE의 이름은 재귀 호출이나 디버깅 시 유용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/function#named_function_expression"
+  },
+  {
+    "id": "scope-037",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "globalThis에 대한 설명으로 올바른 것은?",
+    "options": [
+      "globalThis는 브라우저에서만 사용 가능한 전역 객체이다",
+      "globalThis는 항상 undefined를 반환한다",
+      "globalThis는 strict mode에서 사용할 수 없다",
+      "globalThis는 환경에 관계없이 전역 객체를 참조하는 표준 방법이다"
+    ],
+    "correctIndex": 3,
+    "explanation": "globalThis는 ES2020에서 도입된 표준으로, 실행 환경에 관계없이 전역 객체를 참조합니다. 브라우저에서는 window, Node.js에서는 global, Web Worker에서는 self를 반환합니다. 이전에는 환경마다 다른 전역 객체 이름을 사용해야 했지만, globalThis로 통일된 접근이 가능해졌습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/globalThis"
+  },
+  {
+    "id": "scope-038",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "let i = 0;\nfor (let i = i; i < 3; i++) {\n  // loop\n}\nconsole.log(i);",
+    "options": [
+      "3",
+      "0",
+      "ReferenceError",
+      "undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "for 문의 초기화 부분에서 let i = i는 새로운 블록 스코프 변수 i를 선언하면서 동시에 자기 자신을 참조합니다. 이때 새로운 i는 아직 초기화되지 않은 상태(TDZ)이므로, 오른쪽의 i를 읽으려 할 때 ReferenceError가 발생합니다. 외부의 i = 0은 내부 선언에 의해 가려집니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/for#lexical_declarations_in_the_initialization_block"
+  },
+  {
+    "id": "scope-039",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 클래스 사용 시 ReferenceError가 발생합니다. 원인은 무엇인가요?",
+    "code": "const dog = new Animal('Dog');\nclass Animal {\n  constructor(name) {\n    this.name = name;\n  }\n}",
+    "options": [
+      "class 선언은 TDZ가 적용되어 선언 전에 사용할 수 없기 때문",
+      "constructor에 this를 사용할 수 없기 때문",
+      "class 문법은 JavaScript에서 지원되지 않기 때문",
+      "new 키워드 없이 호출해야 하기 때문"
+    ],
+    "correctIndex": 0,
+    "explanation": "class 선언은 let/const처럼 호이스팅은 되지만 TDZ(Temporal Dead Zone)가 적용됩니다. 따라서 선언문 이전에 클래스를 사용하면 ReferenceError가 발생합니다. 함수 선언문은 전체가 호이스팅되어 선언 전에 호출 가능하지만, class는 이와 다르게 동작합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/class#hoisting"
+  },
+  {
+    "id": "scope-040",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "다음 두 코드의 스코프 동작 차이로 올바른 것은?\n\nA: { function greet() { return 'hi'; } }\nB: { const greet = () => 'hi'; }",
+    "options": [
+      "A와 B 모두 블록 외부에서 greet에 접근할 수 없다",
+      "A는 비엄격 모드에서 블록 외부에서 접근 가능하지만, B는 블록 내부에서만 접근 가능하다",
+      "A와 B 모두 블록 외부에서 greet에 접근할 수 있다",
+      "A는 블록 내부에서만 접근 가능하지만, B는 블록 외부에서도 접근 가능하다"
+    ],
+    "correctIndex": 1,
+    "explanation": "블록 내부의 함수 선언문은 비엄격 모드에서 브라우저마다 동작이 다를 수 있으며, 일부 환경에서는 블록 외부에서도 접근 가능합니다. 반면 const로 선언된 화살표 함수는 항상 블록 스코프를 따르므로 블록 외부에서 접근할 수 없습니다. strict mode에서는 함수 선언문도 블록 스코프를 따릅니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/function#block-level_function_declaration"
   }
 ]
