@@ -164,6 +164,7 @@ Output ONLY one word: content, code, expansion, feature, or skip." \
   local agent
   agent="$(echo "${decision}" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]' | grep -oE '(content|code|expansion|feature|skip)' | head -1)"
 
+  log "Manager raw output: $(echo "${decision}" | head -3)"
   if [ "${agent}" = "skip" ] || [ -z "${agent}" ]; then
     log "Manager decided to skip. Output: ${decision}"
     exit 0
