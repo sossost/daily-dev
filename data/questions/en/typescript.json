@@ -498,5 +498,175 @@
     "correctIndex": 1,
     "explanation": "Declaration merging is a feature unique to interfaces. Declaring the same interface name multiple times automatically merges them into one. In contrast, declaring a type alias with the same name twice in the same scope causes a 'Duplicate identifier' compile error. Declaration merging is useful for extending external library types (e.g., adding properties to the Window interface) or augmenting global types.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/declaration-merging.html"
+  },
+  {
+    "id": "typescript-031",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the `Greeting` type in the following code?",
+    "code": "type EventName = 'click' | 'scroll' | 'mousemove';\ntype Handler = `on${Capitalize<EventName>}`;\n\ntype Greeting = `Hello, ${string}!`;",
+    "options": [
+      "`Hello, ${string}!` — a template literal type that accepts any string starting with 'Hello, ' and ending with '!'",
+      "string",
+      "A literal type that only allows 'Hello, world!'",
+      "any"
+    ],
+    "correctIndex": 0,
+    "explanation": "Template Literal Types use backtick syntax to express string patterns at the type level. `Hello, ${string}!` accepts any string that starts with 'Hello, ' and ends with '!'. Combined with built-in string manipulation types like Capitalize, Uppercase, Lowercase, and Uncapitalize, powerful patterns can be created. The Handler type becomes 'onClick' | 'onScroll' | 'onMousemove'.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html"
+  },
+  {
+    "id": "typescript-032",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the role of custom type guards (the `is` keyword) in TypeScript?",
+    "code": "function isString(value: unknown): value is string {\n  return typeof value === 'string';\n}",
+    "options": [
+      "It performs type conversion at runtime",
+      "When the return value is true, it narrows the parameter's type to the specified type in that scope",
+      "It throws a runtime error if value is not a string",
+      "It makes the function return type boolean | string"
+    ],
+    "correctIndex": 1,
+    "explanation": "Custom type guards are functions with a return type of `value is Type`. When such a function returns true, the TypeScript compiler narrows the parameter's type to the specified type within that scope. They are useful for complex type checks (e.g., interface discrimination, array element filtering) that cannot be expressed with typeof or instanceof. When used with Array.filter(), the result array's type is also automatically narrowed.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates"
+  },
+  {
+    "id": "typescript-033",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the `Admin` type in the following code?",
+    "code": "interface HasName {\n  name: string;\n}\n\ninterface HasPermissions {\n  permissions: string[];\n}\n\ntype Admin = HasName & HasPermissions;",
+    "options": [
+      "{ name: string; permissions: string[] }",
+      "HasName | HasPermissions",
+      "{ name: string } | { permissions: string[] }",
+      "never"
+    ],
+    "correctIndex": 0,
+    "explanation": "Intersection types (&) combine multiple types to create a new type that includes all properties. HasName & HasPermissions becomes a type that must have both name and permissions properties. If union (|) means 'this or that', intersection (&) means 'this and that'. If two types have properties with the same name but incompatible types, that property becomes never.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/objects.html#intersection-types"
+  },
+  {
+    "id": "typescript-034",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Why does a compile error occur in the following code?",
+    "code": "function greet(name: string | null) {\n  console.log(name.toUpperCase());\n}",
+    "options": [
+      "console.log cannot be used in TypeScript",
+      "name may be null, so methods cannot be called without a null check",
+      "toUpperCase does not exist on the string type",
+      "The function has no explicit return type"
+    ],
+    "correctIndex": 1,
+    "explanation": "With strictNullChecks enabled, name's type is string | null. Since null does not have a toUpperCase method, an 'Object is possibly null' error occurs. You can fix this with if (name !== null) or if (name != null) for null checking, or use name! (non-null assertion). The safe approach is to eliminate null first with a conditional statement.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html#truthiness-narrowing"
+  },
+  {
+    "id": "typescript-035",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between `Extract<T, U>` and `Exclude<T, U>`?",
+    "code": "type T = string | number | boolean;\ntype A = Extract<T, string | boolean>; // string | boolean\ntype B = Exclude<T, string | boolean>; // number",
+    "options": [
+      "Extract keeps members of T assignable to U, Exclude removes members assignable to U",
+      "Extract works at runtime, Exclude at compile time",
+      "Extract returns the intersection, Exclude returns the union",
+      "Both return the same result"
+    ],
+    "correctIndex": 0,
+    "explanation": "Extract<T, U> extracts from union type T only those members assignable to U. Exclude<T, U> does the opposite, removing members assignable to U. Both leverage distributive behavior of conditional types: Extract is T extends U ? T : never, and Exclude is T extends U ? never : T. They are frequently used for filtering specific members from event types or unions.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/utility-types.html#extracttype-union"
+  },
+  {
+    "id": "typescript-036",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the type of `cache` in the following code?",
+    "code": "const cache: Record<string, number> = {};\ncache['a'] = 1;\ncache['b'] = 2;",
+    "options": [
+      "{ a: number; b: number }",
+      "{ [key: string]: number } — an object type with string keys and number values",
+      "Map<string, number>",
+      "Array<[string, number]>"
+    ],
+    "correctIndex": 1,
+    "explanation": "Record<K, V> is a utility type that creates an object type with key type K and value type V. Record<string, number> is equivalent to { [key: string]: number }, mapping all string keys to number values. Record is implemented as a mapped type (type Record<K extends keyof any, T> = { [P in K]: T }) and is widely used for config objects, caches, and lookup tables.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+  },
+  {
+    "id": "typescript-037",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does a compile error occur in the following code?",
+    "code": "interface Cat {\n  type: 'cat';\n  meow(): void;\n}\n\ninterface Dog {\n  type: 'dog';\n  bark(): void;\n}\n\nfunction handleAnimal(animal: Cat | Dog) {\n  if ('meow' in animal) {\n    animal.meow();\n  } else {\n    animal.bark();\n  }\n  animal.type; // OK\n  animal.meow(); // Error!\n}",
+    "options": [
+      "The in operator cannot be used for type narrowing in TypeScript",
+      "Accessing animal.type is incorrect and causes the error",
+      "Outside the if-else block, the type reverts to Cat | Dog, so meow() cannot be called directly",
+      "The type property is duplicated between Cat and Dog interfaces"
+    ],
+    "correctIndex": 2,
+    "explanation": "TypeScript's control flow analysis works at block scope level. Inside the if ('meow' in animal) block, animal is narrowed to Cat, but outside the block, it reverts to the original Cat | Dog. The type property is accessible because it exists on both Cat and Dog. However, meow() only exists on Cat, so calling it outside the block causes 'Property meow does not exist on type Dog'. The in operator is both a JavaScript runtime check and a TypeScript type narrowing mechanism.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html#the-in-operator-narrowing"
+  },
+  {
+    "id": "typescript-038",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What are Branded Types in TypeScript?",
+    "code": "type USD = number & { readonly __brand: 'USD' };\ntype EUR = number & { readonly __brand: 'EUR' };\n\nfunction addUSD(a: USD, b: USD): USD {\n  return (a + b) as USD;\n}",
+    "options": [
+      "A special object pattern that preserves type information at runtime",
+      "A pattern that adds phantom properties to nominally distinguish identical base types in a structural type system",
+      "A method of distinguishing types using JavaScript Symbols",
+      "A pattern for implementing inheritance using only interfaces without classes"
+    ],
+    "correctIndex": 1,
+    "explanation": "TypeScript uses structural typing, so types with the same structure are compatible. But when you want to distinguish values like USD and EUR that are both numbers but semantically different, branded types are used. By adding a phantom __brand property via intersection (&), the runtime values remain plain numbers, but they become incompatible at the type level. This prevents errors like addUSD(usd, eur) — mixing currencies — at compile time.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/types-from-types.html"
+  },
+  {
+    "id": "typescript-039",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of the `NonNullable<T>` utility type in TypeScript?",
+    "code": "type MaybeString = string | null | undefined;\ntype DefiniteString = NonNullable<MaybeString>; // string",
+    "options": [
+      "It returns a type with null and undefined removed from T",
+      "It makes type T nullable",
+      "It performs null checking at runtime",
+      "It makes all properties of T required"
+    ],
+    "correctIndex": 0,
+    "explanation": "NonNullable<T> removes null and undefined from type T. Internally, it works the same as Exclude<T, null | undefined>. It is useful in projects with strictNullChecks enabled for safely removing null/undefined from API responses or optional property types. For example, NonNullable<string | null | undefined> becomes string.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/utility-types.html#nonnullabletype"
+  },
+  {
+    "id": "typescript-040",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between the `asserts` keyword and the `is` keyword in TypeScript?",
+    "code": "// asserts approach\nfunction assertIsString(val: unknown): asserts val is string {\n  if (typeof val !== 'string') throw new Error('Not a string');\n}\n\n// is approach\nfunction isString(val: unknown): val is string {\n  return typeof val === 'string';\n}",
+    "options": [
+      "Both narrow types in the same way with no difference",
+      "asserts narrows the type in all subsequent code when the function returns normally, while is narrows only within conditionals",
+      "is throws errors, asserts returns boolean",
+      "asserts can only be used in generic functions"
+    ],
+    "correctIndex": 1,
+    "explanation": "asserts val is string is an assertion function — when the function returns normally without throwing, val is narrowed to string in all subsequent code. No if statement is needed for narrowing. In contrast, val is string is a type predicate that must be used with conditionals like if/else, narrowing the type only in the branch where it returns true. Assert functions must throw when the condition fails, while is functions return boolean.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions"
   }
 ]

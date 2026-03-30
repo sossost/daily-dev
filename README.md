@@ -46,11 +46,11 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Scope | 30 |
 | this Keyword | 30 |
 | Type Coercion | 30 |
-| TypeScript | 30 |
+| TypeScript | 40 |
 | Web Performance | 30 |
 | Web Security | 35 |
 
-**Total: 777 questions across 23 topics**
+**Total: 787 questions across 23 topics**
 
 ## Getting Started
 
