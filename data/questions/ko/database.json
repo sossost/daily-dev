@@ -490,5 +490,170 @@
     "correctIndex": 2,
     "explanation": "뷰(View)는 하나 이상의 테이블에 대한 쿼리를 저장한 가상 테이블입니다. 자체적으로 데이터를 저장하지 않으며, 조회 시 정의된 쿼리를 실행하여 결과를 반환합니다. 복잡한 쿼리를 단순화하고 접근 권한을 제어하는 데 활용됩니다.",
     "sourceUrl": "https://en.wikipedia.org/wiki/View_(SQL)"
+  },
+  {
+    "id": "database-031",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 SQL 쿼리의 결과는 무엇인가요?\n\nSELECT 1 FROM dual UNION ALL SELECT 1 FROM dual UNION ALL SELECT 1 FROM dual;",
+    "code": "SELECT 1 FROM dual\nUNION ALL\nSELECT 1 FROM dual\nUNION ALL\nSELECT 1 FROM dual;",
+    "options": [
+      "1행 (값: 1)",
+      "3행 (모두 값: 1)",
+      "오류 발생",
+      "0행 (빈 결과)"
+    ],
+    "correctIndex": 1,
+    "explanation": "UNION ALL은 중복을 제거하지 않고 모든 결과를 합칩니다. 각 SELECT가 1행을 반환하므로 총 3행이 됩니다. UNION(ALL 없이)을 사용하면 중복이 제거되어 1행만 반환됩니다. 이 차이를 이해하는 것이 성능 최적화에 중요합니다.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_union.asp"
+  },
+  {
+    "id": "database-032",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "SQL에서 UNION과 UNION ALL의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "UNION은 컬럼 수가 달라도 결합할 수 있지만, UNION ALL은 컬럼 수가 같아야 한다",
+      "UNION ALL은 결과를 자동으로 정렬하지만, UNION은 정렬하지 않는다",
+      "UNION은 중복 행을 제거하고, UNION ALL은 중복을 포함한 모든 행을 반환한다",
+      "UNION과 UNION ALL은 동일한 결과를 반환하며 차이가 없다"
+    ],
+    "correctIndex": 2,
+    "explanation": "UNION은 두 쿼리 결과를 합친 후 중복 행을 제거합니다. UNION ALL은 중복 제거 없이 모든 행을 그대로 반환합니다. 중복 제거에는 정렬 비용이 발생하므로, 중복이 없다고 확신하는 경우 UNION ALL이 성능상 유리합니다.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_union.asp"
+  },
+  {
+    "id": "database-033",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "데이터베이스 트리거(Trigger)에 대한 설명으로 올바른 것은 무엇인가요?",
+    "options": [
+      "트리거는 수동으로만 실행할 수 있으며 자동 실행은 불가능하다",
+      "트리거는 SELECT 쿼리에서만 실행될 수 있다",
+      "트리거는 하나의 테이블에 최대 하나만 설정할 수 있다",
+      "트리거는 특정 테이블에서 INSERT, UPDATE, DELETE 이벤트 발생 시 자동으로 실행되는 저장 프로시저이다"
+    ],
+    "correctIndex": 3,
+    "explanation": "트리거(Trigger)는 테이블에 대한 INSERT, UPDATE, DELETE 같은 데이터 변경 이벤트가 발생할 때 자동으로 실행되는 저장 프로시저입니다. BEFORE/AFTER 트리거로 이벤트 전후에 실행할 수 있으며, 감사 로그 기록이나 데이터 유효성 검사에 활용됩니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Database_trigger"
+  },
+  {
+    "id": "database-034",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 SQL 쿼리가 매우 느리게 실행됩니다. 가장 가능성 높은 원인은 무엇인가요?\n\nSELECT * FROM orders WHERE YEAR(created_at) = 2024;",
+    "code": "SELECT * FROM orders\nWHERE YEAR(created_at) = 2024;",
+    "options": [
+      "YEAR 함수는 SQL 표준이 아니라서 오류가 발생한다",
+      "WHERE 절에서 컬럼에 함수를 적용하면 인덱스를 사용할 수 없어 전체 테이블 스캔이 발생한다",
+      "SELECT *는 모든 컬럼을 반환하므로 항상 느리다",
+      "2024는 문자열이 아니라 숫자이므로 타입 불일치가 발생한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "WHERE 절에서 컬럼에 함수를 적용하면 해당 컬럼의 인덱스를 활용할 수 없습니다(SARGable 위반). created_at에 인덱스가 있더라도 YEAR(created_at)으로 변환하면 전체 테이블 스캔이 발생합니다. 대신 WHERE created_at >= '2024-01-01' AND created_at < '2025-01-01' 형태로 범위 조건을 사용해야 합니다.",
+    "sourceUrl": "https://use-the-index-luke.com/sql/where-clause/functions"
+  },
+  {
+    "id": "database-035",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 SQL 쿼리의 결과는 무엇인가요?\n\nemployees 테이블: id(1,2,3), name('A','B','C'), manager_id(NULL,1,1)\n\nSELECT e.name AS employee, m.name AS manager FROM employees e LEFT JOIN employees m ON e.manager_id = m.id;",
+    "code": "SELECT e.name AS employee,\n       m.name AS manager\nFROM employees e\nLEFT JOIN employees m\n  ON e.manager_id = m.id;",
+    "options": [
+      "A-NULL, B-A, C-A (3행)",
+      "B-A, C-A (2행)",
+      "A-A, B-A, C-A (3행)",
+      "오류 발생 — 같은 테이블을 조인할 수 없다"
+    ],
+    "correctIndex": 0,
+    "explanation": "셀프 조인(Self Join)은 같은 테이블을 별칭을 사용하여 조인하는 기법입니다. 직원 A는 manager_id가 NULL이므로 LEFT JOIN에 의해 manager가 NULL로 반환됩니다. 직원 B와 C는 manager_id가 1이므로 직원 A(id=1)와 매칭되어 manager가 'A'로 나타납니다.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_join_self.asp"
+  },
+  {
+    "id": "database-036",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "데이터베이스 복제(Replication)에서 마스터-슬레이브(Primary-Replica) 구조의 주요 특징은 무엇인가요?",
+    "options": [
+      "모든 노드에서 읽기와 쓰기가 동일하게 가능하다",
+      "슬레이브 노드는 마스터보다 항상 최신 데이터를 보유한다",
+      "마스터 노드가 쓰기를 처리하고 슬레이브 노드가 읽기를 분담하여 읽기 성능을 향상시킨다",
+      "슬레이브 노드가 다운되면 쓰기 작업이 중단된다"
+    ],
+    "correctIndex": 2,
+    "explanation": "마스터-슬레이브 복제에서 마스터(Primary)는 모든 쓰기 작업을 처리하고, 변경 사항을 슬레이브(Replica)에 전파합니다. 슬레이브는 읽기 전용으로 읽기 부하를 분산합니다. 이를 통해 읽기 확장성과 고가용성을 달성하지만, 비동기 복제 시 슬레이브의 데이터가 약간 지연될 수 있습니다(복제 지연).",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Replication_(computing)"
+  },
+  {
+    "id": "database-037",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "SQL에서 WHERE와 HAVING의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "WHERE와 HAVING은 완전히 동일하며 상호 교환 가능하다",
+      "HAVING은 GROUP BY 없이 단독으로만 사용할 수 있다",
+      "WHERE는 개별 행을 필터링하고, HAVING은 GROUP BY로 그룹화된 결과를 필터링한다",
+      "WHERE는 집계 함수를 사용할 수 있지만, HAVING은 사용할 수 없다"
+    ],
+    "correctIndex": 2,
+    "explanation": "WHERE는 GROUP BY 전에 개별 행을 필터링하며 집계 함수를 사용할 수 없습니다. HAVING은 GROUP BY 후에 그룹화된 결과를 필터링하며 집계 함수(COUNT, SUM 등)를 조건으로 사용할 수 있습니다. 실행 순서는 WHERE → GROUP BY → HAVING입니다.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_having.asp"
+  },
+  {
+    "id": "database-038",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 쿼리에서 서브쿼리가 외부 쿼리의 모든 행에 대해 반복 실행되어 성능이 저하됩니다. 이 문제의 원인은 무엇인가요?\n\nSELECT name FROM employees e WHERE salary > (SELECT AVG(salary) FROM employees WHERE dept = e.dept);",
+    "code": "SELECT name FROM employees e\nWHERE salary > (\n  SELECT AVG(salary)\n  FROM employees\n  WHERE dept = e.dept\n);",
+    "options": [
+      "서브쿼리가 외부 쿼리의 컬럼(e.dept)을 참조하는 상관 서브쿼리이므로, 외부 쿼리의 각 행마다 서브쿼리가 재실행된다",
+      "AVG 함수가 NULL 값을 처리하지 못해 오류가 발생한다",
+      "WHERE 절에서 서브쿼리를 사용할 수 없다",
+      "employees 테이블을 두 번 참조할 수 없다"
+    ],
+    "correctIndex": 0,
+    "explanation": "상관 서브쿼리(Correlated Subquery)는 외부 쿼리의 컬럼을 참조하므로 외부 쿼리의 각 행에 대해 매번 실행됩니다. 이 경우 e.dept를 참조하므로 직원 수만큼 AVG 계산이 반복됩니다. JOIN과 윈도우 함수로 리팩토링하면 단일 스캔으로 최적화할 수 있습니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Correlated_subquery"
+  },
+  {
+    "id": "database-039",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "데이터베이스 커넥션 풀(Connection Pool)의 주요 목적은 무엇인가요?",
+    "options": [
+      "데이터베이스 서버의 저장 공간을 절약하기 위해",
+      "SQL 쿼리의 문법 오류를 자동으로 수정하기 위해",
+      "데이터베이스 스키마를 자동으로 동기화하기 위해",
+      "미리 생성한 데이터베이스 연결을 재사용하여 연결 생성/해제 오버헤드를 줄이기 위해"
+    ],
+    "correctIndex": 3,
+    "explanation": "커넥션 풀은 데이터베이스 연결을 미리 생성하고 풀(pool)에 보관하여 재사용하는 기법입니다. TCP 연결 수립, 인증 등 연결 생성 비용이 큰데, 풀링을 통해 이 오버헤드를 줄여 애플리케이션의 응답 시간을 단축하고 데이터베이스 서버의 부하를 관리합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Connection_pool"
+  },
+  {
+    "id": "database-040",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 SQL 쿼리의 결과는 무엇인가요?\n\nitems 테이블: id(1,2,3), name('A','B','C'), category('X','Y','X')\n\nSELECT category, COUNT(*) AS cnt FROM items GROUP BY category ORDER BY cnt DESC;",
+    "code": "SELECT category, COUNT(*) AS cnt\nFROM items\nGROUP BY category\nORDER BY cnt DESC;",
+    "options": [
+      "X-2, Y-1",
+      "Y-1, X-2",
+      "X-1, Y-1 (중복 무시)",
+      "오류 발생 — 별칭을 ORDER BY에서 사용할 수 없다"
+    ],
+    "correctIndex": 0,
+    "explanation": "GROUP BY category로 그룹화하면 X(2개)와 Y(1개)가 됩니다. ORDER BY cnt DESC는 COUNT 결과를 내림차순으로 정렬하므로, X(cnt=2)가 먼저, Y(cnt=1)가 다음에 출력됩니다. 대부분의 DBMS에서 SELECT 절의 별칭(alias)을 ORDER BY에서 사용할 수 있습니다.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_groupby.asp"
   }
 ]

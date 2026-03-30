@@ -490,5 +490,170 @@
     "correctIndex": 2,
     "explanation": "A View is a virtual table based on a stored query over one or more tables. It does not store data itself; instead, it executes the defined query and returns results when accessed. Views are used to simplify complex queries and control data access permissions.",
     "sourceUrl": "https://en.wikipedia.org/wiki/View_(SQL)"
+  },
+  {
+    "id": "database-031",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the result of the following SQL query?\n\nSELECT 1 FROM dual UNION ALL SELECT 1 FROM dual UNION ALL SELECT 1 FROM dual;",
+    "code": "SELECT 1 FROM dual\nUNION ALL\nSELECT 1 FROM dual\nUNION ALL\nSELECT 1 FROM dual;",
+    "options": [
+      "1 row (value: 1)",
+      "3 rows (all value: 1)",
+      "Error",
+      "0 rows (empty result)"
+    ],
+    "correctIndex": 1,
+    "explanation": "UNION ALL combines results without removing duplicates. Each SELECT returns 1 row, so the total is 3 rows. Using UNION (without ALL) would remove duplicates and return only 1 row. Understanding this difference is important for performance optimization.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_union.asp"
+  },
+  {
+    "id": "database-032",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between UNION and UNION ALL in SQL?",
+    "options": [
+      "UNION can combine results with different column counts, but UNION ALL requires matching columns",
+      "UNION ALL automatically sorts results, but UNION does not",
+      "UNION removes duplicate rows, while UNION ALL returns all rows including duplicates",
+      "UNION and UNION ALL return identical results with no differences"
+    ],
+    "correctIndex": 2,
+    "explanation": "UNION combines query results and removes duplicate rows. UNION ALL returns all rows without deduplication. Since deduplication requires a sort operation, UNION ALL is more performant when you're confident there are no duplicates.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_union.asp"
+  },
+  {
+    "id": "database-033",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which of the following correctly describes a database trigger?",
+    "options": [
+      "Triggers can only be executed manually and cannot run automatically",
+      "Triggers can only be executed on SELECT queries",
+      "Only one trigger can be set per table",
+      "A trigger is a stored procedure that automatically executes when INSERT, UPDATE, or DELETE events occur on a specific table"
+    ],
+    "correctIndex": 3,
+    "explanation": "A trigger is a stored procedure that automatically fires when data modification events (INSERT, UPDATE, DELETE) occur on a table. It can be configured as BEFORE or AFTER the event, and is commonly used for audit logging and data validation.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Database_trigger"
+  },
+  {
+    "id": "database-034",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "The following SQL query executes very slowly. What is the most likely cause?\n\nSELECT * FROM orders WHERE YEAR(created_at) = 2024;",
+    "code": "SELECT * FROM orders\nWHERE YEAR(created_at) = 2024;",
+    "options": [
+      "YEAR function is not part of the SQL standard and causes an error",
+      "Applying a function to a column in the WHERE clause prevents index usage, causing a full table scan",
+      "SELECT * always performs slowly because it returns all columns",
+      "2024 is a number rather than a string, causing a type mismatch"
+    ],
+    "correctIndex": 1,
+    "explanation": "Applying a function to a column in the WHERE clause prevents the optimizer from using indexes on that column (non-SARGable condition). Even if created_at has an index, wrapping it in YEAR() forces a full table scan. Instead, use a range condition: WHERE created_at >= '2024-01-01' AND created_at < '2025-01-01'.",
+    "sourceUrl": "https://use-the-index-luke.com/sql/where-clause/functions"
+  },
+  {
+    "id": "database-035",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the result of the following SQL query?\n\nemployees table: id(1,2,3), name('A','B','C'), manager_id(NULL,1,1)\n\nSELECT e.name AS employee, m.name AS manager FROM employees e LEFT JOIN employees m ON e.manager_id = m.id;",
+    "code": "SELECT e.name AS employee,\n       m.name AS manager\nFROM employees e\nLEFT JOIN employees m\n  ON e.manager_id = m.id;",
+    "options": [
+      "A-NULL, B-A, C-A (3 rows)",
+      "B-A, C-A (2 rows)",
+      "A-A, B-A, C-A (3 rows)",
+      "Error — cannot join the same table"
+    ],
+    "correctIndex": 0,
+    "explanation": "A self join joins a table with itself using aliases. Employee A has a NULL manager_id, so the LEFT JOIN returns NULL for the manager column. Employees B and C have manager_id=1, matching employee A (id=1), so their manager is 'A'.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_join_self.asp"
+  },
+  {
+    "id": "database-036",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the key characteristic of a Primary-Replica (Master-Slave) replication architecture in databases?",
+    "options": [
+      "All nodes can perform reads and writes equally",
+      "Replica nodes always hold more recent data than the primary",
+      "The primary node handles writes while replicas handle reads, improving read performance",
+      "Write operations stop when a replica node goes down"
+    ],
+    "correctIndex": 2,
+    "explanation": "In primary-replica replication, the primary (master) handles all write operations and propagates changes to replicas (slaves). Replicas serve read-only traffic, distributing the read load. This achieves read scalability and high availability, though asynchronous replication may introduce slight data lag (replication lag).",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Replication_(computing)"
+  },
+  {
+    "id": "database-037",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between WHERE and HAVING in SQL?",
+    "options": [
+      "WHERE and HAVING are completely identical and interchangeable",
+      "HAVING can only be used standalone without GROUP BY",
+      "WHERE filters individual rows, while HAVING filters grouped results after GROUP BY",
+      "WHERE can use aggregate functions, but HAVING cannot"
+    ],
+    "correctIndex": 2,
+    "explanation": "WHERE filters individual rows before GROUP BY and cannot use aggregate functions. HAVING filters grouped results after GROUP BY and can use aggregate functions (COUNT, SUM, etc.) as conditions. The execution order is: WHERE → GROUP BY → HAVING.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_having.asp"
+  },
+  {
+    "id": "database-038",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In the following query, the subquery is executed repeatedly for every row in the outer query, causing performance degradation. What is the cause?\n\nSELECT name FROM employees e WHERE salary > (SELECT AVG(salary) FROM employees WHERE dept = e.dept);",
+    "code": "SELECT name FROM employees e\nWHERE salary > (\n  SELECT AVG(salary)\n  FROM employees\n  WHERE dept = e.dept\n);",
+    "options": [
+      "The subquery references the outer query's column (e.dept), making it a correlated subquery that re-executes for each outer row",
+      "The AVG function cannot handle NULL values, causing an error",
+      "Subqueries cannot be used in WHERE clauses",
+      "The employees table cannot be referenced twice"
+    ],
+    "correctIndex": 0,
+    "explanation": "A correlated subquery references columns from the outer query, so it must be re-executed for each row in the outer query. Here, the reference to e.dept means the AVG calculation runs once per employee. Refactoring with JOINs or window functions can optimize this to a single scan.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Correlated_subquery"
+  },
+  {
+    "id": "database-039",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the main purpose of a database connection pool?",
+    "options": [
+      "To save storage space on the database server",
+      "To automatically fix SQL query syntax errors",
+      "To automatically synchronize database schemas",
+      "To reuse pre-created database connections, reducing the overhead of creating and destroying connections"
+    ],
+    "correctIndex": 3,
+    "explanation": "A connection pool pre-creates and maintains database connections for reuse. Since establishing connections involves costly operations like TCP handshakes and authentication, pooling reduces this overhead, improving application response time and managing database server load.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Connection_pool"
+  },
+  {
+    "id": "database-040",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the result of the following SQL query?\n\nitems table: id(1,2,3), name('A','B','C'), category('X','Y','X')\n\nSELECT category, COUNT(*) AS cnt FROM items GROUP BY category ORDER BY cnt DESC;",
+    "code": "SELECT category, COUNT(*) AS cnt\nFROM items\nGROUP BY category\nORDER BY cnt DESC;",
+    "options": [
+      "X-2, Y-1",
+      "Y-1, X-2",
+      "X-1, Y-1 (duplicates ignored)",
+      "Error — aliases cannot be used in ORDER BY"
+    ],
+    "correctIndex": 0,
+    "explanation": "GROUP BY category groups the rows into X (2 items) and Y (1 item). ORDER BY cnt DESC sorts the results by count in descending order, so X (cnt=2) comes first and Y (cnt=1) comes second. Most DBMS allow using SELECT aliases in ORDER BY.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_groupby.asp"
   }
 ]

@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 10 typescript questions (`cc93f7e`)
 - **content**: add 10 data-structures questions (`7454a0e`)
 - **content**: add 10 css-layout questions (`6825527`)
 - **content**: add 10 algorithms questions (`849399d`)

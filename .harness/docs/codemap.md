@@ -189,7 +189,7 @@
 - closure.json — 40 questions
 - css-layout.json — 40 questions
 - data-structures.json — 40 questions
-- database.json — 30 questions
+- database.json — 40 questions
 - design-patterns.json — 30 questions
 - dom-manipulation.json — 30 questions
 - event-loop.json — 38 questions
@@ -212,7 +212,7 @@
 - closure.json — 40 questions
 - css-layout.json — 40 questions
 - data-structures.json — 40 questions
-- database.json — 30 questions
+- database.json — 40 questions
 - design-patterns.json — 30 questions
 - dom-manipulation.json — 30 questions
 - event-loop.json — 38 questions
