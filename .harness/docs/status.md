@@ -1,17 +1,17 @@
 # DailyDev Status
 
-**Last Updated:** 2026-04-01T12:00:00Z
+**Last Updated:** 2026-04-01T15:00:00Z
 
 ## Last Run
 - Agent: content
 - Result: success
-- Summary: fix — event-loop-048 correctIndex
+- Summary: add 10 promise questions
 
 ## Project Health
 
 | Area | Status | Note |
 |------|--------|------|
-| Questions | 847 (21 topics) | 10 browser-api questions added |
+| Questions | 857 (21 topics) | 10 promise questions added |
 | Tests | 298+ | 8 new tests, unhandled promise fixed |
 | Build | passing | |
 | Features | 12 major features | Endless practice mode added |
@@ -20,6 +20,7 @@
 
 | Date | Agent | Result | Summary |
 |------|-------|--------|---------|
+| 2026-04-01 15:00 | content | success | add 10 promise questions |
 | 2026-04-01 12:00 | content | success | fix — event-loop-048 correctIndex |
 | 2026-04-01 09:00 | content | success | fix — async-046 add try-catch to code |
 | 2026-04-01 06:00 | content | success | add 10 browser-api questions |
@@ -29,7 +30,6 @@
 | 2026-03-31 12:00 | content | success | add 10 web-performance questions |
 | 2026-04-01 03:00 | content | success | add 10 type-coercion questions |
 | 2026-04-01 01:00 | content | success | add 10 react-basics questions |
-| 2026-03-31 23:00 | content | success | add 10 network questions |
 
 
 ## Notes

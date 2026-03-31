@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: fix — event-loop-048 correctIndex (`d1bebb9`)
 - **content**: fix — async-046 add try-catch to code (`b7ff7e2`)
 - **content**: add 10 browser-api questions (`895db12`)
 

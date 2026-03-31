@@ -626,5 +626,170 @@
     "correctIndex": 2,
     "explanation": "Promise의 상태는 pending에서 fulfilled 또는 rejected로 한번만 전환됩니다. 한번 settled된 후에는 resolve나 reject를 다시 호출해도 무시됩니다. 이 불변성(immutability)은 Promise의 핵심 설계 원칙으로, 비동기 작업의 결과가 예측 가능하고 안정적임을 보장합니다. 이를 통해 여러 then 핸들러가 항상 동일한 값을 받게 됩니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+  },
+  {
+    "id": "promise-039",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Promise.prototype.finally() 콜백은 언제 실행되나요?",
+    "options": [
+      "Promise가 이행(fulfilled)된 경우에만 실행된다",
+      "Promise가 거부(rejected)된 경우에만 실행된다",
+      "catch가 에러를 처리한 후에만 실행된다",
+      "Promise가 이행되든 거부되든 항상 실행된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "finally() 콜백은 Promise의 결과(이행 또는 거부)에 관계없이 항상 실행됩니다. finally()는 인자를 받지 않으며, 이전 Promise의 값을 변경하지 않고 그대로 전달합니다. 리소스 정리, 로딩 상태 해제 등 결과와 무관하게 실행해야 하는 로직에 적합합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally"
+  },
+  {
+    "id": "promise-040",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 순서는 무엇인가요?",
+    "code": "console.log('1');\nnew Promise((resolve) => {\n  console.log('2');\n  resolve();\n}).then(() => {\n  console.log('3');\n});\nconsole.log('4');",
+    "options": [
+      "1, 2, 4, 3",
+      "1, 2, 3, 4",
+      "1, 4, 2, 3",
+      "1, 3, 2, 4"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise 생성자의 executor 함수는 동기적으로 실행됩니다. 따라서 '1' 출력 후 executor 내부의 '2'가 즉시 출력됩니다. resolve()가 호출되지만 then 콜백은 마이크로태스크 큐에 등록되어 현재 동기 코드가 모두 실행된 후에 처리됩니다. '4'가 출력된 후 마이크로태스크인 '3'이 마지막에 출력됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
+  },
+  {
+    "id": "promise-041",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 두 번째 then이 항상 undefined를 받는 이유는?",
+    "code": "fetch('/api/data')\n  .then(res => {\n    res.json();\n  })\n  .then(data => {\n    console.log(data); // undefined\n  });",
+    "options": [
+      "fetch가 응답 본문을 자동으로 파싱하지 않기 때문이다",
+      "첫 번째 then에서 res.json()의 결과를 return하지 않아 암묵적으로 undefined가 반환된다",
+      "res.json()은 동기 함수이므로 then 체인에서 사용할 수 없다",
+      "두 번째 then에 에러 핸들러가 없기 때문이다"
+    ],
+    "correctIndex": 1,
+    "explanation": "then 콜백에서 중괄호 {}를 사용하면 명시적 return이 필요합니다. res.json()은 Promise를 반환하지만, 콜백에서 이를 return하지 않으면 콜백 자체는 undefined를 반환합니다. 'return res.json()'으로 수정하거나 화살표 함수의 암묵적 반환(res => res.json())을 사용해야 합니다. 이는 Promise 체이닝에서 매우 흔한 실수입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "promise-042",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Promise.allSettled()과 Promise.all()의 핵심 차이점은?",
+    "options": [
+      "allSettled()은 순서를 보장하지 않지만, all()은 순서를 보장한다",
+      "all()은 병렬로 실행하고, allSettled()은 순차적으로 실행한다",
+      "allSettled()은 모든 Promise가 settled될 때까지 기다리며 하나가 reject되어도 단락(short-circuit)하지 않는다",
+      "allSettled()은 fulfilled된 결과만 반환하고, all()은 모든 결과를 반환한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Promise.all()은 하나의 Promise라도 reject되면 즉시 reject됩니다(short-circuit). 반면 Promise.allSettled()은 모든 Promise가 settled(fulfilled 또는 rejected)될 때까지 기다린 후, 각 결과를 {status, value} 또는 {status, reason} 객체 배열로 반환합니다. 일부 실패해도 모든 결과가 필요한 경우에 allSettled()이 적합합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled"
+  },
+  {
+    "id": "promise-043",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 순서는 무엇인가요?",
+    "code": "Promise.resolve()\n  .then(() => console.log('A'))\n  .then(() => console.log('B'));\n\nPromise.resolve()\n  .then(() => console.log('C'))\n  .then(() => console.log('D'));",
+    "options": [
+      "A, B, C, D",
+      "C, D, A, B",
+      "A, C, D, B",
+      "A, C, B, D"
+    ],
+    "correctIndex": 3,
+    "explanation": "마이크로태스크 큐는 FIFO 순서로 처리됩니다. 먼저 두 개의 Promise.resolve().then()이 각각 마이크로태스크를 등록합니다: 'A' 출력과 'C' 출력. 'A'가 먼저 실행되고 'B' 출력을 큐에 등록합니다. 다음으로 'C'가 실행되고 'D' 출력을 큐에 등록합니다. 그 후 'B', 'D' 순서로 실행됩니다. 체인된 then은 이전 then이 완료된 후에야 큐에 등록됩니다.",
+    "sourceUrl": "https://javascript.info/microtask-queue"
+  },
+  {
+    "id": "promise-044",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Thenable 객체란 무엇인가요?",
+    "options": [
+      "then 메서드를 가진 모든 객체로, Promise 메서드들이 이를 Promise처럼 취급한다",
+      "Promise.prototype을 상속받은 객체만 해당한다",
+      "async 함수가 반환하는 특수한 객체이다",
+      "Symbol.thenable 심볼을 구현한 객체이다"
+    ],
+    "correctIndex": 0,
+    "explanation": "Thenable은 then(onFulfilled, onRejected) 메서드를 가진 모든 객체를 말합니다. Promise.resolve(), await, then() 체인 등은 반환된 객체가 thenable인지 확인하고, thenable이면 해당 then 메서드를 호출하여 Promise처럼 처리합니다. 이 덕분에 다양한 Promise 라이브러리(Q, Bluebird 등)와의 상호운용이 가능합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise#thenables"
+  },
+  {
+    "id": "promise-045",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 에러가 잡히지 않는 이유는?",
+    "code": "Promise.reject('error')\n  .then(val => console.log(val))\n  .then(val => console.log(val));",
+    "options": [
+      "reject에 Error 객체 대신 문자열을 전달했기 때문이다",
+      "체인에 catch나 onRejected 핸들러가 없어 거부가 처리되지 않는다",
+      "then을 두 번 연속 호출하면 에러가 사라진다",
+      "Promise.reject()는 동기적으로 에러를 던지기 때문이다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Promise가 reject되면 가장 가까운 rejection 핸들러(catch 또는 then의 두 번째 인자)를 찾을 때까지 체인을 따라 전파됩니다. 이 코드에는 catch도 onRejected 핸들러도 없으므로 rejection이 처리되지 않아 UnhandledPromiseRejection이 발생합니다. .catch(err => ...) 또는 .then(null, err => ...)을 추가해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch"
+  },
+  {
+    "id": "promise-046",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const thenable = {\n  then(resolve) {\n    resolve(42);\n  }\n};\n\nPromise.resolve(thenable).then(val => console.log(val));",
+    "options": [
+      "{ then: [Function: then] }",
+      "undefined",
+      "Promise { 42 }",
+      "42"
+    ],
+    "correctIndex": 3,
+    "explanation": "Promise.resolve()에 thenable 객체(then 메서드를 가진 객체)를 전달하면, 해당 then 메서드를 호출하여 resolve/reject를 위임합니다. thenable의 then이 resolve(42)를 호출하므로 Promise는 42로 이행됩니다. 따라서 다음 then에서 42가 출력됩니다. 이는 Promise의 thenable 자동 해제(unwrapping) 메커니즘입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve#resolving_thenables"
+  },
+  {
+    "id": "promise-047",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "new Promise(executor)와 Promise.resolve(value)의 차이점은?",
+    "options": [
+      "new Promise는 executor 함수를 받아 비동기 작업을 시작할 수 있고, Promise.resolve는 주어진 값으로 즉시 이행된 Promise를 생성한다",
+      "둘 다 동일한 동작을 하며 단지 문법적 차이일 뿐이다",
+      "Promise.resolve는 내부적으로 new Promise를 호출하므로 성능이 더 느리다",
+      "new Promise는 항상 비동기이고, Promise.resolve는 동기적으로 값을 반환한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "new Promise(executor)는 executor 함수를 받아 resolve/reject를 수동으로 호출할 수 있어 비동기 작업을 래핑하는 데 사용됩니다. Promise.resolve(value)는 주어진 값으로 즉시 이행된 Promise를 생성하는 편의 메서드입니다. 다만 thenable이 전달되면 해당 then을 호출하여 결과를 기다립니다. 두 방식 모두 then 콜백은 마이크로태스크로 비동기 실행됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "promise-048",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "브라우저에서 처리되지 않은 Promise 거부(Unhandled Rejection)를 감지하려면 어떤 이벤트를 사용해야 하나요?",
+    "options": [
+      "window.onerror 이벤트",
+      "error 이벤트",
+      "unhandledrejection 이벤트",
+      "promiseerror 이벤트"
+    ],
+    "correctIndex": 2,
+    "explanation": "브라우저에서는 'unhandledrejection' 이벤트를 통해 처리되지 않은 Promise 거부를 감지할 수 있습니다. window.addEventListener('unhandledrejection', handler)로 등록하며, 이벤트 객체의 promise와 reason 속성으로 거부된 Promise와 사유에 접근할 수 있습니다. window.onerror는 동기 에러만 감지하며, Promise 거부는 감지하지 못합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Window/unhandledrejection_event"
   }
 ]
