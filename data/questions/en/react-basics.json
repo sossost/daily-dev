@@ -490,5 +490,170 @@
     "correctIndex": 2,
     "explanation": "React recommends composition over inheritance. Through the children prop, components can receive arbitrary child elements that are not known in advance, allowing the creation of reusable and flexible components. In practice, there is almost never a need for component inheritance.",
     "sourceUrl": "https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children"
+  },
+  {
+    "id": "react-basics-031",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the cause of the error in the following code?",
+    "code": "function App() {\n  const [show, setShow] = useState(false);\n\n  if (show) {\n    useEffect(() => {\n      console.log('shown');\n    }, []);\n  }\n\n  return <button onClick={() => setShow(s => !s)}>Toggle</button>;\n}",
+    "options": [
+      "Because console.log cannot be called inside useEffect",
+      "Because hooks cannot be called inside conditions, loops, or nested functions",
+      "Because using an empty dependency array prevents the effect from running",
+      "Because a functional update was used with setShow"
+    ],
+    "correctIndex": 1,
+    "explanation": "According to the Rules of Hooks, hooks must always be called at the top level of a component. Calling hooks inside conditions, loops, or nested functions causes the hook call order to differ between renders, preventing React from correctly tracking its internal state.",
+    "sourceUrl": "https://react.dev/reference/rules/rules-of-hooks"
+  },
+  {
+    "id": "react-basics-032",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What happens when the Reset button is clicked in the following code?",
+    "code": "function App() {\n  const [version, setVersion] = useState(0);\n\n  return (\n    <div>\n      <Form key={version} />\n      <button onClick={() => setVersion(v => v + 1)}>Reset</button>\n    </div>\n  );\n}\n\nfunction Form() {\n  const [text, setText] = useState('hello');\n  return <input value={text} onChange={e => setText(e.target.value)} />;\n}",
+    "options": [
+      "Only the text state of Form changes to 'hello'",
+      "Nothing happens",
+      "The Form component is fully unmounted and remounted, resetting its state",
+      "An error occurs"
+    ],
+    "correctIndex": 2,
+    "explanation": "When the key changes, React removes (unmounts) the existing component instance and creates (mounts) a new one. This is a reliable way to reset all internal state of a component. Using key to reset state is a pattern recommended in the official React documentation.",
+    "sourceUrl": "https://react.dev/learn/preserving-and-resetting-state#resetting-state-with-a-key"
+  },
+  {
+    "id": "react-basics-033",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What should you be careful about when using dangerouslySetInnerHTML in React?",
+    "options": [
+      "It can make your app vulnerable to XSS (Cross-Site Scripting) attacks, so only trusted data should be used",
+      "dangerouslySetInnerHTML causes performance issues",
+      "dangerouslySetInnerHTML only works with server-side rendering",
+      "Using dangerouslySetInnerHTML disables React's Virtual DOM"
+    ],
+    "correctIndex": 0,
+    "explanation": "dangerouslySetInnerHTML works the same as the browser's innerHTML, directly inserting HTML strings. Inserting user input without sanitization exposes the app to XSS attacks. The name includes 'dangerously' specifically to warn developers about the security risk.",
+    "sourceUrl": "https://react.dev/reference/react-dom/components/common#dangerously-setting-the-inner-html"
+  },
+  {
+    "id": "react-basics-034",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the common purpose of useTransition and useDeferredValue in React?",
+    "options": [
+      "Fetching data from the server",
+      "Sharing state between components",
+      "Deferring non-urgent UI updates to keep user interactions responsive",
+      "Reducing the memory usage of components"
+    ],
+    "correctIndex": 2,
+    "explanation": "useTransition and useDeferredValue are both concurrent features introduced in React 18. They mark non-urgent state updates as 'transitions', allowing urgent updates like user input to be processed first. This keeps the interface responsive even during heavy UI updates.",
+    "sourceUrl": "https://react.dev/reference/react/useTransition"
+  },
+  {
+    "id": "react-basics-035",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the order of console output when the button is clicked in the following code?",
+    "code": "function App() {\n  const [count, setCount] = useState(0);\n\n  useEffect(() => {\n    console.log('effect');\n    return () => console.log('cleanup');\n  }, [count]);\n\n  console.log('render');\n\n  return <button onClick={() => setCount(c => c + 1)}>Click</button>;\n}",
+    "options": [
+      "'render' → 'effect' → 'cleanup'",
+      "'cleanup' → 'render' → 'effect'",
+      "'effect' → 'cleanup' → 'render'",
+      "'render' → 'cleanup' → 'effect'"
+    ],
+    "correctIndex": 3,
+    "explanation": "When a re-render is triggered by clicking the button: 1) The component function executes first, logging 'render'. 2) After React updates the DOM, the previous effect's cleanup function runs, logging 'cleanup'. 3) Finally, the new effect runs, logging 'effect'.",
+    "sourceUrl": "https://react.dev/learn/synchronizing-with-effects#each-render-has-its-own-effects"
+  },
+  {
+    "id": "react-basics-036",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the main purpose of forwardRef in React?",
+    "options": [
+      "To automatically pass parent component state to children",
+      "To allow a parent to pass a ref to a DOM node inside a child component",
+      "To control the rendering order of components",
+      "To propagate events to the parent component"
+    ],
+    "correctIndex": 1,
+    "explanation": "By default, React components do not expose their internal DOM nodes' refs to the outside. Using forwardRef allows a parent component to pass a ref to a specific DOM node inside a child component for direct access. This is useful for focus management, scrolling, and animations.",
+    "sourceUrl": "https://react.dev/reference/react/forwardRef"
+  },
+  {
+    "id": "react-basics-037",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Why doesn't the list update correctly in the following code?",
+    "code": "function TodoList() {\n  const [todos, setTodos] = useState(['A', 'B', 'C']);\n\n  function addTodo() {\n    todos.push('D');\n    setTodos(todos);\n  }\n\n  return (\n    <div>\n      <button onClick={addTodo}>Add</button>\n      {todos.map((t, i) => <li key={i}>{t}</li>)}\n    </div>\n  );\n}",
+    "options": [
+      "Because index is used as the key in the map function",
+      "Because the original array is mutated (push) and the same reference is passed, so React does not detect a change",
+      "Because the initial value of useState is a string array",
+      "Because li elements cannot be placed directly inside a div"
+    ],
+    "correctIndex": 1,
+    "explanation": "React uses Object.is() to compare previous and new state. Mutating the original array with todos.push('D') and passing the same array reference to setTodos causes React to determine that the state hasn't changed. You need to create a new array like setTodos([...todos, 'D']).",
+    "sourceUrl": "https://react.dev/learn/updating-arrays-in-state"
+  },
+  {
+    "id": "react-basics-038",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is rendered on the screen in the following code?",
+    "code": "function Greeting({ name }) {\n  return <h1>Hello, {name || 'World'}!</h1>;\n}\n\nfunction App() {\n  return <Greeting />;\n}",
+    "options": [
+      "An error occurs",
+      "A blank screen is rendered",
+      "Hello, undefined!",
+      "Hello, World!"
+    ],
+    "correctIndex": 3,
+    "explanation": "When no name prop is passed to the Greeting component, name is undefined. The || operator returns the right-hand value when the left-hand value is falsy (including undefined), so 'World' is used and 'Hello, World!' is rendered.",
+    "sourceUrl": "https://react.dev/learn/passing-props-to-a-component#specifying-a-default-value-for-a-prop"
+  },
+  {
+    "id": "react-basics-039",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about React's Error Boundary is correct?",
+    "options": [
+      "It can be implemented in function components with a useErrorBoundary hook",
+      "It automatically catches errors that occur inside event handlers",
+      "It is implemented in class components using getDerivedStateFromError or componentDidCatch, and catches rendering errors in child components",
+      "It only works in production builds and is disabled in development mode"
+    ],
+    "correctIndex": 2,
+    "explanation": "Error Boundaries can only be implemented as class components, using getDerivedStateFromError (to render a fallback UI) and componentDidCatch (to log errors). They catch errors during rendering in child components but cannot catch errors in event handlers, async code, or server-side rendering.",
+    "sourceUrl": "https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary"
+  },
+  {
+    "id": "react-basics-040",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What does it mean for a React component to be a 'pure function'?",
+    "options": [
+      "It means the component should always return the same JSX for the same inputs (props) and should not mutate external state during rendering",
+      "It means useState cannot be used inside the component",
+      "It means the component cannot include other components as children",
+      "It means the component must be a synchronous function that does not use async/await"
+    ],
+    "correctIndex": 0,
+    "explanation": "A pure component in React returns the same JSX given the same props and does not cause side effects by mutating existing objects or variables during the rendering process. This allows React to safely optimize rendering and verify purity through double-rendering in Strict Mode.",
+    "sourceUrl": "https://react.dev/learn/keeping-components-pure"
   }
 ]
