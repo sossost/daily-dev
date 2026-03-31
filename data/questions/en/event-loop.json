@@ -627,5 +627,172 @@
     "correctIndex": 0,
     "explanation": "Calling first() synchronously outputs '1'. Then await second() calls second(), which synchronously outputs '3'. Inside second(), await Promise.resolve() registers the rest of second() ('4') as a microtask. Control returns to first(), but since second() hasn't completed, first()'s await also suspends. Synchronous code '5' executes. Then microtask '4' runs completing second(), which resolves first()'s await, and '2' executes.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "event-loop-039",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct role of requestIdleCallback?",
+    "options": [
+      "It registers a callback in the microtask queue",
+      "It executes a callback synchronously and immediately",
+      "It delegates work to a Web Worker",
+      "It executes a callback when the browser is idle, allowing low-priority work without blocking the main thread"
+    ],
+    "correctIndex": 3,
+    "explanation": "requestIdleCallback executes callbacks when the browser's main thread is idle. In an event loop cycle, after macrotasks, microtasks, and rendering are all processed, any remaining time (idle period) is used to run these callbacks. This is ideal for low-priority tasks like sending analytics data or background computation, ensuring they don't affect user interactions or animations.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback"
+  },
+  {
+    "id": "event-loop-040",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output order of the following code?",
+    "code": "console.log('A');\nPromise.resolve()\n  .then(() => console.log('B'))\n  .then(() => console.log('C'));\nPromise.resolve()\n  .then(() => console.log('D'))\n  .then(() => console.log('E'));\nconsole.log('F');",
+    "options": [
+      "A, F, B, C, D, E",
+      "A, F, B, D, C, E",
+      "A, F, D, B, E, C",
+      "A, B, D, F, C, E"
+    ],
+    "correctIndex": 1,
+    "explanation": "Synchronous code 'A' and 'F' execute first. The first then callbacks from each chain — 'B' and 'D' — are registered in the microtask queue. 'B' executes and chains 'C' into the queue. 'D' executes and chains 'E' into the queue. The microtask queue continues draining: 'C', then 'E'. This is the interleaving pattern where two Promise chains alternate execution.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "event-loop-041",
+    "topic": "event-loop",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the catch block fail to catch the error in the following code?",
+    "code": "try {\n  setTimeout(() => {\n    throw new Error('async error');\n  }, 0);\n} catch (e) {\n  console.log('caught:', e.message);\n}",
+    "options": [
+      "throw does not work inside setTimeout",
+      "setTimeout's 0ms delay causes it to execute before try-catch",
+      "The setTimeout callback runs as a separate macrotask, and the original try-catch execution context has already exited by then",
+      "Creating an Error object causes it to be automatically ignored"
+    ],
+    "correctIndex": 2,
+    "explanation": "try-catch can only catch errors within its synchronous execution context. The setTimeout callback runs as a separate macrotask, and by the time it executes, the try-catch block's execution context has already been removed from the call stack. Errors in asynchronous callbacks must be handled inside the callback itself, or you should use Promises and async/await to propagate errors.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch"
+  },
+  {
+    "id": "event-loop-042",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct order of phases in the Node.js event loop?",
+    "options": [
+      "poll → check → timers → close callbacks",
+      "timers → close callbacks → poll → check",
+      "check → timers → poll → close callbacks",
+      "timers → pending callbacks → poll → check → close callbacks"
+    ],
+    "correctIndex": 3,
+    "explanation": "The Node.js event loop (based on libuv) consists of several phases. The main order is: timers (setTimeout/setInterval callbacks) → pending callbacks (deferred I/O callbacks) → idle/prepare (internal use) → poll (wait for new I/O events) → check (setImmediate callbacks) → close callbacks (close events). Microtasks (nextTick, Promise) are processed between each phase.",
+    "sourceUrl": "https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick"
+  },
+  {
+    "id": "event-loop-043",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output order of the following code?",
+    "code": "setTimeout(() => console.log('A'), 100);\nsetTimeout(() => console.log('B'), 0);\nsetTimeout(() => console.log('C'), 50);\nconsole.log('D');",
+    "options": [
+      "D, A, C, B",
+      "D, B, C, A",
+      "D, B, A, C",
+      "B, C, A, D"
+    ],
+    "correctIndex": 1,
+    "explanation": "Synchronous code 'D' executes first. Then the three setTimeout callbacks are registered in the macrotask queue according to their delays. 'B' with 0ms delay enters the queue first, followed by 'C' at 50ms, and 'A' at 100ms. setTimeout's delay represents the minimum time before the callback is queued.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/setTimeout"
+  },
+  {
+    "id": "event-loop-044",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Which statement about AbortController and the event loop is correct?",
+    "options": [
+      "AbortController can interrupt synchronous code currently running on the call stack",
+      "An abort() call is processed with higher priority than microtasks",
+      "AbortController operates in a separate thread independent of the event loop",
+      "Calling abort() synchronously fires registered abort event listeners, which can cancel in-progress async operations like fetch"
+    ],
+    "correctIndex": 3,
+    "explanation": "When AbortController's abort() method is called, the AbortSignal's abort event listeners fire synchronously. APIs like fetch monitor the AbortSignal, and when it is aborted, they cancel the network request and reject with an AbortError. This does not interrupt synchronous code on the call stack — rather, it provides a mechanism to abandon waiting for async operation completion.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/AbortController"
+  },
+  {
+    "id": "event-loop-045",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output order of the following code?",
+    "code": "Promise.resolve('ok')\n  .then(v => { console.log('A'); return v; })\n  .finally(() => console.log('B'))\n  .then(v => console.log('C:', v));\nPromise.reject('err')\n  .catch(e => { console.log('D'); return 'recovered'; })\n  .finally(() => console.log('E'))\n  .then(v => console.log('F:', v));",
+    "options": [
+      "A, D, B, E, C: ok, F: recovered",
+      "A, B, C: ok, D, E, F: recovered",
+      "A, D, B, C: ok, E, F: recovered",
+      "D, A, E, B, F: recovered, C: ok"
+    ],
+    "correctIndex": 0,
+    "explanation": "The two Promise chains interleave in the microtask queue. The first chain's then outputs 'A', and the second chain's catch outputs 'D'. Next, the finally callbacks execute: 'B' then 'E'. Since finally passes through the value without modifying it, the final then callbacks output 'C: ok' and 'F: recovered' in order.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally"
+  },
+  {
+    "id": "event-loop-046",
+    "topic": "event-loop",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the race result not always resolve to 'timeout' in the following code?",
+    "code": "function fetchWithTimeout(url, ms) {\n  return Promise.race([\n    fetch(url),\n    new Promise((_, reject) =>\n      setTimeout(() => reject('timeout'), ms)\n    )\n  ]);\n}\nfetchWithTimeout('/api/data', 5000);",
+    "options": [
+      "If fetch responds within 5 seconds, its result resolves first and wins the race",
+      "Promise.race always returns the first argument",
+      "setTimeout cannot guarantee exactly 5 seconds",
+      "fetch executes synchronously"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise.race returns the result of whichever Promise settles (fulfills or rejects) first. If fetch responds within 5 seconds, the fetch Promise resolves first and wins the race. If no response comes within 5 seconds, the setTimeout's reject('timeout') settles first, resulting in a timeout error. This is a pattern where two async operations compete in the event loop.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race"
+  },
+  {
+    "id": "event-loop-047",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between recursive setTimeout and setInterval?",
+    "code": "// Pattern A: Recursive setTimeout\nfunction repeat() {\n  doWork();\n  setTimeout(repeat, 100);\n}\n\n// Pattern B: setInterval\nsetInterval(doWork, 100);",
+    "options": [
+      "Patterns A and B work identically",
+      "Recursive setTimeout starts the delay after the previous callback completes, ensuring stable intervals that account for callback execution time",
+      "setInterval always guarantees more accurate intervals than recursive setTimeout",
+      "Recursive setTimeout causes memory leaks"
+    ],
+    "correctIndex": 1,
+    "explanation": "Recursive setTimeout starts the next delay only after the callback finishes executing. In contrast, setInterval registers callbacks at fixed intervals regardless of callback execution time. If doWork() takes 50ms, recursive setTimeout produces 150ms intervals (50ms execution + 100ms delay), while setInterval queues at 100ms intervals. Recursive setTimeout is safer when execution time may exceed the interval.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/setTimeout"
+  },
+  {
+    "id": "event-loop-048",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output order of the following code?",
+    "code": "console.log('A');\nPromise.reject('error')\n  .catch(() => console.log('B'))\n  .then(() => console.log('C'));\nPromise.resolve()\n  .then(() => { throw new Error('fail'); })\n  .catch(() => console.log('D'))\n  .then(() => console.log('E'));\nconsole.log('F');",
+    "options": [
+      "A, F, B, D, C, E",
+      "A, F, B, C, D, E",
+      "A, F, D, B, E, C",
+      "A, F, B, D, E, C"
+    ],
+    "correctIndex": 1,
+    "explanation": "Synchronous code 'A' and 'F' execute first. Then microtasks run: the first chain's catch (B) and the second chain's then (which throws) are both queued. B executes and enqueues its chained .then(C). The second chain's throw enqueues .catch(D). Now C and D are queued in that order — C runs first, then D. D resolves and enqueues .then(E). Finally E runs. Result: A, F, B, C, D, E.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch"
   }
 ]
