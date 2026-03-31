@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 10 api-design questions (`30bb344`)
 - **content**: add 10 web-security questions (`0b71465`)
 - **content**: add 10 git-advanced questions (`8777b26`)
 - **content**: add 10 web-performance questions (`f605089`)

@@ -574,5 +574,170 @@
     "correctIndex": 2,
     "explanation": "The Web Animations API provides fine-grained programmatic control through the Animation object created by element.animate(), including pause(), play(), reverse(), playbackRate changes, and a finished Promise. It uses the same rendering pipeline as CSS animations, so GPU acceleration applies equally. It is useful when CSS alone cannot handle dynamic conditional animation control.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API"
+  },
+  {
+    "id": "browser-api-036",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const blob = new Blob(['Hello'], { type: 'text/plain' });\nconst url = URL.createObjectURL(blob);\n\nconsole.log(url.startsWith('blob:'));\nconsole.log(typeof url);",
+    "options": [
+      "false, string",
+      "true, object",
+      "true, string",
+      "false, object"
+    ],
+    "correctIndex": 2,
+    "explanation": "URL.createObjectURL() creates a unique URL string that references the given Blob or File object. This URL starts with the 'blob:' scheme and typeof returns 'string'. The generated URL is only valid within the same document, and should be released with URL.revokeObjectURL() when no longer needed to prevent memory leaks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL_static"
+  },
+  {
+    "id": "browser-api-037",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the FormData object is correct?",
+    "options": [
+      "FormData manages data as key-value pairs and is used for multipart/form-data transmission including file uploads",
+      "FormData can only send data in JSON format",
+      "FormData cannot be created without a form element",
+      "FormData can only send data synchronously"
+    ],
+    "correctIndex": 0,
+    "explanation": "FormData is an interface that manages data as key-value pairs. You can create an empty object with new FormData() or pass a form element to automatically collect form data. You can add text or files using append(), and when used with fetch(), the Content-Type is automatically set to multipart/form-data.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/FormData"
+  },
+  {
+    "id": "browser-api-038",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The following code attempts to communicate with a server using WebSocket. What is the issue?",
+    "code": "const ws = new WebSocket('wss://example.com/socket');\n\nws.send('Hello Server');\n\nws.onopen = () => {\n  console.log('Connected');\n};\n\nws.onmessage = (event) => {\n  console.log('Received:', event.data);\n};",
+    "options": [
+      "WebSocket URLs must start with 'ws://'",
+      "addEventListener must be used instead of onmessage",
+      "Objects must be passed to send(); strings cannot be transmitted",
+      "send() is called before the connection is open, which throws an error"
+    ],
+    "correctIndex": 3,
+    "explanation": "WebSocket connections are established asynchronously. Immediately after the constructor call, the connection is not yet open (readyState === CONNECTING), so calling send() throws an InvalidStateError. send() must be called inside the onopen callback or after confirming readyState is OPEN.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/WebSocket"
+  },
+  {
+    "id": "browser-api-039",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const params = new URLSearchParams('a=1&b=2&a=3');\nconsole.log(params.get('a'));\nconsole.log(params.getAll('a').length);",
+    "options": [
+      "3, 2",
+      "1, 2",
+      "[1, 3], 2",
+      "1, 1"
+    ],
+    "correctIndex": 1,
+    "explanation": "In URLSearchParams, get() returns only the first value for the specified key. Although the 'a' parameter appears twice, get('a') returns the first value '1'. getAll() returns all values for that key as an array, so getAll('a') returns ['1', '3'] with a length of 2.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams/get"
+  },
+  {
+    "id": "browser-api-040",
+    "topic": "browser-api",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between queueMicrotask() and setTimeout(fn, 0)?",
+    "options": [
+      "Both functions execute callbacks at the same time",
+      "setTimeout(fn, 0) executes before queueMicrotask()",
+      "queueMicrotask() is queued in the microtask queue and runs right after the current task, while setTimeout(fn, 0) is queued in the macrotask queue and runs in the next task",
+      "queueMicrotask() can only be used inside Promises"
+    ],
+    "correctIndex": 2,
+    "explanation": "queueMicrotask() registers a callback in the microtask queue. Microtasks are processed immediately after the currently executing task completes, before the next macrotask begins. setTimeout(fn, 0) is registered in the macrotask queue and therefore executes later than microtasks. It is useful when you need Promise.then() timing but are not working with a Promise.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "browser-api-041",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Which statement about the Cache API is NOT correct?",
+    "options": [
+      "It is a key-value store that stores Request-Response pairs",
+      "Named caches can be created or opened with caches.open()",
+      "Cached responses can be retrieved with cache.match()",
+      "It can only be used inside Service Workers"
+    ],
+    "correctIndex": 3,
+    "explanation": "The Cache API can be used not only inside Service Workers but also on the main thread (window context). However, in practice it is primarily used in Service Worker fetch event handlers to implement offline caching strategies. The Cache API is independent of the HTTP cache and can be fully controlled programmatically by developers.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Cache"
+  },
+  {
+    "id": "browser-api-042",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output order of the following code?",
+    "code": "console.log('1');\n\nqueueMicrotask(() => console.log('2'));\n\nsetTimeout(() => console.log('3'), 0);\n\nPromise.resolve().then(() => console.log('4'));\n\nconsole.log('5');",
+    "options": [
+      "1, 5, 3, 2, 4",
+      "1, 2, 4, 5, 3",
+      "1, 5, 4, 2, 3",
+      "1, 5, 2, 4, 3"
+    ],
+    "correctIndex": 3,
+    "explanation": "Synchronous code (1, 5) runs first. Then the microtask queue is processed — queueMicrotask (2) and Promise.then (4) are both microtasks and execute in registration order. Finally, the macrotask setTimeout (3) runs. Microtasks always take priority over macrotasks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "browser-api-043",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "The following code attempts to add a timeout to a fetch request. What is the issue?",
+    "code": "async function fetchWithTimeout(url) {\n  const controller = new AbortController();\n  setTimeout(() => controller.abort(), 5000);\n\n  const response = await fetch(url, { signal: controller.signal });\n  return response.json();\n}",
+    "options": [
+      "Even if the request succeeds, the setTimeout remains and may call abort() unnecessarily — clearTimeout should be used for cleanup",
+      "AbortController cannot be used with fetch",
+      "5000ms is too long for a timeout value",
+      "controller.signal.abort() should be called instead of controller.abort()"
+    ],
+    "correctIndex": 0,
+    "explanation": "Even if the request completes successfully within 5 seconds, the setTimeout remains in the timer queue. When the timer expires, abort() is called unnecessarily. While this doesn't cause an error per se, the correct pattern is to save the setTimeout return value and call clearTimeout() after the request completes. Using AbortSignal.timeout(5000) solves this problem cleanly.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/timeout_static"
+  },
+  {
+    "id": "browser-api-044",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the navigator.share() Web Share API is correct?",
+    "options": [
+      "It is supported identically across all browsers and always works on desktop",
+      "It can be called programmatically without any user gesture",
+      "It invokes the operating system's native share UI and can only be triggered by a user gesture",
+      "It can only share text — URLs and files cannot be shared"
+    ],
+    "correctIndex": 2,
+    "explanation": "navigator.share() displays the operating system's native share dialog. For security reasons, it can only be called in response to a user gesture (click, tap, etc.) — calling it automatically on page load throws a NotAllowedError. It can share title, text, url, and files. navigator.canShare() can be used to check shareability in advance.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share"
+  },
+  {
+    "id": "browser-api-045",
+    "topic": "browser-api",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between 'same-origin' and 'include' for the credentials option in the Fetch API's Request object?",
+    "options": [
+      "'same-origin' does not send cookies, while 'include' always sends them",
+      "'same-origin' includes cookies only for same-origin requests, while 'include' includes cookies for cross-origin requests as well",
+      "'include' disables CORS, while 'same-origin' enables CORS",
+      "'same-origin' applies only to GET requests, while 'include' applies to all HTTP methods"
+    ],
+    "correctIndex": 1,
+    "explanation": "credentials: 'same-origin' (the default) includes credentials (cookies, Authorization headers, etc.) only for same-origin requests. credentials: 'include' includes credentials for cross-origin requests as well. To use 'include' with cross-origin requests, the server must return the Access-Control-Allow-Credentials: true header.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/fetch#credentials"
   }
 ]
