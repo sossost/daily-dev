@@ -488,5 +488,168 @@
     "correctIndex": 3,
     "explanation": "As of Lighthouse 10, Total Blocking Time (TBT) has the highest weight at 30%. TBT measures the total time the main thread was blocked for more than 50ms between FCP and Time to Interactive. It has a high correlation with real-user interaction responsiveness (INP), and optimizing long JavaScript execution significantly improves both TBT and the overall performance score.",
     "sourceUrl": "https://developer.chrome.com/docs/lighthouse/performance/performance-scoring"
+  },
+  {
+    "id": "web-performance-031",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between the async and defer attributes on a script tag?",
+    "options": [
+      "async executes immediately upon download completion without guaranteeing order, while defer executes in declaration order after HTML parsing completes",
+      "async blocks HTML parsing, while defer does not",
+      "defer executes immediately upon download completion, while async executes after HTML parsing completes",
+      "async and defer behave identically with no difference"
+    ],
+    "correctIndex": 0,
+    "explanation": "Both async and defer download scripts in parallel with HTML parsing. The difference is execution timing. async executes as soon as the download completes, so execution order between scripts is not guaranteed. defer executes after HTML parsing is complete, right before DOMContentLoaded, in declaration order. async is suitable for independent analytics scripts, while defer is suitable for scripts with dependencies.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#async"
+  },
+  {
+    "id": "web-performance-032",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "How does virtual scrolling (windowing) improve performance?",
+    "options": [
+      "It renders all items at once and then hides them with display: none",
+      "It isolates the scroll area in an iframe so it doesn't affect the main document",
+      "It renders only the items visible in the viewport in the DOM, replacing the rest with empty space to minimize DOM node count",
+      "It renders all list items in a Web Worker and transfers them to the main thread"
+    ],
+    "correctIndex": 2,
+    "explanation": "Virtual scrolling (windowing) only renders items actually visible on screen in a list of thousands of items. Off-screen areas are replaced with placeholders to maintain the full scroll height. This significantly reduces DOM node count, decreasing initial render time, memory usage, and repaint cost during scrolling. Libraries like react-window and @tanstack/virtual implement this pattern.",
+    "sourceUrl": "https://web.dev/articles/virtualize-long-lists-react-window"
+  },
+  {
+    "id": "web-performance-033",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement correctly compares WebP and AVIF image formats with traditional JPEG/PNG?",
+    "options": [
+      "JPEG always has a smaller file size than WebP",
+      "WebP and AVIF are vector image-only formats",
+      "WebP offers about 25-35% smaller file sizes compared to JPEG, and AVIF provides even higher compression ratios but takes longer to encode",
+      "PNG supports lossy compression, making it more efficient than WebP"
+    ],
+    "correctIndex": 2,
+    "explanation": "WebP supports both lossy and lossless compression, producing files 25-35% smaller than JPEG at equivalent quality. AVIF, based on the AV1 codec, offers even higher compression efficiency than WebP, but encoding time is relatively longer and browser support is narrower than WebP. Using the <picture> tag to provide format-specific fallbacks ensures optimal image delivery.",
+    "sourceUrl": "https://web.dev/articles/serve-images-webp"
+  },
+  {
+    "id": "web-performance-034",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What does the PerformanceObserver measure in the following code?",
+    "code": "const observer = new PerformanceObserver((list) => {\n  for (const entry of list.getEntries()) {\n    if (entry.duration > 100) {\n      console.warn('Slow interaction:', entry.name, entry.duration);\n    }\n  }\n});\nobserver.observe({ type: 'event', buffered: true });",
+    "options": [
+      "JavaScript execution time and CPU usage of the page",
+      "Delay between user mouse clicks and key presses",
+      "User event processing times exceeding 100ms to monitor slow interactions",
+      "Warnings when browser memory usage exceeds 100MB"
+    ],
+    "correctIndex": 2,
+    "explanation": "The PerformanceObserver 'event' type measures the processing time of user events (clicks, key presses, etc.). entry.duration includes the time from event occurrence to the next paint, and high values negatively affect the INP (Interaction to Next Paint) score. buffered: true includes events that occurred before the observer was registered, enabling monitoring across the full page lifecycle.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/PerformanceObserver"
+  },
+  {
+    "id": "web-performance-035",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the most effective approach to improve LCP (Largest Contentful Paint)?",
+    "options": [
+      "Add loading=\"lazy\" to all images",
+      "Minimize JavaScript bundles, preload hero images, and reduce server response time",
+      "Inline all CSS on the page",
+      "Disable browser cache to always fetch the latest content"
+    ],
+    "correctIndex": 1,
+    "explanation": "LCP measures when the largest content element in the viewport is rendered. To improve it, minimize render-blocking resources, use <link rel=\"preload\"> for hero images, and reduce server response time (TTFB). Note that applying loading=\"lazy\" to hero images can actually worsen LCP, so caution is needed.",
+    "sourceUrl": "https://web.dev/articles/optimize-lcp"
+  },
+  {
+    "id": "web-performance-036",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What causes an increase in Detached DOM trees when comparing heap snapshots in Chrome DevTools Memory tab?",
+    "options": [
+      "CSS animations are using excessive GPU memory",
+      "DOM elements have been removed from the screen but JavaScript variables or event listeners still reference them, preventing garbage collection",
+      "The browser's rendering engine is caching the DOM tree",
+      "The Service Worker is caching the previous page's DOM in cache storage"
+    ],
+    "correctIndex": 1,
+    "explanation": "A Detached DOM tree consists of nodes that have been removed from the DOM but remain in memory because JavaScript still references them. For example, if you call removeChild() but keep the element stored in a variable, or if event listeners on removed elements reference other objects through closures, the entire subtree cannot be garbage collected. You can trace the reference chain of Detached nodes in the heap snapshot's Comparison view to find the cause.",
+    "sourceUrl": "https://developer.chrome.com/docs/devtools/memory-problems"
+  },
+  {
+    "id": "web-performance-037",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What can be measured using the Resource Timing API in the following code?",
+    "code": "const entries = performance.getEntriesByType('resource');\nentries.forEach(entry => {\n  const dns = entry.domainLookupEnd - entry.domainLookupStart;\n  const tcp = entry.connectEnd - entry.connectStart;\n  const ttfb = entry.responseStart - entry.requestStart;\n  const download = entry.responseEnd - entry.responseStart;\n});",
+    "options": [
+      "JavaScript execution time and CPU utilization of the page",
+      "Delay between user mouse clicks and key presses",
+      "Time spent in each phase of network requests for each resource, including DNS lookup, TCP connection, server response wait, and download",
+      "Time spent in render tree construction and paint phases"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Resource Timing API provides network timing information for each resource loaded on the page (images, scripts, CSS, etc.). domainLookupStart/End measures DNS lookup time, connectStart/End measures TCP handshake time, requestStart and responseStart measure TTFB, and responseStart and responseEnd measure download time. This allows precise identification of bottleneck phases for optimization.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Performance_API/Resource_timing"
+  },
+  {
+    "id": "web-performance-038",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of <link rel=\"preconnect\">?",
+    "options": [
+      "It downloads resources from external domains in advance",
+      "It performs DNS lookup, TCP handshake, and TLS negotiation with external domains in advance, saving connection time when the actual request is made",
+      "It caches responses from external domains in the Service Worker",
+      "It downgrades HTTP/2 connections to external domains to HTTP/1.1"
+    ],
+    "correctIndex": 1,
+    "explanation": "preconnect instructs the browser to establish connections to external domains ahead of time. By completing DNS lookup (~50ms), TCP handshake (~80ms), and TLS negotiation (~100ms) in advance, it can save hundreds of milliseconds of connection setup time when the actual resource is requested. It's effective for frequently used external domains like CDNs or external API servers.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preconnect"
+  },
+  {
+    "id": "web-performance-039",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Which statement correctly compares gzip and Brotli compression?",
+    "options": [
+      "gzip can only compress text files, and Brotli can only compress images",
+      "Brotli provides 15-20% better compression ratios than gzip and is especially effective for text-based assets (HTML, CSS, JS), but compression speed can be slower than gzip",
+      "gzip always has a higher compression ratio than Brotli",
+      "Brotli can only be used with HTTP/1.1 and is not supported in HTTP/2"
+    ],
+    "correctIndex": 1,
+    "explanation": "Brotli (br) is a compression algorithm developed by Google that produces files approximately 15-20% smaller than gzip at equivalent compression levels. It's particularly effective for text-based assets like HTML, CSS, and JavaScript. However, at the highest compression levels, it takes longer than gzip to compress, so static assets should be pre-compressed (static compression) while dynamic responses should use an appropriate compression level.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Brotli_compression"
+  },
+  {
+    "id": "web-performance-040",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What impact does the contain property have on performance in the following CSS?",
+    "code": ".card {\n  contain: layout style paint;\n  width: 300px;\n  height: 200px;\n}",
+    "options": [
+      "The .card element is completely hidden from the screen and removed from the accessibility tree",
+      "Internal changes to the .card element are isolated from affecting external layout, allowing the browser to independently recalculate layout/paint for only that element",
+      "The .card element is rendered exclusively on the GPU, completely eliminating CPU load",
+      "All child event listeners of the .card element are automatically set to passive"
+    ],
+    "correctIndex": 1,
+    "explanation": "The CSS contain property isolates the rendering scope of an element (containment). contain: layout ensures internal layout changes don't affect the outside, style limits the scope of counters and quotes, and paint ensures content doesn't paint outside the element's bounds. This allows the browser to only recalculate that specific element when its internals change rather than the entire page, significantly reducing layout and paint costs on large pages.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/contain"
   }
 ]

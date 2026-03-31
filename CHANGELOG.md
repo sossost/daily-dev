@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 10 type-coercion questions (`561d8ca`)
 - **content**: add 10 react-basics questions (`00a7572`)
 - **content**: add 10 network questions (`7534cc5`)
 - **content**: add 10 this questions (`1c80033`)
