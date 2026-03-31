@@ -483,5 +483,168 @@
     "correctIndex": 2,
     "explanation": "git sparse-checkout은 대규모 모노레포에서 필요한 디렉토리만 워킹 디렉토리에 체크아웃합니다. 전체 Git 히스토리는 유지하면서 디스크 사용량과 체크아웃 시간을 줄입니다. git sparse-checkout set <경로>로 원하는 경로를 지정하며, --cone 모드가 기본으로 사용됩니다.",
     "sourceUrl": "https://git-scm.com/docs/git-sparse-checkout"
+  },
+  {
+    "id": "git-advanced-031",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 명령어를 순서대로 실행했을 때 최종 커밋 히스토리는 어떻게 되나요?\n\ngit commit -m \"initial\"\ngit commit --amend -m \"updated initial\"",
+    "code": "git commit -m \"initial\"\ngit commit --amend -m \"updated initial\"",
+    "options": [
+      "\"initial\"과 \"updated initial\" 두 개의 커밋이 존재한다",
+      "\"updated initial\" 메시지를 가진 커밋 하나만 존재한다",
+      "\"initial\" 커밋만 남고 amend는 무시된다",
+      "두 커밋이 병합되어 메시지가 합쳐진다"
+    ],
+    "correctIndex": 1,
+    "explanation": "git commit --amend는 마지막 커밋을 새로운 커밋으로 대체합니다. 기존 커밋을 수정하는 것이 아니라, 새로운 커밋 해시를 가진 커밋을 만들어 이전 커밋을 교체합니다. 따라서 히스토리에는 \"updated initial\" 커밋만 남습니다. 이미 push한 커밋에는 사용하지 않는 것이 좋습니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-commit"
+  },
+  {
+    "id": "git-advanced-032",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "git switch와 git checkout의 차이점은 무엇인가요?",
+    "options": [
+      "switch는 원격 브랜치 전용이고, checkout은 로컬 브랜치 전용이다",
+      "switch는 브랜치 전환에만 특화된 명령어이고, checkout은 브랜치 전환과 파일 복원을 모두 처리한다",
+      "switch는 새로운 브랜치를 만들 수 없고, checkout만 가능하다",
+      "switch와 checkout은 완전히 동일한 명령어의 별칭이다"
+    ],
+    "correctIndex": 1,
+    "explanation": "git switch는 Git 2.23에서 도입되어 브랜치 전환 기능만 담당합니다. 기존 checkout은 브랜치 전환과 파일 복원이라는 서로 다른 두 가지 역할을 했기 때문에 혼란을 줄 수 있었습니다. 파일 복원은 git restore가 담당합니다. switch -c로 새 브랜치 생성도 가능합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-switch"
+  },
+  {
+    "id": "git-advanced-033",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 명령어는 어떤 결과를 출력하나요?\n\ngit log -S \"TODO\" --oneline",
+    "code": "git log -S \"TODO\" --oneline",
+    "options": [
+      "커밋 메시지에 'TODO'가 포함된 커밋을 보여준다",
+      "'TODO' 문자열을 추가하거나 제거한 커밋을 보여준다",
+      "현재 코드에서 'TODO'가 있는 파일 목록을 보여준다",
+      "'TODO'라는 이름의 브랜치 커밋을 보여준다"
+    ],
+    "correctIndex": 1,
+    "explanation": "git log -S(pickaxe 검색)는 특정 문자열의 등장 횟수가 변경된 커밋을 찾습니다. 즉, 해당 문자열을 코드에 추가하거나 삭제한 커밋만 보여줍니다. 커밋 메시지를 검색하려면 --grep 옵션을, 정규식 패턴을 검색하려면 -G 옵션을 사용합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-log"
+  },
+  {
+    "id": "git-advanced-034",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "git clone --depth 1의 효과는 무엇인가요?",
+    "options": [
+      "저장소의 첫 번째 커밋만 가져온다",
+      "저장소의 한 개 브랜치만 가져온다",
+      "최신 커밋 하나의 히스토리만 가져와서 shallow clone을 생성한다",
+      "파일을 하나의 디렉토리 깊이까지만 가져온다"
+    ],
+    "correctIndex": 2,
+    "explanation": "git clone --depth 1은 shallow clone을 생성하여 가장 최근의 커밋 히스토리만 다운로드합니다. 전체 히스토리가 불필요한 CI/CD 파이프라인이나 대규모 저장소에서 클론 속도와 디스크 사용량을 대폭 줄일 수 있습니다. 나중에 git fetch --unshallow로 전체 히스토리를 가져올 수 있습니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-clone"
+  },
+  {
+    "id": "git-advanced-035",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Git LFS(Large File Storage)가 대용량 파일을 처리하는 방식은 무엇인가요?",
+    "options": [
+      "대용량 파일을 여러 작은 조각으로 분할하여 저장한다",
+      "대용량 파일을 자동으로 압축하여 일반 Git 객체로 저장한다",
+      "Git 저장소에는 포인터 파일만 저장하고, 실제 파일은 별도의 LFS 서버에 저장한다",
+      "대용량 파일의 변경 부분만 diff로 저장하여 용량을 줄인다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Git LFS는 대용량 파일(이미지, 동영상, 바이너리 등)을 Git 저장소 대신 별도의 LFS 서버에 저장합니다. Git 저장소에는 해당 파일을 가리키는 작은 포인터 텍스트 파일만 커밋됩니다. 체크아웃 시 포인터를 통해 실제 파일을 LFS 서버에서 다운로드합니다.",
+    "sourceUrl": "https://git-lfs.com/"
+  },
+  {
+    "id": "git-advanced-036",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "git rebase 중 충돌이 발생했을 때, rebase를 완전히 취소하고 원래 상태로 되돌리려면 어떤 명령어를 사용해야 하나요?",
+    "options": [
+      "git rebase --skip",
+      "git rebase --abort",
+      "git reset --hard HEAD",
+      "git checkout --force main"
+    ],
+    "correctIndex": 1,
+    "explanation": "git rebase --abort는 진행 중인 rebase를 완전히 취소하고 브랜치를 rebase 시작 전 상태로 복원합니다. --skip은 현재 충돌이 발생한 커밋을 건너뛰고 다음 커밋부터 계속합니다. --continue는 충돌을 수동으로 해결한 후 rebase를 계속 진행할 때 사용합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-rebase"
+  },
+  {
+    "id": "git-advanced-037",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "git filter-repo가 git filter-branch보다 권장되는 이유는 무엇인가요?",
+    "options": [
+      "filter-repo는 원격 저장소에서 직접 실행할 수 있기 때문이다",
+      "filter-repo는 충돌을 자동으로 해결하기 때문이다",
+      "filter-repo는 성능이 훨씬 빠르고, 안전하며, 엣지 케이스 처리가 더 완전하기 때문이다",
+      "filter-repo는 Git에 기본 내장되어 별도 설치가 불필요하기 때문이다"
+    ],
+    "correctIndex": 2,
+    "explanation": "git filter-repo는 filter-branch의 대안으로, Python 기반으로 속도가 수십 배 빠르고 메모리 사용이 효율적입니다. filter-branch는 셸 스크립트 기반으로 느리고, 빈 커밋 처리나 태그 재작성 등의 엣지 케이스에서 문제가 발생할 수 있습니다. Git 공식 문서에서도 filter-repo 사용을 권장합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-filter-branch"
+  },
+  {
+    "id": "git-advanced-038",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "git restore --staged <파일> 명령어의 효과는 무엇인가요?",
+    "options": [
+      "파일을 워킹 디렉토리에서 삭제한다",
+      "파일의 변경사항을 마지막 커밋 상태로 되돌린다",
+      "스테이징 영역에서 파일을 제거하되 워킹 디렉토리의 변경사항은 유지한다",
+      "파일을 원격 저장소의 버전으로 교체한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "git restore --staged는 스테이징 영역(인덱스)에서 파일을 언스테이지합니다. 워킹 디렉토리의 변경사항은 그대로 유지됩니다. 이는 git reset HEAD <파일>과 동일한 효과이며, Git 2.23에서 도입된 더 직관적인 명령어입니다. --staged 없이 사용하면 워킹 디렉토리의 변경사항이 되돌려집니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-restore"
+  },
+  {
+    "id": "git-advanced-039",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 명령어의 출력은 무엇을 보여주나요?\n\ngit range-diff main..feature-v1 main..feature-v2",
+    "code": "git range-diff main..feature-v1 main..feature-v2",
+    "options": [
+      "main, feature-v1, feature-v2 세 브랜치의 전체 diff를 보여준다",
+      "feature-v1과 feature-v2의 커밋 집합을 비교하여 각 커밋이 어떻게 변경되었는지 보여준다",
+      "feature-v1에서 feature-v2로의 merge가 가능한지 확인한다",
+      "두 브랜치에서 변경된 파일 목록만 보여준다"
+    ],
+    "correctIndex": 1,
+    "explanation": "git range-diff는 두 커밋 범위를 비교하여 각 커밋이 어떻게 진화했는지 보여줍니다. rebase나 force-push 후 이전 버전과 새 버전의 패치 시리즈를 비교할 때 유용합니다. 각 커밋의 diff 자체를 비교하므로, 코드 리뷰에서 리베이스 전후 변경사항을 추적할 수 있습니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-range-diff"
+  },
+  {
+    "id": "git-advanced-040",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "git commit에서 --no-verify 옵션을 사용하면 어떤 일이 발생하나요?",
+    "options": [
+      "커밋 메시지 없이 빈 커밋을 생성할 수 있다",
+      "GPG 서명 검증을 건너뛴다",
+      "pre-commit과 commit-msg 훅의 실행을 건너뛴다",
+      "스테이징되지 않은 파일도 모두 커밋에 포함된다"
+    ],
+    "correctIndex": 2,
+    "explanation": "--no-verify 옵션은 pre-commit과 commit-msg 훅을 실행하지 않고 커밋을 생성합니다. 린터나 포맷팅 검사를 일시적으로 우회할 때 사용되지만, 코드 품질 게이트를 건너뛰는 것이므로 습관적으로 사용하는 것은 권장되지 않습니다. CI에서 다시 검증하는 것이 안전합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-commit"
   }
 ]

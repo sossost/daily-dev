@@ -483,5 +483,168 @@
     "correctIndex": 2,
     "explanation": "git sparse-checkout allows you to check out only the directories you need in large monorepos. It maintains the full Git history while reducing disk usage and checkout time. Use git sparse-checkout set <path> to specify desired paths; --cone mode is the default.",
     "sourceUrl": "https://git-scm.com/docs/git-sparse-checkout"
+  },
+  {
+    "id": "git-advanced-031",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the final commit history after running these commands?\n\ngit commit -m \"initial\"\ngit commit --amend -m \"updated initial\"",
+    "code": "git commit -m \"initial\"\ngit commit --amend -m \"updated initial\"",
+    "options": [
+      "Two commits exist: \"initial\" and \"updated initial\"",
+      "Only one commit exists with the message \"updated initial\"",
+      "Only the \"initial\" commit remains and amend is ignored",
+      "The two commits are merged and their messages are combined"
+    ],
+    "correctIndex": 1,
+    "explanation": "git commit --amend replaces the last commit with a new one. It doesn't modify the existing commit — it creates a new commit with a different hash that replaces the previous one. Only the \"updated initial\" commit remains in the history. Avoid amending commits that have already been pushed to a shared branch.",
+    "sourceUrl": "https://git-scm.com/docs/git-commit"
+  },
+  {
+    "id": "git-advanced-032",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between git switch and git checkout?",
+    "options": [
+      "switch is for remote branches only, checkout is for local branches only",
+      "switch is specialized for branch switching only, while checkout handles both branch switching and file restoration",
+      "switch cannot create new branches, only checkout can",
+      "switch and checkout are completely identical aliases"
+    ],
+    "correctIndex": 1,
+    "explanation": "git switch was introduced in Git 2.23 to handle branch switching only. The original checkout command served two different purposes — switching branches and restoring files — which could be confusing. File restoration is now handled by git restore. You can create a new branch with switch -c.",
+    "sourceUrl": "https://git-scm.com/docs/git-switch"
+  },
+  {
+    "id": "git-advanced-033",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What does the following command output?\n\ngit log -S \"TODO\" --oneline",
+    "code": "git log -S \"TODO\" --oneline",
+    "options": [
+      "Commits whose messages contain 'TODO'",
+      "Commits that added or removed the string 'TODO'",
+      "A list of files currently containing 'TODO'",
+      "Commits from a branch named 'TODO'"
+    ],
+    "correctIndex": 1,
+    "explanation": "git log -S (pickaxe search) finds commits where the number of occurrences of a string changed — meaning commits that added or deleted that string in the code. Use --grep to search commit messages, and -G for regex pattern matching in diffs.",
+    "sourceUrl": "https://git-scm.com/docs/git-log"
+  },
+  {
+    "id": "git-advanced-034",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the effect of git clone --depth 1?",
+    "options": [
+      "It fetches only the first commit of the repository",
+      "It fetches only one branch of the repository",
+      "It creates a shallow clone with only the most recent commit history",
+      "It fetches files only one directory level deep"
+    ],
+    "correctIndex": 2,
+    "explanation": "git clone --depth 1 creates a shallow clone that downloads only the most recent commit history. This significantly reduces clone time and disk usage for CI/CD pipelines or large repositories where full history isn't needed. You can later run git fetch --unshallow to retrieve the full history.",
+    "sourceUrl": "https://git-scm.com/docs/git-clone"
+  },
+  {
+    "id": "git-advanced-035",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "How does Git LFS (Large File Storage) handle large files?",
+    "options": [
+      "It splits large files into smaller chunks for storage",
+      "It automatically compresses large files into regular Git objects",
+      "It stores only pointer files in the Git repository while actual files are stored on a separate LFS server",
+      "It stores only the changed portions of large files as diffs"
+    ],
+    "correctIndex": 2,
+    "explanation": "Git LFS stores large files (images, videos, binaries, etc.) on a separate LFS server instead of in the Git repository. Only small text pointer files are committed to the Git repository. During checkout, the actual files are downloaded from the LFS server via these pointers.",
+    "sourceUrl": "https://git-lfs.com/"
+  },
+  {
+    "id": "git-advanced-036",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "When a conflict occurs during git rebase, which command completely cancels the rebase and returns to the original state?",
+    "options": [
+      "git rebase --skip",
+      "git rebase --abort",
+      "git reset --hard HEAD",
+      "git checkout --force main"
+    ],
+    "correctIndex": 1,
+    "explanation": "git rebase --abort completely cancels an in-progress rebase and restores the branch to its state before the rebase started. --skip skips the current conflicting commit and continues with the next one. --continue resumes the rebase after you manually resolve the conflict.",
+    "sourceUrl": "https://git-scm.com/docs/git-rebase"
+  },
+  {
+    "id": "git-advanced-037",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why is git filter-repo recommended over git filter-branch?",
+    "options": [
+      "Because filter-repo can run directly on remote repositories",
+      "Because filter-repo automatically resolves conflicts",
+      "Because filter-repo is significantly faster, safer, and handles edge cases more completely",
+      "Because filter-repo is built into Git and requires no separate installation"
+    ],
+    "correctIndex": 2,
+    "explanation": "git filter-repo is a Python-based alternative to filter-branch that is tens of times faster and more memory-efficient. filter-branch is shell-script based, slow, and can have issues with edge cases like empty commits and tag rewriting. The official Git documentation recommends using filter-repo instead.",
+    "sourceUrl": "https://git-scm.com/docs/git-filter-branch"
+  },
+  {
+    "id": "git-advanced-038",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What does the command git restore --staged <file> do?",
+    "options": [
+      "It deletes the file from the working directory",
+      "It reverts the file changes to the last commit state",
+      "It removes the file from the staging area while keeping the working directory changes intact",
+      "It replaces the file with the version from the remote repository"
+    ],
+    "correctIndex": 2,
+    "explanation": "git restore --staged unstages a file from the staging area (index) while preserving the changes in the working directory. This has the same effect as git reset HEAD <file> and is a more intuitive command introduced in Git 2.23. Without --staged, it reverts working directory changes instead.",
+    "sourceUrl": "https://git-scm.com/docs/git-restore"
+  },
+  {
+    "id": "git-advanced-039",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What does the following command show?\n\ngit range-diff main..feature-v1 main..feature-v2",
+    "code": "git range-diff main..feature-v1 main..feature-v2",
+    "options": [
+      "The full diff across all three branches: main, feature-v1, and feature-v2",
+      "A comparison of the commit sets from feature-v1 and feature-v2, showing how each commit evolved",
+      "Whether a merge from feature-v1 to feature-v2 is possible",
+      "Only the list of files changed across both branches"
+    ],
+    "correctIndex": 1,
+    "explanation": "git range-diff compares two commit ranges to show how each commit evolved between versions. This is invaluable after a rebase or force-push to compare the old and new versions of a patch series. It compares the diffs of individual commits, helping track changes during code review.",
+    "sourceUrl": "https://git-scm.com/docs/git-range-diff"
+  },
+  {
+    "id": "git-advanced-040",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What happens when you use the --no-verify option with git commit?",
+    "options": [
+      "It allows creating an empty commit without a message",
+      "It skips GPG signature verification",
+      "It skips the execution of pre-commit and commit-msg hooks",
+      "It includes all unstaged files in the commit"
+    ],
+    "correctIndex": 2,
+    "explanation": "--no-verify skips the pre-commit and commit-msg hooks when creating a commit. While it can be used to temporarily bypass linters or formatting checks, it skips quality gates and should not be used habitually. It is safer to fix the issues that hooks detect rather than bypass them.",
+    "sourceUrl": "https://git-scm.com/docs/git-commit"
   }
 ]
