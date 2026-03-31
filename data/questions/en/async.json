@@ -628,5 +628,170 @@
     "correctIndex": 3,
     "explanation": "Errors thrown in a Promise constructor's executor automatically reject that Promise. Errors thrown in a .then() callback reject the new Promise returned by .then(). In both cases, the next .catch() in the chain handles the error. Promises provide a safe execution context that automatically converts synchronous errors into rejections.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+  },
+  {
+    "id": "async-039",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What happens when you use await with a non-Promise value?",
+    "options": [
+      "A TypeError is thrown",
+      "It enters an infinite loop",
+      "undefined is returned",
+      "The value is wrapped in Promise.resolve() and returned immediately"
+    ],
+    "correctIndex": 3,
+    "explanation": "When a non-Promise value is used after await (e.g., await 42), it is automatically wrapped in Promise.resolve(42). This Promise fulfills immediately, so the value is returned in the next microtask. No error is thrown, and this behavior allows synchronous and asynchronous values to be handled with the same code pattern.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "async-040",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const thenable = {\n  then(resolve) {\n    resolve(99);\n  }\n};\nPromise.resolve(thenable).then(v => console.log(v));",
+    "options": [
+      "99",
+      "undefined",
+      "{ then: [Function: then] }",
+      "Promise { 99 }"
+    ],
+    "correctIndex": 0,
+    "explanation": "When a thenable object (an object with a then method) is passed to Promise.resolve(), the then method is called and the object is treated like a Promise. The thenable's then method calls resolve(99), so the resulting Promise fulfills with 99. This behavior enables interoperability between different Promise libraries.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "async-041",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the problem with the following code?",
+    "code": "async function getData() {\n  const result = await fetch('/api/data');\n  return result;\n}\nconst data = getData();\nconsole.log(data.status);",
+    "options": [
+      "fetch returns undefined instead of result",
+      "getData() returns a Promise, so data.status is undefined. Use await or .then() to get the result",
+      "You cannot use return inside an async function",
+      "The fetch result does not have a status property"
+    ],
+    "correctIndex": 1,
+    "explanation": "An async function always returns a Promise. The return value of getData() is a Promise, not a Response object. The Promise object does not have a status property, so undefined is printed. Correct usage: const data = await getData() or getData().then(data => console.log(data.status)).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "async-042",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "async function outer() {\n  console.log('A');\n  await inner();\n  console.log('B');\n}\nasync function inner() {\n  console.log('C');\n  await Promise.resolve();\n  console.log('D');\n}\nconsole.log('E');\nouter();\nconsole.log('F');",
+    "options": [
+      "E, A, C, F, D, B",
+      "E, A, C, D, F, B",
+      "A, C, E, F, D, B",
+      "E, F, A, C, D, B"
+    ],
+    "correctIndex": 0,
+    "explanation": "Synchronous code 'E' prints first. Calling outer() synchronously prints 'A', then calls inner() which synchronously prints 'C'. At await Promise.resolve() inside inner, both inner and outer are suspended. Synchronous code 'F' prints. Then microtasks resume: inner resumes printing 'D', and after inner completes, outer resumes printing 'B'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "async-043",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "When does the difference between return await promise and return promise matter?",
+    "options": [
+      "There is always a difference, so return await should always be used",
+      "There is never a difference; both are identical",
+      "return await always has better performance",
+      "Inside a try-catch block, return await catches rejections in the catch block, but return does not"
+    ],
+    "correctIndex": 3,
+    "explanation": "Inside a try block, return promise returns the Promise directly, so if the Promise rejects, it is not caught by the function's catch block. In contrast, return await promise awaits the Promise first, so a rejection throws inside the try block and is caught by catch. Outside of try-catch, there is no practical difference.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "async-044",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the pattern of converting callback-based functions to return Promises called?",
+    "options": [
+      "Polyfilling",
+      "Transpiling",
+      "Promisification",
+      "Serialization"
+    ],
+    "correctIndex": 2,
+    "explanation": "Promisification is the pattern of converting callback-based async functions into functions that return Promises. Inside new Promise((resolve, reject) => { ... }), the original callback-based function is called, with resolve on success and reject on failure. In Node.js, util.promisify() can perform this conversion automatically.",
+    "sourceUrl": "https://javascript.info/promisify"
+  },
+  {
+    "id": "async-045",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "Promise.all([])\n  .then(result => console.log(result, result.length));",
+    "options": [
+      "undefined, TypeError",
+      "[], 0",
+      "Promise { [] }, 0",
+      "null, 0"
+    ],
+    "correctIndex": 1,
+    "explanation": "When Promise.all([]) receives an empty array, it returns a Promise that immediately fulfills with an empty array. Since there are no Promises to wait for, it resolves instantly. result is an empty array [] and length is 0. This behavior ensures safe handling even when a dynamically generated Promise array turns out to be empty.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+  },
+  {
+    "id": "async-046",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The following code has an unintended behavior. What is the cause?",
+    "code": "async function fetchWithRetry(url, retries = 3) {\n  for (let i = 0; i < retries; i++) {\n    try {\n      const res = await fetch(url);\n      if (res.ok) return res.json();\n    } catch (e) {\n      console.log('Retry', i + 1);\n    }\n  }\n  throw new Error('All retries failed');\n}",
+    "options": [
+      "return res.json() without await means JSON parse errors bypass the catch block and are not retried",
+      "await cannot be used inside a for loop",
+      "throw new Error does not work inside async functions",
+      "The default value for retries parameter is not applied"
+    ],
+    "correctIndex": 0,
+    "explanation": "return res.json() returns a Promise without awaiting it, so the function exits the try block immediately. If res.json() later rejects (e.g., invalid JSON), the error escapes the catch block entirely and is never retried. Using return await res.json() ensures the Promise is settled inside the try block, allowing parse errors to be caught and retried.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "async-047",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between Promise.all() and sequential processing with for...of + await?",
+    "options": [
+      "Promise.all() is sequential and for...of + await is parallel",
+      "Both have the same execution order and performance",
+      "Promise.all() starts all Promises concurrently, while for...of + await waits for each task to finish before starting the next",
+      "Only for...of + await can handle errors"
+    ],
+    "correctIndex": 2,
+    "explanation": "Promise.all() starts all provided Promises concurrently, so total time equals the slowest task. A for...of loop with await waits for each task to complete before starting the next, so total time is the sum of all tasks. Use Promise.all() for independent tasks, and for...of + await when order matters or tasks depend on previous results.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+  },
+  {
+    "id": "async-048",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about the unhandledrejection event is correct?",
+    "options": [
+      "It fires when an unhandled Promise rejection is detected and is used for global error handling",
+      "It is only available in Node.js, not in browsers",
+      "It fires on every Promise rejection, even when .catch() is present",
+      "It also detects errors in synchronous code"
+    ],
+    "correctIndex": 0,
+    "explanation": "The unhandledrejection event fires when a Promise is rejected but no .catch() handler is attached. It can be registered with window.addEventListener('unhandledrejection', handler) and serves as a safety net for monitoring unhandled async errors across the application. Both browsers and Node.js (process.on('unhandledRejection')) support it.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/unhandledrejection_event"
   }
 ]

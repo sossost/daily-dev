@@ -628,5 +628,170 @@
     "correctIndex": 3,
     "explanation": "Promise 생성자의 executor에서 throw된 에러는 자동으로 해당 Promise를 reject시킵니다. .then() 콜백에서 throw된 에러는 .then()이 반환하는 새 Promise를 reject시킵니다. 두 경우 모두 체인의 다음 .catch()에서 처리할 수 있습니다. Promise는 내부의 동기 에러를 자동으로 잡아 rejection으로 변환하는 안전한 실행 컨텍스트를 제공합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+  },
+  {
+    "id": "async-039",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "await 뒤에 Promise가 아닌 일반 값을 사용하면 어떻게 되나요?",
+    "options": [
+      "TypeError가 발생한다",
+      "무한 루프에 빠진다",
+      "undefined가 반환된다",
+      "해당 값이 Promise.resolve()로 감싸진 후 즉시 반환된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "await 뒤에 Promise가 아닌 값(예: await 42)을 사용하면 자동으로 Promise.resolve(42)로 감싸집니다. 이 Promise는 즉시 이행되므로 다음 마이크로태스크에서 값이 반환됩니다. 에러가 발생하지 않으며, 이를 통해 동기 값과 비동기 값을 동일한 코드 패턴으로 처리할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "async-040",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const thenable = {\n  then(resolve) {\n    resolve(99);\n  }\n};\nPromise.resolve(thenable).then(v => console.log(v));",
+    "options": [
+      "99",
+      "undefined",
+      "{ then: [Function: then] }",
+      "Promise { 99 }"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise.resolve()에 thenable 객체(then 메서드를 가진 객체)를 전달하면, then 메서드가 호출되어 해당 객체를 Promise처럼 처리합니다. thenable의 then 메서드가 resolve(99)를 호출하므로 결과 Promise는 99로 이행됩니다. 이 동작 덕분에 다양한 Promise 라이브러리 간 호환이 가능합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "async-041",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드의 문제점은 무엇인가요?",
+    "code": "async function getData() {\n  const result = await fetch('/api/data');\n  return result;\n}\nconst data = getData();\nconsole.log(data.status);",
+    "options": [
+      "fetch가 result 대신 undefined를 반환하기 때문",
+      "getData()가 Promise를 반환하므로 data.status는 undefined이다. await 또는 .then()으로 결과를 받아야 한다",
+      "async 함수 안에서 return을 사용할 수 없기 때문",
+      "fetch의 결과에 status 속성이 존재하지 않기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "async 함수는 항상 Promise를 반환합니다. getData()의 반환값은 Response 객체가 아니라 Promise입니다. Promise 객체에는 status 속성이 없으므로 undefined가 출력됩니다. 올바른 사용법: const data = await getData() 또는 getData().then(data => console.log(data.status))입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "async-042",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "async function outer() {\n  console.log('A');\n  await inner();\n  console.log('B');\n}\nasync function inner() {\n  console.log('C');\n  await Promise.resolve();\n  console.log('D');\n}\nconsole.log('E');\nouter();\nconsole.log('F');",
+    "options": [
+      "E, A, C, F, D, B",
+      "E, A, C, D, F, B",
+      "A, C, E, F, D, B",
+      "E, F, A, C, D, B"
+    ],
+    "correctIndex": 0,
+    "explanation": "동기 코드 'E'가 먼저 출력됩니다. outer() 호출 시 'A'가 동기적으로 출력되고, inner()를 호출하면 'C'가 동기적으로 출력됩니다. inner() 안의 await Promise.resolve()에서 inner가 일시 중지되고, outer도 await inner()에서 일시 중지됩니다. 동기 코드 'F'가 출력된 후, 마이크로태스크로 inner가 재개되어 'D'가 출력되고, inner 완료 후 outer가 재개되어 'B'가 출력됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "async-043",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "return await promise와 return promise의 차이가 의미 있는 경우는?",
+    "options": [
+      "항상 차이가 있으므로 return await를 사용해야 한다",
+      "차이가 전혀 없으므로 어느 것을 사용해도 동일하다",
+      "return await는 성능이 항상 더 좋다",
+      "try-catch 블록 안에서 사용할 때, return await는 거부된 Promise를 catch할 수 있지만 return은 catch하지 못한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "try 블록 안에서 return promise는 Promise를 그대로 반환하므로, Promise가 거부되어도 해당 함수의 catch 블록에서 잡히지 않습니다. 반면 return await promise는 먼저 await로 Promise를 기다리므로, 거부 시 catch 블록에서 에러를 처리할 수 있습니다. try-catch 밖에서는 실질적 차이가 없습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "async-044",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "콜백 기반 함수를 Promise로 변환하는 패턴을 무엇이라 하나요?",
+    "options": [
+      "Polyfilling",
+      "Transpiling",
+      "Promisification",
+      "Serialization"
+    ],
+    "correctIndex": 2,
+    "explanation": "Promisification은 콜백 기반의 비동기 함수를 Promise를 반환하는 함수로 변환하는 패턴입니다. new Promise((resolve, reject) => { ... }) 안에서 원래의 콜백 기반 함수를 호출하고, 성공 시 resolve, 실패 시 reject를 호출합니다. Node.js에서는 util.promisify()를 사용하여 자동으로 변환할 수 있습니다.",
+    "sourceUrl": "https://javascript.info/promisify"
+  },
+  {
+    "id": "async-045",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "Promise.all([])\n  .then(result => console.log(result, result.length));",
+    "options": [
+      "undefined, TypeError",
+      "[], 0",
+      "Promise { [] }, 0",
+      "null, 0"
+    ],
+    "correctIndex": 1,
+    "explanation": "Promise.all([])에 빈 배열을 전달하면 빈 배열로 즉시 이행되는 Promise를 반환합니다. 기다릴 Promise가 없으므로 즉시 resolve됩니다. result는 빈 배열 []이고 length는 0입니다. 이 동작은 동적으로 생성된 Promise 배열이 비어 있을 때도 안전하게 처리할 수 있게 해줍니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+  },
+  {
+    "id": "async-046",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 의도치 않은 동작이 발생합니다. 원인은 무엇인가요?",
+    "code": "async function fetchWithRetry(url, retries = 3) {\n  for (let i = 0; i < retries; i++) {\n    try {\n      const res = await fetch(url);\n      if (res.ok) return res.json();\n    } catch (e) {\n      console.log('Retry', i + 1);\n    }\n  }\n  throw new Error('All retries failed');\n}",
+    "options": [
+      "return res.json()에서 await 없이 반환하면 JSON 파싱 에러가 catch 블록을 우회하여 재시도되지 않는다",
+      "for 루프 안에서 await를 사용할 수 없기 때문",
+      "throw new Error가 async 함수 안에서 동작하지 않기 때문",
+      "retries 매개변수의 기본값이 적용되지 않기 때문"
+    ],
+    "correctIndex": 0,
+    "explanation": "return res.json()은 Promise를 await하지 않고 반환하므로 함수가 try 블록을 즉시 빠져나갑니다. 이후 res.json()이 거부되면(예: 잘못된 JSON) 에러가 catch 블록을 완전히 우회하여 재시도되지 않습니다. return await res.json()을 사용하면 try 블록 내에서 Promise가 처리되므로 파싱 에러를 잡아 재시도할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "async-047",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Promise.all()과 for...of + await를 사용한 순차 처리의 차이로 올바른 것은?",
+    "options": [
+      "Promise.all()은 순차 실행이고 for...of + await는 병렬 실행이다",
+      "둘 다 동일한 실행 순서와 성능을 가진다",
+      "Promise.all()은 모든 Promise를 동시에 시작하고, for...of + await는 이전 작업이 끝나야 다음을 시작한다",
+      "for...of + await만 에러 처리가 가능하다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Promise.all()은 전달받은 모든 Promise를 동시에 시작하여 가장 느린 작업만큼의 시간이 걸립니다. for...of 루프 안의 await는 각 작업이 완료될 때까지 기다린 후 다음 작업을 시작하므로 총 시간이 합산됩니다. 독립적인 작업은 Promise.all()로, 순서가 중요한 작업은 for...of + await로 처리하는 것이 적절합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+  },
+  {
+    "id": "async-048",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "unhandledrejection 이벤트에 대한 설명으로 올바른 것은?",
+    "options": [
+      "처리되지 않은 Promise rejection이 감지되면 발생하며 글로벌 에러 핸들링에 사용된다",
+      "Node.js에서만 사용할 수 있고 브라우저에서는 지원되지 않는다",
+      "모든 Promise rejection에서 발생하며 .catch()가 있어도 실행된다",
+      "동기 코드의 에러도 감지한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "unhandledrejection 이벤트는 Promise가 거부되었지만 .catch() 핸들러가 연결되지 않았을 때 발생합니다. window.addEventListener('unhandledrejection', handler)로 등록할 수 있으며, 앱 전체의 처리되지 않은 비동기 에러를 모니터링하는 안전망 역할을 합니다. 브라우저와 Node.js(process.on('unhandledRejection')) 모두 지원합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Window/unhandledrejection_event"
   }
 ]

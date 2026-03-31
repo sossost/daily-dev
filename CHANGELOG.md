@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-04-01
+
+### Features
+
+- **content**: add 10 browser-api questions (`895db12`)
+
 ## 2026-03-31
 
 ### Features
