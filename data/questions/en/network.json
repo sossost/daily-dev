@@ -485,5 +485,168 @@
     "correctIndex": 2,
     "explanation": "Headers.append() does not overwrite an existing header with the same name. Instead, it appends the value separated by a comma and space. So get() returns \"first, second\". To overwrite a value, use set() instead of append().",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Headers/append"
+  },
+  {
+    "id": "network-031",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What effect does setting the HttpOnly attribute on a cookie have?",
+    "options": [
+      "The cookie is only sent over HTTPS connections",
+      "The cookie becomes inaccessible to JavaScript via document.cookie",
+      "The cookie is not forwarded to subdomains",
+      "The cookie's expiration is automatically set to session end"
+    ],
+    "correctIndex": 1,
+    "explanation": "A cookie with the HttpOnly attribute set cannot be accessed through JavaScript's document.cookie API. This is an important security mechanism that prevents cookie theft through XSS attacks. HTTPS-only transmission is the role of the Secure attribute, which is separate from HttpOnly.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies"
+  },
+  {
+    "id": "network-032",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What value is logged to the console in the following code?",
+    "code": "const params = new URLSearchParams('page=1&sort=name&sort=date');\nconsole.log(params.getAll('sort'));",
+    "options": [
+      "['name', 'date']",
+      "'name'",
+      "'name,date'",
+      "['date']"
+    ],
+    "correctIndex": 0,
+    "explanation": "The getAll() method of URLSearchParams returns an array of all values associated with the specified key. Since 'sort' appears twice in the query string, ['name', 'date'] is returned. get() returns only the first value, but getAll() retrieves all values for the same key.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams/getAll"
+  },
+  {
+    "id": "network-033",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why can't the response body from a cross-origin API be read in the following code?\n\nconst response = await fetch('https://api.other-domain.com/data', { mode: 'no-cors' });\nconst data = await response.json();",
+    "options": [
+      "In no-cors mode, fetch itself fails and response is undefined",
+      "In no-cors mode, only the POST method can be used",
+      "In no-cors mode, only JSON-format responses are blocked",
+      "no-cors mode returns an opaque response, making the response body, headers, and status inaccessible to JavaScript"
+    ],
+    "correctIndex": 3,
+    "explanation": "Using mode: 'no-cors' with fetch allows cross-origin requests without CORS headers, but the response becomes opaque. An opaque response has a status of 0, and its body and headers cannot be read by JavaScript. This mode is only useful when you don't need to read the response content, such as Service Worker caching.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Request/mode"
+  },
+  {
+    "id": "network-034",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between GraphQL and REST APIs?",
+    "options": [
+      "REST uses a single endpoint, while GraphQL uses resource-specific endpoints",
+      "GraphQL allows clients to specify the exact data structure needed via queries, reducing over-fetching",
+      "REST only uses the POST method, while GraphQL uses all HTTP methods",
+      "GraphQL caching is always more efficient than REST"
+    ],
+    "correctIndex": 1,
+    "explanation": "GraphQL allows clients to request exactly the fields they need through queries, solving the over-fetching (receiving unnecessary data) and under-fetching (requiring multiple requests) problems common in REST. REST uses resource-specific endpoints, while GraphQL typically uses a single endpoint.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/GraphQL"
+  },
+  {
+    "id": "network-035",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the main reason HTTP/3 uses the QUIC protocol instead of TCP?",
+    "options": [
+      "To support larger packet sizes than TCP",
+      "To simplify server-side implementation",
+      "To optimize JSON data transmission",
+      "To solve TCP's Head-of-Line Blocking problem and reduce connection establishment time"
+    ],
+    "correctIndex": 3,
+    "explanation": "HTTP/2 runs over TCP, where a single packet loss blocks all streams — known as Head-of-Line Blocking. QUIC is built on UDP and processes each stream independently, solving this problem. It also supports 0-RTT connection establishment, significantly reducing initial latency.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/QUIC"
+  },
+  {
+    "id": "network-036",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the result of the second response.text() call in the following code?",
+    "code": "const response = await fetch('https://api.example.com/data');\nconst text1 = await response.text();\ntry {\n  const text2 = await response.text();\n  console.log('success');\n} catch (e) {\n  console.log(e.constructor.name);\n}",
+    "options": [
+      "TypeError is logged",
+      "An empty string is returned and 'success' is logged",
+      "'success' is logged and text2 equals text1",
+      "SyntaxError is logged"
+    ],
+    "correctIndex": 0,
+    "explanation": "A Response object's body is a ReadableStream that can only be consumed once. After reading the body with text(), calling text() again throws a TypeError with the message 'body stream already read'. To read the body multiple times, use response.clone() to duplicate the Response before consuming it.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Response/clone"
+  },
+  {
+    "id": "network-037",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the browser block an HTTP image from loading on an HTTPS site?",
+    "options": [
+      "HTTP images are larger in size than HTTPS page resources",
+      "The Mixed Content policy blocks loading of insecure resources",
+      "HTTP and HTTPS use different ports, making communication impossible",
+      "Image files must be served from the same domain"
+    ],
+    "correctIndex": 1,
+    "explanation": "Loading HTTP resources on an HTTPS page is called Mixed Content. This can weaken the security of an encrypted page. Modern browsers block mixed active content (scripts, iframes) by default, and are progressively blocking mixed passive content (images) as well.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content"
+  },
+  {
+    "id": "network-038",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the primary purpose of using a CDN (Content Delivery Network)?",
+    "options": [
+      "To improve loading speed by serving content from servers geographically closer to the user",
+      "To speed up database queries on the server",
+      "To improve client-side JavaScript execution speed",
+      "To automate server SSL certificate issuance"
+    ],
+    "correctIndex": 0,
+    "explanation": "A CDN caches content on edge servers distributed across multiple regions worldwide, serving content from the server physically closest to the user. This reduces network latency, improves loading speed, and distributes the load on the origin server.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/CDN"
+  },
+  {
+    "id": "network-039",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What value is logged to the console in the following code?",
+    "code": "const request = new Request('https://api.example.com/data', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' }\n});\nconsole.log(request.method, request.headers.get('Content-Type'));",
+    "options": [
+      "undefined undefined",
+      "'GET' null",
+      "'POST' 'application/json'",
+      "'POST' null"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Request constructor takes a URL and an options object to create a Request object. The method property returns the specified HTTP method, and the headers property returns a Headers object. The method ('POST') and Content-Type header ('application/json') passed during creation are output as-is.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Request/Request"
+  },
+  {
+    "id": "network-040",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the role of HSTS (HTTP Strict Transport Security)?",
+    "options": [
+      "It forces the server to upgrade the client's TLS version",
+      "It forces the browser to always connect to the domain using HTTPS",
+      "It limits HTTP request header sizes to enhance security",
+      "It requires mutual TLS authentication for server-to-server communication"
+    ],
+    "correctIndex": 1,
+    "explanation": "HSTS is a security mechanism where the server uses the Strict-Transport-Security header to instruct the browser to only use HTTPS for the specified domain for a given period. This ensures that even if a user enters an HTTP URL, the browser automatically converts it to HTTPS, preventing man-in-the-middle attacks such as SSL stripping.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security"
   }
 ]
