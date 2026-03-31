@@ -183,7 +183,7 @@
 ## Data
 
 - algorithms.json — 40 questions
-- api-design.json — 35 questions
+- api-design.json — 45 questions
 - async.json — 38 questions
 - browser-api.json — 35 questions
 - closure.json — 40 questions
@@ -206,7 +206,7 @@
 - web-performance.json — 40 questions
 - web-security.json — 45 questions
 - algorithms.json — 40 questions
-- api-design.json — 35 questions
+- api-design.json — 45 questions
 - async.json — 38 questions
 - browser-api.json — 35 questions
 - closure.json — 40 questions

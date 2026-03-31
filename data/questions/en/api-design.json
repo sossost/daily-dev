@@ -566,5 +566,168 @@
     "correctIndex": 0,
     "explanation": "401 Unauthorized, despite its name, actually means 'authentication failure' — the client has not proven their identity. 403 Forbidden means the client is authenticated but does not have authorization to access the resource. For example, a regular user accessing an admin API would receive a 403.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+  },
+  {
+    "id": "api-design-036",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "When should HTTP status code 204 No Content be used?",
+    "options": [
+      "When the request succeeded but there is no body to return",
+      "When the requested resource's content is empty",
+      "When the server could not understand the request",
+      "When the client sent a request without content"
+    ],
+    "correctIndex": 0,
+    "explanation": "204 No Content is used when the request was successfully processed but there is no data to return in the response body. It is commonly used after a DELETE request when a resource has been successfully deleted, or after a PUT/PATCH update when there is no need to return the modified resource. The client can simply confirm success while staying on the current page.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/204"
+  },
+  {
+    "id": "api-design-037",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is logged to the console in the following code?",
+    "code": "const url = new URL('https://api.example.com/search');\nurl.searchParams.append('q', 'hello world');\nurl.searchParams.append('page', '1');\nurl.searchParams.set('q', 'hi');\nconsole.log(url.searchParams.toString());",
+    "options": [
+      "q=hello+world&page=1&q=hi",
+      "q=hello%20world&page=1",
+      "q=hi&page=1",
+      "q=hello+world&page=1"
+    ],
+    "correctIndex": 2,
+    "explanation": "The URLSearchParams set() method removes all existing parameters with the same name and replaces them with the new value. The 'q=hello world' added by append() is completely replaced by set('q', 'hi'), so the final result is 'q=hi&page=1'. While append() adds duplicate parameters with the same name, set() overwrites them.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams/set"
+  },
+  {
+    "id": "api-design-038",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Which of the following API changes breaks backward compatibility?",
+    "options": [
+      "Adding a new optional field to the response",
+      "Renaming an existing required response field",
+      "Adding a new optional query parameter",
+      "Adding a new API endpoint"
+    ],
+    "correctIndex": 1,
+    "explanation": "Renaming a required response field that existing clients depend on will break all client code that references that field. In contrast, adding new optional fields, new query parameters, or new endpoints are additive changes that do not affect existing clients, thus maintaining backward compatibility.",
+    "sourceUrl": "https://google.aip.dev/180"
+  },
+  {
+    "id": "api-design-039",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which correctly describes a difference between gRPC and REST APIs?",
+    "options": [
+      "gRPC only supports JSON while REST supports various formats",
+      "REST only works with HTTP/2 while gRPC works with HTTP/1.1",
+      "gRPC uses Protocol Buffers for binary serialization, while REST primarily uses text-based JSON",
+      "REST supports bidirectional streaming but gRPC only supports unidirectional request-response"
+    ],
+    "correctIndex": 2,
+    "explanation": "gRPC uses Protocol Buffers (protobuf) as its default serialization format, exchanging binary data that results in smaller payloads and faster parsing compared to JSON. REST APIs primarily use JSON text format. gRPC is based on HTTP/2, supporting bidirectional streaming and multiplexing, and is widely used for inter-microservice communication.",
+    "sourceUrl": "https://grpc.io/docs/what-is-grpc/introduction/"
+  },
+  {
+    "id": "api-design-040",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What HTTP method is logged to the console in the following code?",
+    "code": "const request = new Request('/api/data', {\n  method: 'patch',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({ name: 'updated' })\n});\nconsole.log(request.method);",
+    "options": [
+      "'patch'",
+      "'PATCH'",
+      "'Patch'",
+      "undefined"
+    ],
+    "correctIndex": 1,
+    "explanation": "When creating a Request object, even if the method option is passed in lowercase, the browser automatically normalizes HTTP methods to uppercase. This follows the HTTP specification convention where standard methods (GET, POST, PUT, DELETE, PATCH, etc.) are used in uppercase.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Request/method"
+  },
+  {
+    "id": "api-design-041",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the primary purpose of the HTTP OPTIONS method?",
+    "options": [
+      "To confirm before deleting a resource on the server",
+      "To discover the communication options supported by the server, used in CORS preflight requests",
+      "A benchmark request to measure server performance",
+      "To send new configuration options to the server"
+    ],
+    "correctIndex": 1,
+    "explanation": "The OPTIONS method is used to discover the HTTP methods, headers, and other communication options that a server supports for a specific resource. Its most common use case is the CORS preflight request, where the browser checks the server's CORS policy before sending the actual request.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS"
+  },
+  {
+    "id": "api-design-042",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the security issue in the following API Gateway configuration?\n\n{\n  \"routes\": [\n    { \"path\": \"/api/public/*\", \"auth\": false },\n    { \"path\": \"/api/admin/*\", \"auth\": true },\n    { \"path\": \"/api/*\", \"auth\": false }\n  ]\n}",
+    "options": [
+      "The public path requires authentication",
+      "Routing should not be configured in JSON format",
+      "The wildcard route /api/* may match before /api/admin/* in some gateways, bypassing authentication",
+      "HTTPS is not specified for the admin path"
+    ],
+    "correctIndex": 2,
+    "explanation": "Route matching order varies between API Gateway implementations. Some gateways match by path pattern priority rather than declaration order, and the wildcard /api/* could match before /api/admin/*. This creates a security vulnerability where admin APIs can be accessed without authentication. You must ensure that more specific paths are always evaluated first.",
+    "sourceUrl": "https://owasp.org/API-Security/editions/2023/en/0xa2-broken-authentication/"
+  },
+  {
+    "id": "api-design-043",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the final value logged to the console in the following code?",
+    "code": "async function fetchWithTimeout(url, ms) {\n  const controller = new AbortController();\n  const timeout = setTimeout(() => controller.abort(), ms);\n  try {\n    const res = await fetch(url, { signal: controller.signal });\n    return res.status;\n  } catch (e) {\n    return e.name;\n  } finally {\n    clearTimeout(timeout);\n  }\n}\n// Assume the server responds with 200 after 5 seconds\nfetchWithTimeout('/api/slow', 1000).then(v => console.log(v));",
+    "options": [
+      "200",
+      "'TimeoutError'",
+      "'AbortError'",
+      "undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "The server responds after 5 seconds but the timeout is set to 1 second, so controller.abort() is called after 1 second. When fetch is aborted, a DOMException named AbortError is thrown, and the catch block returns e.name which is 'AbortError'. The finally block cleans up the timer.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/timeout_static"
+  },
+  {
+    "id": "api-design-044",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the characteristic of the HTTP HEAD method in REST APIs?",
+    "options": [
+      "It is used to create resources",
+      "It is identical to GET but returns only headers without a response body",
+      "It is used to modify resource metadata",
+      "It is used to terminate the connection with the server"
+    ],
+    "correctIndex": 1,
+    "explanation": "The HEAD method returns the same response as a GET request but without the response body. It only returns headers like Content-Length and Last-Modified, making it useful for checking resource existence, querying file sizes, and validating cache. It saves bandwidth by not downloading the actual data.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/HEAD"
+  },
+  {
+    "id": "api-design-045",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which correctly describes the difference between Long Polling and Short Polling in API design?",
+    "options": [
+      "Short Polling uses the same protocol as WebSocket",
+      "Long Polling does not use TCP connections",
+      "Long Polling delays the response until the server has new data, while Short Polling returns a response immediately",
+      "Short Polling is a server push approach and Long Polling is a client pull approach"
+    ],
+    "correctIndex": 2,
+    "explanation": "Short Polling has the client send requests to the server at regular intervals, with the server responding immediately. Even when there is no new data, an empty response is returned, creating unnecessary requests. Long Polling has the server hold the response until new data is ready, then respond immediately. This enables near-real-time updates over HTTP.",
+    "sourceUrl": "https://javascript.info/long-polling"
   }
 ]
