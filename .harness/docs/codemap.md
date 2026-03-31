@@ -204,7 +204,7 @@
 - type-coercion.json — 40 questions
 - typescript.json — 40 questions
 - web-performance.json — 40 questions
-- web-security.json — 35 questions
+- web-security.json — 45 questions
 - algorithms.json — 40 questions
 - api-design.json — 35 questions
 - async.json — 38 questions
@@ -227,7 +227,7 @@
 - type-coercion.json — 40 questions
 - typescript.json — 40 questions
 - web-performance.json — 40 questions
-- web-security.json — 35 questions
+- web-security.json — 45 questions
 
 ## Modules
 

@@ -572,5 +572,168 @@
     "correctIndex": 3,
     "explanation": "encodeURIComponent() encodes special characters in values inserted into URLs using %XX format (e.g., & → %26). HTML escaping converts characters in HTML context (e.g., < → &lt;, > → &gt;, & → &amp;). Each encoding applies to a different context (URL vs. HTML), and using the wrong encoding for a given context leaves you vulnerable to injection attacks.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent"
+  },
+  {
+    "id": "web-security-036",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What restrictions are enforced when a cookie name uses the __Host- prefix?",
+    "options": [
+      "The cookie must have the Secure attribute, Path=/, and no Domain attribute",
+      "The cookie can only be accessed from JavaScript",
+      "The cookie's expiration is limited to 1 hour",
+      "The cookie is only sent to subdomains"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cookies with the __Host- prefix have additional security constraints enforced by the browser. They must have the Secure flag set, Path must be /, and the Domain attribute must not be present. This ensures the cookie is valid only for the exact host, preventing cookie overwrite attacks via subdomain takeover.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#cookie_prefixes"
+  },
+  {
+    "id": "web-security-037",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the primary purpose of the Trusted Types API?",
+    "options": [
+      "To validate network request certificates",
+      "To optimize browser rendering performance",
+      "To automatically encrypt all cookies",
+      "To prevent DOM XSS attacks by requiring typed objects instead of strings for dangerous DOM sinks like innerHTML"
+    ],
+    "correctIndex": 3,
+    "explanation": "Trusted Types is a browser API that enforces passing trusted type objects instead of raw strings to major DOM XSS entry points (sinks) such as innerHTML and document.write. When require-trusted-types-for 'script' is set in the CSP header, the browser blocks unsanitized strings from being passed to dangerous sinks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Trusted_Types_API"
+  },
+  {
+    "id": "web-security-038",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the following login code have a Session Fixation vulnerability?",
+    "code": "app.post('/login', (req, res) => {\n  const { username, password } = req.body;\n  if (authenticate(username, password)) {\n    req.session.user = username;\n    res.redirect('/dashboard');\n  }\n});",
+    "options": [
+      "The authenticate function is async, so await is required",
+      "The session ID is not regenerated after successful login, so an attacker's pre-set session ID persists",
+      "body-parser middleware is required to use req.body",
+      "res.render should be used instead of res.redirect"
+    ],
+    "correctIndex": 1,
+    "explanation": "A session fixation attack involves an attacker pre-setting a session ID and then tricking the victim into logging in with that session. Without calling req.session.regenerate() after successful login to issue a new session ID, the attacker can access the victim's authenticated session using the known session ID.",
+    "sourceUrl": "https://owasp.org/www-community/attacks/Session_fixation"
+  },
+  {
+    "id": "web-security-039",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What security benefit does the Cross-Origin-Opener-Policy (COOP) header with the 'same-origin' value provide?",
+    "options": [
+      "It blocks all cross-origin resource loading",
+      "It prevents pages opened via window.open from different origins from accessing the original page through the opener reference",
+      "It blocks script execution within iframes",
+      "It blocks cross-origin cookie transmission"
+    ],
+    "correctIndex": 1,
+    "explanation": "COOP: same-origin ensures that a page is isolated into its own browsing context group, separate from cross-origin contexts. This prevents pages opened via window.open from different origins from using the opener reference to read or manipulate properties of the original page. This is important for blocking cross-origin information leaks that are prerequisites for side-channel attacks like Spectre.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Opener-Policy"
+  },
+  {
+    "id": "web-security-040",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the security vulnerability in the following login API?",
+    "code": "app.post('/login', async (req, res) => {\n  const { email, password } = req.body;\n  const user = await db.findUser(email);\n  if (!user) return res.status(401).json({ error: 'User not found' });\n  if (!bcrypt.compareSync(password, user.hash)) {\n    return res.status(401).json({ error: 'Incorrect password' });\n  }\n  res.json({ token: generateToken(user) });\n});",
+    "options": [
+      "Different error messages for email and password reveal whether an account exists, making it vulnerable to user enumeration attacks",
+      "bcrypt.compare (async) should be used instead of bcrypt.compareSync",
+      "generateToken being synchronous causes performance issues",
+      "Destructuring assignment cannot be used on req.body"
+    ],
+    "correctIndex": 0,
+    "explanation": "Returning different error messages for non-existent emails versus incorrect passwords allows attackers to identify valid email addresses. This is called a user enumeration attack. Both cases should return an identical message like 'Invalid email or password' to prevent attackers from distinguishing between the two scenarios.",
+    "sourceUrl": "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/03-Identity_Management_Testing/04-Testing_for_Account_Enumeration_and_Guessable_User_Account"
+  },
+  {
+    "id": "web-security-041",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the security vulnerability in the following Service Worker registration code?",
+    "code": "const swUrl = new URLSearchParams(location.search).get('sw');\nif (swUrl) {\n  navigator.serviceWorker.register(swUrl);\n}",
+    "options": [
+      "Service Workers only work over HTTPS, causing errors in HTTP environments",
+      "navigator.serviceWorker could be undefined, requiring a null check",
+      "Allowing user input to specify the Service Worker URL enables malicious scripts to be registered as Service Workers, intercepting all network requests",
+      "URLSearchParams is not supported in IE, causing compatibility issues"
+    ],
+    "correctIndex": 2,
+    "explanation": "A Service Worker, once registered, is a powerful API that can intercept and modify all network requests within its scope. Allowing user input to specify the Service Worker URL could let an attacker register a malicious script as a Service Worker. While the browser enforces same-origin restrictions, if script injection is possible within the same domain, this enables a persistent man-in-the-middle attack.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers#setting_up_to_play_with_service_workers"
+  },
+  {
+    "id": "web-security-042",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the security role of package-lock.json (or yarn.lock) when installing npm packages?",
+    "options": [
+      "It encrypts and stores the source code of packages",
+      "It locks exact dependency versions and integrity hashes, detecting tampered packages from supply chain attacks",
+      "It only serves as a cache to speed up package installation",
+      "It verifies package license information"
+    ],
+    "correctIndex": 1,
+    "explanation": "package-lock.json records the exact version and integrity hash for each dependency. During npm install, if the hash of a downloaded package differs from the lock file's hash, the installation fails. This helps detect cases where packages have been tampered with in supply chain attacks. In CI environments, using npm ci is recommended to strictly follow the lock file.",
+    "sourceUrl": "https://docs.npmjs.com/cli/v10/configuring-npm/package-lock-json"
+  },
+  {
+    "id": "web-security-043",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the role of the report-to directive in the following CSP header?\n\nContent-Security-Policy: default-src 'self'; report-to csp-endpoint",
+    "options": [
+      "It completely blocks page loading when a CSP violation occurs",
+      "When a CSP violation occurs, the browser sends a JSON report with violation details to the specified endpoint",
+      "It switches CSP to report-only mode, monitoring without blocking",
+      "It only allows resources from the URL specified in report-to to load"
+    ],
+    "correctIndex": 1,
+    "explanation": "The report-to directive instructs the browser to send violation details (blocked URI, violated directive, etc.) as JSON to the specified endpoint when a CSP violation occurs. It is the modern replacement for report-uri and works with the Reporting API. To monitor without blocking, use the Content-Security-Policy-Report-Only header instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/report-to"
+  },
+  {
+    "id": "web-security-044",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Which statement correctly describes the principle behind a DNS Rebinding attack?",
+    "options": [
+      "The attacker poisons a DNS server's cache to redirect users to a malicious site",
+      "The attacker manipulates DNS responses for their own domain, changing the IP to the victim's internal network address after TTL expiry, thereby bypassing the browser's same-origin policy",
+      "DNS requests are not encrypted, allowing a man-in-the-middle to forge responses",
+      "The attacker sends a massive number of queries to a DNS server to disrupt its service"
+    ],
+    "correctIndex": 1,
+    "explanation": "In a DNS Rebinding attack, the attacker configures their domain with a very short TTL. Initially, it returns the attacker's server IP to load malicious JavaScript. After TTL expiry, the second DNS lookup returns the victim's internal IP (e.g., 192.168.1.1). The browser treats it as the same domain and thus same-origin, allowing requests to internal network resources.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/DNS_rebinding"
+  },
+  {
+    "id": "web-security-045",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What effect does setting both Cross-Origin-Embedder-Policy (COEP) and Cross-Origin-Opener-Policy (COOP) together achieve?",
+    "options": [
+      "It improves web page loading speed",
+      "It automatically deletes all cross-origin cookies",
+      "It disables CORS preflight requests",
+      "It enables cross-origin isolation, allowing safe use of high-performance APIs like SharedArrayBuffer"
+    ],
+    "correctIndex": 3,
+    "explanation": "Setting COEP: require-corp and COOP: same-origin together puts the page in a cross-origin isolated state. In this state, APIs that could be exploited for side-channel attacks like Spectre — such as SharedArrayBuffer and high-resolution performance.now() — can be safely used. You can check the isolation state via the self.crossOriginIsolated property.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Embedder-Policy"
   }
 ]
