@@ -496,5 +496,171 @@
     "correctIndex": 2,
     "explanation": "|| 연산자는 왼쪽 피연산자가 falsy이면 오른쪽을 반환합니다. 0은 falsy이므로 0 || 'none'은 'none'이 됩니다. 하지만 0은 유효한 숫자값일 수 있습니다. ?? (nullish coalescing) 연산자는 null과 undefined만 체크하므로 0 ?? 'none'은 0을 반환합니다. 이는 || 대신 ??를 사용해야 하는 대표적인 사례입니다."  ,
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing"
+  },
+  {
+    "id": "type-coercion-031",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log('6' * 2);\nconsole.log('6' / '3');\nconsole.log('abc' * 2);\nconsole.log('3' ** 2);",
+    "options": [
+      "12, 2, NaN, 9",
+      "'62', '63', NaN, '32'",
+      "12, 2, 0, 9",
+      "NaN, NaN, NaN, NaN"
+    ],
+    "correctIndex": 0,
+    "explanation": "*, /, ** 산술 연산자는 + 연산자와 달리 항상 피연산자를 숫자로 변환합니다. '6' * 2에서 '6'은 6으로 변환되어 12, '6' / '3'은 6 / 3 = 2, '3' ** 2는 9가 됩니다. 'abc'는 유효한 숫자가 아니므로 NaN으로 변환되어 NaN * 2 = NaN입니다. + 연산자만 문자열 연결도 수행하는 특수한 산술 연산자입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Multiplication"
+  },
+  {
+    "id": "type-coercion-032",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(parseFloat('3.14abc'));\nconsole.log(parseFloat('abc3.14'));\nconsole.log(parseFloat('.5'));\nconsole.log(parseFloat(''));",
+    "options": [
+      "3.14, NaN, 0.5, 0",
+      "3.14, NaN, 0.5, NaN",
+      "3.14, 3.14, 0.5, 0",
+      "NaN, NaN, NaN, NaN"
+    ],
+    "correctIndex": 1,
+    "explanation": "parseFloat()는 parseInt()처럼 문자열을 왼쪽부터 파싱하지만 소수점을 포함합니다. '3.14abc'에서 유효한 부분 3.14를 반환합니다. 'abc3.14'는 첫 문자부터 유효하지 않아 NaN입니다. '.5'는 0.5로 파싱됩니다. 빈 문자열 ''은 파싱할 수 있는 숫자가 없으므로 NaN을 반환합니다. 이는 Number('')이 0을 반환하는 것과 다른 동작입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/parseFloat"
+  },
+  {
+    "id": "type-coercion-033",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "JSON.stringify()에서 값이 자동으로 제거되거나 변환되는 경우로 올바른 것은?",
+    "options": [
+      "숫자 0은 null로 변환된다",
+      "배열은 항상 빈 배열 []로 변환된다",
+      "undefined, 함수, Symbol은 객체 프로퍼티 값일 때 해당 키가 제거되고, 배열 요소일 때 null로 변환된다",
+      "모든 값이 문자열로 변환되어 유지된다"
+    ],
+    "correctIndex": 2,
+    "explanation": "JSON.stringify()는 JSON으로 직렬화할 수 없는 값을 특수하게 처리합니다. undefined, 함수, Symbol이 객체 프로퍼티 값이면 해당 키-값 쌍이 완전히 제거됩니다. 배열 요소인 경우 null로 대체되어 배열 인덱스가 유지됩니다. 예를 들어 JSON.stringify({a: undefined, b: 1})은 '{\"b\":1}'이고, JSON.stringify([undefined, 1])은 '[null,1]'입니다. NaN과 Infinity는 null로 변환됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify"
+  },
+  {
+    "id": "type-coercion-034",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(0 | '3');\nconsole.log('5' & 3);\nconsole.log(~-1);\nconsole.log(~~3.7);",
+    "options": [
+      "3, 1, 0, 3",
+      "0, 0, -1, 3.7",
+      "'03', '53', 0, 3",
+      "3, 1, -2, 4"
+    ],
+    "correctIndex": 0,
+    "explanation": "비트 연산자(|, &, ~, ^, <<, >>)는 피연산자를 32비트 정수로 변환합니다. 0 | '3'에서 '3'은 3으로 변환되고 0 | 3 = 3입니다. '5' & 3에서 '5'는 5로 변환되고 5(101) & 3(011) = 1(001)입니다. ~-1은 비트 NOT 연산으로 ~(-1) = 0입니다(모든 비트가 1인 -1을 반전하면 0). ~~3.7은 이중 비트 NOT으로 소수점을 버리는 효과가 있어 3이 됩니다. Math.trunc()과 유사하지만 32비트 범위로 제한됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Bitwise_OR"
+  },
+  {
+    "id": "type-coercion-035",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 비교 결과가 예상과 다릅니다. 원인은 무엇인가요?",
+    "code": "const a = { name: 'test' };\nconst b = { name: 'test' };\nconsole.log(a == b);  // false\nconsole.log(a === b); // false",
+    "options": [
+      "객체의 name 프로퍼티 값이 다르기 때문",
+      "==와 ===는 객체의 내용이 아닌 참조(메모리 주소)를 비교하므로, 같은 내용이라도 서로 다른 객체이면 false이다",
+      "const로 선언된 객체는 비교할 수 없기 때문",
+      "== 연산자에서 객체를 문자열로 변환하면 같은 결과가 나오지만 버그가 발생했기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "JavaScript에서 객체(배열, 함수 포함)의 ==과 === 비교는 참조(레퍼런스) 비교입니다. 두 변수가 메모리의 같은 객체를 가리키는지 확인합니다. a와 b는 동일한 내용을 가지지만 서로 다른 객체이므로 두 비교 모두 false입니다. 내용을 비교하려면 JSON.stringify() 또는 깊은 비교(deep equality) 함수를 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-036",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "parseFloat()와 Number()의 빈 문자열 처리 차이로 올바른 것은?",
+    "options": [
+      "둘 다 빈 문자열을 0으로 변환한다",
+      "둘 다 빈 문자열을 NaN으로 변환한다",
+      "Number('')는 0을 반환하고 parseFloat('')는 NaN을 반환한다",
+      "Number('')는 NaN을 반환하고 parseFloat('')는 0을 반환한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Number()와 parseFloat()는 빈 문자열을 다르게 처리합니다. Number('')는 ECMAScript의 ToNumber 추상 연산에 의해 0을 반환합니다. parseFloat('')는 파싱할 수 있는 유효한 숫자 문자가 없으므로 NaN을 반환합니다. 공백 문자열도 동일합니다: Number(' ')는 0이지만 parseFloat(' ')는 NaN입니다. 이 차이는 사용자 입력 검증 시 중요한 고려 사항입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/parseFloat"
+  },
+  {
+    "id": "type-coercion-037",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const obj = {\n  [Symbol.toPrimitive](hint) {\n    if (hint === 'number') return 10;\n    if (hint === 'string') return 'ten';\n    return true;\n  }\n};\nconsole.log(+obj);\nconsole.log(`${obj}`);\nconsole.log(obj + 1);",
+    "options": [
+      "10, 'ten', 11",
+      "10, 'ten', 2",
+      "NaN, 'ten', 'true1'",
+      "10, '10', 11"
+    ],
+    "correctIndex": 1,
+    "explanation": "Symbol.toPrimitive가 정의되면 변환 시 hint에 따라 다른 값을 반환합니다. +obj는 hint가 'number'이므로 10을 반환합니다. `${obj}`는 hint가 'string'이므로 'ten'을 반환합니다. obj + 1은 hint가 'default'이므로 true를 반환합니다. true + 1에서 true는 숫자 1로 변환되어 1 + 1 = 2입니다. + 연산자의 hint가 'number'가 아닌 'default'라는 점이 핵심입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive"
+  },
+  {
+    "id": "type-coercion-038",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "논리 AND(&&) 연산자의 반환값에 대해 올바른 설명은?",
+    "options": [
+      "항상 true 또는 false를 반환한다",
+      "두 피연산자를 합친 값을 반환한다",
+      "왼쪽이 falsy이면 왼쪽 값을 그대로 반환하고, truthy이면 오른쪽 값을 반환한다",
+      "항상 오른쪽 피연산자를 반환한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "&& 연산자는 || 연산자와 반대로 동작합니다. 왼쪽 피연산자가 falsy이면 왼쪽 값을 그대로 반환하고(단락 평가), truthy이면 오른쪽 값을 반환합니다. 예를 들어 0 && 'hello'는 0을, 'hello' && 'world'는 'world'를 반환합니다. 불리언을 반환하는 것이 아니라 원래 값을 반환하는 것이 핵심입니다. 이 특성은 조건부 실행 패턴(condition && doSomething())에 자주 사용됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Logical_AND"
+  },
+  {
+    "id": "type-coercion-039",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 의도하지 않은 결과가 발생합니다. 원인은 무엇인가요?",
+    "code": "const date = new Date('2024-01-15');\nconsole.log(date + 1);  // 'Mon Jan 15 2024 ...1'\nconsole.log(date - 1);  // 1705276799999",
+    "options": [
+      "Date 객체는 + 연산자와 사용할 수 없기 때문",
+      "Date 객체의 + 연산은 toString()이 호출되어 문자열 연결이 되지만, - 연산은 valueOf()가 호출되어 타임스탬프 숫자 연산이 된다",
+      "Date 객체가 잘못 생성되었기 때문",
+      "+ 연산자가 날짜를 밀리초로 변환하지 못하기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "Date 객체는 ToPrimitive 변환 시 특수하게 동작합니다. 대부분의 객체는 hint가 'default'일 때 valueOf()를 먼저 호출하지만, Date 객체는 'default' hint에서 'string' hint와 동일하게 toString()을 먼저 호출합니다(@@toPrimitive가 이렇게 정의됨). 따라서 date + 1에서는 문자열 변환이 일어나 문자열 연결이 됩니다. 반면 - 연산자는 항상 ToNumber를 사용하므로 date.valueOf()가 호출되어 밀리초 타임스탬프가 반환됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Date/@@toPrimitive"
+  },
+  {
+    "id": "type-coercion-040",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "논리 할당 연산자 ??=와 ||=의 차이로 올바른 것은?",
+    "options": [
+      "둘 다 동일하게 동작한다",
+      "??=는 왼쪽이 null 또는 undefined일 때만 할당하고, ||=는 왼쪽이 falsy이면 할당한다",
+      "||=는 왼쪽이 null 또는 undefined일 때만 할당하고, ??=는 왼쪽이 falsy이면 할당한다",
+      "??=와 ||= 모두 항상 오른쪽 값을 할당한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "??= (nullish coalescing assignment)는 왼쪽 변수가 null 또는 undefined일 때만 오른쪽 값을 할당합니다. ||= (logical OR assignment)는 왼쪽 변수가 falsy(0, '', false, null, undefined, NaN)일 때 오른쪽 값을 할당합니다. 예를 들어 let x = 0; x ??= 5에서 x는 여전히 0이지만, let y = 0; y ||= 5에서 y는 5가 됩니다. ?? vs || 연산자의 차이와 동일한 논리입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_assignment"
   }
 ]

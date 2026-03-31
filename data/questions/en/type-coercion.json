@@ -496,5 +496,171 @@
     "correctIndex": 2,
     "explanation": "The || operator returns the right operand when the left operand is falsy. 0 is falsy, so 0 || 'none' returns 'none'. However, 0 can be a valid numeric value. The ?? (nullish coalescing) operator only checks for null and undefined, so 0 ?? 'none' returns 0. This is a classic case where ?? should be used instead of ||.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing"
+  },
+  {
+    "id": "type-coercion-031",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "console.log('6' * 2);\nconsole.log('6' / '3');\nconsole.log('abc' * 2);\nconsole.log('3' ** 2);",
+    "options": [
+      "12, 2, NaN, 9",
+      "'62', '63', NaN, '32'",
+      "12, 2, 0, 9",
+      "NaN, NaN, NaN, NaN"
+    ],
+    "correctIndex": 0,
+    "explanation": "The *, /, and ** arithmetic operators always convert their operands to numbers, unlike the + operator. '6' * 2 converts '6' to 6, giving 12. '6' / '3' gives 6 / 3 = 2. '3' ** 2 gives 9. 'abc' cannot be converted to a valid number, so it becomes NaN, and NaN * 2 = NaN. The + operator is the only arithmetic operator that also performs string concatenation.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Multiplication"
+  },
+  {
+    "id": "type-coercion-032",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "console.log(parseFloat('3.14abc'));\nconsole.log(parseFloat('abc3.14'));\nconsole.log(parseFloat('.5'));\nconsole.log(parseFloat(''));",
+    "options": [
+      "3.14, NaN, 0.5, 0",
+      "3.14, NaN, 0.5, NaN",
+      "3.14, 3.14, 0.5, 0",
+      "NaN, NaN, NaN, NaN"
+    ],
+    "correctIndex": 1,
+    "explanation": "parseFloat() parses strings from left to right like parseInt() but includes decimal points. '3.14abc' returns the valid portion 3.14. 'abc3.14' starts with an invalid character, so it returns NaN. '.5' is parsed as 0.5. An empty string '' has no parseable number, so it returns NaN. This differs from Number('') which returns 0.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseFloat"
+  },
+  {
+    "id": "type-coercion-033",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about automatic removal or conversion of values in JSON.stringify() is correct?",
+    "options": [
+      "The number 0 is converted to null",
+      "Arrays are always converted to empty arrays []",
+      "undefined, functions, and Symbols are removed from object properties; in arrays, they are replaced with null",
+      "All values are converted to strings and preserved"
+    ],
+    "correctIndex": 2,
+    "explanation": "JSON.stringify() specially handles values that cannot be serialized to JSON. When undefined, functions, or Symbols are object property values, the entire key-value pair is removed. When they are array elements, they are replaced with null to preserve array indices. For example, JSON.stringify({a: undefined, b: 1}) returns '{\"b\":1}', and JSON.stringify([undefined, 1]) returns '[null,1]'. NaN and Infinity are also converted to null.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify"
+  },
+  {
+    "id": "type-coercion-034",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "console.log(0 | '3');\nconsole.log('5' & 3);\nconsole.log(~-1);\nconsole.log(~~3.7);",
+    "options": [
+      "3, 1, 0, 3",
+      "0, 0, -1, 3.7",
+      "'03', '53', 0, 3",
+      "3, 1, -2, 4"
+    ],
+    "correctIndex": 0,
+    "explanation": "Bitwise operators (|, &, ~, ^, <<, >>) convert their operands to 32-bit integers. 0 | '3' converts '3' to 3 and 0 | 3 = 3. '5' & 3 converts '5' to 5 and 5(101) & 3(011) = 1(001). ~-1 is a bitwise NOT — inverting all bits of -1 (all 1s) gives 0. ~~3.7 is a double bitwise NOT which effectively truncates the decimal, yielding 3. Similar to Math.trunc() but limited to the 32-bit range.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_OR"
+  },
+  {
+    "id": "type-coercion-035",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "In the following code, the comparison result is unexpected. What is the cause?",
+    "code": "const a = { name: 'test' };\nconst b = { name: 'test' };\nconsole.log(a == b);  // false\nconsole.log(a === b); // false",
+    "options": [
+      "The name property values of the objects are different",
+      "Both == and === compare object references (memory addresses), not contents, so different objects with the same content are not equal",
+      "Objects declared with const cannot be compared",
+      "The == operator converts objects to strings which should match, but a bug occurred"
+    ],
+    "correctIndex": 1,
+    "explanation": "In JavaScript, == and === comparisons for objects (including arrays and functions) are reference comparisons. They check if two variables point to the same object in memory. a and b have identical contents but are different objects, so both comparisons return false. To compare contents, use JSON.stringify() or a deep equality function.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-036",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about how parseFloat() and Number() handle empty strings is correct?",
+    "options": [
+      "Both convert empty strings to 0",
+      "Both convert empty strings to NaN",
+      "Number('') returns 0 and parseFloat('') returns NaN",
+      "Number('') returns NaN and parseFloat('') returns 0"
+    ],
+    "correctIndex": 2,
+    "explanation": "Number() and parseFloat() handle empty strings differently. Number('') returns 0 per the ECMAScript ToNumber abstract operation. parseFloat('') returns NaN because there are no valid numeric characters to parse. The same applies to whitespace strings: Number(' ') is 0 but parseFloat(' ') is NaN. This difference is an important consideration when validating user input.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseFloat"
+  },
+  {
+    "id": "type-coercion-037",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  [Symbol.toPrimitive](hint) {\n    if (hint === 'number') return 10;\n    if (hint === 'string') return 'ten';\n    return true;\n  }\n};\nconsole.log(+obj);\nconsole.log(`${obj}`);\nconsole.log(obj + 1);",
+    "options": [
+      "10, 'ten', 11",
+      "10, 'ten', 2",
+      "NaN, 'ten', 'true1'",
+      "10, '10', 11"
+    ],
+    "correctIndex": 1,
+    "explanation": "When Symbol.toPrimitive is defined, it returns different values depending on the hint. +obj has a 'number' hint, so it returns 10. `${obj}` has a 'string' hint, so it returns 'ten'. obj + 1 has a 'default' hint, so it returns true. In true + 1, true is converted to the number 1, giving 1 + 1 = 2. The key insight is that the + operator's hint is 'default', not 'number'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive"
+  },
+  {
+    "id": "type-coercion-038",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the return value of the logical AND (&&) operator is correct?",
+    "options": [
+      "It always returns true or false",
+      "It returns the combined value of both operands",
+      "If the left operand is falsy, it returns the left value as-is; if truthy, it returns the right value",
+      "It always returns the right operand"
+    ],
+    "correctIndex": 2,
+    "explanation": "The && operator works opposite to ||. If the left operand is falsy, it returns the left value (short-circuit evaluation); if truthy, it returns the right value. For example, 0 && 'hello' returns 0, and 'hello' && 'world' returns 'world'. The key point is that it returns the original value, not a boolean. This behavior is commonly used in conditional execution patterns (condition && doSomething()).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_AND"
+  },
+  {
+    "id": "type-coercion-039",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In the following code, unexpected results occur. What is the cause?",
+    "code": "const date = new Date('2024-01-15');\nconsole.log(date + 1);  // 'Mon Jan 15 2024 ...1'\nconsole.log(date - 1);  // 1705276799999",
+    "options": [
+      "Date objects cannot be used with the + operator",
+      "The + operation on Date calls toString() resulting in string concatenation, while the - operation calls valueOf() resulting in timestamp arithmetic",
+      "The Date object was created incorrectly",
+      "The + operator cannot convert dates to milliseconds"
+    ],
+    "correctIndex": 1,
+    "explanation": "Date objects behave specially during ToPrimitive conversion. Most objects call valueOf() first when the hint is 'default', but Date objects call toString() first for the 'default' hint (this is how @@toPrimitive is defined for Date). So date + 1 results in string concatenation. The - operator always uses ToNumber, so date.valueOf() is called, returning the millisecond timestamp.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/@@toPrimitive"
+  },
+  {
+    "id": "type-coercion-040",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the difference between the logical assignment operators ??= and ||= is correct?",
+    "options": [
+      "Both behave identically",
+      "??= assigns only when the left side is null or undefined, while ||= assigns when the left side is falsy",
+      "||= assigns only when the left side is null or undefined, while ??= assigns when the left side is falsy",
+      "Both ??= and ||= always assign the right-hand value"
+    ],
+    "correctIndex": 1,
+    "explanation": "??= (nullish coalescing assignment) assigns the right-hand value only when the left variable is null or undefined. ||= (logical OR assignment) assigns when the left variable is falsy (0, '', false, null, undefined, NaN). For example, let x = 0; x ??= 5 — x remains 0, but let y = 0; y ||= 5 — y becomes 5. This follows the same logic as the ?? vs || operator difference.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_assignment"
   }
 ]

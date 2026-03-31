@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 10 react-basics questions (`00a7572`)
 - **content**: add 10 network questions (`7534cc5`)
 - **content**: add 10 this questions (`1c80033`)
 - **content**: fix — scope-034 factual error & correctIndex ... (`d5db7fe`)
