@@ -628,5 +628,170 @@
     "correctIndex": 0,
     "explanation": "The 'key' in obj operator checks for property existence across the entire prototype chain. obj.hasOwnProperty('key') ignores the prototype and checks only the object's own properties. For example, with const obj = {}, 'toString' in obj is true (inherited from Object.prototype), but obj.hasOwnProperty('toString') is false.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/in"
+  },
+  {
+    "id": "prototype-039",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which object sits at the very top of the prototype chain for all ordinary objects?",
+    "options": [
+      "Object.prototype",
+      "Function.prototype",
+      "globalThis",
+      "null"
+    ],
+    "correctIndex": 0,
+    "explanation": "The prototype chain of ordinary objects ends at Object.prototype. Its [[Prototype]] is null, making it the last reachable prototype object in the chain. Common methods like toString() and hasOwnProperty() are defined here, which is why they are available on all objects.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain"
+  },
+  {
+    "id": "prototype-040",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function Foo() {}\nconst f = new Foo();\nconsole.log(Object.getPrototypeOf(f) === Foo.prototype);\nconsole.log(Object.getPrototypeOf(Foo.prototype) === Object.prototype);\nconsole.log(Object.getPrototypeOf(Object.prototype));",
+    "options": [
+      "true, true, Object",
+      "true, false, null",
+      "false, true, null",
+      "true, true, null"
+    ],
+    "correctIndex": 3,
+    "explanation": "The [[Prototype]] of f (created via new Foo()) is Foo.prototype. Foo.prototype is a plain object, so its [[Prototype]] is Object.prototype. Object.prototype is the top of the chain, and its [[Prototype]] is null — this is the termination condition for prototype chain traversal.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getPrototypeOf"
+  },
+  {
+    "id": "prototype-041",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The following code throws a TypeError. What is the cause?",
+    "code": "const a = {};\nconst b = {};\nObject.setPrototypeOf(a, b);\nObject.setPrototypeOf(b, a); // TypeError",
+    "options": [
+      "Circular prototype chains are forbidden — the engine throws TypeError to prevent infinite loops",
+      "setPrototypeOf cannot be called twice in a row",
+      "Empty objects cannot be used as prototypes",
+      "a and b were created by the same constructor"
+    ],
+    "correctIndex": 0,
+    "explanation": "JavaScript engines do not allow circular prototype chains. If a cycle like a → b → a were formed, property lookups would loop infinitely. Object.setPrototypeOf() detects cycles and immediately throws a TypeError. This is a safety mechanism mandated by the ECMAScript specification.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf"
+  },
+  {
+    "id": "prototype-042",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between Object.create(proto) and new Constructor()?",
+    "options": [
+      "Object.create is only available in ES6, while new works in all versions",
+      "Both create objects in the same way",
+      "new does not create a prototype chain",
+      "Object.create sets only the prototype without running a constructor, while new runs the constructor and links the prototype"
+    ],
+    "correctIndex": 3,
+    "explanation": "Object.create(proto) creates a new empty object with the given object as its prototype. No constructor function is executed. new Constructor() executes the Constructor function to initialize this, and sets Constructor.prototype as the new object's prototype. Object.create is useful when you want to set up only the prototype relationship without initialization logic.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create"
+  },
+  {
+    "id": "prototype-043",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const proto = {};\nObject.defineProperty(proto, 'x', {\n  value: 10,\n  writable: false\n});\nconst child = Object.create(proto);\nchild.x = 20;\nconsole.log(child.x);\nconsole.log(child.hasOwnProperty('x'));",
+    "options": [
+      "20, true",
+      "10, false",
+      "20, false",
+      "TypeError is thrown"
+    ],
+    "correctIndex": 1,
+    "explanation": "When a prototype has a property defined with writable: false, descendant objects cannot create an own property with the same name. In non-strict mode, the assignment child.x = 20 is silently ignored; in strict mode, it throws a TypeError. As a result, no own property x is created on child, so the prototype's value 10 is returned and hasOwnProperty returns false.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty"
+  },
+  {
+    "id": "prototype-044",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "When does prototype chain property lookup terminate?",
+    "options": [
+      "It stops immediately upon reaching Object.prototype",
+      "It traverses until reaching an object whose [[Prototype]] is null, then returns undefined",
+      "It searches up to a maximum of 10 levels",
+      "It throws a ReferenceError if the property is not found"
+    ],
+    "correctIndex": 1,
+    "explanation": "Prototype chain traversal moves from one object to the next via the [[Prototype]] link when a property is not found. This continues until an object with [[Prototype]] equal to null is reached. Typically, Object.prototype's [[Prototype]] is null, so lookup ends there. If the property is not found, undefined is returned. ReferenceError is thrown for undefined variable references, not property accesses.",
+    "sourceUrl": "https://javascript.info/prototype-inheritance"
+  },
+  {
+    "id": "prototype-045",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function F() {}\nF.prototype = null;\nconst obj = new F();\nconsole.log(Object.getPrototypeOf(obj) === null);\nconsole.log(obj instanceof F);",
+    "options": [
+      "true, true",
+      "null, TypeError",
+      "false, TypeError",
+      "true, false"
+    ],
+    "correctIndex": 2,
+    "explanation": "When F.prototype is set to null (a non-object), the new operator ignores it and falls back to using Object.prototype as the prototype. So Object.getPrototypeOf(obj) is Object.prototype, not null — hence false. For instanceof, the OrdinaryHasInstance spec requires F.prototype to be an object. Since F.prototype is null, instanceof throws a TypeError rather than returning a boolean.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new"
+  },
+  {
+    "id": "prototype-046",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "How can you make obj + '' return a custom string instead of '[object Object]'?",
+    "code": "function MyType(val) { this.val = val; }\nconst obj = new MyType(42);\nconsole.log(obj + ''); // '[object Object]'",
+    "options": [
+      "Define a toString method on MyType.prototype that returns the desired string",
+      "Define a toJSON method on MyType.prototype",
+      "Use Object.defineProperty to change obj's type to string",
+      "Modify String.prototype to add conversion logic"
+    ],
+    "correctIndex": 0,
+    "explanation": "When an object is concatenated with a string using +, JavaScript calls the object's toString() method. By default, Object.prototype.toString() returns '[object Object]'. Defining toString on MyType.prototype makes it appear earlier in the prototype chain than Object.prototype.toString, allowing you to return a custom string. This is prototype-based method overriding in action.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString"
+  },
+  {
+    "id": "prototype-047",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is a key difference between Object.create-based inheritance and class extends inheritance?",
+    "options": [
+      "Object.create does not create a prototype chain",
+      "class extends does not inherit static methods",
+      "Both create identical prototype chains with no differences",
+      "class extends sets up both the instance prototype chain and a [[Prototype]] link between constructors, enabling static method inheritance"
+    ],
+    "correctIndex": 3,
+    "explanation": "Traditional inheritance using B.prototype = Object.create(A.prototype) only sets up the instance prototype chain. class B extends A sets up two chains simultaneously: B.prototype → A.prototype (for instance methods) and B → A (for static methods). This means static methods defined on A are also accessible via B when using class extends.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/extends"
+  },
+  {
+    "id": "prototype-048",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What property exists by default on a constructor function's prototype object?",
+    "options": [
+      "constructor — a reference pointing back to the constructor function itself",
+      "__proto__ — a reference to the parent prototype",
+      "name — the constructor function's name string",
+      "length — a number representing the prototype chain depth"
+    ],
+    "correctIndex": 0,
+    "explanation": "When a function is defined, a prototype object is automatically created with a constructor property that points back to the function itself. For example, after function Foo() {}, Foo.prototype.constructor === Foo. This allows instances to reference their constructor via instance.constructor.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/constructor"
   }
 ]

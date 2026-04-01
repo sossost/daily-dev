@@ -197,7 +197,7 @@
 - network.json — 40 questions
 - nodejs.json — 40 questions
 - promise.json — 48 questions
-- prototype.json — 38 questions
+- prototype.json — 48 questions
 - react-basics.json — 40 questions
 - scope.json — 40 questions
 - this.json — 40 questions
@@ -220,7 +220,7 @@
 - network.json — 40 questions
 - nodejs.json — 40 questions
 - promise.json — 48 questions
-- prototype.json — 38 questions
+- prototype.json — 48 questions
 - react-basics.json — 40 questions
 - scope.json — 40 questions
 - this.json — 40 questions
