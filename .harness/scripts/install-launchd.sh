@@ -60,5 +60,5 @@ echo "Plist written to ${PLIST_PATH}"
 launchctl bootstrap "gui/$(id -u)" "${PLIST_PATH}"
 
 echo "LaunchAgent installed and started: ${PLIST_NAME}"
-echo "  Interval: every 3600 seconds (1 hour)"
+echo "  Schedule: twice daily at 10:00 and 22:00"
 echo "  Logs: ${HARNESS_DIR}/logs/"
