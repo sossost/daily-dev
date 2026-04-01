@@ -650,5 +650,168 @@
     "correctIndex": 0,
     "explanation": "Media Query는 viewport(브라우저 창)의 크기를 기준으로 스타일을 조건부 적용합니다. Container Query(@container)는 가장 가까운 containment context(container-type이 설정된 조상)의 크기를 기준으로 스타일을 적용합니다. 이를 통해 컴포넌트가 배치된 위치에 따라 반응하는 진정한 컴포넌트 기반 반응형 디자인이 가능합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/CSS_containment/Container_queries"
+  },
+  {
+    "id": "css-layout-041",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "CSS clamp() 함수의 역할로 올바른 것은?",
+    "options": [
+      "요소의 크기를 고정값으로 설정한다",
+      "최솟값, 선호값, 최댓값을 지정하여 반응형 크기를 한 줄로 표현한다",
+      "미디어 쿼리를 대체하여 브레이크포인트를 설정한다",
+      "calc()와 동일하게 단순 사칙연산만 수행한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "clamp(min, preferred, max)는 선호값(preferred)을 기본으로 사용하되, 최솟값(min)보다 작아지지 않고 최댓값(max)보다 커지지 않도록 제한합니다. 예를 들어 clamp(1rem, 2.5vw, 2rem)은 뷰포트에 따라 유동적이면서도 최소/최대 크기가 보장되어 반응형 타이포그래피에 매우 유용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/clamp"
+  },
+  {
+    "id": "css-layout-042",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 CSS에서 .box의 너비는 어떻게 결정되는가?",
+    "code": ".box {\n  width: min-content;\n  background: lightblue;\n}\n/* .box 안에 'Hello World'라는 텍스트가 있음 */",
+    "options": [
+      "가장 긴 단어('Hello' 또는 'World')의 너비에 맞춰진다",
+      "텍스트 전체('Hello World')를 한 줄에 표시할 수 있는 너비가 된다",
+      "부모 요소의 100% 너비를 차지한다",
+      "콘텐츠와 무관하게 0px이 된다"
+    ],
+    "correctIndex": 0,
+    "explanation": "width: min-content는 콘텐츠가 오버플로우 없이 표시될 수 있는 가장 작은 너비를 사용합니다. 텍스트의 경우 단어 단위로 줄바꿈이 되므로 가장 긴 단어의 너비가 요소의 너비가 됩니다. max-content는 반대로 줄바꿈 없이 콘텐츠를 한 줄에 표시하는 너비입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/min-content"
+  },
+  {
+    "id": "css-layout-043",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "position: fixed 요소가 viewport가 아닌 특정 부모 요소 기준으로 위치가 결정됩니다. 가장 가능한 원인은?",
+    "options": [
+      "부모에 position: relative가 설정되어 있어서",
+      "부모에 z-index가 설정되어 있어서",
+      "부모에 transform, filter, 또는 will-change 속성이 설정되어 있어서",
+      "부모에 overflow: hidden이 설정되어 있어서"
+    ],
+    "correctIndex": 2,
+    "explanation": "CSS 사양에 따르면 transform, perspective, filter, backdrop-filter, will-change(이 속성들 중 하나를 참조) 등이 설정된 요소는 새로운 containing block을 생성합니다. 이 경우 position: fixed인 자식은 viewport가 아닌 해당 조상을 기준으로 위치가 결정됩니다. 이는 모달이나 고정 헤더 구현 시 흔히 만나는 문제입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/Containing_block"
+  },
+  {
+    "id": "css-layout-044",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "CSS 논리적 속성(logical properties)과 물리적 속성의 차이점으로 올바른 것은?",
+    "options": [
+      "논리적 속성은 항상 왼쪽에서 오른쪽 방향으로만 적용된다",
+      "물리적 속성은 브라우저마다 다르게 해석된다",
+      "둘은 동일한 속성의 다른 이름이며 동작에 차이가 없다",
+      "논리적 속성은 writing-mode와 direction에 따라 방향이 자동으로 변경되고, 물리적 속성은 항상 고정된 방향이다"
+    ],
+    "correctIndex": 3,
+    "explanation": "margin-left, padding-top 같은 물리적 속성은 항상 물리적 방향(상하좌우)을 가리킵니다. margin-inline-start, padding-block-end 같은 논리적 속성은 writing-mode(가로/세로 쓰기)와 direction(LTR/RTL)에 따라 실제 방향이 결정됩니다. 다국어 지원이 필요한 경우 논리적 속성을 사용하면 RTL 레이아웃을 별도로 작성하지 않아도 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/CSS_logical_properties_and_values"
+  },
+  {
+    "id": "css-layout-045",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드에서 3개의 200px 너비 아이템이 400px 컨테이너에 배치되면 어떻게 되는가?",
+    "code": ".container {\n  display: flex;\n  width: 400px;\n  /* flex-wrap 기본값: nowrap */\n}\n.item {\n  width: 200px;\n  flex-shrink: 1;\n}",
+    "options": [
+      "아이템이 200px를 유지하고 컨테이너를 넘친다",
+      "3개 아이템이 균등하게 축소되어 약 133px씩 한 줄에 배치된다",
+      "세 번째 아이템이 다음 줄로 넘어간다",
+      "컨테이너가 600px로 자동 확장된다"
+    ],
+    "correctIndex": 1,
+    "explanation": "flex-wrap의 기본값은 nowrap이므로 아이템은 한 줄에 배치됩니다. 총 너비(600px)가 컨테이너(400px)보다 크므로, flex-shrink: 1에 의해 부족분 200px이 3개 아이템에 균등하게 분배되어 각각 약 133px로 축소됩니다. width 대신 flex-basis가 사용되지만 결과는 동일합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/flex-wrap"
+  },
+  {
+    "id": "css-layout-046",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "CSS Grid의 subgrid 기능이 해결하는 문제로 올바른 것은?",
+    "options": [
+      "중첩된 그리드 아이템이 부모 그리드의 트랙 라인에 정렬될 수 있게 한다",
+      "그리드 아이템의 z-index를 자동으로 설정한다",
+      "그리드 컨테이너의 반응형 브레이크포인트를 자동 생성한다",
+      "그리드와 플렉스박스를 혼합하여 사용할 수 있게 한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "subgrid는 중첩된 그리드가 부모 그리드의 트랙(행 또는 열) 정의를 상속받도록 합니다. 이를 통해 카드 리스트 같은 UI에서 각 카드 내부의 헤더, 본문, 푸터가 부모 그리드의 행 라인에 맞춰 정렬됩니다. grid-template-columns: subgrid 또는 grid-template-rows: subgrid로 사용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/CSS_grid_layout/Subgrid"
+  },
+  {
+    "id": "css-layout-047",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드에서 .overlay의 z-index 동작은?",
+    "code": ".parent {\n  position: relative;\n  isolation: isolate;\n}\n.overlay {\n  position: absolute;\n  z-index: 100;\n}\n/* .parent 외부에 z-index: 50인 요소가 있음 */",
+    "options": [
+      ".overlay가 z-index: 100이므로 외부 요소(z-index: 50) 위에 표시된다",
+      ".overlay는 항상 모든 요소 위에 표시된다",
+      ".parent가 새로운 stacking context를 생성하므로 .overlay의 z-index는 .parent 범위 내에서만 유효하다",
+      "isolation: isolate는 z-index에 영향을 주지 않는다"
+    ],
+    "correctIndex": 2,
+    "explanation": "isolation: isolate는 요소에 새로운 stacking context를 명시적으로 생성합니다. 이로 인해 .overlay의 z-index: 100은 .parent 내부에서만 유효하며, 외부 요소와의 z-index 비교 시에는 .parent의 z-index(기본값 auto → 0)가 기준이 됩니다. isolation은 opacity나 transform 부작용 없이 stacking context를 제어할 때 사용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/isolation"
+  },
+  {
+    "id": "css-layout-048",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "자식 요소에 height: 50%를 설정했는데 높이가 적용되지 않습니다. 원인은?",
+    "options": [
+      "퍼센트 높이는 CSS에서 지원하지 않는다",
+      "자식 요소에 display: block이 설정되지 않았다",
+      "자식 요소의 콘텐츠가 비어 있어서 0%가 되었다",
+      "부모 요소에 명시적 height가 설정되어 있지 않아 퍼센트 계산의 기준이 없다"
+    ],
+    "correctIndex": 3,
+    "explanation": "CSS에서 퍼센트(%) 높이는 부모 요소의 높이를 기준으로 계산됩니다. 부모에 명시적 height(px, vh 등)가 설정되지 않으면 기준값이 undefined로 취급되어 퍼센트 높이가 무시됩니다. 이를 해결하려면 부모에 height를 명시하거나, html과 body에 height: 100%를 설정하여 기준 체인을 만들어야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/height"
+  },
+  {
+    "id": "css-layout-049",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "CSS 크기 키워드 min-content, max-content, fit-content의 차이점으로 올바른 것은?",
+    "options": [
+      "세 값 모두 부모 너비의 퍼센트를 다르게 계산한다",
+      "min-content는 가장 긴 단어 너비, max-content는 줄바꿈 없는 전체 콘텐츠 너비, fit-content는 max-content와 가용 공간 중 작은 값이다",
+      "max-content가 가장 작고 min-content가 가장 크다",
+      "fit-content는 항상 부모의 50% 너비를 차지한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "min-content는 콘텐츠가 오버플로우 없이 표시될 수 있는 최소 너비(텍스트의 경우 가장 긴 단어 기준)입니다. max-content는 줄바꿈 없이 콘텐츠를 표시하는 데 필요한 너비입니다. fit-content는 max-content와 가용 공간(available space) 중 작은 값을 선택하되, min-content보다는 크게 유지합니다. 즉 fit-content = min(max-content, max(min-content, available space))입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/fit-content"
+  },
+  {
+    "id": "css-layout-050",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "CSS Multi-column Layout(columns 속성)의 주요 용도로 올바른 것은?",
+    "options": [
+      "텍스트 콘텐츠를 신문 스타일의 여러 세로 컬럼으로 자동 분배한다",
+      "그리드와 동일하게 2차원 레이아웃을 생성한다",
+      "플렉스박스를 대체하여 가로 정렬을 수행한다",
+      "각 컬럼에 서로 다른 배경색을 적용한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "CSS Multi-column Layout은 column-count나 column-width를 사용하여 텍스트 콘텐츠를 여러 세로 컬럼으로 자동 분배합니다. 신문이나 잡지 스타일의 레이아웃에 적합하며, column-gap으로 컬럼 간격을, column-rule로 구분선을 설정할 수 있습니다. Grid나 Flexbox와 달리 콘텐츠 흐름을 자동으로 분배하는 것이 특징입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/CSS_multicol_layout"
   }
 ]

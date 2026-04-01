@@ -650,5 +650,168 @@
     "correctIndex": 0,
     "explanation": "Media Queries conditionally apply styles based on the viewport (browser window) size. Container Queries (@container) apply styles based on the size of the nearest containment context (an ancestor with container-type set). This enables truly component-based responsive design where components respond based on where they are placed.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries"
+  },
+  {
+    "id": "css-layout-041",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct role of the CSS clamp() function?",
+    "options": [
+      "It sets an element's size to a fixed value",
+      "It defines a responsive size in a single expression using a minimum, preferred, and maximum value",
+      "It replaces media queries to set breakpoints",
+      "It performs only simple arithmetic operations like calc()"
+    ],
+    "correctIndex": 1,
+    "explanation": "clamp(min, preferred, max) uses the preferred value by default, but ensures it never goes below the minimum or above the maximum. For example, clamp(1rem, 2.5vw, 2rem) scales fluidly with the viewport while guaranteeing minimum and maximum sizes, making it extremely useful for responsive typography.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/clamp"
+  },
+  {
+    "id": "css-layout-042",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "How is the width of .box determined in the following CSS?",
+    "code": ".box {\n  width: min-content;\n  background: lightblue;\n}\n/* .box contains the text 'Hello World' */",
+    "options": [
+      "It matches the width of the longest word ('Hello' or 'World')",
+      "It becomes wide enough to display the entire text ('Hello World') on one line",
+      "It takes up 100% of the parent element's width",
+      "It becomes 0px regardless of content"
+    ],
+    "correctIndex": 0,
+    "explanation": "width: min-content uses the smallest width at which the content can be displayed without overflow. For text, line breaks occur at word boundaries, so the element's width equals the width of the longest word. max-content is the opposite — it uses the width needed to display content on a single line without any line breaks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/min-content"
+  },
+  {
+    "id": "css-layout-043",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "A position: fixed element is being positioned relative to a specific parent element instead of the viewport. What is the most likely cause?",
+    "options": [
+      "The parent has position: relative set",
+      "The parent has z-index set",
+      "The parent has a transform, filter, or will-change property set",
+      "The parent has overflow: hidden set"
+    ],
+    "correctIndex": 2,
+    "explanation": "According to the CSS specification, elements with transform, perspective, filter, backdrop-filter, or will-change (referencing one of these properties) create a new containing block. In this case, a position: fixed child is positioned relative to that ancestor instead of the viewport. This is a common issue encountered when implementing modals or fixed headers.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block"
+  },
+  {
+    "id": "css-layout-044",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between CSS logical properties and physical properties?",
+    "options": [
+      "Logical properties always apply in a left-to-right direction",
+      "Physical properties are interpreted differently across browsers",
+      "Both are different names for the same properties with no behavioral difference",
+      "Logical properties automatically change direction based on writing-mode and direction, while physical properties always reference fixed directions"
+    ],
+    "correctIndex": 3,
+    "explanation": "Physical properties like margin-left and padding-top always refer to physical directions (top, right, bottom, left). Logical properties like margin-inline-start and padding-block-end change their actual direction based on writing-mode (horizontal/vertical) and direction (LTR/RTL). Using logical properties for multilingual support eliminates the need to write separate RTL layouts.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values"
+  },
+  {
+    "id": "css-layout-045",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What happens when three 200px-wide items are placed in a 400px container in the following code?",
+    "code": ".container {\n  display: flex;\n  width: 400px;\n  /* flex-wrap default: nowrap */\n}\n.item {\n  width: 200px;\n  flex-shrink: 1;\n}",
+    "options": [
+      "Items maintain 200px width and overflow the container",
+      "All 3 items shrink equally to about 133px each and fit on one line",
+      "The third item wraps to the next line",
+      "The container automatically expands to 600px"
+    ],
+    "correctIndex": 1,
+    "explanation": "The default value of flex-wrap is nowrap, so items are placed on a single line. Since the total width (600px) exceeds the container (400px), flex-shrink: 1 distributes the 200px deficit equally among the 3 items, shrinking each to approximately 133px. flex-basis is used instead of width in flex calculations, but the result is the same.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap"
+  },
+  {
+    "id": "css-layout-046",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What problem does the CSS Grid subgrid feature solve?",
+    "options": [
+      "It allows nested grid items to align with the parent grid's track lines",
+      "It automatically sets the z-index of grid items",
+      "It auto-generates responsive breakpoints for grid containers",
+      "It enables mixing grid and flexbox together"
+    ],
+    "correctIndex": 0,
+    "explanation": "subgrid allows a nested grid to inherit the track (row or column) definitions of its parent grid. This enables UI patterns like card lists where the header, body, and footer within each card align with the parent grid's row lines. It is used as grid-template-columns: subgrid or grid-template-rows: subgrid.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Subgrid"
+  },
+  {
+    "id": "css-layout-047",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "How does .overlay's z-index behave in the following code?",
+    "code": ".parent {\n  position: relative;\n  isolation: isolate;\n}\n.overlay {\n  position: absolute;\n  z-index: 100;\n}\n/* An element with z-index: 50 exists outside .parent */",
+    "options": [
+      ".overlay appears above the external element (z-index: 50) because its z-index is 100",
+      ".overlay always appears above all elements",
+      ".parent creates a new stacking context, so .overlay's z-index is only effective within .parent's scope",
+      "isolation: isolate does not affect z-index"
+    ],
+    "correctIndex": 2,
+    "explanation": "isolation: isolate explicitly creates a new stacking context on the element. Because of this, .overlay's z-index: 100 is only effective within .parent, and when compared with external elements, .parent's z-index (default auto → 0) is used as the reference. isolation is used to control stacking contexts without the side effects of opacity or transform.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/isolation"
+  },
+  {
+    "id": "css-layout-048",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "height: 50% is set on a child element, but the height is not being applied. What is the cause?",
+    "options": [
+      "Percentage heights are not supported in CSS",
+      "display: block is not set on the child element",
+      "The child element's content is empty so it becomes 0%",
+      "The parent element has no explicit height set, so there is no reference for the percentage calculation"
+    ],
+    "correctIndex": 3,
+    "explanation": "In CSS, percentage heights are calculated based on the parent element's height. If the parent does not have an explicit height (px, vh, etc.), the reference value is treated as undefined and the percentage height is ignored. To fix this, you need to set an explicit height on the parent, or establish a height chain by setting height: 100% on html and body.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/height"
+  },
+  {
+    "id": "css-layout-049",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference between the CSS sizing keywords min-content, max-content, and fit-content?",
+    "options": [
+      "All three calculate different percentages of the parent width",
+      "min-content is the longest word width, max-content is the full content width without line breaks, and fit-content is the smaller of max-content and available space",
+      "max-content is the smallest and min-content is the largest",
+      "fit-content always takes up 50% of the parent's width"
+    ],
+    "correctIndex": 1,
+    "explanation": "min-content is the minimum width at which content can be displayed without overflow (for text, based on the longest word). max-content is the width needed to display content without any line breaks. fit-content selects the smaller of max-content and available space, but never goes below min-content. In other words, fit-content = min(max-content, max(min-content, available space)).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/fit-content"
+  },
+  {
+    "id": "css-layout-050",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the primary use of CSS Multi-column Layout (the columns property)?",
+    "options": [
+      "It automatically distributes text content into multiple vertical columns in a newspaper-style layout",
+      "It creates a two-dimensional layout identical to grid",
+      "It replaces flexbox for horizontal alignment",
+      "It applies different background colors to each column"
+    ],
+    "correctIndex": 0,
+    "explanation": "CSS Multi-column Layout uses column-count or column-width to automatically distribute text content across multiple vertical columns. It is ideal for newspaper or magazine-style layouts. column-gap sets the spacing between columns, and column-rule adds separator lines. Unlike Grid or Flexbox, its distinguishing feature is the automatic distribution of content flow.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_multicol_layout"
   }
 ]
