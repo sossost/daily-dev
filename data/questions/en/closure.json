@@ -662,5 +662,170 @@
     "correctIndex": 0,
     "explanation": "Closure singletons hide the instance inside an IIFE and expose it through getInstance(). This pattern was useful before ES6 when there was no module scope. ES6 modules are evaluated only once by the runtime, so an instance created at the module's top level and exported is shared across all imports. The ES6 module approach is more concise and also benefits from static analysis by build tools.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules"
+  },
+  {
+    "id": "closure-041",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "function makePrefix(prefix) {\n  return function(str) {\n    return prefix + str;\n  };\n}\nconst addDr = makePrefix('Dr. ');\nconst addMr = makePrefix('Mr. ');\nconsole.log(addDr('Kim'));\nconsole.log(addMr('Lee'));",
+    "options": [
+      "Dr. Kim / Mr. Lee",
+      "Mr. Kim / Mr. Lee",
+      "Dr. Lee / Mr. Kim",
+      "undefined / undefined"
+    ],
+    "correctIndex": 0,
+    "explanation": "makePrefix('Dr. ') returns a function that captures prefix='Dr. ' via closure. makePrefix('Mr. ') creates a separate lexical environment capturing prefix='Mr. '. Each function has its own independent closure, so addDr('Kim') returns 'Dr. Kim' and addMr('Lee') returns 'Mr. Lee'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-042",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function createAccumulator(initial) {\n  let total = initial;\n  return {\n    add(n) { total += n; return total; },\n    reset() { total = initial; }\n  };\n}\nconst acc = createAccumulator(10);\nconsole.log(acc.add(5));\nconsole.log(acc.add(3));\nacc.reset();\nconsole.log(acc.add(1));",
+    "options": [
+      "15, 18, 1",
+      "15, 18, 11",
+      "5, 8, 1",
+      "15, 18, 10"
+    ],
+    "correctIndex": 1,
+    "explanation": "createAccumulator(10) captures total=10 and initial=10 in its closure. add(5) makes total 15, add(3) makes it 18. reset() sets total back to the initial value (10). Then add(1) returns 10+1=11. The initial parameter is also captured in the closure and available for reset to use.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-043",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the relationship between closures and Array.prototype.map is correct?",
+    "options": [
+      "The map callback cannot form a closure",
+      "When the map callback references a variable from the enclosing scope, a closure is formed allowing access to that variable",
+      "map automatically releases the callback's closure",
+      "The map callback can only reference global variables"
+    ],
+    "correctIndex": 1,
+    "explanation": "The callback passed to Array.prototype.map follows the same lexical scoping rules as any regular function. When the callback references a variable from the enclosing scope, a closure is formed. For example, in const factor = 2; [1,2,3].map(n => n * factor), the arrow function captures factor via closure.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map"
+  },
+  {
+    "id": "closure-044",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the closure-related issue in the following async code?",
+    "code": "function fetchAll(urls) {\n  const results = [];\n  for (var i = 0; i < urls.length; i++) {\n    fetch(urls[i]).then(res => {\n      results[i] = res.status;\n    });\n  }\n  return results;\n}",
+    "options": [
+      "fetch executes synchronously so there is no issue",
+      "The results array is const so it cannot be modified",
+      "fetch does not return a Promise",
+      "var i is function-scoped so all then callbacks reference the same i (urls.length), storing values only at the last index"
+    ],
+    "correctIndex": 3,
+    "explanation": "The i declared with var is function-scoped, so only one i exists for the entire loop. The then callbacks execute asynchronously, and by the time they run, i has already reached urls.length. All callbacks therefore write to results[urls.length]. Switching to let or using Promise.all with map correctly captures each iteration's index.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-045",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the relationship between pure functions and closures in functional programming is correct?",
+    "options": [
+      "Using closures always results in a pure function",
+      "Pure functions cannot use closures",
+      "A closure that only reads (not modifies) captured outer variables can be a pure function, but modifying them breaks purity",
+      "Pure functions and closures are completely unrelated concepts"
+    ],
+    "correctIndex": 2,
+    "explanation": "A pure function always returns the same output for the same input and has no side effects. If a closure only reads captured variables without modifying them (especially const-declared values), referential transparency is maintained and the function can be pure. However, modifying captured variables introduces side effects, breaking purity.",
+    "sourceUrl": "https://javascript.info/closure"
+  },
+  {
+    "id": "closure-046",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function pipe(...fns) {\n  return function(x) {\n    return fns.reduce((acc, fn) => fn(acc), x);\n  };\n}\nconst transform = pipe(\n  x => x + 1,\n  x => x * 3,\n  x => x - 2\n);\nconsole.log(transform(5));",
+    "options": [
+      "14",
+      "16",
+      "18",
+      "12"
+    ],
+    "correctIndex": 1,
+    "explanation": "The pipe function captures the array of functions (fns) via closure and passes the input value through them from left to right. transform(5) first computes 5+1=6, then 6*3=18, then 18-2=16. The fns array is captured in the closure, so transform executes the same pipeline on every call.",
+    "sourceUrl": "https://javascript.info/closure"
+  },
+  {
+    "id": "closure-047",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about try-catch blocks and closures is correct?",
+    "options": [
+      "Closures cannot be formed inside try-catch blocks",
+      "The catch block's error parameter is block-scoped and cannot be captured by closures outside the block",
+      "try-catch resets the closure's scope chain",
+      "let/const variables declared in a try block can be captured via closure by functions defined within that block"
+    ],
+    "correctIndex": 3,
+    "explanation": "A try block creates block scope, so let/const variables declared inside are only valid within that block. Functions defined inside the block that reference these variables form closures. The catch block's error parameter (optional since ES2019) is also block-scoped, and functions defined within catch can capture it via closure.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch"
+  },
+  {
+    "id": "closure-048",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the following throttle implementation not work correctly?",
+    "code": "function throttle(fn, limit) {\n  return function(...args) {\n    let lastCall = 0;\n    const now = Date.now();\n    if (now - lastCall >= limit) {\n      lastCall = now;\n      fn(...args);\n    }\n  };\n}",
+    "options": [
+      "Date.now() is inaccurate",
+      "fn(...args) executes asynchronously",
+      "let lastCall is declared inside the returned function so it resets to 0 on every call, causing fn to always execute",
+      "An arrow function must be used instead"
+    ],
+    "correctIndex": 2,
+    "explanation": "This is the same pattern as the debounce timer bug. Because let lastCall = 0 is inside the returned function, it is reinitialized to 0 on every call. Since now - 0 is always greater than limit, fn executes every time. The fix is to declare lastCall in the throttle function scope (above the return) so all calls share the same lastCall through closure.",
+    "sourceUrl": "https://javascript.info/closure"
+  },
+  {
+    "id": "closure-049",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Which statement about the relationship between closures and callback functions is correct?",
+    "options": [
+      "Callback functions are unrelated to closures",
+      "Callback functions always form closures",
+      "Callback functions cannot access outer variables",
+      "A callback function forms a closure when it references outer variables from the scope where it was defined"
+    ],
+    "correctIndex": 3,
+    "explanation": "A callback function is not inherently a closure. A closure is formed when the callback references outer variables from its defining lexical scope. For example, event handlers, setTimeout callbacks, and Promise then callbacks that use variables from their enclosing scope access them through closures.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-050",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about the difference between closure-based iterators and generators is correct?",
+    "options": [
+      "Generators use the same mechanism as closures to maintain state",
+      "Closure iterators manage state variables explicitly, while generators use yield to suspend/resume execution and state is preserved automatically",
+      "Closure iterators cannot produce infinite sequences",
+      "Generators cannot maintain state"
+    ],
+    "correctIndex": 1,
+    "explanation": "Implementing an iterator with closures requires manually managing state variables like index and items, with the next() function updating them through the closure. Generator functions use function* and yield to suspend and resume the execution context itself, automatically preserving local variables. Generators can express complex state machines more declaratively.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator"
   }
 ]
