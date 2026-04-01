@@ -659,5 +659,170 @@
     "correctIndex": 2,
     "explanation": "용량을 1씩 증가시키면 배열이 가득 찰 때마다 모든 요소를 복사해야 하므로, n번의 push에 O(n²) 시간이 걸립니다. 2배씩 증가(this.capacity *= 2)하면 상각 분석(amortized analysis)에 의해 push 당 평균 O(1)이 됩니다. 이것이 JavaScript 배열과 ArrayList 등의 동적 배열이 2배 확장 전략을 사용하는 이유입니다.",
     "sourceUrl": "https://en.wikipedia.org/wiki/Dynamic_array#Geometric_expansion_and_amortized_cost"
+  },
+  {
+    "id": "algorithms-041",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "삽입 정렬(Insertion Sort)의 최선 시간 복잡도는 무엇인가요?",
+    "options": [
+      "O(n)",
+      "O(n log n)",
+      "O(n²)",
+      "O(log n)"
+    ],
+    "correctIndex": 0,
+    "explanation": "삽입 정렬은 이미 정렬된 배열에 대해 각 요소를 한 번씩만 비교하므로 최선 시간 복잡도가 O(n)입니다. 거의 정렬된 데이터에 매우 효율적이며, 이 특성 때문에 Tim Sort 같은 하이브리드 정렬 알고리즘에서 작은 부분 배열 정렬에 활용됩니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Insertion_sort"
+  },
+  {
+    "id": "algorithms-042",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function insertBST(root, val) {\n  if (root == null) return { val, left: null, right: null };\n  if (val < root.val) {\n    return { ...root, left: insertBST(root.left, val) };\n  }\n  return { ...root, right: insertBST(root.right, val) };\n}\nlet tree = null;\nfor (const v of [5, 3, 7, 1]) {\n  tree = insertBST(tree, v);\n}\nconsole.log(tree.left.left.val);",
+    "options": [
+      "3",
+      "1",
+      "5",
+      "7"
+    ],
+    "correctIndex": 1,
+    "explanation": "BST 삽입 순서를 따라가면: 5(루트) → 3(5의 왼쪽) → 7(5의 오른쪽) → 1(3보다 작으므로 3의 왼쪽). 따라서 tree.left는 3, tree.left.left는 1입니다. 불변 방식으로 새 노드를 생성하며 삽입하는 함수형 BST 구현입니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Binary_search_tree#Insertion"
+  },
+  {
+    "id": "algorithms-043",
+    "topic": "algorithms",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 퀵 정렬 파티션 코드의 버그는 무엇인가요?",
+    "code": "function partition(arr, low, high) {\n  const pivot = arr[high];\n  let i = low;\n  for (let j = low; j < high; j++) {\n    if (arr[j] < pivot) {\n      [arr[i], arr[j]] = [arr[j], arr[i]];\n    }\n  }\n  [arr[i], arr[high]] = [arr[high], arr[i]];\n  return i;\n}",
+    "options": [
+      "pivot을 arr[low]로 선택해야 한다",
+      "for 루프 조건이 j <= high여야 한다",
+      "arr[j] < pivot일 때 swap 후 i를 증가시키지 않아 파티션이 올바르게 나뉘지 않는다",
+      "반환값이 i가 아닌 high여야 한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Lomuto 파티션에서 arr[j] < pivot인 경우 arr[i]와 arr[j]를 교환한 후 i++를 해야 합니다. i를 증가시키지 않으면 다음 swap에서 같은 위치에 덮어쓰게 되어 피벗보다 작은 요소들이 올바르게 왼쪽으로 이동하지 않습니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Quicksort#Lomuto_partition_scheme"
+  },
+  {
+    "id": "algorithms-044",
+    "topic": "algorithms",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "JavaScript에서 배열을 사용한 큐(Queue)의 shift() 연산이 비효율적인 이유는 무엇인가요?",
+    "options": [
+      "shift()가 새로운 배열을 생성하기 때문이다",
+      "shift()가 비동기로 동작하기 때문이다",
+      "shift()가 프로토타입 체인을 순회하기 때문이다",
+      "shift()가 나머지 모든 요소의 인덱스를 앞으로 이동시켜 O(n)이기 때문이다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Array.shift()는 첫 번째 요소를 제거한 후 나머지 모든 요소의 인덱스를 한 칸씩 앞으로 이동시키므로 O(n) 시간이 걸립니다. 대량의 큐 연산이 필요한 경우 연결 리스트 기반 큐나 순환 버퍼를 사용하면 O(1)에 dequeue할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/shift"
+  },
+  {
+    "id": "algorithms-045",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function rotateArray(arr, k) {\n  const n = arr.length;\n  const offset = k % n;\n  return [...arr.slice(n - offset), ...arr.slice(0, n - offset)];\n}\nconsole.log(rotateArray([1, 2, 3, 4, 5], 2).join(','));",
+    "options": [
+      "4,5,1,2,3",
+      "3,4,5,1,2",
+      "2,3,4,5,1",
+      "5,4,3,2,1"
+    ],
+    "correctIndex": 0,
+    "explanation": "k=2만큼 오른쪽으로 회전합니다. offset=2이므로 arr.slice(3)=[4,5]와 arr.slice(0,3)=[1,2,3]을 연결하면 [4,5,1,2,3]이 됩니다. 배열 회전은 slice와 spread를 활용하면 간결하게 구현할 수 있는 기본적인 배열 조작 알고리즘입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/slice"
+  },
+  {
+    "id": "algorithms-046",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "상각 분석(Amortized Analysis)에서 '상각 시간 복잡도'가 의미하는 것은 무엇인가요?",
+    "options": [
+      "최악의 경우 시간 복잡도와 동일하다",
+      "연산 n회를 수행했을 때 총 비용을 n으로 나눈 평균 비용이다",
+      "확률 분포에 기반한 기대값이다",
+      "최선의 경우 시간 복잡도와 동일하다"
+    ],
+    "correctIndex": 1,
+    "explanation": "상각 분석은 일련의 연산에서 총 비용을 연산 횟수로 나누어 각 연산의 평균 비용을 구합니다. 예를 들어 동적 배열의 push는 대부분 O(1)이지만 가끔 O(n) 복사가 발생합니다. 상각 분석하면 push의 상각 시간은 O(1)입니다. 이는 확률이 아닌 실제 총 비용의 분배입니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Amortized_analysis"
+  },
+  {
+    "id": "algorithms-047",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function maxDepth(node) {\n  if (node == null) return 0;\n  return 1 + Math.max(maxDepth(node.left), maxDepth(node.right));\n}\nconst tree = {\n  val: 1,\n  left: {\n    val: 2,\n    left: { val: 4, left: null, right: null },\n    right: null\n  },\n  right: {\n    val: 3,\n    left: null,\n    right: null\n  }\n};\nconsole.log(maxDepth(tree));",
+    "options": [
+      "2",
+      "4",
+      "3",
+      "1"
+    ],
+    "correctIndex": 2,
+    "explanation": "트리의 최대 깊이는 루트에서 가장 먼 리프 노드까지의 경로 길이입니다. 왼쪽 경로: 1→2→4 (깊이 3), 오른쪽 경로: 1→3 (깊이 2). Math.max(3, 2) = 3이므로 최대 깊이는 3입니다. 이 재귀적 접근은 후위 순회(post-order)와 동일한 패턴입니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Tree_(data_structure)#Terminology"
+  },
+  {
+    "id": "algorithms-048",
+    "topic": "algorithms",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 최소 힙(Min Heap)의 삽입 코드에서 문제점은 무엇인가요?",
+    "code": "class MinHeap {\n  constructor() { this.data = []; }\n  insert(val) {\n    this.data.push(val);\n    let i = this.data.length - 1;\n    while (i > 0) {\n      const parent = Math.floor(i / 2);\n      if (this.data[parent] > this.data[i]) {\n        [this.data[parent], this.data[i]] = [this.data[i], this.data[parent]];\n        i = parent;\n      }\n    }\n  }\n}",
+    "options": [
+      "push 대신 unshift를 사용해야 한다",
+      "parent 계산이 (i - 1) / 2가 아닌 i / 2로 잘못되었다",
+      "data 배열의 초기 크기를 지정해야 한다",
+      "부모가 자식보다 작거나 같을 때 break가 없어 무한 루프가 발생한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "while 루프에서 부모가 이미 자식보다 작거나 같은 경우(힙 속성 만족) 루프를 빠져나가는 else break 또는 조건부 break가 없습니다. 이로 인해 i가 0이 되지 않는 한 무한히 반복합니다. 또한 0-indexed 힙에서 부모 인덱스는 Math.floor((i - 1) / 2)가 정확하지만, break 누락이 더 치명적인 버그입니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Binary_heap#Insert"
+  },
+  {
+    "id": "algorithms-049",
+    "topic": "algorithms",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "기수 정렬(Radix Sort)에 대한 설명으로 올바른 것은 무엇인가요?",
+    "options": [
+      "비교 기반이 아닌 정렬로, 자릿수별로 정렬하여 O(d·n) 시간에 동작한다",
+      "항상 퀵 정렬보다 빠르다",
+      "음수를 포함한 배열에서는 사용할 수 없다",
+      "불안정 정렬(Unstable Sort)이다"
+    ],
+    "correctIndex": 0,
+    "explanation": "기수 정렬은 요소를 직접 비교하지 않고 각 자릿수(digit)별로 안정 정렬(보통 카운팅 정렬)을 수행합니다. d는 최대 자릿수, n은 원소 수로 O(d·n) 시간에 동작합니다. 비교 정렬의 하한인 O(n log n)을 우회하지만, 자릿수가 많거나 범위가 넓으면 비효율적일 수 있습니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Radix_sort"
+  },
+  {
+    "id": "algorithms-050",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "이진 탐색(Binary Search)을 사용하기 위한 필수 전제 조건은 무엇인가요?",
+    "options": [
+      "배열의 크기가 2의 거듭제곱이어야 한다",
+      "배열이 정렬되어 있어야 한다",
+      "배열에 중복된 값이 없어야 한다",
+      "배열의 모든 요소가 양수여야 한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "이진 탐색은 중간 값과 대소 비교를 통해 탐색 범위를 절반씩 줄이는 알고리즘이므로, 배열이 반드시 정렬되어 있어야 합니다. 정렬되지 않은 배열에서는 중간 값 비교의 결과로 어느 쪽 절반에 목표값이 있는지 판단할 수 없습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf"
   }
 ]

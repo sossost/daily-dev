@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 10 closure questions (`854c0ea`)
 - **content**: fix — prototype-045 correctIndex and options (`9ad3a63`)
 - **content**: add 10 promise questions (`113021d`)
 - **content**: fix — event-loop-048 correctIndex (`d1bebb9`)

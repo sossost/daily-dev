@@ -182,7 +182,7 @@
 
 ## Data
 
-- algorithms.json — 40 questions
+- algorithms.json — 50 questions
 - api-design.json — 45 questions
 - async.json — 48 questions
 - browser-api.json — 45 questions
@@ -205,7 +205,7 @@
 - typescript.json — 40 questions
 - web-performance.json — 40 questions
 - web-security.json — 45 questions
-- algorithms.json — 40 questions
+- algorithms.json — 50 questions
 - api-design.json — 45 questions
 - async.json — 48 questions
 - browser-api.json — 45 questions
