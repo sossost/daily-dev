@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 10 data-structures questions (`3647270`)
 - **content**: add 10 css-layout questions (`ca69963`)
 
 ## 2026-04-01

@@ -658,5 +658,170 @@
     "correctIndex": 2,
     "explanation": "객체 풀 패턴은 미리 생성한 객체들을 풀에 보관하고, 필요할 때 꺼내 쓴 뒤 반환받아 재사용합니다. 데이터베이스 연결, 스레드, DOM 요소 등 생성 비용이 높은 객체를 빈번하게 사용할 때 가비지 컬렉션 부담을 줄이고 성능을 개선할 수 있습니다.",
     "sourceUrl": "https://refactoring.guru/design-patterns/object-pool"
+  },
+  {
+    "id": "design-patterns-041",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "스로틀(Throttle) 패턴의 핵심 동작 원리는 무엇인가요?",
+    "options": [
+      "일정 시간 간격마다 최대 한 번만 함수가 실행되도록 보장한다",
+      "함수 호출을 모아서 한꺼번에 실행한다",
+      "함수의 실행 결과를 캐싱하여 재사용한다",
+      "함수가 실패하면 자동으로 재시도한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "스로틀 패턴은 지정된 시간 간격 동안 함수가 최대 한 번만 실행되도록 제한합니다. 스크롤 이벤트나 리사이즈 이벤트처럼 빈번하게 발생하는 이벤트에서 과도한 함수 호출을 방지하여 성능을 최적화합니다. 디바운스와 달리 첫 번째 호출이 즉시 실행될 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Throttle"
+  },
+  {
+    "id": "design-patterns-042",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 상태 머신(State Machine) 패턴 코드의 출력 결과는 무엇인가요?",
+    "code": "const machine = {\n  state: 'idle',\n  transitions: {\n    idle: { START: 'running' },\n    running: { PAUSE: 'paused', STOP: 'idle' },\n    paused: { RESUME: 'running', STOP: 'idle' }\n  },\n  dispatch(action) {\n    const next = this.transitions[this.state]?.[action];\n    if (next) this.state = next;\n    return this.state;\n  }\n};\nmachine.dispatch('START');\nmachine.dispatch('PAUSE');\nmachine.dispatch('START');\nconsole.log(machine.state);",
+    "options": [
+      "running",
+      "paused",
+      "idle",
+      "에러 발생"
+    ],
+    "correctIndex": 1,
+    "explanation": "첫 번째 dispatch('START')로 idle → running. 두 번째 dispatch('PAUSE')로 running → paused. 세 번째 dispatch('START')에서 paused 상태에는 START 전환이 정의되지 않으므로(RESUME과 STOP만 있음) next가 undefined이고 상태가 변경되지 않습니다. 따라서 최종 상태는 'paused'입니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/State_machine"
+  },
+  {
+    "id": "design-patterns-043",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 서킷 브레이커(Circuit Breaker) 패턴 구현에서 서킷이 열린 후 복구되지 않는 이유는 무엇인가요?",
+    "code": "class CircuitBreaker {\n  failures = 0;\n  state = 'closed';\n  threshold = 3;\n  async call(fn) {\n    if (this.state === 'open') throw new Error('Circuit open');\n    try {\n      const result = await fn();\n      this.failures = 0;\n      return result;\n    } catch (e) {\n      this.failures++;\n      if (this.failures >= this.threshold) this.state = 'open';\n      throw e;\n    }\n  }\n}",
+    "options": [
+      "threshold 값이 너무 작아서 서킷이 너무 빨리 열리기 때문",
+      "async/await 사용이 잘못되었기 때문",
+      "서킷이 'open' 상태로 전환된 후 'half-open' 상태로 복구하는 타이머나 로직이 없어서 영구적으로 열린 상태가 되기 때문",
+      "failures 카운터가 올바르게 증가하지 않기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "완전한 서킷 브레이커 패턴에는 closed(정상), open(차단), half-open(복구 시도)의 세 가지 상태가 필요합니다. 이 구현에서는 서킷이 열린 후 일정 시간 뒤에 half-open 상태로 전환하여 복구를 시도하는 로직이 없습니다. 따라서 한 번 open이 되면 영원히 모든 요청이 차단됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch"
+  },
+  {
+    "id": "design-patterns-044",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "스로틀(Throttle)과 디바운스(Debounce) 패턴의 가장 중요한 차이점은 무엇인가요?",
+    "options": [
+      "스로틀은 비동기 함수에만, 디바운스는 동기 함수에만 사용할 수 있다",
+      "두 패턴의 동작 방식은 완전히 동일하다",
+      "디바운스는 메모리를 더 많이 사용한다",
+      "스로틀은 일정 간격마다 실행을 보장하고, 디바운스는 호출이 멈춘 후 마지막 호출만 실행한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "스로틀은 지정된 시간 간격 내에 최대 한 번 함수를 실행하므로 연속 호출 중에도 주기적으로 실행됩니다. 디바운스는 연속 호출이 멈춘 후 지정된 시간이 지나야 마지막 호출이 실행됩니다. 스크롤 위치 업데이트에는 스로틀이, 검색 입력 자동완성에는 디바운스가 적합합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Throttle"
+  },
+  {
+    "id": "design-patterns-045",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 메멘토(Memento) 패턴 코드의 출력 결과는 무엇인가요?",
+    "code": "class Editor {\n  #content = '';\n  type(text) { this.#content += text; }\n  save() { return this.#content; }\n  restore(memento) { this.#content = memento; }\n  getContent() { return this.#content; }\n}\nconst editor = new Editor();\neditor.type('Hello');\nconst saved = editor.save();\neditor.type(' World');\neditor.restore(saved);\nconsole.log(editor.getContent());",
+    "options": [
+      "Hello",
+      "Hello World",
+      "World",
+      "빈 문자열"
+    ],
+    "correctIndex": 0,
+    "explanation": "메멘토 패턴은 객체의 내부 상태를 저장하고 나중에 복원할 수 있게 합니다. editor.type('Hello') 후 save()로 'Hello' 상태를 저장합니다. type(' World')로 내용이 'Hello World'가 되지만, restore(saved)로 저장된 'Hello' 상태로 되돌리므로 최종 출력은 'Hello'입니다.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/memento"
+  },
+  {
+    "id": "design-patterns-046",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "플러그인(Plugin) 패턴에서 핵심적으로 제공해야 하는 메커니즘은 무엇인가요?",
+    "options": [
+      "모든 플러그인이 동일한 프로토타입을 공유해야 한다",
+      "플러그인 코드가 호스트 코드보다 먼저 실행되어야 한다",
+      "호스트 시스템이 플러그인을 등록, 초기화, 실행할 수 있는 훅(hook) 포인트를 제공해야 한다",
+      "플러그인이 호스트의 모든 내부 상태에 직접 접근할 수 있어야 한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "플러그인 패턴은 호스트 시스템에 확장 포인트(훅)를 두어 외부 코드가 기능을 추가할 수 있게 합니다. Webpack의 tapable, Babel의 visitor, Express의 미들웨어 등이 이 패턴을 따릅니다. 핵심은 호스트가 플러그인의 구체적 구현을 모르면서도 생명주기 훅을 통해 상호작용하는 것입니다.",
+    "sourceUrl": "https://www.patterns.dev/vanilla/middleware-pattern"
+  },
+  {
+    "id": "design-patterns-047",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 리액티브(Reactive) 패턴 코드의 출력 결과는 무엇인가요?",
+    "code": "function reactive(initial) {\n  let value = initial;\n  const subs = [];\n  return {\n    get: () => value,\n    set: (v) => { value = v; subs.forEach(fn => fn(v)); },\n    subscribe: (fn) => { subs.push(fn); return () => subs.splice(subs.indexOf(fn), 1); }\n  };\n}\nconst count = reactive(0);\nconst logs = [];\nconst unsub = count.subscribe(v => logs.push(v));\ncount.set(1);\ncount.set(2);\nunsub();\ncount.set(3);\nconsole.log(logs.join(','));",
+    "options": [
+      "1,2,3",
+      "1,2",
+      "0,1,2",
+      "0,1,2,3"
+    ],
+    "correctIndex": 1,
+    "explanation": "reactive 함수는 값이 변경될 때 구독자에게 알리는 반응형 상태를 생성합니다. subscribe로 등록한 콜백은 set 호출 시 실행됩니다. set(1)과 set(2)에서 logs에 1, 2가 추가됩니다. unsub()로 구독을 해제한 후 set(3)은 콜백을 트리거하지 않으므로 결과는 '1,2'입니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice"
+  },
+  {
+    "id": "design-patterns-048",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 불변 업데이트(Immutable Update) 패턴 코드에서 의도와 다르게 동작하는 이유는 무엇인가요?",
+    "code": "const state = {\n  user: { name: 'Alice', address: { city: 'Seoul' } },\n  theme: 'dark'\n};\nconst newState = { ...state, user: { ...state.user, name: 'Bob' } };\nnewState.user.address.city = 'Busan';\nconsole.log(state.user.address.city);",
+    "options": [
+      "스프레드 연산자가 깊은 복사를 수행하므로 'Seoul'이 출력된다",
+      "newState.user가 undefined이므로 에러가 발생한다",
+      "state 객체가 Object.freeze로 동결되어 있어서 에러가 발생한다",
+      "스프레드 연산자는 얕은 복사만 수행하므로 address 객체는 공유되어 원본의 city도 'Busan'으로 변경된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "스프레드 연산자({ ...obj })는 1단계만 복사하는 얕은 복사를 수행합니다. user 객체는 새로 생성되지만 내부의 address 객체는 여전히 원본과 같은 참조를 공유합니다. 따라서 newState.user.address.city를 변경하면 원본 state.user.address.city도 함께 변경됩니다. 깊은 불변 업데이트를 위해서는 변경하려는 경로의 모든 중첩 객체를 복사해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax"
+  },
+  {
+    "id": "design-patterns-049",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "파사드(Facade) 패턴과 미디에이터(Mediator) 패턴의 핵심 차이점은 무엇인가요?",
+    "options": [
+      "파사드는 서브시스템에 대한 단방향 단순 인터페이스를 제공하고, 미디에이터는 여러 객체 간의 양방향 통신을 조율한다",
+      "파사드는 행동 패턴이고 미디에이터는 구조 패턴이다",
+      "파사드는 성능 최적화 목적이고 미디에이터는 보안 목적이다",
+      "두 패턴은 동일한 문제를 해결하며 이름만 다르다"
+    ],
+    "correctIndex": 0,
+    "explanation": "파사드는 복잡한 서브시스템을 감싸서 클라이언트에게 단순한 인터페이스를 제공하는 구조 패턴입니다. 서브시스템 객체들은 파사드의 존재를 모릅니다. 미디에이터는 여러 동료(colleague) 객체들이 서로 직접 통신하는 대신 중재자를 통해 양방향으로 소통하게 하는 행동 패턴입니다.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/facade"
+  },
+  {
+    "id": "design-patterns-050",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "명세(Specification) 패턴의 핵심 아이디어는 무엇인가요?",
+    "options": [
+      "데이터를 영구적으로 저장하는 방법을 정의한다",
+      "객체 생성 로직을 팩토리에 위임한다",
+      "비즈니스 규칙을 재사용 가능한 조합 가능한 객체로 캡슐화한다",
+      "네트워크 요청의 재시도 로직을 구현한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "명세 패턴은 비즈니스 규칙이나 필터 조건을 독립적인 객체로 분리하여 재사용하고 조합할 수 있게 합니다. 각 명세는 isSatisfiedBy(candidate) 메서드를 구현하며, AND, OR, NOT 등의 논리 연산으로 복잡한 조건을 선언적으로 합성할 수 있습니다. JavaScript에서는 고차 함수나 배열의 filter 콜백으로 자연스럽게 구현됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter"
   }
 ]

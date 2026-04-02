@@ -658,5 +658,170 @@
     "correctIndex": 2,
     "explanation": "The Object Pool pattern maintains a pool of pre-created objects, lending them out when needed and accepting them back for reuse. For expensive-to-create objects like database connections, threads, or DOM elements that are used frequently, this reduces garbage collection overhead and improves performance.",
     "sourceUrl": "https://refactoring.guru/design-patterns/object-pool"
+  },
+  {
+    "id": "design-patterns-041",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the core operating principle of the Throttle pattern?",
+    "options": [
+      "It ensures a function executes at most once per specified time interval",
+      "It batches function calls and executes them all at once",
+      "It caches function results for reuse",
+      "It automatically retries when a function fails"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Throttle pattern limits a function to execute at most once within a specified time interval. It optimizes performance by preventing excessive function calls on frequently firing events like scroll or resize. Unlike debounce, the first call can execute immediately.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Throttle"
+  },
+  {
+    "id": "design-patterns-042",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following State Machine pattern code?",
+    "code": "const machine = {\n  state: 'idle',\n  transitions: {\n    idle: { START: 'running' },\n    running: { PAUSE: 'paused', STOP: 'idle' },\n    paused: { RESUME: 'running', STOP: 'idle' }\n  },\n  dispatch(action) {\n    const next = this.transitions[this.state]?.[action];\n    if (next) this.state = next;\n    return this.state;\n  }\n};\nmachine.dispatch('START');\nmachine.dispatch('PAUSE');\nmachine.dispatch('START');\nconsole.log(machine.state);",
+    "options": [
+      "running",
+      "paused",
+      "idle",
+      "Error occurs"
+    ],
+    "correctIndex": 1,
+    "explanation": "First dispatch('START') transitions idle → running. Second dispatch('PAUSE') transitions running → paused. Third dispatch('START') — the paused state only defines RESUME and STOP transitions, not START, so next is undefined and the state remains unchanged. The final state is 'paused'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/State_machine"
+  },
+  {
+    "id": "design-patterns-043",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the circuit never recover after opening in the following Circuit Breaker pattern implementation?",
+    "code": "class CircuitBreaker {\n  failures = 0;\n  state = 'closed';\n  threshold = 3;\n  async call(fn) {\n    if (this.state === 'open') throw new Error('Circuit open');\n    try {\n      const result = await fn();\n      this.failures = 0;\n      return result;\n    } catch (e) {\n      this.failures++;\n      if (this.failures >= this.threshold) this.state = 'open';\n      throw e;\n    }\n  }\n}",
+    "options": [
+      "Because the threshold value is too small, causing the circuit to open too quickly",
+      "Because async/await is used incorrectly",
+      "Because there is no timer or logic to transition from 'open' to 'half-open' state, so the circuit stays open permanently",
+      "Because the failures counter does not increment correctly"
+    ],
+    "correctIndex": 2,
+    "explanation": "A complete Circuit Breaker pattern requires three states: closed (normal), open (blocking), and half-open (recovery attempt). This implementation lacks logic to transition to a half-open state after a timeout period. Once the circuit opens, all requests are blocked forever with no way to recover.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch"
+  },
+  {
+    "id": "design-patterns-044",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the most important difference between the Throttle and Debounce patterns?",
+    "options": [
+      "Throttle can only be used with async functions, while debounce works only with sync functions",
+      "Both patterns work exactly the same way",
+      "Debounce uses more memory",
+      "Throttle guarantees execution at regular intervals, while debounce executes only the last call after calls stop"
+    ],
+    "correctIndex": 3,
+    "explanation": "Throttle executes a function at most once within a specified time interval, so it fires periodically during continuous calls. Debounce waits until continuous calls stop and the specified delay passes before executing the last call. Throttle is suitable for scroll position updates, while debounce is better for search input autocomplete.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Throttle"
+  },
+  {
+    "id": "design-patterns-045",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following Memento pattern code?",
+    "code": "class Editor {\n  #content = '';\n  type(text) { this.#content += text; }\n  save() { return this.#content; }\n  restore(memento) { this.#content = memento; }\n  getContent() { return this.#content; }\n}\nconst editor = new Editor();\neditor.type('Hello');\nconst saved = editor.save();\neditor.type(' World');\neditor.restore(saved);\nconsole.log(editor.getContent());",
+    "options": [
+      "Hello",
+      "Hello World",
+      "World",
+      "Empty string"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Memento pattern allows saving and restoring an object's internal state. After editor.type('Hello'), save() captures the 'Hello' state. type(' World') changes the content to 'Hello World', but restore(saved) reverts it to the saved 'Hello' state, so the final output is 'Hello'.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/memento"
+  },
+  {
+    "id": "design-patterns-046",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What mechanism must a Plugin pattern fundamentally provide?",
+    "options": [
+      "All plugins must share the same prototype",
+      "Plugin code must execute before host code",
+      "The host system must provide hook points for registering, initializing, and executing plugins",
+      "Plugins must have direct access to all internal state of the host"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Plugin pattern places extension points (hooks) in the host system so external code can add functionality. Webpack's tapable, Babel's visitor, and Express middleware follow this pattern. The key is that the host interacts with plugins through lifecycle hooks without knowing their specific implementations.",
+    "sourceUrl": "https://www.patterns.dev/vanilla/middleware-pattern"
+  },
+  {
+    "id": "design-patterns-047",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following Reactive pattern code?",
+    "code": "function reactive(initial) {\n  let value = initial;\n  const subs = [];\n  return {\n    get: () => value,\n    set: (v) => { value = v; subs.forEach(fn => fn(v)); },\n    subscribe: (fn) => { subs.push(fn); return () => subs.splice(subs.indexOf(fn), 1); }\n  };\n}\nconst count = reactive(0);\nconst logs = [];\nconst unsub = count.subscribe(v => logs.push(v));\ncount.set(1);\ncount.set(2);\nunsub();\ncount.set(3);\nconsole.log(logs.join(','));",
+    "options": [
+      "1,2,3",
+      "1,2",
+      "0,1,2",
+      "0,1,2,3"
+    ],
+    "correctIndex": 1,
+    "explanation": "The reactive function creates reactive state that notifies subscribers when the value changes. The callback registered via subscribe fires on each set call. set(1) and set(2) push 1 and 2 to logs. After unsub() removes the subscription, set(3) no longer triggers the callback, so the result is '1,2'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice"
+  },
+  {
+    "id": "design-patterns-048",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the following Immutable Update pattern code behave unexpectedly?",
+    "code": "const state = {\n  user: { name: 'Alice', address: { city: 'Seoul' } },\n  theme: 'dark'\n};\nconst newState = { ...state, user: { ...state.user, name: 'Bob' } };\nnewState.user.address.city = 'Busan';\nconsole.log(state.user.address.city);",
+    "options": [
+      "The spread operator performs a deep copy, so 'Seoul' is output",
+      "newState.user is undefined, causing an error",
+      "The state object is frozen with Object.freeze, causing an error",
+      "The spread operator only performs a shallow copy, so the address object is shared and the original city also changes to 'Busan'"
+    ],
+    "correctIndex": 3,
+    "explanation": "The spread operator ({ ...obj }) performs a shallow copy — only one level deep. The user object is newly created, but the nested address object still shares the same reference as the original. So modifying newState.user.address.city also changes state.user.address.city. For deep immutable updates, all nested objects along the modified path must be copied.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax"
+  },
+  {
+    "id": "design-patterns-049",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the key difference between the Facade pattern and the Mediator pattern?",
+    "options": [
+      "Facade provides a one-directional simplified interface to a subsystem, while Mediator orchestrates bidirectional communication between multiple objects",
+      "Facade is a behavioral pattern and Mediator is a structural pattern",
+      "Facade is for performance optimization and Mediator is for security",
+      "Both patterns solve the same problem and differ only in name"
+    ],
+    "correctIndex": 0,
+    "explanation": "Facade is a structural pattern that wraps a complex subsystem to provide clients with a simple interface. The subsystem objects are unaware of the facade. Mediator is a behavioral pattern where multiple colleague objects communicate through a mediator bidirectionally instead of directly with each other.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/facade"
+  },
+  {
+    "id": "design-patterns-050",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the core idea of the Specification pattern?",
+    "options": [
+      "It defines how to persist data permanently",
+      "It delegates object creation logic to a factory",
+      "It encapsulates business rules into reusable, composable objects",
+      "It implements retry logic for network requests"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Specification pattern separates business rules or filter conditions into independent objects that can be reused and composed. Each specification implements an isSatisfiedBy(candidate) method and can be combined with logical operations like AND, OR, and NOT to declaratively compose complex conditions. In JavaScript, this is naturally implemented using higher-order functions or array filter callbacks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter"
   }
 ]
