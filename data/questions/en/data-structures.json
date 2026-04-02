@@ -659,5 +659,170 @@
     "correctIndex": 1,
     "explanation": "Array's unshift() and shift() add/remove elements at the front of the array. This requires shifting all remaining elements' indices by one, resulting in O(n) time complexity. In contrast, push() and pop() operate at the end with O(1). For large datasets requiring a double-ended queue, a linked list-based implementation is more efficient.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/unshift"
+  },
+  {
+    "id": "data-structures-041",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the most reliable way to check if a value is an array in JavaScript?",
+    "options": [
+      "Use the typeof operator",
+      "Use the Array.isArray() method",
+      "Use instanceof Array",
+      "Check the constructor property"
+    ],
+    "correctIndex": 1,
+    "explanation": "typeof [] returns 'object', so it cannot distinguish arrays. instanceof Array may not recognize arrays created in a different iframe or realm. Array.isArray() is the most reliable method as it accurately detects arrays regardless of the realm they were created in.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray"
+  },
+  {
+    "id": "data-structures-042",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const inventory = [\n  { name: 'apple', type: 'fruit' },\n  { name: 'banana', type: 'fruit' },\n  { name: 'carrot', type: 'vegetable' }\n];\nconst grouped = Map.groupBy(inventory, item => item.type);\nconsole.log(grouped.get('fruit').length, grouped.size);",
+    "options": [
+      "2 2",
+      "2 3",
+      "3 2",
+      "1 2"
+    ],
+    "correctIndex": 0,
+    "explanation": "Map.groupBy() groups elements into a Map using the callback's return value as the key. The 'fruit' group contains apple and banana (length 2), and the 'vegetable' group contains carrot. So the 'fruit' group length is 2 and the Map size is 2.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/groupBy"
+  },
+  {
+    "id": "data-structures-043",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const [a = 10, b = 20, c = 30] = [1, undefined];\nconsole.log(a, b, c);",
+    "options": [
+      "1 undefined undefined",
+      "1 20 30",
+      "10 20 30",
+      "1 undefined 30"
+    ],
+    "correctIndex": 1,
+    "explanation": "In destructuring assignment, default values are applied only when the value at that position is undefined. Index 0 has value 1, so a is 1. Index 1 is explicitly undefined, so the default 20 applies and b is 20. Index 2 doesn't exist in the array (also undefined), so the default 30 applies and c is 30.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#default_values"
+  },
+  {
+    "id": "data-structures-044",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "How do Array.prototype.findLast() and Array.prototype.findLastIndex() differ from find() and findIndex()?",
+    "options": [
+      "The callback function arguments are different",
+      "The return type is different",
+      "find() searches forward from the start, findLast() searches backward from the end",
+      "findLast() returns all matching items as an array"
+    ],
+    "correctIndex": 2,
+    "explanation": "find() and findIndex() search forward from the first element and return the first match. findLast() and findLastIndex() search backward from the last element and return the last match. The callback function signature and return types are identical between both pairs.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findLast"
+  },
+  {
+    "id": "data-structures-045",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between Object.hasOwn() and Object.prototype.hasOwnProperty()?",
+    "options": [
+      "Object.hasOwn() can be safely used on objects created with Object.create(null)",
+      "hasOwnProperty() is a newer method than Object.hasOwn()",
+      "Object.hasOwn() also searches the prototype chain",
+      "Both methods behave identically with no differences"
+    ],
+    "correctIndex": 0,
+    "explanation": "Objects created with Object.create(null) have no prototype, so calling hasOwnProperty() on them throws a TypeError. Object.hasOwn() is a static method that doesn't depend on the target object's prototype, making it safe to use on any object. It also works correctly even if hasOwnProperty has been overridden.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn"
+  },
+  {
+    "id": "data-structures-046",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const arr = [1, 2, 3, 4, 5];\narr.copyWithin(1, 3);\nconsole.log(arr);",
+    "options": [
+      "[1, 2, 3, 1, 2]",
+      "[4, 5, 3, 4, 5]",
+      "[1, 2, 4, 5, 5]",
+      "[1, 4, 5, 4, 5]"
+    ],
+    "correctIndex": 3,
+    "explanation": "copyWithin(target, start) copies elements from the start index to the end of the array into the target index position. Copying elements from index 3 to end (4, 5) into index 1 results in [1, 4, 5, 4, 5]. This method mutates the original array in place and the array length remains unchanged.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/copyWithin"
+  },
+  {
+    "id": "data-structures-047",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does spreading a string into an array produce unexpected results in the following code?",
+    "code": "const emoji = '👨‍👩‍👧‍👦';\nconst chars = [...emoji];\nconsole.log(chars.length);",
+    "options": [
+      "The spread operator cannot be used on strings, causing an error",
+      "It always outputs 1",
+      "The emoji is composed of multiple code points and ZWJ (Zero Width Joiner) characters, outputting 7",
+      "The emoji is a surrogate pair, so it outputs 2"
+    ],
+    "correctIndex": 2,
+    "explanation": "The family emoji (👨‍👩‍👧‍👦) is a sequence of individual emojis joined by ZWJ (U+200D) characters. The spread operator splits strings by Unicode code points, so a visually single emoji is split into 7 code points. To split by visual units, use Intl.Segmenter instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter"
+  },
+  {
+    "id": "data-structures-048",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the key difference between the ES2023 methods toSorted(), toReversed(), toSpliced() and the existing sort(), reverse(), splice()?",
+    "options": [
+      "They execute faster than the original methods",
+      "The new methods do not modify the original array and return a new array instead",
+      "The new methods cannot accept callback functions",
+      "The new methods can only be used on TypedArrays"
+    ],
+    "correctIndex": 1,
+    "explanation": "sort(), reverse(), and splice() mutate the original array in place. The ES2023 methods toSorted(), toReversed(), and toSpliced() leave the original array unchanged and return a new array with the modifications applied. This immutable pattern is especially useful in React state management and functional programming.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted"
+  },
+  {
+    "id": "data-structures-049",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the potential problem with the cleanup logic using FinalizationRegistry in the following code?",
+    "code": "const registry = new FinalizationRegistry(key => {\n  console.log(`${key} has been collected`);\n  cache.delete(key);\n});\nconst cache = new Map();\nfunction store(key, value) {\n  const obj = { data: value };\n  cache.set(key, new WeakRef(obj));\n  registry.register(obj, key);\n  return obj;\n}",
+    "options": [
+      "FinalizationRegistry cannot be used with Map",
+      "The second argument of register() must be an object",
+      "Callback execution is not guaranteed and the timing is unpredictable, so critical logic should not depend on it",
+      "Using WeakRef and FinalizationRegistry together causes memory leaks"
+    ],
+    "correctIndex": 2,
+    "explanation": "FinalizationRegistry cleanup callbacks are called after an object is garbage collected, but the timing is unpredictable and execution itself is not guaranteed. There may be unexecuted callbacks when the program exits, and the order of callback execution is also not guaranteed. Therefore, critical logic like resource cleanup should be handled explicitly.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/FinalizationRegistry"
+  },
+  {
+    "id": "data-structures-050",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Why is Map more performant than a plain Object when frequent key-value additions and deletions are needed?",
+    "options": [
+      "Because Map keeps keys in sorted order",
+      "Because Object only supports string keys, causing more hash collisions",
+      "Map uses a hash table structure optimized for frequent additions/deletions, avoiding overhead like hidden class regeneration",
+      "Because Map uses less memory"
+    ],
+    "correctIndex": 2,
+    "explanation": "Plain objects use hidden classes in engines like V8 to optimize property access. Frequently adding and deleting properties causes repeated hidden class regeneration, degrading performance. Map is implemented as a hash table optimized for dynamic key-value storage from the start, operating efficiently without this overhead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#objects_vs._maps"
   }
 ]

@@ -659,5 +659,170 @@
     "correctIndex": 1,
     "explanation": "배열의 unshift()와 shift()는 배열의 앞쪽에서 요소를 추가/제거합니다. 이때 나머지 모든 요소의 인덱스를 하나씩 밀거나 당겨야 하므로 O(n) 시간 복잡도를 가집니다. 반면 push()와 pop()은 끝에서만 작업하므로 O(1)입니다. 대량의 데이터에서 양방향 큐가 필요하면 연결 리스트 기반 구현이 더 효율적입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/unshift"
+  },
+  {
+    "id": "data-structures-041",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "JavaScript에서 값이 배열인지 확인하는 가장 신뢰할 수 있는 방법은 무엇인가요?",
+    "options": [
+      "typeof 연산자를 사용한다",
+      "Array.isArray() 메서드를 사용한다",
+      "instanceof Array를 사용한다",
+      "constructor 프로퍼티를 확인한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "typeof []는 'object'를 반환하므로 배열 여부를 구별할 수 없습니다. instanceof Array는 다른 iframe이나 realm에서 생성된 배열을 인식하지 못할 수 있습니다. Array.isArray()는 realm에 관계없이 정확하게 배열 여부를 판별하는 가장 안정적인 방법입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray"
+  },
+  {
+    "id": "data-structures-042",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const inventory = [\n  { name: 'apple', type: 'fruit' },\n  { name: 'banana', type: 'fruit' },\n  { name: 'carrot', type: 'vegetable' }\n];\nconst grouped = Map.groupBy(inventory, item => item.type);\nconsole.log(grouped.get('fruit').length, grouped.size);",
+    "options": [
+      "2 2",
+      "2 3",
+      "3 2",
+      "1 2"
+    ],
+    "correctIndex": 0,
+    "explanation": "Map.groupBy()는 콜백 함수의 반환값을 키로 사용하여 요소를 그룹화한 Map을 반환합니다. 'fruit' 타입인 apple과 banana가 하나의 그룹(길이 2)이 되고, 'vegetable' 타입인 carrot이 다른 그룹이 됩니다. 따라서 'fruit' 그룹의 길이는 2이고, Map의 크기는 2입니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/groupBy"
+  },
+  {
+    "id": "data-structures-043",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const [a = 10, b = 20, c = 30] = [1, undefined];\nconsole.log(a, b, c);",
+    "options": [
+      "1 undefined undefined",
+      "1 20 30",
+      "10 20 30",
+      "1 undefined 30"
+    ],
+    "correctIndex": 1,
+    "explanation": "구조 분해 할당에서 기본값은 해당 위치의 값이 undefined일 때만 적용됩니다. 인덱스 0의 값은 1이므로 a는 1, 인덱스 1의 값은 명시적 undefined이므로 기본값 20이 적용되어 b는 20, 인덱스 2는 배열에 존재하지 않아 undefined이므로 기본값 30이 적용되어 c는 30입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#default_values"
+  },
+  {
+    "id": "data-structures-044",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Array.prototype.findLast()와 Array.prototype.findLastIndex()가 기존의 find(), findIndex()와 다른 점은 무엇인가요?",
+    "options": [
+      "콜백 함수의 인자가 다르다",
+      "반환 타입이 다르다",
+      "find()는 배열을 정순으로, findLast()는 역순으로 탐색한다",
+      "findLast()는 모든 일치 항목을 배열로 반환한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "find()와 findIndex()는 배열의 첫 번째 요소부터 순방향으로 탐색하여 조건에 맞는 첫 번째 요소를 반환합니다. findLast()와 findLastIndex()는 배열의 마지막 요소부터 역방향으로 탐색하여 조건에 맞는 마지막 요소를 반환합니다. 콜백 함수 시그니처와 반환 타입은 동일합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/findLast"
+  },
+  {
+    "id": "data-structures-045",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Object.hasOwn()과 Object.prototype.hasOwnProperty()의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "Object.hasOwn()은 Object.create(null)로 생성된 객체에서도 안전하게 사용할 수 있다",
+      "hasOwnProperty()가 Object.hasOwn()보다 더 최신 메서드이다",
+      "Object.hasOwn()은 프로토타입 체인도 검색한다",
+      "두 메서드는 동작이 완전히 동일하며 차이가 없다"
+    ],
+    "correctIndex": 0,
+    "explanation": "Object.create(null)로 생성된 객체는 프로토타입이 없으므로 hasOwnProperty()를 호출하면 TypeError가 발생합니다. Object.hasOwn()은 정적 메서드로, 대상 객체의 프로토타입에 의존하지 않아 모든 객체에 안전하게 사용할 수 있습니다. 또한 hasOwnProperty가 재정의된 경우에도 올바르게 동작합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn"
+  },
+  {
+    "id": "data-structures-046",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const arr = [1, 2, 3, 4, 5];\narr.copyWithin(1, 3);\nconsole.log(arr);",
+    "options": [
+      "[1, 2, 3, 1, 2]",
+      "[4, 5, 3, 4, 5]",
+      "[1, 2, 4, 5, 5]",
+      "[1, 4, 5, 4, 5]"
+    ],
+    "correctIndex": 3,
+    "explanation": "copyWithin(target, start)은 배열 내에서 start 인덱스부터 끝까지의 요소를 target 인덱스 위치에 복사합니다. 인덱스 3부터 끝까지(4, 5)를 인덱스 1 위치에 복사하면 [1, 4, 5, 4, 5]가 됩니다. 이 메서드는 원본 배열을 직접 변경하며, 배열의 길이는 변하지 않습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/copyWithin"
+  },
+  {
+    "id": "data-structures-047",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 문자열을 스프레드 연산자로 배열로 변환할 때 예상치 못한 결과가 발생하는 이유는 무엇인가요?",
+    "code": "const emoji = '👨‍👩‍👧‍👦';\nconst chars = [...emoji];\nconsole.log(chars.length);",
+    "options": [
+      "스프레드 연산자는 문자열에 사용할 수 없어 에러가 발생한다",
+      "항상 1을 출력한다",
+      "이모지가 여러 코드 포인트와 ZWJ(Zero Width Joiner)로 구성되어 7을 출력한다",
+      "이모지가 서로게이트 쌍이므로 2를 출력한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "가족 이모지(👨‍👩‍👧‍👦)는 개별 이모지와 ZWJ(U+200D) 문자가 결합된 시퀀스입니다. 스프레드 연산자는 유니코드 코드 포인트 단위로 문자열을 분리하므로, 시각적으로 하나인 이모지가 7개의 코드 포인트로 분리됩니다. 시각적 단위로 분리하려면 Intl.Segmenter를 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter"
+  },
+  {
+    "id": "data-structures-048",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "ES2023에서 추가된 toSorted(), toReversed(), toSpliced() 메서드와 기존의 sort(), reverse(), splice()의 가장 큰 차이점은 무엇인가요?",
+    "options": [
+      "기존 메서드보다 실행 속도가 빠르다",
+      "새 메서드는 원본 배열을 변경하지 않고 새 배열을 반환한다",
+      "새 메서드는 콜백 함수를 받을 수 없다",
+      "새 메서드는 TypedArray에서만 사용할 수 있다"
+    ],
+    "correctIndex": 1,
+    "explanation": "sort(), reverse(), splice()는 원본 배열을 직접 변경(mutate)하는 메서드입니다. ES2023에서 추가된 toSorted(), toReversed(), toSpliced()는 원본 배열을 변경하지 않고 변경이 적용된 새 배열을 반환합니다. 이 불변 패턴은 React 상태 관리나 함수형 프로그래밍에서 특히 유용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted"
+  },
+  {
+    "id": "data-structures-049",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 FinalizationRegistry를 사용한 정리 작업의 잠재적 문제는 무엇인가요?",
+    "code": "const registry = new FinalizationRegistry(key => {\n  console.log(`${key} has been collected`);\n  cache.delete(key);\n});\nconst cache = new Map();\nfunction store(key, value) {\n  const obj = { data: value };\n  cache.set(key, new WeakRef(obj));\n  registry.register(obj, key);\n  return obj;\n}",
+    "options": [
+      "FinalizationRegistry는 Map과 함께 사용할 수 없다",
+      "register()의 두 번째 인자는 반드시 객체여야 한다",
+      "콜백 실행이 보장되지 않으며, 실행 시점도 예측할 수 없어 중요한 로직에 의존하면 안 된다",
+      "WeakRef와 FinalizationRegistry를 동시에 사용하면 메모리 누수가 발생한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "FinalizationRegistry의 정리 콜백은 객체가 가비지 컬렉션된 후 호출되지만, 실행 시점은 예측할 수 없고 실행 자체가 보장되지도 않습니다. 프로그램 종료 시 미실행된 콜백이 있을 수 있으며, 콜백 실행 순서도 보장되지 않습니다. 따라서 리소스 해제 같은 중요한 로직은 명시적으로 처리해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/FinalizationRegistry"
+  },
+  {
+    "id": "data-structures-050",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "빈번한 키-값 추가와 삭제가 필요한 상황에서 Map이 일반 Object보다 성능적으로 유리한 이유는 무엇인가요?",
+    "options": [
+      "Map은 키를 정렬된 상태로 유지하기 때문이다",
+      "Object는 문자열 키만 지원하여 해시 충돌이 더 많기 때문이다",
+      "Map은 빈번한 추가/삭제에 최적화된 해시 테이블 구조로, 히든 클래스 재생성 등의 오버헤드가 없다",
+      "Map은 메모리를 덜 사용하기 때문이다"
+    ],
+    "correctIndex": 2,
+    "explanation": "일반 객체는 V8 같은 엔진에서 히든 클래스(hidden class)를 사용하여 프로퍼티 접근을 최적화합니다. 프로퍼티를 자주 추가/삭제하면 히든 클래스가 반복적으로 재생성되어 성능이 저하됩니다. Map은 처음부터 동적 키-값 저장에 최적화된 해시 테이블로 구현되어 이런 오버헤드 없이 효율적으로 동작합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Map#objects_vs._maps"
   }
 ]
