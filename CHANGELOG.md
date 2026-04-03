@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-04-03
+
+### Features
+
+- **content**: add 10 design-patterns questions (`5c8a982`)
+
 ## 2026-04-02
 
 ### Features

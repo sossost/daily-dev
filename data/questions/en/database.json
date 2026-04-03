@@ -655,5 +655,170 @@
     "correctIndex": 0,
     "explanation": "GROUP BY category groups the rows into X (2 items) and Y (1 item). ORDER BY cnt DESC sorts the results by count in descending order, so X (cnt=2) comes first and Y (cnt=1) comes second. Most DBMS allow using SELECT aliases in ORDER BY.",
     "sourceUrl": "https://www.w3schools.com/sql/sql_groupby.asp"
+  },
+  {
+    "id": "database-041",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the key characteristic of a Stored Procedure in a database?",
+    "options": [
+      "It is a set of precompiled SQL statements stored on the server that can be reused when called",
+      "It can only be executed on the client side and cannot be stored on the server",
+      "It can only contain SELECT queries and cannot modify data",
+      "Once created, it cannot be deleted and is maintained permanently"
+    ],
+    "correctIndex": 0,
+    "explanation": "A stored procedure is a precompiled collection of SQL statements and logic stored on the database server. It can accept parameters and execute complex business logic, improving performance through reduced network traffic and execution plan reuse.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Stored_procedure"
+  },
+  {
+    "id": "database-042",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the result of the following SQL query?\n\nproducts table: id(1,2,3), price(50, 150, 300)\n\nSELECT id, CASE WHEN price < 100 THEN 'low' WHEN price < 200 THEN 'mid' ELSE 'high' END AS tier FROM products;",
+    "code": "SELECT id,\n  CASE\n    WHEN price < 100 THEN 'low'\n    WHEN price < 200 THEN 'mid'\n    ELSE 'high'\n  END AS tier\nFROM products;",
+    "options": [
+      "1-low, 2-low, 3-low",
+      "1-mid, 2-mid, 3-high",
+      "Error — CASE can only be used in WHERE clauses",
+      "1-low, 2-mid, 3-high"
+    ],
+    "correctIndex": 3,
+    "explanation": "The CASE expression evaluates conditions in order and returns the value for the first TRUE condition. Price 50 is less than 100, so 'low'. Price 150 is less than 200, so 'mid'. Price 300 matches no condition, so the ELSE value 'high' is returned. CASE can be used in SELECT, WHERE, ORDER BY, and more.",
+    "sourceUrl": "https://www.postgresql.org/docs/current/functions-conditional.html"
+  },
+  {
+    "id": "database-043",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between EXISTS and IN subqueries in SQL?",
+    "options": [
+      "EXISTS only checks for the existence of rows and returns immediately when a match is found, while IN generates the full result set of the subquery before comparison",
+      "IN can only be used with correlated subqueries, while EXISTS can only be used with non-correlated subqueries",
+      "EXISTS is used only for numeric comparisons, while IN is used only for string comparisons",
+      "EXISTS and IN always generate the same execution plan with no performance difference"
+    ],
+    "correctIndex": 0,
+    "explanation": "EXISTS returns TRUE as soon as it finds a matching row in the subquery and stops searching immediately. IN collects the entire subquery result set before performing comparisons. EXISTS tends to perform better with large subquery results, while IN is often better with small result sets.",
+    "sourceUrl": "https://use-the-index-luke.com/sql/partial-results/top-n-queries"
+  },
+  {
+    "id": "database-044",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the result of the following SQL query?\n\norders table: id(1,2,3,4), status('done','pending','done','cancel')\n\nSELECT COUNT(*) FROM orders WHERE status IN ('done', 'cancel');",
+    "code": "SELECT COUNT(*)\nFROM orders\nWHERE status IN ('done', 'cancel');",
+    "options": [
+      "2",
+      "3",
+      "4",
+      "1"
+    ],
+    "correctIndex": 1,
+    "explanation": "The IN operator checks whether a column value is included in the specified list. Rows with status 'done' are id 1 and 3, and 'cancel' is id 4, totaling 3 rows that match the condition. IN is a concise way to express multiple OR conditions.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_in.asp"
+  },
+  {
+    "id": "database-045",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "After executing the following SQL statement, unexpected results occurred. What is the cause?\n\nUPDATE products SET price = price * 0.9;",
+    "code": "UPDATE products SET price = price * 0.9;",
+    "options": [
+      "price * 0.9 is an invalid operation",
+      "The same column cannot be referenced in a SET clause",
+      "UPDATE statements must be executed within a transaction",
+      "Without a WHERE clause, all rows in the table are updated, applying a 10% discount to every product's price"
+    ],
+    "correctIndex": 3,
+    "explanation": "An UPDATE statement without a WHERE clause applies to all rows in the table. If the intention was to discount only specific products, a WHERE clause must be added to limit the scope. The same principle applies to DELETE — always verify the WHERE clause before executing UPDATE or DELETE statements.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_update.asp"
+  },
+  {
+    "id": "database-046",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the role of a SAVEPOINT in a database transaction?",
+    "options": [
+      "It sets an intermediate save point within a transaction, allowing partial rollback to that point",
+      "It sets a point where the transaction is automatically committed",
+      "It specifies a database backup point in time",
+      "It is a command that changes the transaction's isolation level"
+    ],
+    "correctIndex": 0,
+    "explanation": "A SAVEPOINT creates a named intermediate save point within a transaction. Using ROLLBACK TO SAVEPOINT, you can undo changes made after that point without rolling back the entire transaction. This enables partial recovery in complex transactions when errors occur.",
+    "sourceUrl": "https://www.postgresql.org/docs/current/sql-savepoint.html"
+  },
+  {
+    "id": "database-047",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "When a composite index is created on columns (A, B, C), which query condition can utilize the index?",
+    "options": [
+      "WHERE B = 1 AND C = 2",
+      "WHERE C = 1",
+      "WHERE A = 1 AND B = 2",
+      "WHERE C = 1 AND B = 2"
+    ],
+    "correctIndex": 2,
+    "explanation": "Composite indexes follow the 'leftmost prefix' principle. An index on (A, B, C) can be used for queries filtering on A alone, A+B, or A+B+C. Conditions starting with B or C without A cannot leverage the index. The order of columns in the WHERE clause doesn't matter — the optimizer matches based on the index definition order from the left.",
+    "sourceUrl": "https://dev.mysql.com/doc/refman/8.0/en/multiple-column-indexes.html"
+  },
+  {
+    "id": "database-048",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the result of the following SQL query?\n\nSELECT * FROM (SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3) t WHERE n > 1 ORDER BY n DESC;",
+    "code": "SELECT * FROM (\n  SELECT 1 AS n\n  UNION ALL SELECT 2\n  UNION ALL SELECT 3\n) t\nWHERE n > 1\nORDER BY n DESC;",
+    "options": [
+      "1, 2, 3 (ascending)",
+      "2, 3 (ascending)",
+      "1 (1 row)",
+      "3, 2 (descending)"
+    ],
+    "correctIndex": 3,
+    "explanation": "The inline view (subquery) generates values 1, 2, and 3. The WHERE n > 1 condition filters to only 2 and 3. ORDER BY n DESC sorts in descending order, returning 3, then 2. A subquery in the FROM clause (derived table) acts as a temporary table and requires an alias (t).",
+    "sourceUrl": "https://www.postgresql.org/docs/current/queries-table-expressions.html#QUERIES-SUBQUERIES"
+  },
+  {
+    "id": "database-049",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The following query fails to use an index and performs a full table scan. Given that an index exists on the phone column, what is the cause?\n\nSELECT * FROM users WHERE phone = 01012345678;",
+    "code": "-- phone column: VARCHAR type, index exists\nSELECT * FROM users\nWHERE phone = 01012345678;",
+    "options": [
+      "Using SELECT * causes the index to be ignored",
+      "Comparing a VARCHAR column with a number causes implicit type conversion, preventing index usage",
+      "An index does not work when there is only one condition in the WHERE clause",
+      "Numeric values cannot be used in WHERE clauses"
+    ],
+    "correctIndex": 1,
+    "explanation": "When a VARCHAR phone column is compared with a numeric literal, the DBMS performs implicit type casting on the column values, converting them to numbers. This conversion prevents the index from being used, resulting in a full table scan. Use WHERE phone = '01012345678' with a string literal to allow index usage.",
+    "sourceUrl": "https://use-the-index-luke.com/sql/where-clause/obfuscation/numeric-strings"
+  },
+  {
+    "id": "database-050",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the core principle of WAL (Write-Ahead Logging) in databases?",
+    "options": [
+      "Changes are first recorded in a log before being applied to data files, ensuring recovery in case of failure",
+      "All data is written only to memory, completely eliminating disk I/O",
+      "Data changes are sent to replica servers in real-time for synchronization",
+      "Query execution logs are saved to files for audit purposes"
+    ],
+    "correctIndex": 0,
+    "explanation": "WAL (Write-Ahead Logging) records changes to a log file before modifying the actual data pages. In case of a system failure, the log can be replayed to recover committed transactions and roll back incomplete ones, guaranteeing the Durability property of ACID.",
+    "sourceUrl": "https://www.postgresql.org/docs/current/wal-intro.html"
   }
 ]
