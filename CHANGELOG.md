@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: fix — database-047 ambiguous option D (`29ab2da`)
 - **content**: add 10 design-patterns questions (`5c8a982`)
 
 ## 2026-04-02

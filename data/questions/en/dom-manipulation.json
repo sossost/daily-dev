@@ -657,5 +657,170 @@
     "correctIndex": 1,
     "explanation": "createTreeWalker() is a low-level API that can traverse various node types using NodeFilter, including text nodes (NodeFilter.SHOW_TEXT) and comment nodes (NodeFilter.SHOW_COMMENT). querySelectorAll() returns only Element nodes matching CSS selectors as a static NodeList. TreeWalker can define complex traversal conditions using custom filter functions, making it useful for fine-grained DOM tree exploration.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Document/createTreeWalker"
+  },
+  {
+    "id": "dom-manipulation-041",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the correct key characteristic of Shadow DOM?",
+    "options": [
+      "Shadow DOM creates an independent DOM tree that encapsulates styles and markup, unaffected by external CSS",
+      "Shadow DOM is a completely isolated DOM that cannot be accessed from JavaScript",
+      "Shadow DOM can only be used with server-side rendering",
+      "Shadow DOM works in the same way as an iframe"
+    ],
+    "correctIndex": 0,
+    "explanation": "Shadow DOM is a core technology of Web Components that creates an encapsulated DOM tree inside a host element. External CSS does not affect the Shadow DOM's interior, and internal styles do not leak to the outside. It is created with element.attachShadow({ mode: 'open' }), and when mode is 'open', it can be accessed via element.shadowRoot; when 'closed', it returns null.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM"
+  },
+  {
+    "id": "dom-manipulation-042",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const div = document.createElement('div');\nconsole.log(div.isConnected);\ndocument.body.appendChild(div);\nconsole.log(div.isConnected);\ndiv.remove();\nconsole.log(div.isConnected);",
+    "options": [
+      "true, true, false",
+      "false, true, false",
+      "false, false, true",
+      "undefined, true, false"
+    ],
+    "correctIndex": 1,
+    "explanation": "isConnected is a read-only boolean property that indicates whether a node is currently connected to the document's DOM tree. A node created with createElement is not yet connected, so it returns false. After being added with appendChild, it becomes true. After being removed with remove(), it returns false again.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Node/isConnected"
+  },
+  {
+    "id": "dom-manipulation-043",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the correct purpose of IntersectionObserver?",
+    "options": [
+      "It detects when the style properties of two DOM elements overlap",
+      "It detects event conflicts between elements",
+      "It checks whether the z-index of two elements overlap",
+      "It asynchronously observes the ratio at which a target element intersects with the viewport or a specified ancestor element"
+    ],
+    "correctIndex": 3,
+    "explanation": "IntersectionObserver asynchronously detects when a target element enters or exits the visible area of the viewport or a specified root element. It is used for infinite scrolling, lazy loading of images, and ad visibility tracking. Unlike scroll event listeners, it does not block the main thread, making it more performant.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver"
+  },
+  {
+    "id": "dom-manipulation-044",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does toggleAttribute behave differently than expected in the following code?",
+    "code": "const btn = document.createElement('button');\nbtn.toggleAttribute('disabled', true);\nbtn.toggleAttribute('disabled');\nbtn.toggleAttribute('disabled');\nconsole.log(btn.hasAttribute('disabled'));",
+    "options": [
+      "The second argument true forces addition, and the subsequent calls toggle, so disabled ends up present",
+      "toggleAttribute can only be used with boolean attributes, causing an error",
+      "When toggleAttribute is called consecutively, only the last call takes effect",
+      "toggleAttribute works the same as setAttribute"
+    ],
+    "correctIndex": 0,
+    "explanation": "In toggleAttribute(name, force), when force is true, the attribute is forcibly added; when false, it is forcibly removed. When force is omitted, it toggles the attribute's presence. The first call adds disabled (force=true), the second toggles it off (removed), and the third toggles it back on (added). Therefore, the final result is true.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/toggleAttribute"
+  },
+  {
+    "id": "dom-manipulation-045",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const ul = document.createElement('ul');\nconst li1 = document.createElement('li');\nconst li2 = document.createElement('li');\nli1.textContent = 'A';\nli2.textContent = 'B';\nul.append(li1);\nul.prepend(li2);\nconsole.log(ul.firstElementChild.textContent, ul.lastElementChild.textContent);",
+    "options": [
+      "A, B",
+      "B, B",
+      "A, A",
+      "B, A"
+    ],
+    "correctIndex": 3,
+    "explanation": "append() adds a node after the parent's last child, while prepend() inserts a node before the parent's first child. After appending li1 ('A') and then prepending li2 ('B'), the order becomes li2, li1. Therefore, firstElementChild is 'B' and lastElementChild is 'A'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/prepend"
+  },
+  {
+    "id": "dom-manipulation-046",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between adoptNode() and importNode()?",
+    "options": [
+      "adoptNode() copies the node, while importNode() moves the original",
+      "adoptNode() moves the original node to the current document, while importNode() copies the node into the current document",
+      "Both methods work identically",
+      "importNode() copies event listeners as well, but adoptNode() does not"
+    ],
+    "correctIndex": 1,
+    "explanation": "adoptNode() moves a node from another document to the current document. The node is removed from the original document and its ownerDocument is changed. importNode() copies (clones) a node into the current document while leaving the original intact. In both cases, the returned node must be explicitly inserted into the DOM using methods like appendChild.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Document/adoptNode"
+  },
+  {
+    "id": "dom-manipulation-047",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const div = document.createElement('div');\ndiv.append('Hello', ' ', 'World');\ndiv.normalize();\nconsole.log(div.childNodes.length, div.firstChild.textContent);",
+    "options": [
+      "1, Hello World",
+      "3, Hello",
+      "3, Hello World",
+      "1, Hello"
+    ],
+    "correctIndex": 0,
+    "explanation": "When strings are passed to append(), each becomes a separate Text node. Three text nodes are created: 'Hello', ' ', and 'World'. The normalize() method merges adjacent text nodes into one and removes empty text nodes. Therefore, the three text nodes are merged into 'Hello World', resulting in childNodes.length of 1.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Node/normalize"
+  },
+  {
+    "id": "dom-manipulation-048",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct purpose of ResizeObserver?",
+    "options": [
+      "It only detects changes in the browser window size",
+      "It detects changes in CSS media queries",
+      "It detects when images have finished loading",
+      "It asynchronously detects size changes of individual DOM elements"
+    ],
+    "correctIndex": 3,
+    "explanation": "ResizeObserver asynchronously detects changes in the content area or border box size of individual DOM elements. Unlike the window resize event, it can directly observe size changes of specific elements, making it useful for implementing container queries and responsive components. The callback receives an array of ResizeObserverEntry objects.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver"
+  },
+  {
+    "id": "dom-manipulation-049",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does text extraction using Range fail in the following code?",
+    "code": "const div = document.createElement('div');\ndiv.innerHTML = '<span>Hello</span> <span>World</span>';\nconst range = document.createRange();\nrange.selectNodeContents(div);\nconst text = range.toString();\nconsole.log(text);",
+    "options": [
+      "createRange() only works on elements connected to the DOM",
+      "selectNode should be used instead of selectNodeContents",
+      "There is no problem — 'Hello World' is output correctly",
+      "range.toString() returns a string that includes HTML tags"
+    ],
+    "correctIndex": 2,
+    "explanation": "This code works correctly. Range objects can be used even on elements not connected to the DOM. selectNodeContents() includes all children of the node in the range, and toString() returns only the text content within the range. HTML tags are not included, so 'Hello World' is output.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Range"
+  },
+  {
+    "id": "dom-manipulation-050",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between previousElementSibling and previousSibling?",
+    "options": [
+      "previousSibling returns only Element nodes, while previousElementSibling returns all node types",
+      "Both properties return the same node",
+      "previousElementSibling returns the parent element",
+      "previousElementSibling returns only Element nodes, while previousSibling can also return text or comment nodes"
+    ],
+    "correctIndex": 3,
+    "explanation": "previousSibling returns the previous sibling node, which can be any node type including text nodes, comment nodes, and Element nodes. previousElementSibling returns only the previous sibling that is an Element node. Since line breaks and whitespace in HTML create text nodes, it is safer to use previousElementSibling when traversing only elements.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/previousElementSibling"
   }
 ]

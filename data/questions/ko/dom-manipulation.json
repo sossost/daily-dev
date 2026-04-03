@@ -657,5 +657,170 @@
     "correctIndex": 1,
     "explanation": "createTreeWalker()는 NodeFilter를 사용하여 텍스트 노드(NodeFilter.SHOW_TEXT), 주석 노드(NodeFilter.SHOW_COMMENT) 등 다양한 노드 타입을 순회할 수 있는 저수준 API입니다. querySelectorAll()은 CSS 선택자에 매칭되는 Element 노드만 정적 NodeList로 반환합니다. TreeWalker는 커스텀 필터 함수로 복잡한 순회 조건을 정의할 수 있어, DOM 트리의 세밀한 탐색에 유용합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Document/createTreeWalker"
+  },
+  {
+    "id": "dom-manipulation-041",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Shadow DOM의 주요 특징으로 올바른 것은?",
+    "options": [
+      "Shadow DOM은 스타일과 마크업을 캡슐화하여 외부 CSS의 영향을 받지 않는 독립된 DOM 트리를 생성한다",
+      "Shadow DOM은 JavaScript에서 접근할 수 없는 완전히 격리된 DOM이다",
+      "Shadow DOM은 서버 사이드 렌더링에서만 사용할 수 있다",
+      "Shadow DOM은 iframe과 동일한 방식으로 동작한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "Shadow DOM은 웹 컴포넌트의 핵심 기술로, 호스트 요소 내부에 캡슐화된 DOM 트리를 생성합니다. 외부 CSS가 Shadow DOM 내부에 영향을 주지 않고, 내부 스타일도 외부로 누출되지 않습니다. element.attachShadow({ mode: 'open' })으로 생성하며, mode가 'open'이면 element.shadowRoot로 접근 가능하고 'closed'이면 null을 반환합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Web_components/Using_shadow_DOM"
+  },
+  {
+    "id": "dom-manipulation-042",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "const div = document.createElement('div');\nconsole.log(div.isConnected);\ndocument.body.appendChild(div);\nconsole.log(div.isConnected);\ndiv.remove();\nconsole.log(div.isConnected);",
+    "options": [
+      "true, true, false",
+      "false, true, false",
+      "false, false, true",
+      "undefined, true, false"
+    ],
+    "correctIndex": 1,
+    "explanation": "isConnected는 노드가 현재 문서의 DOM 트리에 연결되어 있는지를 나타내는 읽기 전용 불리언 속성입니다. createElement로 생성만 한 노드는 아직 DOM에 연결되지 않았으므로 false입니다. appendChild로 추가하면 true가 되고, remove()로 제거하면 다시 false가 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Node/isConnected"
+  },
+  {
+    "id": "dom-manipulation-043",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "IntersectionObserver의 용도로 올바른 것은?",
+    "options": [
+      "두 DOM 요소의 스타일 속성이 겹치는지 감지한다",
+      "요소 간의 이벤트 충돌을 감지한다",
+      "두 요소의 z-index가 겹치는지 확인한다",
+      "대상 요소가 뷰포트 또는 특정 조상 요소와 교차하는 비율을 비동기적으로 관찰한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "IntersectionObserver는 대상 요소가 뷰포트나 지정된 루트 요소의 가시 영역에 들어오거나 나가는 것을 비동기적으로 감지합니다. 무한 스크롤, 이미지 지연 로딩(lazy loading), 광고 가시성 추적 등에 활용됩니다. scroll 이벤트 리스너와 달리 메인 스레드를 차단하지 않아 성능에 유리합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/IntersectionObserver"
+  },
+  {
+    "id": "dom-manipulation-044",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 toggleAttribute가 기대와 다르게 동작하는 이유는?",
+    "code": "const btn = document.createElement('button');\nbtn.toggleAttribute('disabled', true);\nbtn.toggleAttribute('disabled');\nbtn.toggleAttribute('disabled');\nconsole.log(btn.hasAttribute('disabled'));",
+    "options": [
+      "toggleAttribute의 두 번째 인자 true는 강제로 추가하고, 이후 호출들은 토글하여 최종적으로 disabled가 존재한다",
+      "toggleAttribute는 불리언 속성에만 사용할 수 있어서 오류가 발생한다",
+      "toggleAttribute를 연속 호출하면 마지막 호출만 적용된다",
+      "toggleAttribute는 setAttribute와 동일하게 동작한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "toggleAttribute(name, force)에서 force가 true이면 속성을 강제 추가, false이면 강제 제거합니다. force를 생략하면 존재 여부를 토글합니다. 첫 호출에서 disabled가 추가되고(force=true), 두 번째 호출에서 토글되어 제거, 세 번째 호출에서 다시 토글되어 추가됩니다. 따라서 최종 결과는 true입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/toggleAttribute"
+  },
+  {
+    "id": "dom-manipulation-045",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "const ul = document.createElement('ul');\nconst li1 = document.createElement('li');\nconst li2 = document.createElement('li');\nli1.textContent = 'A';\nli2.textContent = 'B';\nul.append(li1);\nul.prepend(li2);\nconsole.log(ul.firstElementChild.textContent, ul.lastElementChild.textContent);",
+    "options": [
+      "A, B",
+      "B, B",
+      "A, A",
+      "B, A"
+    ],
+    "correctIndex": 3,
+    "explanation": "append()는 부모의 마지막 자식 뒤에 노드를 추가하고, prepend()는 부모의 첫 번째 자식 앞에 노드를 삽입합니다. li1('A')을 append한 후 li2('B')를 prepend하면 순서가 li2, li1이 됩니다. 따라서 firstElementChild는 'B', lastElementChild는 'A'입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/prepend"
+  },
+  {
+    "id": "dom-manipulation-046",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "adoptNode()와 importNode()의 차이점으로 올바른 것은?",
+    "options": [
+      "adoptNode()는 노드를 복사하고, importNode()는 원본을 이동시킨다",
+      "adoptNode()는 원본 노드를 현재 문서로 이동시키고, importNode()는 노드를 복사하여 현재 문서에 가져온다",
+      "두 메서드는 동일하게 동작한다",
+      "importNode()는 이벤트 리스너도 복사하지만, adoptNode()는 복사하지 않는다"
+    ],
+    "correctIndex": 1,
+    "explanation": "adoptNode()는 다른 문서의 노드를 현재 문서로 이동시킵니다. 원본 문서에서 노드가 제거되고 ownerDocument가 변경됩니다. importNode()는 노드를 복사(clone)하여 현재 문서에 가져오며, 원본은 그대로 유지됩니다. 두 경우 모두 반환된 노드를 DOM에 삽입하려면 별도로 appendChild 등을 호출해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Document/adoptNode"
+  },
+  {
+    "id": "dom-manipulation-047",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "const div = document.createElement('div');\ndiv.append('Hello', ' ', 'World');\ndiv.normalize();\nconsole.log(div.childNodes.length, div.firstChild.textContent);",
+    "options": [
+      "1, Hello World",
+      "3, Hello",
+      "3, Hello World",
+      "1, Hello"
+    ],
+    "correctIndex": 0,
+    "explanation": "append()에 문자열을 전달하면 각각 별도의 Text 노드가 생성됩니다. 'Hello', ' ', 'World' 세 개의 텍스트 노드가 만들어집니다. normalize()는 인접한 텍스트 노드를 하나로 병합하고, 빈 텍스트 노드를 제거합니다. 따라서 세 텍스트 노드가 'Hello World' 하나로 병합되어 childNodes.length는 1이 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Node/normalize"
+  },
+  {
+    "id": "dom-manipulation-048",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "ResizeObserver의 용도로 올바른 것은?",
+    "options": [
+      "브라우저 창의 크기 변경만 감지한다",
+      "CSS 미디어 쿼리의 변경을 감지한다",
+      "이미지의 로딩 완료를 감지한다",
+      "개별 DOM 요소의 크기 변경을 비동기적으로 감지한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "ResizeObserver는 개별 DOM 요소의 콘텐츠 영역이나 보더 박스 크기 변경을 비동기적으로 감지합니다. window의 resize 이벤트와 달리 특정 요소의 크기 변화를 직접 관찰할 수 있어, 컨테이너 쿼리나 반응형 컴포넌트 구현에 유용합니다. 콜백은 ResizeObserverEntry 배열을 받습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/ResizeObserver"
+  },
+  {
+    "id": "dom-manipulation-049",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 Range를 사용한 텍스트 추출이 실패하는 이유는?",
+    "code": "const div = document.createElement('div');\ndiv.innerHTML = '<span>Hello</span> <span>World</span>';\nconst range = document.createRange();\nrange.selectNodeContents(div);\nconst text = range.toString();\nconsole.log(text);",
+    "options": [
+      "createRange()는 DOM에 연결된 요소에서만 동작한다",
+      "selectNodeContents 대신 selectNode를 사용해야 한다",
+      "코드에 문제가 없다 — 'Hello World'가 정상적으로 출력된다",
+      "range.toString()은 HTML 태그를 포함한 문자열을 반환한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "이 코드는 정상적으로 동작합니다. Range 객체는 DOM에 연결되지 않은 요소에서도 사용할 수 있습니다. selectNodeContents()는 노드의 모든 자식을 범위에 포함시키고, toString()은 범위 내의 텍스트 콘텐츠만 반환합니다. HTML 태그는 포함되지 않으므로 'Hello World'가 출력됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Range"
+  },
+  {
+    "id": "dom-manipulation-050",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "previousElementSibling과 previousSibling의 차이점으로 올바른 것은?",
+    "options": [
+      "previousSibling은 Element 노드만 반환하고, previousElementSibling은 모든 노드를 반환한다",
+      "두 속성은 동일한 노드를 반환한다",
+      "previousElementSibling은 부모 요소를 반환한다",
+      "previousElementSibling은 Element 노드만 반환하고, previousSibling은 텍스트 노드나 주석 노드도 반환할 수 있다"
+    ],
+    "correctIndex": 3,
+    "explanation": "previousSibling은 이전 형제 노드를 반환하며, 이는 텍스트 노드, 주석 노드, Element 노드 등 모든 노드 타입이 될 수 있습니다. previousElementSibling은 이전 형제 중 Element 노드만 반환합니다. HTML에서 줄바꿈이나 공백은 텍스트 노드를 생성하므로, 요소만 탐색할 때는 previousElementSibling을 사용하는 것이 안전합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/previousElementSibling"
   }
 ]
