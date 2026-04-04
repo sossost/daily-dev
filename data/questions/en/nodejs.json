@@ -656,5 +656,171 @@
     "correctIndex": 0,
     "explanation": "When the first connect() is called, only the 'A' listener is registered, so 'A' is output. Then the 'B' listener is added. When the second connect() is called, both 'A' and 'B' listeners execute in registration order, outputting 'A' then 'B'. The total output is A A B.",
     "sourceUrl": "https://nodejs.org/api/events.html#class-eventemitter"
+  },
+  {
+    "id": "nodejs-041",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between the legacy url.parse() and the WHATWG URL API (new URL()) in Node.js?",
+    "options": [
+      "url.parse() returns a Promise, while new URL() works synchronously",
+      "new URL() follows the WHATWG standard and provides the same API as browsers, while url.parse() is a Node.js-specific legacy API",
+      "url.parse() supports more protocols",
+      "Both return completely identical result objects"
+    ],
+    "correctIndex": 1,
+    "explanation": "new URL() implements the WHATWG URL Standard and behaves identically to the browser URL API. url.parse() is a Node.js-specific legacy API that may parse certain edge cases differently from the WHATWG standard. New code should use new URL() instead.",
+    "sourceUrl": "https://nodejs.org/api/url.html#url-strings-and-url-objects"
+  },
+  {
+    "id": "nodejs-042",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Node.js code?",
+    "code": "const timer = setInterval(() => {\n  console.log('tick');\n}, 100);\n\ntimer.unref();\n\nsetTimeout(() => {\n  console.log('done');\n}, 50);",
+    "options": [
+      "done followed by tick",
+      "tick repeated indefinitely",
+      "Only done",
+      "No output"
+    ],
+    "correctIndex": 2,
+    "explanation": "timer.unref() allows the event loop to exit if the unref'd timer is the only remaining work. The setTimeout keeps the event loop alive for 50ms, printing 'done'. After that callback completes, the only remaining scheduled work is the unref'd setInterval (due at 100ms), but since it is unref'd it does not keep the event loop alive. The process exits before 100ms, so 'tick' is never printed.",
+    "sourceUrl": "https://nodejs.org/api/timers.html#timeoutunref"
+  },
+  {
+    "id": "nodejs-043",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Running the following code produces a 'MaxListenersExceededWarning'. What is the cause?",
+    "code": "const EventEmitter = require('events');\nconst emitter = new EventEmitter();\n\nfor (let i = 0; i < 20; i++) {\n  emitter.on('data', () => console.log(i));\n}",
+    "options": [
+      "EventEmitter only supports a maximum of 10 events",
+      "Closures cannot be used inside listener functions",
+      "By default, a maximum of 10 listeners is allowed per event — exceeding this triggers a memory leak warning",
+      "var should be used instead of let in the for loop"
+    ],
+    "correctIndex": 2,
+    "explanation": "EventEmitter allows a maximum of 10 listeners per event by default. Exceeding this limit triggers a warning about potential memory leaks. If more listeners are intentionally needed, use emitter.setMaxListeners(n) to increase the limit.",
+    "sourceUrl": "https://nodejs.org/api/events.html#emittersetmaxlistenersn"
+  },
+  {
+    "id": "nodejs-044",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following Node.js code?",
+    "code": "const url = new URL('https://example.com/path?name=node&version=20');\nconsole.log(url.searchParams.get('version'));\nconsole.log(url.pathname);",
+    "options": [
+      "20 /path?name=node&version=20",
+      "node /path",
+      "null /path",
+      "20 /path"
+    ],
+    "correctIndex": 3,
+    "explanation": "The URL object's searchParams.get('version') returns the value '20' of the query parameter 'version'. pathname returns the path portion excluding the query string, which is '/path'. searchParams is a URLSearchParams instance that provides convenient methods to query and modify URL parameters.",
+    "sourceUrl": "https://nodejs.org/api/url.html#class-url"
+  },
+  {
+    "id": "nodejs-045",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference between flowing mode and paused mode in a Node.js Readable stream?",
+    "options": [
+      "Flowing mode is synchronous, while paused mode is asynchronous",
+      "In flowing mode, data is automatically delivered to the consumer, while in paused mode, read() must be explicitly called to read data",
+      "pipe() can only be used in paused mode",
+      "Flowing mode is only available in object mode"
+    ],
+    "correctIndex": 1,
+    "explanation": "In flowing mode, data automatically flows to the consumer when a 'data' event listener is added or pipe() is called. In paused mode (the default), stream.read() must be explicitly called to read data chunks. Modes can be switched using resume() and pause().",
+    "sourceUrl": "https://nodejs.org/api/stream.html#two-reading-modes"
+  },
+  {
+    "id": "nodejs-046",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "What causes the server to crash when invalid JSON is sent to the following code?",
+    "code": "const http = require('http');\nconst server = http.createServer((req, res) => {\n  let body = '';\n  req.on('data', (chunk) => { body += chunk; });\n  req.on('end', () => {\n    const data = JSON.parse(body);\n    res.end(JSON.stringify({ received: data }));\n  });\n});\nserver.listen(3000);",
+    "options": [
+      "JSON.parse() throws an exception for invalid JSON, but without a try-catch wrapper it causes an uncaughtException",
+      "The encoding is not specified in req.on('data')",
+      "The body variable should be declared with const",
+      "A Content-Type header must be set before res.end()"
+    ],
+    "correctIndex": 0,
+    "explanation": "JSON.parse() throws a SyntaxError when given an invalid JSON string. Without a try-catch block, this error goes uncaught and crashes the server. When parsing user input, always wrap JSON.parse() in try-catch and return an appropriate HTTP status code (400) on error.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse"
+  },
+  {
+    "id": "nodejs-047",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Node.js code?",
+    "code": "process.on('exit', (code) => {\n  setTimeout(() => console.log('timer'), 0);\n  console.log('exit:', code);\n});\n\nconsole.log('start');\nprocess.exitCode = 1;",
+    "options": [
+      "start -> timer -> exit: 1",
+      "start -> exit: 1 -> timer",
+      "start -> exit: 1",
+      "start"
+    ],
+    "correctIndex": 2,
+    "explanation": "Asynchronous operations cannot be scheduled inside the 'exit' event handler. The setTimeout callback will never execute. 'start' is output first, then when the event loop empties, since process.exitCode is 1, 'exit: 1' is output. 'timer' is never printed.",
+    "sourceUrl": "https://nodejs.org/api/process.html#event-exit"
+  },
+  {
+    "id": "nodejs-048",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Although Node.js is called 'single-threaded', in which case does it actually use multiple threads?",
+    "options": [
+      "A separate thread is used for every HTTP request",
+      "Thread pools are used for CPU operations like JSON.parse()",
+      "A new thread is created each time a callback function is invoked",
+      "libuv's thread pool handles blocking operations such as DNS lookups, file system I/O, and certain crypto operations"
+    ],
+    "correctIndex": 3,
+    "explanation": "JavaScript code runs on a single thread (the main event loop), but libuv manages a thread pool of 4 threads by default (up to 1024). Blocking operations like DNS lookups, fs operations, zlib compression, and certain crypto operations that lack OS-level async APIs are handled in this thread pool.",
+    "sourceUrl": "https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop"
+  },
+  {
+    "id": "nodejs-049",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between the HTTP/1.1 and HTTP/2 (http2) modules in Node.js?",
+    "options": [
+      "http2 is a text protocol, while http is a binary protocol",
+      "http2 supports multiplexing — handling multiple requests/responses simultaneously over a single TCP connection",
+      "http2 cannot be used without encryption",
+      "The http module is always faster than http2"
+    ],
+    "correctIndex": 1,
+    "explanation": "The key advantage of HTTP/2 is multiplexing. HTTP/1.1 handles only one request/response at a time per TCP connection, causing Head-of-Line (HOL) blocking, while HTTP/2 can process multiple streams simultaneously over a single connection. HTTP/2 also uses a binary protocol and supports header compression (HPACK).",
+    "sourceUrl": "https://nodejs.org/api/http2.html"
+  },
+  {
+    "id": "nodejs-050",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the expected problem when circular dependency occurs in the following code?",
+    "code": "// a.js\nconst b = require('./b');\nconsole.log('a:', b.value);\nmodule.exports = { value: 'A' };\n\n// b.js\nconst a = require('./a');\nconsole.log('b:', a.value);\nmodule.exports = { value: 'B' };",
+    "options": [
+      "require('./b') in a.js throws an error and the program terminates",
+      "An infinite loop occurs causing a stack overflow",
+      "When b.js requires a.js, a.js's module.exports has not been set yet, so an empty object is returned and a.value is undefined",
+      "Node.js automatically detects the circular dependency, prints a warning, and skips the loading"
+    ],
+    "correctIndex": 2,
+    "explanation": "When a circular dependency occurs in CommonJS, instead of entering an infinite loop, Node.js returns a 'partial' exports object of the module that has not yet finished executing. When a.js requires b.js, and b.js then requires a.js, a.js's module.exports has not been set yet, so an empty object ({}) is returned. Therefore a.value is undefined.",
+    "sourceUrl": "https://nodejs.org/api/modules.html#cycles"
   }
 ]

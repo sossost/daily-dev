@@ -39,7 +39,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Event Loop | 48 |
 | Git Advanced | 40 |
 | Network | 40 |
-| Node.js | 40 |
+| Node.js | 50 |
 | Promise | 48 |
 | Prototype | 48 |
 | React Basics | 40 |
@@ -50,7 +50,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Web Performance | 50 |
 | Web Security | 45 |
 
-**Total: 1047 questions across 23 topics**
+**Total: 1057 questions across 23 topics**
 
 ## Getting Started
 

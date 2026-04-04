@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 10 web-performance questions (`ada9bc5`)
 - **content**: add 10 dom-manipulation questions (`0542c05`)
 
 ## 2026-04-03
