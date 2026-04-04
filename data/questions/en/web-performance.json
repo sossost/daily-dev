@@ -651,5 +651,168 @@
     "correctIndex": 1,
     "explanation": "The CSS contain property isolates the rendering scope of an element (containment). contain: layout ensures internal layout changes don't affect the outside, style limits the scope of counters and quotes, and paint ensures content doesn't paint outside the element's bounds. This allows the browser to only recalculate that specific element when its internals change rather than the entire page, significantly reducing layout and paint costs on large pages.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/contain"
+  },
+  {
+    "id": "web-performance-041",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of passive event listeners?",
+    "options": [
+      "They ensure event handlers execute asynchronously",
+      "They tell the browser that the handler won't call preventDefault(), allowing default actions like scrolling to proceed immediately without delay",
+      "They run event listeners in a Web Worker to avoid blocking the main thread",
+      "They disable event bubbling to reduce event propagation cost"
+    ],
+    "correctIndex": 1,
+    "explanation": "When a touch or wheel event listener might call preventDefault(), the browser must wait for the handler to finish before it can start scrolling. Setting { passive: true } guarantees that preventDefault() won't be called, so the browser can begin scrolling immediately without waiting for the handler. This significantly improves touch scroll responsiveness, especially on mobile devices.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#passive"
+  },
+  {
+    "id": "web-performance-042",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the performance benefit of using WeakRef in the following code?",
+    "code": "const cache = new Map();\n\nfunction getCachedResult(key, compute) {\n  const ref = cache.get(key);\n  const cached = ref?.deref();\n  if (cached !== undefined) return cached;\n\n  const result = compute();\n  cache.set(key, new WeakRef(result));\n  return result;\n}",
+    "options": [
+      "WeakRef compresses data to reduce memory usage",
+      "Cached objects can be garbage collected when no longer referenced elsewhere, preventing memory leaks",
+      "WeakRef moves objects to a Web Worker to free main thread memory",
+      "deref() executes asynchronously so it doesn't block the main thread"
+    ],
+    "correctIndex": 1,
+    "explanation": "WeakRef allows its target object to be garbage collected when there are no other strong references to it. Caching objects in a regular Map prevents them from being GC'd as long as the Map exists, potentially causing memory leaks. With WeakRef, cached objects are automatically freed under memory pressure, preventing the cache from growing unboundedly. However, since GC timing is not guaranteed, deref() may return undefined, requiring recomputation logic.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakRef"
+  },
+  {
+    "id": "web-performance-043",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What problem occurs when the CSS will-change property is overused?",
+    "options": [
+      "Elements with will-change can no longer receive click events",
+      "will-change disables CSS transitions, causing animations to stop working",
+      "Each element creates a separate compositing layer, consuming excessive GPU memory and actually degrading performance",
+      "Child elements of will-change elements are not rendered"
+    ],
+    "correctIndex": 2,
+    "explanation": "will-change hints to the browser that an element will change soon, prompting optimizations like creating a compositing layer in advance. However, applying it to every element creates separate GPU layers for each, rapidly increasing VRAM usage and making layer compositing more expensive, which actually degrades performance. The recommended approach is to add will-change just before an animation starts and remove it after completion.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/will-change"
+  },
+  {
+    "id": "web-performance-044",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "How do the fetchpriority attribute values 'high' and 'low' affect resource loading?",
+    "options": [
+      "fetchpriority only affects the order of resource downloads and doesn't change actual transfer speed",
+      "fetchpriority='high' loads resources synchronously, while 'low' loads them asynchronously",
+      "fetchpriority='high' hints the browser to download that resource before other same-type resources, while 'low' lowers priority so critical resources load first",
+      "fetchpriority only works in HTTP/1.1 and is ignored in HTTP/2"
+    ],
+    "correctIndex": 2,
+    "explanation": "The fetchpriority attribute influences the browser's resource priority decisions. For example, setting fetchpriority='high' on a hero image downloads it before other images, improving LCP. Conversely, setting 'low' on below-the-fold images yields bandwidth to critical resources. It can be used on img, link, script, and fetch(), and when combined with preload, enables more precise loading priority control.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/fetchPriority"
+  },
+  {
+    "id": "web-performance-045",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What does each measurement represent when using the Navigation Timing API in the following code?",
+    "code": "const timing = performance.getEntriesByType('navigation')[0];\nconst redirect = timing.redirectEnd - timing.redirectStart;\nconst domParsing = timing.domInteractive - timing.responseEnd;\nconst domReady = timing.domContentLoadedEventEnd - timing.fetchStart;",
+    "options": [
+      "redirect is the redirect duration, domParsing is the time from response receipt to DOM parsing completion, and domReady is the total time from page request to DOMContentLoaded event completion",
+      "All three values measure only JavaScript execution time",
+      "redirect is DNS lookup time, domParsing is TCP connection time, and domReady is TLS handshake time",
+      "The Navigation Timing API can only measure Service Worker response times"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Navigation Timing API measures each stage of page load in milliseconds. redirectStart/End covers the redirect chain duration, responseEnd to domInteractive is the time the browser takes to parse the HTML after receiving it, and fetchStart to domContentLoadedEventEnd is the total time from navigation start to DOMContentLoaded. This enables precise identification of bottleneck phases in the page load process.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/PerformanceNavigationTiming"
+  },
+  {
+    "id": "web-performance-046",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the core principle of the Critical CSS technique?",
+    "options": [
+      "Combine all CSS files into one to reduce the number of HTTP requests",
+      "Remove all comments and whitespace from CSS files to minimize file size",
+      "Inline only the CSS needed for above-the-fold rendering and load the rest asynchronously to minimize render blocking",
+      "Convert CSS to JavaScript for dynamic application"
+    ],
+    "correctIndex": 2,
+    "explanation": "External CSS files are render-blocking resources — the browser cannot perform its first paint until the entire CSS is downloaded and parsed. The Critical CSS technique inlines the minimum CSS needed for the first screen in a <style> tag in the HTML, and loads the remaining CSS asynchronously using media attributes or rel='preload'. This can significantly improve FCP (First Contentful Paint) and LCP.",
+    "sourceUrl": "https://web.dev/articles/extract-critical-css"
+  },
+  {
+    "id": "web-performance-047",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What impact does the media attribute have on performance in the following CSS?",
+    "code": "<link rel=\"stylesheet\" href=\"base.css\">\n<link rel=\"stylesheet\" href=\"print.css\" media=\"print\">\n<link rel=\"stylesheet\" href=\"large.css\" media=\"(min-width: 1200px)\">",
+    "options": [
+      "CSS files with a media attribute are not downloaded at all",
+      "All CSS files are downloaded, but stylesheets whose media condition doesn't match don't block rendering, making initial rendering faster",
+      "The media attribute determines the compression method for CSS files",
+      "print.css and large.css are only parsed when their conditions are met"
+    ],
+    "correctIndex": 1,
+    "explanation": "The browser downloads all <link> stylesheets, but stylesheets whose media attribute doesn't match the current environment are not treated as render-blocking resources. For example, if the screen width is less than 1200px, large.css is downloaded but doesn't block rendering, and print.css only blocks rendering during printing. This can be used to limit render-blocking CSS to only what's needed for the initial render, improving FCP.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#conditionally_loading_resources_with_media_queries"
+  },
+  {
+    "id": "web-performance-048",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "How can you minimize the negative performance impact of third-party scripts?",
+    "options": [
+      "Load all third-party scripts synchronously in the <head>",
+      "Apply async or defer to third-party scripts, lazy-load them after user interaction when possible, or self-host them to reduce DNS lookup and connection time",
+      "Converting third-party scripts to inline <script> improves performance",
+      "Third-party scripts are automatically loaded with low priority, so no optimization is needed"
+    ],
+    "correctIndex": 1,
+    "explanation": "Third-party scripts (ads, analytics, chat widgets, etc.) load from external servers, incurring additional costs for DNS lookup, TCP connection, and script execution. Using async/defer prevents parser blocking, and lazy-loading via Intersection Observer or user events minimizes impact on initial loading. When possible, self-hosting on your CDN also eliminates external domain connection costs.",
+    "sourceUrl": "https://web.dev/articles/optimizing-third-party-javascript"
+  },
+  {
+    "id": "web-performance-049",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between <link rel=\"preload\"> and <link rel=\"modulepreload\">?",
+    "options": [
+      "modulepreload fetches ES modules and their static dependencies, parsing them immediately, while preload only downloads resources and defers parsing until use",
+      "preload is always faster than modulepreload",
+      "modulepreload can only be used with CommonJS modules",
+      "Both attributes behave identically and only differ in name"
+    ],
+    "correctIndex": 0,
+    "explanation": "preload downloads specified resources with high priority but doesn't parse them until they're actually used. In contrast, modulepreload is specific to ES modules — it downloads the module, immediately parses it and registers it in the module map, and recursively fetches the module's static import dependencies. This prevents the waterfall (sequential requests) of the module graph, significantly reducing load times for applications using multiple modules.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/modulepreload"
+  },
+  {
+    "id": "web-performance-050",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of <link rel=\"dns-prefetch\">?",
+    "options": [
+      "It downloads all resources from external domains in advance",
+      "It validates SSL certificates of external domains in advance",
+      "It performs DNS resolution for external domains ahead of time, saving DNS lookup time when the actual resource request is made",
+      "It establishes WebSocket connections to external domains in advance"
+    ],
+    "correctIndex": 2,
+    "explanation": "dns-prefetch hints the browser to perform DNS resolution for the specified domain in advance. DNS lookups typically take 20-120ms, and for pages using resources from multiple external domains, this time accumulates. It's a lighter hint than preconnect and is suitable for domains you might not definitely connect to. preconnect performs DNS + TCP + TLS, so it's more suitable for domains you'll definitely use.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/dns-prefetch"
   }
 ]
