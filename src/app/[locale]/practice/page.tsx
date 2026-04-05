@@ -1,27 +1,31 @@
 'use client'
 
-import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { useRouter } from '@/i18n/navigation'
 import { Link } from '@/i18n/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { isLocale } from '@/i18n/routing'
 import { AnimatePresence } from 'framer-motion'
-import { ArrowLeft, Dumbbell } from 'lucide-react'
-import { TOPICS, SESSION_TOTAL_QUESTIONS, type Topic, type Difficulty } from '@/types'
+import { ArrowLeft, Dumbbell, Square } from 'lucide-react'
+import { TOPICS, SESSION_TOTAL_QUESTIONS, type Topic, type Difficulty, type SessionAnswer, type SessionQuestion } from '@/types'
 import { useSessionStore } from '@/stores/useSessionStore'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useHydration } from '@/hooks/useHydration'
 import { useQuizKeyboard } from '@/hooks/useQuizKeyboard'
 import { generatePracticeSession, countAvailableQuestions } from '@/lib/practice-session'
+import { generateEndlessPool, computeEndlessResult, type EndlessResult } from '@/lib/endless-session'
 import { TopicSelector } from '@/components/practice/TopicSelector'
 import { ProgressBar } from '@/components/quiz/ProgressBar'
 import { QuizCard, NextButton } from '@/components/quiz/QuizCard'
 import { KeyboardHint } from '@/components/quiz/KeyboardHint'
+import { EndlessResultView } from '@/components/endless/EndlessResultView'
 
-type PracticePhase = 'setup' | 'quiz'
+type PracticeMode = 'standard' | 'endless'
+type PracticePhase = 'setup' | 'quiz' | 'result'
 
 export default function PracticePage() {
   const t = useTranslations('practice')
+  const te = useTranslations('endless')
   const tc = useTranslations('common')
   const router = useRouter()
   const rawLocale = useLocale()
@@ -29,32 +33,72 @@ export default function PracticePage() {
   const isHydrated = useHydration()
   const srsRecords = useProgressStore((s) => s.srsRecords)
 
-  // Clear stale session state synchronously on mount.
-  // Prevents redirect to result page from previous session's isComplete=true.
-  const cleared = useRef(false)
-  if (!cleared.current) {
-    cleared.current = true
-    useSessionStore.getState().reset()
-  }
+  useEffect(() => {
+    resetSession()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const [phase, setPhase] = useState<PracticePhase>('setup')
+  const [mode, setMode] = useState<PracticeMode>('standard')
   const [selectedTopics, setSelectedTopics] = useState<readonly Topic[]>([...TOPICS])
   const [difficulty, setDifficulty] = useState<Difficulty | 'all'>('all')
 
-  const questions = useSessionStore((s) => s.questions)
-  const currentIndex = useSessionStore((s) => s.currentIndex)
-  const selectedIndex = useSessionStore((s) => s.selectedIndex)
-  const isAnswered = useSessionStore((s) => s.isAnswered)
-  const isComplete = useSessionStore((s) => s.isComplete)
+  // Standard mode — session store
+  const storeQuestions = useSessionStore((s) => s.questions)
+  const storeCurrentIndex = useSessionStore((s) => s.currentIndex)
+  const storeSelectedIndex = useSessionStore((s) => s.selectedIndex)
+  const storeIsAnswered = useSessionStore((s) => s.isAnswered)
+  const storeIsComplete = useSessionStore((s) => s.isComplete)
   const startSession = useSessionStore((s) => s.startSession)
   const selectAnswer = useSessionStore((s) => s.selectAnswer)
-  const nextQuestion = useSessionStore((s) => s.nextQuestion)
-  const reset = useSessionStore((s) => s.reset)
+  const storeNextQuestion = useSessionStore((s) => s.nextQuestion)
+  const resetSession = useSessionStore((s) => s.reset)
+
+  // Endless mode — local state
+  const [endlessQuestions, setEndlessQuestions] = useState<SessionQuestion[]>([])
+  const [endlessIndex, setEndlessIndex] = useState(0)
+  const [endlessSelectedIndex, setEndlessSelectedIndex] = useState<number | null>(null)
+  const [endlessIsAnswered, setEndlessIsAnswered] = useState(false)
+  const [endlessAnswers, setEndlessAnswers] = useState<SessionAnswer[]>([])
+  const [endlessResult, setEndlessResult] = useState<EndlessResult | null>(null)
+
+  const handleEndlessSelect = useCallback((index: number) => {
+    if (endlessIsAnswered === true) return
+    setEndlessSelectedIndex(index)
+    setEndlessIsAnswered(true)
+
+    const currentQ = endlessQuestions[endlessIndex]
+    if (currentQ == null) return
+
+    const newAnswer: SessionAnswer = {
+      questionId: currentQ.question.id,
+      topic: currentQ.question.topic,
+      selectedIndex: index,
+      isCorrect: index === currentQ.question.correctIndex,
+      timeSpent: 0,
+    }
+    setEndlessAnswers((prev) => [...prev, newAnswer])
+  }, [endlessIsAnswered, endlessQuestions, endlessIndex])
+
+  const handleEndlessNext = useCallback(() => {
+    if (endlessIsAnswered === false) return
+    const nextIdx = endlessIndex + 1
+    if (nextIdx >= endlessQuestions.length) {
+      setEndlessResult(computeEndlessResult(endlessAnswers))
+      setPhase('result')
+      return
+    }
+    setEndlessIndex(nextIdx)
+    setEndlessSelectedIndex(null)
+    setEndlessIsAnswered(false)
+  }, [endlessIsAnswered, endlessIndex, endlessQuestions.length, endlessAnswers])
 
   useQuizKeyboard({
-    isAnswered: phase === 'quiz' ? isAnswered : false,
-    onSelect: selectAnswer,
-    onNext: nextQuestion,
+    isAnswered: phase === 'quiz'
+      ? (mode === 'standard' ? storeIsAnswered : endlessIsAnswered)
+      : false,
+    onSelect: mode === 'standard' ? selectAnswer : handleEndlessSelect,
+    onNext: mode === 'standard' ? storeNextQuestion : handleEndlessNext,
   })
 
   const availableCount = useMemo(
@@ -63,12 +107,11 @@ export default function PracticePage() {
   )
 
   const handleToggleTopic = useCallback((topic: Topic) => {
-    setSelectedTopics((prev) => {
-      if (prev.includes(topic)) {
-        return prev.filter((t) => t !== topic)
-      }
-      return [...prev, topic]
-    })
+    setSelectedTopics((prev) =>
+      prev.includes(topic)
+        ? prev.filter((t) => t !== topic)
+        : [...prev, topic],
+    )
   }, [])
 
   const handleSelectAll = useCallback(() => {
@@ -84,7 +127,6 @@ export default function PracticePage() {
       const prevSet = new Set(prev)
       const topicsSet = new Set(topics)
       const allSelected = topics.every((t) => prevSet.has(t))
-
       if (allSelected) {
         return prev.filter((t) => !topicsSet.has(t))
       }
@@ -96,52 +138,155 @@ export default function PracticePage() {
     setDifficulty(d)
   }, [])
 
-  const handleStartPractice = useCallback(() => {
-    reset()
-    const sessionQuestions = generatePracticeSession({
-      topics: selectedTopics,
-      difficulty,
-      srsRecords,
-      locale,
-    })
-    if (sessionQuestions.length === 0) return
-    startSession(sessionQuestions)
+  const handleStart = useCallback(() => {
+    if (mode === 'standard') {
+      resetSession()
+      const sessionQuestions = generatePracticeSession({
+        topics: selectedTopics,
+        difficulty,
+        srsRecords,
+        locale,
+      })
+      if (sessionQuestions.length === 0) return
+      startSession(sessionQuestions)
+    } else {
+      const pool = generateEndlessPool({ topics: selectedTopics, difficulty, locale })
+      if (pool.length === 0) return
+      setEndlessQuestions(pool)
+      setEndlessIndex(0)
+      setEndlessSelectedIndex(null)
+      setEndlessIsAnswered(false)
+      setEndlessAnswers([])
+      setEndlessResult(null)
+    }
     setPhase('quiz')
-  }, [selectedTopics, difficulty, srsRecords, locale, reset, startSession])
+  }, [mode, selectedTopics, difficulty, srsRecords, locale, resetSession, startSession])
+
+  const handleStop = useCallback(() => {
+    if (mode !== 'endless') return
+    setEndlessResult(computeEndlessResult(endlessAnswers))
+    setPhase('result')
+  }, [mode, endlessAnswers])
+
+  const handleRetry = useCallback(() => {
+    setPhase('setup')
+    setEndlessResult(null)
+    setEndlessAnswers([])
+  }, [])
+
+  const handleHome = useCallback(() => {
+    router.push('/')
+  }, [router])
 
   useEffect(() => {
-    if (isComplete === true) {
+    if (mode === 'standard' && storeIsComplete === true) {
       router.push('/session/result')
     }
-  }, [isComplete, router])
+  }, [mode, storeIsComplete, router])
 
   if (isHydrated === false) {
     return null
   }
 
-  if (phase === 'quiz') {
-    const currentQuestion = questions[currentIndex]
-    if (currentQuestion == null) return null
-    const isLast = currentIndex === questions.length - 1
-
+  // Endless result
+  if (phase === 'result' && endlessResult != null) {
     return (
       <div>
-        <KeyboardHint />
-        <ProgressBar current={currentIndex + 1} total={questions.length} />
-        <AnimatePresence mode="wait">
-          <QuizCard
-            key={currentQuestion.question.id}
-            sessionQuestion={currentQuestion}
-            selectedIndex={selectedIndex}
-            isAnswered={isAnswered}
-            onSelect={selectAnswer}
-          />
-        </AnimatePresence>
-        <NextButton isAnswered={isAnswered} isLast={isLast} onNext={nextQuestion} />
+        <header className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900 -mx-4 px-4 -mt-8 pt-3 pb-3">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mb-3"
+          >
+            <ArrowLeft size={16} />
+            {tc('home')}
+          </Link>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+            <Dumbbell size={22} className="text-blue-500" />
+            {te('result')}
+          </h1>
+        </header>
+        <EndlessResultView result={endlessResult} onRetry={handleRetry} onHome={handleHome} />
       </div>
     )
   }
 
+  // Standard quiz
+  if (phase === 'quiz' && mode === 'standard') {
+    const currentQuestion = storeQuestions[storeCurrentIndex]
+    if (currentQuestion == null) return null
+    const isLast = storeCurrentIndex === storeQuestions.length - 1
+
+    return (
+      <div>
+        <KeyboardHint />
+        <ProgressBar current={storeCurrentIndex + 1} total={storeQuestions.length} />
+        <AnimatePresence mode="wait">
+          <QuizCard
+            key={currentQuestion.question.id}
+            sessionQuestion={currentQuestion}
+            selectedIndex={storeSelectedIndex}
+            isAnswered={storeIsAnswered}
+            onSelect={selectAnswer}
+          />
+        </AnimatePresence>
+        <NextButton isAnswered={storeIsAnswered} isLast={isLast} onNext={storeNextQuestion} />
+      </div>
+    )
+  }
+
+  // Endless quiz
+  if (phase === 'quiz' && mode === 'endless') {
+    const currentQuestion = endlessQuestions[endlessIndex]
+    if (currentQuestion == null) return null
+    const correctCount = endlessAnswers.filter((a) => a.isCorrect).length
+
+    return (
+      <div>
+        <KeyboardHint />
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            {te('questionsCompleted', { count: endlessAnswers.length })}
+          </span>
+          <span className="text-sm font-medium text-emerald-500">
+            {te('correctCount', { count: correctCount })}
+          </span>
+        </div>
+        <AnimatePresence mode="wait">
+          <QuizCard
+            key={currentQuestion.question.id}
+            sessionQuestion={currentQuestion}
+            selectedIndex={endlessSelectedIndex}
+            isAnswered={endlessIsAnswered}
+            onSelect={handleEndlessSelect}
+          />
+        </AnimatePresence>
+        <div className="flex gap-3 mt-4">
+          {endlessIsAnswered && (
+            <button
+              type="button"
+              onClick={handleEndlessNext}
+              className="flex-1 py-3 rounded-xl font-semibold text-white bg-blue-500 hover:bg-blue-600 transition-colors"
+            >
+              {endlessIndex + 1 >= endlessQuestions.length
+                ? te('showResult')
+                : te('nextQuestion')}
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={handleStop}
+            className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+            aria-label={te('stopSession')}
+          >
+            <Square size={14} />
+            {te('stop')}
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  // Setup
   return (
     <div>
       <header className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900 -mx-4 px-4 -mt-8 pt-3 pb-3">
@@ -161,6 +306,31 @@ export default function PracticePage() {
         </p>
       </header>
 
+      <div className="flex gap-2 mb-4">
+        <button
+          type="button"
+          onClick={() => setMode('standard')}
+          className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+            mode === 'standard'
+              ? 'bg-blue-500 text-white'
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+          }`}
+        >
+          {t('modeStandard')}
+        </button>
+        <button
+          type="button"
+          onClick={() => setMode('endless')}
+          className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+            mode === 'endless'
+              ? 'bg-blue-500 text-white'
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+          }`}
+        >
+          {t('modeEndless')}
+        </button>
+      </div>
+
       <TopicSelector
         selectedTopics={selectedTopics}
         difficulty={difficulty}
@@ -174,14 +344,18 @@ export default function PracticePage() {
       <div className="mt-6">
         <button
           type="button"
-          onClick={handleStartPractice}
+          onClick={handleStart}
           disabled={availableCount === 0}
           className="w-full py-3 rounded-xl font-semibold text-white bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
-          aria-label={t('startPractice', { count: availableCount, max: SESSION_TOTAL_QUESTIONS })}
+          aria-label={mode === 'standard'
+            ? t('startPractice', { count: availableCount, max: SESSION_TOTAL_QUESTIONS })
+            : te('startEndless', { count: availableCount })}
         >
           {availableCount === 0
             ? t('noQuestions')
-            : t('startPractice', { count: availableCount, max: SESSION_TOTAL_QUESTIONS })}
+            : mode === 'standard'
+              ? t('startPractice', { count: availableCount, max: SESSION_TOTAL_QUESTIONS })
+              : te('startEndless', { count: availableCount })}
         </button>
       </div>
     </div>

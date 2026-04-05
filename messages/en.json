@@ -40,10 +40,6 @@
         "title": "Challenge Mode | DailyDev",
         "description": "Test your speed and accuracy with timed developer quiz challenges."
       },
-      "endless": {
-        "title": "Endless Mode | DailyDev",
-        "description": "Non-stop developer quiz questions — keep going as long as you want."
-      },
       "wrongAnswers": {
         "title": "Wrong Answers | DailyDev",
         "description": "Review and retry the questions you got wrong to strengthen weak areas."
@@ -88,9 +84,7 @@
     "wrongAnswers": "Wrong Answers",
     "wrongAnswersDesc": "Review wrong questions",
     "challenge": "Time Challenge",
-    "challengeDesc": "Speed quiz",
-    "endless": "Endless Practice",
-    "endlessDesc": "No limit, stop anytime"
+    "challengeDesc": "Speed quiz"
   },
   "session": {
     "start": "Start Learning",
@@ -229,7 +223,9 @@
     "deselect": "Deselect",
     "noQuestions": "No questions match your selection",
     "startPractice": "Start Practice ({count} of max {max} questions)",
-    "questionsCount": "{count} questions"
+    "questionsCount": "{count} questions",
+    "modeStandard": "10 Questions",
+    "modeEndless": "Endless"
   },
   "focus": {
     "title": "Focus Practice",

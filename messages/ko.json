@@ -40,10 +40,6 @@
         "title": "챌린지 모드 | DailyDev",
         "description": "제한 시간 안에 개발 퀴즈를 풀며 속도와 정확도를 테스트하세요."
       },
-      "endless": {
-        "title": "무한 모드 | DailyDev",
-        "description": "끝없이 이어지는 개발 퀴즈 — 원하는 만큼 계속 풀어보세요."
-      },
       "wrongAnswers": {
         "title": "오답 노트 | DailyDev",
         "description": "틀렸던 문제를 다시 풀며 취약한 부분을 보강하세요."
@@ -88,9 +84,7 @@
     "wrongAnswers": "오답 노트",
     "wrongAnswersDesc": "틀린 문제 복습",
     "challenge": "타임 챌린지",
-    "challengeDesc": "스피드 퀴즈",
-    "endless": "끝없는 연습",
-    "endlessDesc": "제한 없이, 원할 때 종료"
+    "challengeDesc": "스피드 퀴즈"
   },
   "session": {
     "start": "학습 시작",
@@ -229,7 +223,9 @@
     "deselect": "해제",
     "noQuestions": "선택한 조건에 문제가 없습니다",
     "startPractice": "연습 시작 ({count}문제 중 최대 {max}문제)",
-    "questionsCount": "{count}문제"
+    "questionsCount": "{count}문제",
+    "modeStandard": "10문제",
+    "modeEndless": "무제한"
   },
   "focus": {
     "title": "집중 연습",

@@ -11,7 +11,6 @@ const INDEXABLE_ROUTES = [
   '/focus',
   '/topics',
   '/challenge',
-  '/endless',
 ]
 
 function buildEntry(route: string): MetadataRoute.Sitemap[number] {
