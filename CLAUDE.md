@@ -193,6 +193,91 @@ bash .harness/scripts/validate.sh {agent}
 
 If validation fails → rollback → try different agent or skip.
 
+#### Step 5a: Quality Review (content/expansion only)
+
+Semantic quality gate for questions. Only runs for `content`/`expansion` agents when topics have 50+ questions.
+
+**Sample questions to review:**
+```bash
+SAMPLE=$(npx tsx .harness/scripts/quality-review.ts sample 2>/dev/null)
+QUESTION_COUNT=$(echo "$SAMPLE" | jq '.questions | length' 2>/dev/null || echo "0")
+```
+
+If `QUESTION_COUNT` is 0 → skip to Step 6.
+
+**Run quality review agent:**
+```bash
+QUALITY_OUTPUT=$(claude -p "$(cat .harness/agents/quality.md)
+
+## Questions to Review
+
+${SAMPLE}" \
+  --allowedTools 'Read,Glob,Grep' \
+  --dangerously-skip-permissions \
+  --output-format text \
+  --max-turns 5)
+```
+
+**Apply results:**
+```bash
+QUALITY_ACTIONS=$(echo "$QUALITY_OUTPUT" | npx tsx .harness/scripts/quality-review.ts apply 2>/dev/null)
+NEEDS_FIX=$(echo "$QUALITY_ACTIONS" | jq '.needsFix | length' 2>/dev/null || echo "0")
+```
+
+**If questions need fixing (fix loop):**
+```bash
+if [ "$NEEDS_FIX" -gt 0 ]; then
+  FIX_LIST=$(echo "$QUALITY_ACTIONS" | jq -r '.needsFix[] | "\(.id): \(.reason)"')
+
+  claude -p "$(cat .harness/agents/{agent}.md)
+
+## Agent Rules
+1. Read existing files before writing. Never guess — verify first.
+2. Only modify files within data/questions/.
+
+## Quality Fix Required
+
+The quality reviewer flagged these questions. Fix them in BOTH ko/ and en/ locales:
+
+${FIX_LIST}
+
+Fix ONLY the flagged issues. Do NOT add new questions or rewrite unflagged content.
+
+Work directory: $(pwd)
+
+End your output with:
+SUMMARY: <short title, max 50 chars>
+DETAILS:
+<what was fixed>" \
+    --allowedTools 'Bash(cat:*),Bash(ls:*),Bash(find:*),Read,Write,Edit,Glob,Grep' \
+    --dangerously-skip-permissions \
+    --output-format text \
+    --max-turns 20
+
+  # Re-review only the fixed questions
+  PENDING_SAMPLE=$(npx tsx .harness/scripts/quality-review.ts sample-pending 2>/dev/null)
+  PENDING_COUNT=$(echo "$PENDING_SAMPLE" | jq '.questions | length' 2>/dev/null || echo "0")
+
+  if [ "$PENDING_COUNT" -gt 0 ]; then
+    RE_REVIEW=$(claude -p "$(cat .harness/agents/quality.md)
+
+## Questions to Review
+
+${PENDING_SAMPLE}" \
+      --allowedTools 'Read,Glob,Grep' \
+      --dangerously-skip-permissions \
+      --output-format text \
+      --max-turns 5)
+
+    echo "$RE_REVIEW" | npx tsx .harness/scripts/quality-review.ts apply 2>/dev/null
+    # apply automatically removes questions that fail twice
+  fi
+fi
+```
+
+Quality review errors (script crash, LLM failure) are non-blocking — log and continue to Step 6.
+Maximum 1 fix loop per quality review. Questions that fail twice are auto-removed.
+
 #### Step 6: Review
 
 Call the review agent and capture its output:
