@@ -1,7 +1,7 @@
 export default function StatsLoading() {
   return (
     <div className="animate-pulse">
-      <div className="mb-6 flex items-center gap-3">
+      <div className="-mt-8 pt-3 pb-3 flex items-center gap-3">
         <div className="h-9 w-9 bg-gray-200 dark:bg-gray-700 rounded-lg" />
         <div>
           <div className="h-6 w-24 bg-gray-200 dark:bg-gray-700 rounded" />

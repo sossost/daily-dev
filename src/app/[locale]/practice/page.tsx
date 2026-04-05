@@ -218,8 +218,17 @@ export default function PracticePage() {
 
     return (
       <div>
+        <header className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900 -mx-4 px-4 -mt-8 pt-3 pb-3">
+          <Link
+            href="/"
+            className="p-2 -ml-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors inline-block"
+            aria-label={tc('home')}
+          >
+            <ArrowLeft size={20} className="text-gray-600 dark:text-gray-400" />
+          </Link>
+          <ProgressBar current={storeCurrentIndex + 1} total={storeQuestions.length} />
+        </header>
         <KeyboardHint />
-        <ProgressBar current={storeCurrentIndex + 1} total={storeQuestions.length} />
         <AnimatePresence mode="wait">
           <QuizCard
             key={currentQuestion.question.id}
@@ -242,15 +251,24 @@ export default function PracticePage() {
 
     return (
       <div>
-        <KeyboardHint />
-        <div className="flex items-center justify-between mb-4">
+        <header className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900 -mx-4 px-4 -mt-8 pt-3 pb-3">
+          <Link
+            href="/"
+            className="p-2 -ml-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors inline-block"
+            aria-label={tc('home')}
+          >
+            <ArrowLeft size={20} className="text-gray-600 dark:text-gray-400" />
+          </Link>
+          <div className="flex items-center justify-between">
           <span className="text-sm text-gray-500 dark:text-gray-400">
             {te('questionsCompleted', { count: endlessAnswers.length })}
           </span>
           <span className="text-sm font-medium text-emerald-500">
             {te('correctCount', { count: correctCount })}
           </span>
-        </div>
+          </div>
+        </header>
+        <KeyboardHint />
         <AnimatePresence mode="wait">
           <QuizCard
             key={currentQuestion.question.id}

@@ -1,6 +1,10 @@
 export default function SessionLoading() {
   return (
     <div className="animate-pulse">
+      {/* Back button */}
+      <div className="-mt-8 pt-3 pb-3">
+        <div className="h-9 w-9 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+      </div>
       {/* ProgressBar */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">

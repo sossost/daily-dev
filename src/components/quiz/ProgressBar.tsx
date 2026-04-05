@@ -10,7 +10,7 @@ export function ProgressBar({ current, total }: ProgressBarProps) {
   const percentage = total > 0 ? (current / total) * PERCENTAGE_MULTIPLIER : 0
 
   return (
-    <div className="mb-6">
+    <div>
       <div className="flex justify-between items-center mb-2">
         <span className="text-sm text-gray-600 dark:text-gray-400">
           {current} / {total}

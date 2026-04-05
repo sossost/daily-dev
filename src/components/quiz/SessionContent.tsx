@@ -6,6 +6,8 @@ import { useRouter } from '@/i18n/navigation'
 import { AnimatePresence } from 'framer-motion'
 import { TOPICS } from '@/types'
 import { isLocale } from '@/i18n/routing'
+import { ArrowLeft } from 'lucide-react'
+import { Link } from '@/i18n/navigation'
 import { useSessionStore } from '@/stores/useSessionStore'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
@@ -81,8 +83,17 @@ export default function SessionContent() {
 
   return (
     <div>
+      <header className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900 -mx-4 px-4 -mt-8 pt-3 pb-3">
+        <Link
+          href="/"
+          className="p-2 -ml-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors inline-block"
+          aria-label="Home"
+        >
+          <ArrowLeft size={20} className="text-gray-600 dark:text-gray-400" />
+        </Link>
+        <ProgressBar current={currentIndex + 1} total={questions.length} />
+      </header>
       <KeyboardHint />
-      <ProgressBar current={currentIndex + 1} total={questions.length} />
       <AnimatePresence mode="wait">
         <QuizCard
           key={currentQuestion.question.id}
