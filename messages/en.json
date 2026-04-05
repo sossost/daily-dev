@@ -68,17 +68,15 @@
     "title": "DailyDev",
     "totalSessions": "Total Sessions",
     "streak": "Streak",
+    "sectionStudy": "Study",
+    "sectionRecord": "Records",
     "history": "History",
     "stats": "Statistics",
     "schedule": "Review Schedule",
-    "srsSchedule": "SRS Schedule",
     "bookmarks": "Bookmarks",
-    "practice": "Practice Mode",
-    "topicDifficulty": "Topic / Difficulty",
+    "practice": "Practice",
     "review": "Review",
-    "reviewDesc": "Focus & wrong answers",
-    "challenge": "Time Challenge",
-    "challengeDesc": "Speed quiz"
+    "challenge": "Challenge"
   },
   "session": {
     "start": "Start Learning",

@@ -75,90 +75,89 @@ function DashboardContent({
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 mb-6">
-        <Link
-          href="/history"
-          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
-        >
-          <History size={18} className="text-blue-500" />
-          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {t('history')}
-          </span>
-          <span className="ml-auto text-sm text-gray-500 dark:text-gray-400">
-            {totalSessions > 0 ? `${totalSessions} ${tc('sessions')}` : ''}
-          </span>
-        </Link>
-        <Link
-          href="/stats"
-          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
-        >
-          <BarChart3 size={18} className="text-blue-500" />
-          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {t('stats')}
-          </span>
-        </Link>
-        <Link
-          href="/schedule"
-          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
-        >
-          <CalendarClock size={18} className="text-blue-500" />
-          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {t('schedule')}
-          </span>
-          <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
-            {t('srsSchedule')}
-          </span>
-        </Link>
-        <Link
-          href="/bookmarks"
-          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
-        >
-          <Bookmark size={18} className="text-blue-500 fill-blue-500" />
-          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {t('bookmarks')}
-          </span>
-          {bookmarkCount > 0 && (
-            <span className="ml-auto text-sm text-gray-500 dark:text-gray-400">
-              {tc('items', { count: bookmarkCount })}
+      <div className="mb-6">
+        <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">{t('sectionStudy')}</p>
+        <div className="flex flex-col gap-2">
+          <Link
+            href="/practice"
+            className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
+          >
+            <Dumbbell size={18} className="text-blue-500" />
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              {t('practice')}
             </span>
-          )}
-        </Link>
-        <Link
-          href="/practice"
-          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
-        >
-          <Dumbbell size={18} className="text-blue-500" />
-          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {t('practice')}
-          </span>
-          <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
-            {t('topicDifficulty')}
-          </span>
-        </Link>
-        <Link
-          href="/review"
-          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
-        >
-          <Target size={18} className="text-blue-500" />
-          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {t('review')}
-          </span>
-          <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
-            {t('reviewDesc')}
-          </span>
-        </Link>
-        <Link
-          href="/challenge"
-          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-purple-200 dark:hover:border-purple-800 transition-colors"
-        >
-          <Timer size={18} className="text-purple-500" />
-          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {t('challenge')}
-          </span>
-          <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
-            {t('challengeDesc')}
-          </span>
-        </Link>
+          </Link>
+          <Link
+            href="/review"
+            className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
+          >
+            <Target size={18} className="text-blue-500" />
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              {t('review')}
+            </span>
+          </Link>
+          <Link
+            href="/challenge"
+            className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
+          >
+            <Timer size={18} className="text-blue-500" />
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              {t('challenge')}
+            </span>
+          </Link>
+        </div>
+      </div>
+
+      <div className="mb-6">
+        <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">{t('sectionRecord')}</p>
+        <div className="flex flex-col gap-2">
+          <Link
+            href="/history"
+            className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
+          >
+            <History size={18} className="text-blue-500" />
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              {t('history')}
+            </span>
+            {totalSessions > 0 && (
+              <span className="ml-auto text-sm text-gray-500 dark:text-gray-400">
+                {totalSessions} {tc('sessions')}
+              </span>
+            )}
+          </Link>
+          <Link
+            href="/stats"
+            className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
+          >
+            <BarChart3 size={18} className="text-blue-500" />
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              {t('stats')}
+            </span>
+          </Link>
+          <Link
+            href="/schedule"
+            className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
+          >
+            <CalendarClock size={18} className="text-blue-500" />
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              {t('schedule')}
+            </span>
+          </Link>
+          <Link
+            href="/bookmarks"
+            className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
+          >
+            <Bookmark size={18} className="text-blue-500 fill-blue-500" />
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              {t('bookmarks')}
+            </span>
+            {bookmarkCount > 0 && (
+              <span className="ml-auto text-sm text-gray-500 dark:text-gray-400">
+                {tc('items', { count: bookmarkCount })}
+              </span>
+            )}
+          </Link>
+        </div>
       </div>
 
     </>

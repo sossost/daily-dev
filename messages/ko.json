@@ -68,17 +68,15 @@
     "title": "DailyDev",
     "totalSessions": "총 세션",
     "streak": "연속 학습",
+    "sectionStudy": "학습",
+    "sectionRecord": "기록",
     "history": "학습 기록",
     "stats": "학습 통계",
     "schedule": "복습 일정",
-    "srsSchedule": "SRS 스케줄",
     "bookmarks": "북마크",
     "practice": "연습 모드",
-    "topicDifficulty": "토픽 · 난이도 선택",
     "review": "복습",
-    "reviewDesc": "약점 분석 & 오답 복습",
-    "challenge": "타임 챌린지",
-    "challengeDesc": "스피드 퀴즈"
+    "challenge": "챌린지"
   },
   "session": {
     "start": "학습 시작",
