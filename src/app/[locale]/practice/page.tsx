@@ -144,7 +144,7 @@ export default function PracticePage() {
 
   return (
     <div>
-      <header className="mb-6">
+      <header className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900 -mx-4 px-4 -mt-8 pt-3 pb-3">
         <Link
           href="/"
           className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mb-3"
