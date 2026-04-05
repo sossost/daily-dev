@@ -8,7 +8,7 @@ const INDEXABLE_ROUTES = [
   '',
   '/session',
   '/practice',
-  '/focus',
+  '/review',
   '/topics',
   '/challenge',
 ]

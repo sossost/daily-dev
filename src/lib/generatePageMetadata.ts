@@ -12,10 +12,8 @@ type PageKey =
   | 'bookmarks'
   | 'schedule'
   | 'practice'
-  | 'focus'
+  | 'review'
   | 'challenge'
-  | 'endless'
-  | 'wrongAnswers'
 
 type Options = {
   noIndex?: boolean

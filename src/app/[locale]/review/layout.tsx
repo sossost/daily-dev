@@ -6,7 +6,7 @@ type Props = { children: ReactNode; params: Promise<{ locale: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
-  return generatePageMetadata(locale, 'wrongAnswers', '/wrong-answers', { noIndex: true })
+  return generatePageMetadata(locale, 'review', '/review')
 }
 
 export default function Layout({ children }: Props) {

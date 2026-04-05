@@ -1,6 +1,6 @@
 'use client'
 
-import { BarChart3, Bookmark, CalendarClock, Dumbbell, FileX2, History, Target, Timer } from 'lucide-react'
+import { BarChart3, Bookmark, CalendarClock, Dumbbell, History, Target, Timer } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { useBookmarkStore } from '@/stores/useBookmarkStore'
@@ -142,27 +142,15 @@ function DashboardContent({
           </span>
         </Link>
         <Link
-          href="/focus"
-          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-orange-200 dark:hover:border-orange-800 transition-colors"
+          href="/review"
+          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
         >
-          <Target size={18} className="text-orange-500" />
+          <Target size={18} className="text-blue-500" />
           <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {t('focusPractice')}
+            {t('review')}
           </span>
           <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
-            {t('weaknessAnalysis')}
-          </span>
-        </Link>
-        <Link
-          href="/wrong-answers"
-          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-red-200 dark:hover:border-red-800 transition-colors"
-        >
-          <FileX2 size={18} className="text-red-500" />
-          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {t('wrongAnswers')}
-          </span>
-          <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
-            {t('wrongAnswersDesc')}
+            {t('reviewDesc')}
           </span>
         </Link>
         <Link

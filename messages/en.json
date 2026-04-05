@@ -32,17 +32,13 @@
         "title": "Practice Mode | DailyDev",
         "description": "Practice developer questions by topic and difficulty at your own pace."
       },
-      "focus": {
-        "title": "Focus Mode | DailyDev",
-        "description": "Target your weak spots with AI-powered focus practice based on your accuracy data."
+      "review": {
+        "title": "Review | DailyDev",
+        "description": "Focus on weaknesses and review wrong answers to improve your skills."
       },
       "challenge": {
         "title": "Challenge Mode | DailyDev",
         "description": "Test your speed and accuracy with timed developer quiz challenges."
-      },
-      "wrongAnswers": {
-        "title": "Wrong Answers | DailyDev",
-        "description": "Review and retry the questions you got wrong to strengthen weak areas."
       }
     }
   },
@@ -79,10 +75,8 @@
     "bookmarks": "Bookmarks",
     "practice": "Practice Mode",
     "topicDifficulty": "Topic / Difficulty",
-    "focusPractice": "Focus Practice",
-    "weaknessAnalysis": "Auto weakness analysis",
-    "wrongAnswers": "Wrong Answers",
-    "wrongAnswersDesc": "Review wrong questions",
+    "review": "Review",
+    "reviewDesc": "Focus & wrong answers",
     "challenge": "Time Challenge",
     "challengeDesc": "Speed quiz"
   },
@@ -226,6 +220,12 @@
     "questionsCount": "{count} questions",
     "modeStandard": "10 Questions",
     "modeEndless": "Endless"
+  },
+  "review": {
+    "title": "Review",
+    "subtitle": "Focus on weaknesses and review mistakes",
+    "tabFocus": "Auto Focus",
+    "tabWrongAnswers": "Wrong Answers"
   },
   "focus": {
     "title": "Focus Practice",

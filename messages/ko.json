@@ -32,17 +32,13 @@
         "title": "연습 모드 | DailyDev",
         "description": "토픽과 난이도를 선택해 나만의 속도로 개발 문제를 연습하세요."
       },
-      "focus": {
-        "title": "집중 모드 | DailyDev",
-        "description": "정답률 데이터 기반으로 취약한 부분을 집중 공략하세요."
+      "review": {
+        "title": "복습 | DailyDev",
+        "description": "약점 분석과 오답 복습으로 실력을 키우세요."
       },
       "challenge": {
         "title": "챌린지 모드 | DailyDev",
         "description": "제한 시간 안에 개발 퀴즈를 풀며 속도와 정확도를 테스트하세요."
-      },
-      "wrongAnswers": {
-        "title": "오답 노트 | DailyDev",
-        "description": "틀렸던 문제를 다시 풀며 취약한 부분을 보강하세요."
       }
     }
   },
@@ -79,10 +75,8 @@
     "bookmarks": "북마크",
     "practice": "연습 모드",
     "topicDifficulty": "토픽 · 난이도 선택",
-    "focusPractice": "집중 연습",
-    "weaknessAnalysis": "약점 자동 분석",
-    "wrongAnswers": "오답 노트",
-    "wrongAnswersDesc": "틀린 문제 복습",
+    "review": "복습",
+    "reviewDesc": "약점 분석 & 오답 복습",
     "challenge": "타임 챌린지",
     "challengeDesc": "스피드 퀴즈"
   },
@@ -226,6 +220,12 @@
     "questionsCount": "{count}문제",
     "modeStandard": "10문제",
     "modeEndless": "무제한"
+  },
+  "review": {
+    "title": "복습",
+    "subtitle": "약점 집중 분석과 오답 복습",
+    "tabFocus": "자동 분석",
+    "tabWrongAnswers": "오답 노트"
   },
   "focus": {
     "title": "집중 연습",
