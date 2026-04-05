@@ -22,6 +22,7 @@ import { WeakTopicsList } from '@/components/stats/WeakTopicsList'
 import { StatCard } from '@/components/stats/StatCard'
 import { TopicAccuracyBars } from '@/components/stats/TopicAccuracyBars'
 import { ShareProgressButton } from '@/components/stats/ShareProgressButton'
+import { TopicProgressList } from '@/components/dashboard/TopicProgressList'
 
 export default function StatsPage() {
   const t = useTranslations('stats')
@@ -155,6 +156,8 @@ export default function StatsPage() {
             </h2>
             <WeakTopicsList weakTopics={weakTopics} />
           </section>
+
+          <TopicProgressList topicStats={topicStats} />
         </>
       )}
     </div>

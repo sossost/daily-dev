@@ -7,15 +7,12 @@ import { useBookmarkStore } from '@/stores/useBookmarkStore'
 import { useTopicFilterStore } from '@/stores/useTopicFilterStore'
 import { useHydration } from '@/hooks/useHydration'
 import { SessionStartCard } from '@/components/dashboard/SessionStartCard'
-import { TopicProgressList } from '@/components/dashboard/TopicProgressList'
 import { SettingsDropdown } from '@/components/SettingsDropdown'
 import { OnboardingModal } from '@/components/OnboardingModal'
 import { Link } from '@/i18n/navigation'
-import type { Topic } from '@/types'
 
 export default function DashboardPage() {
   const t = useTranslations()
-  const topicStats = useProgressStore((s) => s.topicStats)
   const totalSessions = useProgressStore((s) => s.sessions.length)
   const currentStreak = useProgressStore((s) => s.currentStreak)
   const bookmarkCount = useBookmarkStore((s) => s.bookmarkedIds.length)
@@ -44,7 +41,6 @@ export default function DashboardPage() {
         totalSessions={totalSessions}
         currentStreak={currentStreak}
         bookmarkCount={bookmarkCount}
-        topicStats={topicStats}
       />
     </div>
   )
@@ -54,14 +50,12 @@ interface DashboardContentProps {
   totalSessions: number
   currentStreak: number
   bookmarkCount: number
-  topicStats: ReturnType<typeof useProgressStore.getState>['topicStats']
 }
 
 function DashboardContent({
   totalSessions,
   currentStreak,
   bookmarkCount,
-  topicStats,
 }: DashboardContentProps) {
   const t = useTranslations('dashboard')
   const tc = useTranslations('common')
@@ -167,7 +161,6 @@ function DashboardContent({
         </Link>
       </div>
 
-      <TopicProgressList topicStats={topicStats} />
     </>
   )
 }

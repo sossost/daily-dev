@@ -56,10 +56,10 @@ export function TopicProgressList({ topicStats }: TopicProgressListProps) {
     .filter((c) => c.topics.length > 0)
 
   return (
-    <div className="mt-8">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+    <section className="mb-6">
+      <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">
         {topicT('progress')}
-      </h3>
+      </h2>
       <div className="flex flex-col gap-6">
         {categories.map((category) => (
           <CategoryAccordion key={category.id} category={category}>
@@ -100,6 +100,6 @@ export function TopicProgressList({ topicStats }: TopicProgressListProps) {
           </CategoryAccordion>
         ))}
       </div>
-    </div>
+    </section>
   )
 }

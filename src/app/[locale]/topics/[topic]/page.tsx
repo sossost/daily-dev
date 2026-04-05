@@ -1,6 +1,7 @@
 'use client'
 
 import { useParams } from 'next/navigation'
+import { useRouter } from '@/i18n/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { ArrowLeft, Dumbbell } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
@@ -18,6 +19,7 @@ function isValidTopic(value: string): value is Topic {
 }
 
 export default function TopicDetailPage() {
+  const router = useRouter()
   const params = useParams()
   const rawTopic = params.topic
   const topic = Array.isArray(rawTopic) ? rawTopic[0] : rawTopic
@@ -55,13 +57,14 @@ export default function TopicDetailPage() {
   return (
     <div>
       <div className="flex items-center gap-3 mb-6">
-        <Link
-          href="/topics"
+        <button
+          type="button"
+          onClick={() => router.back()}
           className="p-2 -ml-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           aria-label={td('allTopics')}
         >
           <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        </Link>
+        </button>
         <div>
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
             {t(topic)}
