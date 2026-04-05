@@ -646,5 +646,168 @@
     "correctIndex": 2,
     "explanation": "--no-verify skips the pre-commit and commit-msg hooks when creating a commit. While it can be used to temporarily bypass linters or formatting checks, it skips quality gates and should not be used habitually. It is safer to fix the issues that hooks detect rather than bypass them.",
     "sourceUrl": "https://git-scm.com/docs/git-commit"
+  },
+  {
+    "id": "git-advanced-041",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the purpose of git add -p (or --patch)?",
+    "options": [
+      "It stages all changes in a file to the staging area",
+      "It lets you interactively select which hunks of changes to stage",
+      "It generates a patch file for emailing",
+      "It automatically commits the changes"
+    ],
+    "correctIndex": 1,
+    "explanation": "git add -p displays changes in a file hunk by hunk, allowing you to interactively choose whether to stage each hunk (y), skip it (n), split it further (s), and more. This is invaluable when a single file contains changes belonging to different logical commits.",
+    "sourceUrl": "https://git-scm.com/docs/git-add"
+  },
+  {
+    "id": "git-advanced-042",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What information does the following command display?\n\ngit describe --tags",
+    "code": "git describe --tags",
+    "options": [
+      "A list of all tags",
+      "The nearest tag name from the current HEAD and the number of commits since that tag",
+      "The commit message associated with the tag",
+      "Information about who created the tag"
+    ],
+    "correctIndex": 1,
+    "explanation": "git describe finds the nearest tag reachable from the current HEAD and outputs it in the format 'v1.2.3-5-gabcdef', where v1.2.3 is the tag name, 5 is the number of commits since that tag, and gabcdef is the abbreviated commit hash. If HEAD is exactly on a tag, only the tag name is printed. This is frequently used in CI/CD for automatic version numbering.",
+    "sourceUrl": "https://git-scm.com/docs/git-describe"
+  },
+  {
+    "id": "git-advanced-043",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between git merge --squash and a regular git merge?",
+    "options": [
+      "Squash merge never causes conflicts",
+      "Squash merge can only be used with remote branches",
+      "Squash merge creates a merge commit, while a regular merge does not",
+      "Squash merge combines all branch commits into a single set of changes staged for commit, requiring a separate commit step"
+    ],
+    "correctIndex": 3,
+    "explanation": "git merge --squash takes all changes from the target branch, combines them into a single changeset applied to the working directory and staging area, but does not automatically create a commit. The developer must run git commit manually to create a single, clean commit. This is useful for flattening a messy feature branch history, but the merge relationship is not recorded in the commit graph.",
+    "sourceUrl": "https://git-scm.com/docs/git-merge"
+  },
+  {
+    "id": "git-advanced-044",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the main task performed by git gc (garbage collection)?",
+    "options": [
+      "It removes local branches that were deleted on the remote",
+      "It automatically deletes large files from commit history",
+      "It cleans up unreachable objects and compresses loose objects into packfiles to optimize the repository",
+      "It automatically deletes old branches"
+    ],
+    "correctIndex": 2,
+    "explanation": "git gc performs garbage collection on the Git repository. It removes objects that are unreachable from any reference (dangling objects) and compresses individual loose objects into packfiles, saving disk space and improving performance. Git automatically runs gc under certain conditions.",
+    "sourceUrl": "https://git-scm.com/docs/git-gc"
+  },
+  {
+    "id": "git-advanced-045",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What does the following command display?\n\ngit shortlog -sn --no-merges",
+    "code": "git shortlog -sn --no-merges",
+    "options": [
+      "A one-line summary of each commit in chronological order",
+      "The commit count per author in descending order, excluding merge commits",
+      "The commits with the shortest commit messages",
+      "The most recent n commit logs"
+    ],
+    "correctIndex": 1,
+    "explanation": "git shortlog groups commits by author. The -s flag shows only the count (summary), -n sorts by count in descending order (number), and --no-merges excludes merge commits. This is useful for quickly understanding contributor statistics in a project.",
+    "sourceUrl": "https://git-scm.com/docs/git-shortlog"
+  },
+  {
+    "id": "git-advanced-046",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the purpose of GPG-signed commits (git commit -S)?",
+    "options": [
+      "To encrypt the commit contents so they cannot be read externally",
+      "To cryptographically prove that the person who made the commit is the actual owner of the GPG key",
+      "To automatically check the spelling and grammar of commit messages",
+      "To automatically push the commit to the remote repository"
+    ],
+    "correctIndex": 1,
+    "explanation": "GPG-signed commits cryptographically verify the identity of the commit author. Since Git allows anyone to change the author/committer information, GPG signatures prove that a commit was genuinely made by the owner of the signing key. GitHub displays these as 'Verified' badges, and they are essential for security-critical projects.",
+    "sourceUrl": "https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work"
+  },
+  {
+    "id": "git-advanced-047",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "What problem does the git remote prune origin command solve?",
+    "options": [
+      "It cleans up local tracking references for branches that have already been deleted on the remote",
+      "It deletes local branches that do not exist on the remote",
+      "It removes unnecessary tags from the remote repository",
+      "It prunes old commits from the remote to reduce storage"
+    ],
+    "correctIndex": 0,
+    "explanation": "git remote prune origin removes local remote-tracking references (like origin/feature-x) for branches that have already been deleted on the remote repository (origin). Over time, these stale references can accumulate and clutter the output of git branch -r. Running git fetch --prune achieves the same effect.",
+    "sourceUrl": "https://git-scm.com/docs/git-remote"
+  },
+  {
+    "id": "git-advanced-048",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What does the following command display?\n\ngit log --first-parent main",
+    "code": "git log --first-parent main",
+    "options": [
+      "Only the very first commit on the main branch",
+      "Only commits by the first contributor to the main branch",
+      "It follows only the first parent of merge commits, skipping individual commits from side branches",
+      "It filters to show only commits that have exactly one parent"
+    ],
+    "correctIndex": 2,
+    "explanation": "The --first-parent option follows only the first parent at merge commits (the current branch side). This skips the detailed commits within feature branches and shows only commits that were directly made on or merged into main. It is useful for understanding the high-level change flow, especially in PR/MR-based workflows.",
+    "sourceUrl": "https://git-scm.com/docs/git-log"
+  },
+  {
+    "id": "git-advanced-049",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between git grep and the regular grep command?",
+    "options": [
+      "git grep does not support regular expressions",
+      "git grep only searches in the remote repository",
+      "git grep searches only Git-tracked files, automatically skipping files ignored by .gitignore",
+      "git grep only searches commit messages"
+    ],
+    "correctIndex": 2,
+    "explanation": "git grep searches only files tracked by Git, automatically excluding ignored files like node_modules or build artifacts. It also leverages Git's internal index to run faster than regular grep on large repositories. You can even search code at a specific point in history using git grep <pattern> <commit-hash>.",
+    "sourceUrl": "https://git-scm.com/docs/git-grep"
+  },
+  {
+    "id": "git-advanced-050",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the purpose of git notes?",
+    "options": [
+      "To permanently change the commit message",
+      "To attach additional metadata to a commit without changing its hash",
+      "To automatically insert comments into code",
+      "To add descriptions to branches and share them with the remote"
+    ],
+    "correctIndex": 1,
+    "explanation": "git notes lets you attach additional information (code review memos, CI results, related issue numbers, etc.) to existing commits without altering their hashes. Modifying a commit changes its hash and rewrites history, but notes are stored in a separate reference namespace (refs/notes/) so they leave the original commit untouched.",
+    "sourceUrl": "https://git-scm.com/docs/git-notes"
   }
 ]

@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-04-05
+
+### Features
+
+- **content**: fix — nodejs-042 incorrect answer (`df94984`)
+
 ## 2026-04-04
 
 ### Features
