@@ -13,16 +13,16 @@ export default function TopicsPage() {
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-6">
+      <header className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900 -mx-4 px-4 -mt-8 pt-3 pb-3 flex items-center gap-3">
         <Link
           href="/"
           className="p-2 -ml-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           aria-label={tc('home')}
         >
-          <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <ArrowLeft size={20} className="text-gray-600 dark:text-gray-400" />
         </Link>
         <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('title')}</h1>
-      </div>
+      </header>
       <TopicProgressList topicStats={topicStats} />
     </div>
   )
