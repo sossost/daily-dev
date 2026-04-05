@@ -6,7 +6,23 @@
 
 ### Features
 
+- **ui**: apply sticky header to topics pages (`027d24c`)
+- **ui**: unify quiz sticky headers and skeleton heights (`71b5645`)
+- **ui**: add sticky header to all sub-pages (`b51c7e1`)
+- **harness**: add semantic quality review agent for questions (`c40f888`)
+- **content**: add 10 git-advanced questions (`7b66e8a`)
 - **content**: fix — nodejs-042 incorrect answer (`df94984`)
+
+### Bug Fixes
+
+- **ui**: unify practice and challenge headers to match other pages (`6c73a47`)
+
+### Refactoring
+
+- **ui**: organize dashboard menu into study and records groups (`67e2135`)
+- **ui**: move TopicProgressList from dashboard to stats page (`ddbdbb7`)
+- **ui**: merge Focus and Wrong Answers into Review page (`54deef2`)
+- **ui**: merge Practice and Endless into single page (`c179b01`)
 
 ## 2026-04-04
 

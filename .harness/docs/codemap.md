@@ -8,10 +8,9 @@
 - `DEFAULT_DURATION` = `60`
 - `AUTO_ADVANCE_MS` = `400`
 - `ANIMATION_DELAY_STEP` = `0.06`
+- `SESSION_LIMIT` = `10`
 - `UPDATED_SESSION_KEY` = `'daily-dev-last-updated-session'`
 - `SAMPLE_COUNT` = `3`
-- `ANIMATION_DELAY_STEP` = `0.04`
-- `SESSION_LIMIT` = `10`
 - `LOCAL_STORAGE_PROGRESS_KEY` = `"daily-dev-progress"`
 - `ANIMATION_DELAY_STEP` = `0.02`
 - `ANIMATION_DELAY_STEP` = `0.08`
@@ -199,7 +198,7 @@
 - promise.json — 48 questions
 - prototype.json — 48 questions
 - react-basics.json — 40 questions
-- scope.json — 40 questions
+- scope.json — 50 questions
 - this.json — 40 questions
 - type-coercion.json — 40 questions
 - typescript.json — 40 questions
@@ -222,7 +221,7 @@
 - promise.json — 48 questions
 - prototype.json — 48 questions
 - react-basics.json — 40 questions
-- scope.json — 40 questions
+- scope.json — 50 questions
 - this.json — 40 questions
 - type-coercion.json — 40 questions
 - typescript.json — 40 questions
@@ -518,7 +517,7 @@
 - *deps*: types, components/quiz/CodeBlock, components/quiz/OptionList, components/quiz/Explanation, components/quiz/BookmarkButton
 
 #### `SessionContent.tsx`
-- *deps*: i18n/navigation, types, i18n/routing, stores/useSessionStore, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, hooks/useQuizKeyboard, lib/session, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
+- *deps*: i18n/navigation, types, i18n/routing, i18n/navigation, stores/useSessionStore, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, hooks/useQuizKeyboard, lib/session, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
 
 ### src/components/result/
 
@@ -587,28 +586,6 @@
 #### `page.tsx`
 - *deps*: i18n/navigation, hooks/useHydration, stores/useTopicFilterStore, hooks/useQuizKeyboard, types, lib/topics, components/challenge/ChallengeTimer, components/challenge/ChallengeResult, components/quiz/QuizCard
 
-### src/app/[locale]/endless/
-
-#### `layout.tsx`
-- `generateMetadata` ({ params }: Props) → Promise<Metadata>
-- *deps*: lib/generatePageMetadata
-
-#### `loading.tsx`
-
-#### `page.tsx`
-- *deps*: i18n/navigation, i18n/routing, types, hooks/useHydration, hooks/useQuizKeyboard, lib/practice-session, components/practice/TopicSelector, components/quiz/QuizCard, components/quiz/KeyboardHint, components/endless/EndlessResultView
-
-### src/app/[locale]/focus/
-
-#### `layout.tsx`
-- `generateMetadata` ({ params }: Props) → Promise<Metadata>
-- *deps*: lib/generatePageMetadata
-
-#### `loading.tsx`
-
-#### `page.tsx`
-- *deps*: i18n/navigation, i18n/navigation, i18n/routing, stores/useSessionStore, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, hooks/useQuizKeyboard, lib/focus-session, lib/topics, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
-
 ### src/app/[locale]/history/
 
 #### `layout.tsx`
@@ -631,7 +608,7 @@
 #### `loading.tsx`
 
 #### `page.tsx`
-- *deps*: stores/useProgressStore, stores/useBookmarkStore, stores/useTopicFilterStore, hooks/useHydration, components/dashboard/SessionStartCard, components/dashboard/TopicProgressList, components/SettingsDropdown, components/OnboardingModal, i18n/navigation, types
+- *deps*: stores/useProgressStore, stores/useBookmarkStore, stores/useTopicFilterStore, hooks/useHydration, components/dashboard/SessionStartCard, components/SettingsDropdown, components/OnboardingModal, i18n/navigation
 
 ### src/app/[locale]/practice/
 
@@ -642,7 +619,18 @@
 #### `loading.tsx`
 
 #### `page.tsx`
-- *deps*: i18n/navigation, i18n/navigation, i18n/routing, types, stores/useSessionStore, stores/useProgressStore, hooks/useHydration, hooks/useQuizKeyboard, lib/practice-session, components/practice/TopicSelector, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint
+- *deps*: i18n/navigation, i18n/navigation, i18n/routing, types, stores/useSessionStore, stores/useProgressStore, hooks/useHydration, hooks/useQuizKeyboard, lib/practice-session, lib/endless-session, components/practice/TopicSelector, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint, components/endless/EndlessResultView
+
+### src/app/[locale]/review/
+
+#### `layout.tsx`
+- `generateMetadata` ({ params }: Props) → Promise<Metadata>
+- *deps*: lib/generatePageMetadata
+
+#### `loading.tsx`
+
+#### `page.tsx`
+- *deps*: i18n/navigation, i18n/navigation, i18n/routing, stores/useSessionStore, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, hooks/useQuizKeyboard, lib/focus-session, lib/topics, components/quiz/ProgressBar, components/quiz/QuizCard, components/quiz/KeyboardHint, components/review/WrongAnswerCard
 
 ### src/app/[locale]/schedule/
 
@@ -681,7 +669,7 @@
 #### `loading.tsx`
 
 #### `page.tsx`
-- *deps*: i18n/navigation, types, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, lib/topics, lib/stats, components/stats/AccuracyTrendChart, components/stats/WeakTopicsList, components/stats/StatCard, components/stats/TopicAccuracyBars, components/stats/ShareProgressButton
+- *deps*: i18n/navigation, types, stores/useProgressStore, stores/useTopicFilterStore, hooks/useHydration, lib/topics, lib/stats, components/stats/AccuracyTrendChart, components/stats/WeakTopicsList, components/stats/StatCard, components/stats/TopicAccuracyBars, components/stats/ShareProgressButton, components/dashboard/TopicProgressList
 
 ### src/app/[locale]/topics/[topic]/
 
@@ -691,7 +679,7 @@
 - *deps*: types, lib/constants, lib/buildLocaleUrl, i18n/routing
 
 #### `page.tsx`
-- *deps*: i18n/navigation, i18n/routing, types, lib/questions, stores/useProgressStore, hooks/useHydration, components/topics/SampleQuestion
+- *deps*: i18n/navigation, i18n/navigation, i18n/routing, types, lib/questions, stores/useProgressStore, hooks/useHydration, components/topics/SampleQuestion
 
 ### src/app/[locale]/topics/
 
@@ -703,17 +691,6 @@
 
 #### `page.tsx`
 - *deps*: i18n/navigation, stores/useProgressStore, components/dashboard/TopicProgressList
-
-### src/app/[locale]/wrong-answers/
-
-#### `layout.tsx`
-- `generateMetadata` ({ params }: Props) → Promise<Metadata>
-- *deps*: lib/generatePageMetadata
-
-#### `loading.tsx`
-
-#### `page.tsx`
-- *deps*: i18n/navigation, stores/useProgressStore, stores/useSessionStore, stores/useTopicFilterStore, hooks/useHydration, lib/wrong-answers, lib/topics, components/quiz/CodeBlock, components/quiz/BookmarkButton
 
 ### src/app/auth/callback/
 
@@ -753,6 +730,12 @@
 #### `TopicSelector.tsx`
 - `TopicSelector` ({ selectedTopics, difficulty, onToggleTopic, onToggleCategory, onSelectAll, onDeselectAll, onDifficultyChange, }: TopicSelectorProps)
 - *deps*: i18n/routing, types, lib/questions, components/common/CategoryAccordion
+
+### src/components/review/
+
+#### `WrongAnswerCard.tsx`
+- `WrongAnswerCard` ({ entry }: WrongAnswerCardProps)
+- *deps*: lib/wrong-answers, components/quiz/BookmarkButton, components/quiz/CodeBlock
 
 ### src/components/schedule/
 

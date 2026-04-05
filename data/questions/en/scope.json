@@ -662,5 +662,172 @@
     "correctIndex": 1,
     "explanation": "Function declarations inside blocks have inconsistent behavior in non-strict mode — in some environments they are accessible outside the block. Arrow functions assigned with const always follow block scope and are inaccessible outside. In strict mode, function declarations also follow block scope.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function#block-level_function_declaration"
+  },
+  {
+    "id": "scope-041",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  value: 42,\n  getValue: () => {\n    let value = 100;\n    return value;\n  }\n};\nconst value = 200;\nconsole.log(obj.getValue());",
+    "options": [
+      "100",
+      "42",
+      "200",
+      "undefined"
+    ],
+    "correctIndex": 0,
+    "explanation": "Inside the getValue arrow function, let value = 100 is declared, so the function body's value refers to the local variable 100. It is unrelated to the object's value property (42) or the outer const value (200). The scope chain always references the closest scope's variable first.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions"
+  },
+  {
+    "id": "scope-042",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "How does an IIFE solve the var scoping problem in for loops?",
+    "options": [
+      "The IIFE automatically converts var to let",
+      "The IIFE creates a new function scope that independently captures each iteration's value",
+      "The IIFE forces asynchronous callbacks to run synchronously",
+      "The IIFE automatically deletes global variables"
+    ],
+    "correctIndex": 1,
+    "explanation": "Since var has function scope, a for loop shares a single variable across iterations. An IIFE creates a new function scope per iteration, receiving the current value as a parameter and maintaining an independent copy. This allows asynchronous callbacks like setTimeout to correctly reference each iteration's value. Since ES6, using let achieves the same effect more simply.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/IIFE"
+  },
+  {
+    "id": "scope-043",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "In a non-strict mode environment, the following code exhibits unexpected behavior. What is the cause?",
+    "code": "function setName() {\n  name = 'Alice';\n}\nsetName();\nconsole.log(name); // 'Alice'",
+    "options": [
+      "name is a JavaScript reserved word",
+      "The function keyword automatically registers variables in the global scope",
+      "Assigning to a variable without a declaration keyword implicitly creates a global variable",
+      "console.log can access variables inside a function scope"
+    ],
+    "correctIndex": 2,
+    "explanation": "In non-strict mode, assigning a value without var, let, or const causes the JavaScript engine to traverse the scope chain upward. If the variable is not found even in the global scope, a new property is created on the global object. This is called an 'implicit global' and is a major cause of unintended global pollution. In strict mode, this would throw a ReferenceError instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode#changes_in_strict_mode"
+  },
+  {
+    "id": "scope-044",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function createFunctions() {\n  var funcs = [];\n  for (var i = 0; i < 3; i++) {\n    (function(j) {\n      funcs.push(function() { return j; });\n    })(i);\n  }\n  return funcs;\n}\nvar result = createFunctions();\nconsole.log(result[0](), result[1](), result[2]());",
+    "options": [
+      "3, 3, 3",
+      "0, 0, 0",
+      "undefined, undefined, undefined",
+      "0, 1, 2"
+    ],
+    "correctIndex": 3,
+    "explanation": "An IIFE is used to create a new function scope for each iteration, passing the current i value as the parameter j. Each IIFE has an independent j value (0, 1, 2), and the inner function captures its IIFE scope's j as a closure. Without the IIFE and using only var, all functions would have returned 3.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures#creating_closures_in_loops_a_common_mistake"
+  },
+  {
+    "id": "scope-045",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference in output between these two code snippets?\n\nA: function foo() { console.log(x); var x = 5; }\nB: function bar() { console.log(x); let x = 5; }",
+    "options": [
+      "A outputs undefined, B throws ReferenceError",
+      "A throws ReferenceError, B outputs undefined",
+      "Both output undefined",
+      "Both throw ReferenceError"
+    ],
+    "correctIndex": 0,
+    "explanation": "var is declared and initialized to undefined simultaneously during hoisting, so accessing it before its declaration returns undefined. let is hoisted but not initialized, placing it in the TDZ — accessing it before the declaration throws a ReferenceError. This difference is why let/const are recommended as safer variable declaration methods.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let#temporal_dead_zone"
+  },
+  {
+    "id": "scope-046",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const arr = [10, 20, 30];\nconst funcs = [];\nfor (const val of arr) {\n  funcs.push(() => val);\n}\nconsole.log(funcs[0](), funcs[1](), funcs[2]());",
+    "options": [
+      "30, 30, 30",
+      "ReferenceError",
+      "10, 20, 30",
+      "undefined, undefined, undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "In a for...of loop, a variable declared with const creates a new block-scoped binding for each iteration. Each arrow function captures its own unique val from its respective iteration. Although const prevents reassignment, each iteration in for...of creates a new binding, so it works without errors.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of"
+  },
+  {
+    "id": "scope-047",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The developer expects the counter to increment by 1 on each call, but it always returns 1. What is the cause?",
+    "code": "function makeCounter() {\n  function counter() {\n    let count = 0;\n    count++;\n    return count;\n  }\n  return counter;\n}\nconst myCounter = makeCounter();\nconsole.log(myCounter()); // 1\nconsole.log(myCounter()); // 1",
+    "options": [
+      "let count is declared inside counter, so it is reinitialized to 0 on every call",
+      "makeCounter returns a new function on each call",
+      "let cannot retain values in closures",
+      "The count++ operation does not work with let variables"
+    ],
+    "correctIndex": 0,
+    "explanation": "Since let count = 0 is inside the counter function body, a new count variable is created and initialized to 0 every time counter is called. To use closures for state persistence, count should be declared in makeCounter's scope (outside the counter function). That way, counter captures the outer scope's count and maintains state across calls.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "scope-048",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What effect does eval have on scope in the following code?",
+    "code": "function test() {\n  eval('var x = 10;');\n  console.log(x); // 10\n}",
+    "options": [
+      "eval does not affect scope and x only exists in the global scope",
+      "Only let can be used inside eval, not var",
+      "eval always runs in a completely separate isolated scope",
+      "In non-strict mode, var declarations inside eval are added to the calling function's scope"
+    ],
+    "correctIndex": 3,
+    "explanation": "In non-strict mode, eval can directly modify the scope of its calling context. A var declaration inside eval adds the variable to the enclosing function's scope. This is one of the reasons eval is considered dangerous. In strict mode, eval creates its own scope and cannot modify the outer scope.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#direct_and_indirect_eval"
+  },
+  {
+    "id": "scope-049",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct description of the scoping difference between these two patterns?\n\nA: { let x = 1; } console.log(x);\nB: (function() { var x = 1; })(); console.log(x);",
+    "options": [
+      "Only A throws a ReferenceError",
+      "Only B throws a ReferenceError",
+      "Both throw a ReferenceError",
+      "Both output 1"
+    ],
+    "correctIndex": 2,
+    "explanation": "In A, let has block scope, so accessing x outside the block ({}) throws a ReferenceError. In B, var has function scope, so accessing x outside the IIFE also throws a ReferenceError. Both patterns are scope isolation techniques that limit variable accessibility, but block scope (A) is the more concise modern approach.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block"
+  },
+  {
+    "id": "scope-050",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The developer expects the inner function to reference the outer x, but a ReferenceError occurs. What is the cause?",
+    "code": "const x = 'outer';\nfunction test() {\n  console.log(x);\n  const x = 'inner';\n  function nested() {\n    const x = 'nested';\n  }\n}",
+    "options": [
+      "Variables with the same name cannot be declared in nested functions",
+      "The const x inside test creates a TDZ for the entire function block, so console.log(x) accesses x before initialization",
+      "The function keyword conflicts with const",
+      "The nested function's hoisting conflicts with the x declaration"
+    ],
+    "correctIndex": 1,
+    "explanation": "Since const x = 'inner' exists inside the test function, a TDZ is formed for x across the entire test function block. console.log(x) is before the const x declaration, so it accesses x within the TDZ, causing a ReferenceError. The outer const x = 'outer' is shadowed by the inner declaration. The nested function's x is in a separate function scope and does not cause issues.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const"
   }
 ]
