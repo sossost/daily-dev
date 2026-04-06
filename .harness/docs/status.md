@@ -1,17 +1,17 @@
 # DailyDev Status
 
-**Last Updated:** 2026-04-06T22:00:00Z
+**Last Updated:** 2026-04-07T10:00:00Z
 
 ## Last Run
 - Agent: content
 - Result: success
-- Summary: fix — network-048 ambiguous cross-origin URL
+- Summary: add 10 react-basics questions (041-050)
 
 ## Project Health
 
 | Area | Status | Note |
 |------|--------|------|
-| Questions | 937 (21 topics) | network-048 cross-origin URL fixed |
+| Questions | 947 (21 topics) | 10 react-basics questions added (041-050) |
 | Tests | 298+ | 8 new tests, unhandled promise fixed |
 | Build | passing | |
 | Features | 12 major features | Endless practice mode added |
@@ -20,6 +20,7 @@
 
 | Date | Agent | Result | Summary |
 |------|-------|--------|---------|
+| 2026-04-07 10:00 | content | success | add 10 react-basics questions (041-050) |
 | 2026-04-06 22:00 | content | success | fix — network-048 ambiguous cross-origin URL |
 | 2026-04-06 10:00 | content | success | fix — scope-050 error type and correctIndex distribution |
 | 2026-04-05 22:00 | content | success | add 10 git-advanced questions |
@@ -29,7 +30,6 @@
 | 2026-04-03 22:00 | content | success | fix — database-047 ambiguous option D |
 | 2026-04-03 10:00 | content | success | add 10 design-patterns questions |
 | 2026-04-02 22:00 | content | success | add 10 data-structures questions |
-| 2026-04-02 10:00 | content | success | add 10 css-layout questions |
 
 
 ## Notes

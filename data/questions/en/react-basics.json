@@ -655,5 +655,170 @@
     "correctIndex": 0,
     "explanation": "A pure component in React returns the same JSX given the same props and does not cause side effects by mutating existing objects or variables during the rendering process. This allows React to safely optimize rendering and verify purity through double-rendering in Strict Mode.",
     "sourceUrl": "https://react.dev/learn/keeping-components-pure"
+  },
+  {
+    "id": "react-basics-041",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the main purpose of the useId hook introduced in React 18?",
+    "options": [
+      "To track the rendering order of components",
+      "To generate consistent unique IDs between server and client",
+      "To automatically generate keys for list rendering",
+      "To globally identify component instances"
+    ],
+    "correctIndex": 1,
+    "explanation": "useId generates the same unique ID on both server-side rendering (SSR) and client-side rendering. It is primarily used to connect form elements with labels in accessibility attributes (aria-describedby, htmlFor, etc.). It should not be used as a key for list items.",
+    "sourceUrl": "https://react.dev/reference/react/useId"
+  },
+  {
+    "id": "react-basics-042",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "How many times is the computeInitial function called in the following code? (After clicking the button 3 times)",
+    "code": "function computeInitial() {\n  console.log('computing...');\n  return { count: 0 };\n}\n\nfunction Counter() {\n  const [state, setState] = useState(computeInitial);\n\n  return (\n    <button onClick={() => setState({ count: state.count + 1 })}>\n      {state.count}\n    </button>\n  );\n}",
+    "options": [
+      "1 time (only called on the initial render)",
+      "4 times (initial render + 3 clicks)",
+      "3 times (called on every click)",
+      "0 times (only a function reference is passed, so it is never called)"
+    ],
+    "correctIndex": 0,
+    "explanation": "When a function is passed to useState, 'lazy initialization' is applied and the function is only called on the first render. Unlike passing the result of computeInitial(), passing computeInitial as a function reference means it is not executed on subsequent re-renders, optimizing expensive initial value computations.",
+    "sourceUrl": "https://react.dev/reference/react/useState#avoiding-recreating-the-initial-state"
+  },
+  {
+    "id": "react-basics-043",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the timer not work correctly when the button is clicked rapidly multiple times in the following code?",
+    "code": "function Timer() {\n  const [count, setCount] = useState(0);\n  const [isRunning, setIsRunning] = useState(false);\n\n  useEffect(() => {\n    if (isRunning) {\n      const id = setInterval(() => {\n        setCount(count + 1);\n      }, 1000);\n      return () => clearInterval(id);\n    }\n  }, [isRunning]);\n\n  return (\n    <div>\n      <span>{count}</span>\n      <button onClick={() => setIsRunning(r => !r)}>Toggle</button>\n    </div>\n  );\n}",
+    "options": [
+      "Because clearInterval is not called properly, causing duplicate timers",
+      "Because setState cannot be called inside setInterval",
+      "Because count is not included in the dependency array, causing a lint warning",
+      "Because the setInterval callback captures the count value from when the effect was created, always updating with the same value"
+    ],
+    "correctIndex": 3,
+    "explanation": "Since count is not in the dependency array, the setInterval callback captures the count value (0) via closure from when the effect was created. So setCount(0 + 1) is called every second, and count never goes beyond 1. Using a functional update like setCount(prev => prev + 1) would always update based on the latest state.",
+    "sourceUrl": "https://react.dev/reference/react/useState#updating-state-based-on-the-previous-state"
+  },
+  {
+    "id": "react-basics-044",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What does JSX get transformed into during the build process?",
+    "options": [
+      "JSX is directly converted to HTML strings",
+      "JSX is converted to document.createElement() calls",
+      "JSX is converted to React.createElement() or jsx() function calls",
+      "JSX is converted to Web Components custom elements"
+    ],
+    "correctIndex": 2,
+    "explanation": "JSX is a syntax extension of JavaScript that is transformed by build tools (Babel, SWC, etc.) into React.createElement() calls. With the new JSX transform in React 17+, it is converted to jsx() from react/jsx-runtime. These functions return React elements, which are plain JavaScript objects.",
+    "sourceUrl": "https://react.dev/learn/writing-markup-with-jsx"
+  },
+  {
+    "id": "react-basics-045",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What type of event object is logged to the console when the button is clicked in the following code?",
+    "code": "function App() {\n  function handleClick(e) {\n    console.log(e.constructor.name);\n    console.log(e.nativeEvent.constructor.name);\n  }\n\n  return <button onClick={handleClick}>Click</button>;\n}",
+    "options": [
+      "MouseEvent, MouseEvent",
+      "SyntheticBaseEvent, MouseEvent",
+      "Event, Event",
+      "PointerEvent, PointerEvent"
+    ],
+    "correctIndex": 1,
+    "explanation": "React wraps browser native events in a SyntheticEvent (SyntheticBaseEvent) before passing them to handlers. This ensures consistent event behavior across browsers. The original browser event can be accessed via the e.nativeEvent property, which in this case is a MouseEvent.",
+    "sourceUrl": "https://react.dev/reference/react-dom/components/common#react-event-object"
+  },
+  {
+    "id": "react-basics-046",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the correct difference between React's 'render phase' and 'commit phase'?",
+    "options": [
+      "In the render phase, React calls components to build the Virtual DOM, and in the commit phase, it applies changes to the actual DOM",
+      "In the render phase, the DOM is directly modified, and in the commit phase, state is updated",
+      "The render phase runs on the server, and the commit phase runs on the client",
+      "The render phase and commit phase run simultaneously in parallel"
+    ],
+    "correctIndex": 0,
+    "explanation": "React's rendering process is divided into two phases. In the render phase, component functions are called to create the React element tree (Virtual DOM) and compare it with the previous tree (reconciliation). This phase must be pure with no side effects. In the commit phase, the actual DOM is updated, refs are set, and useEffect is scheduled.",
+    "sourceUrl": "https://react.dev/learn/render-and-commit"
+  },
+  {
+    "id": "react-basics-047",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the count value shown in the alert differ from what is expected in the following code?",
+    "code": "function Counter() {\n  const [count, setCount] = useState(0);\n\n  function handleClick() {\n    setCount(count + 1);\n    alert(count);\n  }\n\n  return <button onClick={handleClick}>{count}</button>;\n}",
+    "options": [
+      "Because alert executes before setCount",
+      "Because setCount throws an error",
+      "Because state updates are reflected in the next render, so the current render's count value is shown in the alert",
+      "Because the alert function blocks React's event loop"
+    ],
+    "correctIndex": 2,
+    "explanation": "In React, state behaves like a 'snapshot'. Calling setCount does not change the count variable in the current render. The new value is reflected in the next render. Therefore, alert(count) displays the value before the update. This is based on React's unidirectional data flow and immutable state principle.",
+    "sourceUrl": "https://react.dev/learn/state-as-a-snapshot"
+  },
+  {
+    "id": "react-basics-048",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the main purpose of the useImperativeHandle hook in React?",
+    "options": [
+      "To optimize component rendering performance",
+      "To control the execution order of useEffect",
+      "To serialize data from server to client",
+      "To customize the ref instance exposed to parent components when used with forwardRef"
+    ],
+    "correctIndex": 3,
+    "explanation": "useImperativeHandle is used with forwardRef to directly define the ref value exposed to the parent component. Instead of exposing the entire DOM node, you can selectively expose only the necessary methods (focus, scrollTo, etc.), encapsulating the component's internal implementation.",
+    "sourceUrl": "https://react.dev/reference/react/useImperativeHandle"
+  },
+  {
+    "id": "react-basics-049",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What count value is displayed on screen after mount in the following code?",
+    "code": "function App() {\n  const [count, setCount] = useState(0);\n\n  useEffect(() => {\n    setCount(1);\n    setCount(prev => prev + 1);\n  }, []);\n\n  return <div>{count}</div>;\n}",
+    "options": [
+      "0",
+      "2",
+      "1",
+      "3"
+    ],
+    "correctIndex": 1,
+    "explanation": "Inside useEffect, setCount(1) is queued first, then setCount(prev => prev + 1) is queued. React processes this queue in order: first count is set to 1, then the functional update adds 1 to the previous value (1), making the final value 2. These updates are batched into a single re-render.",
+    "sourceUrl": "https://react.dev/learn/queueing-a-series-of-state-updates"
+  },
+  {
+    "id": "react-basics-050",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct way to solve the prop drilling problem in React?",
+    "options": [
+      "Store all state in localStorage",
+      "Assign data to the window global object",
+      "Use Context API or state management libraries to pass data without going through intermediate components",
+      "Write all components in a single file"
+    ],
+    "correctIndex": 2,
+    "explanation": "Prop drilling is the problem of having to pass data through intermediate components that don't use it. Using the Context API allows direct access to data from anywhere in the component tree without going through intermediate components. State management libraries like Zustand and Redux also solve the same problem.",
+    "sourceUrl": "https://react.dev/learn/passing-data-deeply-with-context"
   }
 ]

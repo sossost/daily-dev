@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: fix — network-048 ambiguous cross-origin URL (`de84760`)
 - **content**: fix — scope-050 error type and correctIndex d... (`fff1946`)
 
 ## 2026-04-05

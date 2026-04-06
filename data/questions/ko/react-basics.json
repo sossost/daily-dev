@@ -655,5 +655,170 @@
     "correctIndex": 0,
     "explanation": "React에서 순수 컴포넌트란 동일한 props가 주어지면 항상 동일한 JSX를 반환하고, 렌더링 과정에서 기존 객체나 변수를 변경하는 부수효과(side effect)를 일으키지 않는 컴포넌트를 말합니다. 이를 통해 React는 렌더링을 안전하게 최적화하고, Strict Mode에서 이중 렌더링으로 순수성을 검증합니다.",
     "sourceUrl": "https://react.dev/learn/keeping-components-pure"
+  },
+  {
+    "id": "react-basics-041",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "React 18에서 도입된 useId 훅의 주된 목적은?",
+    "options": [
+      "컴포넌트의 렌더링 순서를 추적하기 위해",
+      "서버와 클라이언트 간에 일관된 고유 ID를 생성하기 위해",
+      "리스트 렌더링 시 key를 자동으로 생성하기 위해",
+      "컴포넌트 인스턴스를 전역적으로 식별하기 위해"
+    ],
+    "correctIndex": 1,
+    "explanation": "useId는 서버 사이드 렌더링(SSR)과 클라이언트 사이드 렌더링에서 동일한 고유 ID를 생성합니다. 주로 접근성(aria-describedby, htmlFor 등) 속성에서 폼 요소와 레이블을 연결할 때 사용합니다. 리스트의 key로 사용하는 것은 권장되지 않습니다.",
+    "sourceUrl": "https://react.dev/reference/react/useId"
+  },
+  {
+    "id": "react-basics-042",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 computeInitial 함수는 몇 번 호출되나요? (버튼을 3번 클릭한 경우)",
+    "code": "function computeInitial() {\n  console.log('computing...');\n  return { count: 0 };\n}\n\nfunction Counter() {\n  const [state, setState] = useState(computeInitial);\n\n  return (\n    <button onClick={() => setState({ count: state.count + 1 })}>\n      {state.count}\n    </button>\n  );\n}",
+    "options": [
+      "1번 (초기 렌더링에서만 호출된다)",
+      "4번 (초기 렌더링 + 클릭 3번)",
+      "3번 (클릭할 때마다 호출된다)",
+      "0번 (함수 참조만 전달되므로 호출되지 않는다)"
+    ],
+    "correctIndex": 0,
+    "explanation": "useState에 함수를 전달하면 '지연 초기화(lazy initialization)'가 적용되어 첫 렌더링에서만 함수가 호출됩니다. computeInitial()처럼 호출 결과를 전달하는 것과 달리, computeInitial을 함수 참조로 전달하면 이후 리렌더링에서는 실행되지 않아 비용이 큰 초기값 계산을 최적화할 수 있습니다.",
+    "sourceUrl": "https://react.dev/reference/react/useState#avoiding-recreating-the-initial-state"
+  },
+  {
+    "id": "react-basics-043",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 버튼을 빠르게 여러 번 클릭하면 타이머가 올바르게 동작하지 않는 이유는?",
+    "code": "function Timer() {\n  const [count, setCount] = useState(0);\n  const [isRunning, setIsRunning] = useState(false);\n\n  useEffect(() => {\n    if (isRunning) {\n      const id = setInterval(() => {\n        setCount(count + 1);\n      }, 1000);\n      return () => clearInterval(id);\n    }\n  }, [isRunning]);\n\n  return (\n    <div>\n      <span>{count}</span>\n      <button onClick={() => setIsRunning(r => !r)}>Toggle</button>\n    </div>\n  );\n}",
+    "options": [
+      "clearInterval이 제대로 호출되지 않아 타이머가 중복 생성되기 때문",
+      "setInterval 내부에서 setState를 호출할 수 없기 때문",
+      "useEffect의 의존성 배열에 count가 포함되지 않아 린터 경고가 발생하기 때문",
+      "setInterval 콜백이 이펙트 생성 시점의 count 값을 캡처하여 항상 같은 값으로 업데이트되기 때문"
+    ],
+    "correctIndex": 3,
+    "explanation": "의존성 배열에 count가 없으므로 setInterval의 콜백은 이펙트가 생성된 시점의 count(0)를 클로저로 캡처합니다. 따라서 매초 setCount(0 + 1)이 호출되어 count가 1에서 더 증가하지 않습니다. setCount(prev => prev + 1)처럼 함수형 업데이트를 사용하면 항상 최신 상태를 기반으로 업데이트할 수 있습니다.",
+    "sourceUrl": "https://react.dev/reference/react/useState#updating-state-based-on-the-previous-state"
+  },
+  {
+    "id": "react-basics-044",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "JSX가 빌드 시 변환되는 결과물에 대한 설명으로 올바른 것은?",
+    "options": [
+      "JSX는 HTML 문자열로 직접 변환된다",
+      "JSX는 document.createElement() 호출로 변환된다",
+      "JSX는 React.createElement() 또는 jsx() 함수 호출로 변환된다",
+      "JSX는 Web Components의 커스텀 엘리먼트로 변환된다"
+    ],
+    "correctIndex": 2,
+    "explanation": "JSX는 JavaScript의 문법 확장으로, 빌드 도구(Babel, SWC 등)에 의해 React.createElement() 호출로 변환됩니다. React 17+의 새로운 JSX 변환에서는 react/jsx-runtime의 jsx() 함수로 변환됩니다. 이 함수들은 React 엘리먼트(일반 JavaScript 객체)를 반환합니다.",
+    "sourceUrl": "https://react.dev/learn/writing-markup-with-jsx"
+  },
+  {
+    "id": "react-basics-045",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드에서 버튼을 클릭하면 콘솔에 출력되는 이벤트 객체의 타입은?",
+    "code": "function App() {\n  function handleClick(e) {\n    console.log(e.constructor.name);\n    console.log(e.nativeEvent.constructor.name);\n  }\n\n  return <button onClick={handleClick}>Click</button>;\n}",
+    "options": [
+      "MouseEvent, MouseEvent",
+      "SyntheticBaseEvent, MouseEvent",
+      "Event, Event",
+      "PointerEvent, PointerEvent"
+    ],
+    "correctIndex": 1,
+    "explanation": "React는 브라우저의 네이티브 이벤트를 SyntheticEvent(SyntheticBaseEvent)로 래핑하여 전달합니다. 이를 통해 브라우저 간 이벤트 동작을 일관되게 만듭니다. 원래의 브라우저 이벤트는 e.nativeEvent 속성으로 접근할 수 있으며, 이 경우 MouseEvent입니다.",
+    "sourceUrl": "https://react.dev/reference/react-dom/components/common#react-event-object"
+  },
+  {
+    "id": "react-basics-046",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "React의 렌더링 과정에서 'render phase'와 'commit phase'의 차이로 올바른 것은?",
+    "options": [
+      "Render phase에서 React는 컴포넌트를 호출하여 Virtual DOM을 생성하고, Commit phase에서 실제 DOM에 변경사항을 반영한다",
+      "Render phase에서 DOM을 직접 수정하고, Commit phase에서 상태를 업데이트한다",
+      "Render phase는 서버에서, Commit phase는 클라이언트에서 실행된다",
+      "Render phase와 Commit phase는 동시에 병렬로 실행된다"
+    ],
+    "correctIndex": 0,
+    "explanation": "React의 렌더링은 두 단계로 나뉩니다. Render phase에서는 컴포넌트 함수를 호출하여 React 엘리먼트 트리(Virtual DOM)를 생성하고 이전 트리와 비교(reconciliation)합니다. 이 단계는 순수해야 하며 부수효과가 없어야 합니다. Commit phase에서 실제 DOM을 업데이트하고 ref를 설정하며 useEffect를 스케줄링합니다.",
+    "sourceUrl": "https://react.dev/learn/render-and-commit"
+  },
+  {
+    "id": "react-basics-047",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 alert에 표시되는 count 값이 기대와 다른 이유는?",
+    "code": "function Counter() {\n  const [count, setCount] = useState(0);\n\n  function handleClick() {\n    setCount(count + 1);\n    alert(count);\n  }\n\n  return <button onClick={handleClick}>{count}</button>;\n}",
+    "options": [
+      "alert가 setCount보다 먼저 실행되기 때문",
+      "setCount가 에러를 발생시키기 때문",
+      "상태 업데이트는 다음 렌더링에 반영되므로, 현재 렌더링의 count 값이 alert에 표시되기 때문",
+      "alert 함수가 React의 이벤트 루프를 차단하기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "React에서 상태는 '스냅샷'처럼 동작합니다. setCount를 호출해도 현재 렌더링의 count 변수는 변하지 않습니다. 새로운 값은 다음 렌더링에서 반영됩니다. 따라서 alert(count)는 업데이트 이전의 값을 표시합니다. 이는 React의 단방향 데이터 흐름과 불변 상태 원칙에 기반합니다.",
+    "sourceUrl": "https://react.dev/learn/state-as-a-snapshot"
+  },
+  {
+    "id": "react-basics-048",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "React에서 useImperativeHandle 훅의 주된 용도는?",
+    "options": [
+      "컴포넌트의 렌더링 성능을 최적화하기 위해",
+      "useEffect의 실행 순서를 제어하기 위해",
+      "서버에서 클라이언트로 데이터를 직렬화하기 위해",
+      "forwardRef와 함께 사용하여 부모에게 노출하는 ref 인스턴스를 커스터마이징하기 위해"
+    ],
+    "correctIndex": 3,
+    "explanation": "useImperativeHandle은 forwardRef와 함께 사용되어, 부모 컴포넌트에 노출하는 ref 값을 직접 정의합니다. 전체 DOM 노드 대신 필요한 메서드(focus, scrollTo 등)만 선택적으로 노출하여 컴포넌트의 내부 구현을 캡슐화할 수 있습니다.",
+    "sourceUrl": "https://react.dev/reference/react/useImperativeHandle"
+  },
+  {
+    "id": "react-basics-049",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드에서 마운트 후 화면에 표시되는 count 값은?",
+    "code": "function App() {\n  const [count, setCount] = useState(0);\n\n  useEffect(() => {\n    setCount(1);\n    setCount(prev => prev + 1);\n  }, []);\n\n  return <div>{count}</div>;\n}",
+    "options": [
+      "0",
+      "2",
+      "1",
+      "3"
+    ],
+    "correctIndex": 1,
+    "explanation": "useEffect 내부에서 setCount(1)이 먼저 큐에 추가되고, 이어서 setCount(prev => prev + 1)이 큐에 추가됩니다. React는 이 큐를 순서대로 처리합니다: 먼저 count가 1로 설정되고, 그 다음 함수형 업데이트가 이전 값(1)에 1을 더해 최종 값은 2가 됩니다. 배칭되어 한 번의 리렌더링만 발생합니다.",
+    "sourceUrl": "https://react.dev/learn/queueing-a-series-of-state-updates"
+  },
+  {
+    "id": "react-basics-050",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "React에서 prop drilling 문제를 해결하는 방법으로 올바른 것은?",
+    "options": [
+      "모든 상태를 localStorage에 저장한다",
+      "window 전역 객체에 데이터를 할당한다",
+      "Context API나 상태 관리 라이브러리를 사용하여 중간 컴포넌트를 거치지 않고 데이터를 전달한다",
+      "모든 컴포넌트를 하나의 파일에 작성한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Prop drilling은 데이터를 사용하지 않는 중간 컴포넌트를 통해 깊이 전달해야 하는 문제입니다. Context API를 사용하면 컴포넌트 트리 어디서든 데이터에 직접 접근할 수 있어 중간 컴포넌트를 거치지 않아도 됩니다. Zustand, Redux 같은 상태 관리 라이브러리도 같은 문제를 해결합니다.",
+    "sourceUrl": "https://react.dev/learn/passing-data-deeply-with-context"
   }
 ]
