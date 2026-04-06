@@ -648,5 +648,168 @@
     "correctIndex": 1,
     "explanation": "HSTS is a security mechanism where the server uses the Strict-Transport-Security header to instruct the browser to only use HTTPS for the specified domain for a given period. This ensures that even if a user enters an HTTP URL, the browser automatically converts it to HTTPS, preventing man-in-the-middle attacks such as SSL stripping.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security"
+  },
+  {
+    "id": "network-041",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What happens when a cookie's SameSite attribute is set to 'Strict'?",
+    "options": [
+      "The cookie is included in all cross-site requests",
+      "The cookie is only included in requests originating from the same site, and excluded from all requests from external sites",
+      "The cookie is only sent with GET requests and excluded from POST requests",
+      "The cookie's expiration is automatically set to session end"
+    ],
+    "correctIndex": 1,
+    "explanation": "SameSite=Strict is the most restrictive setting — the cookie is never sent with cross-site requests, including when following a link from an external site. This effectively prevents CSRF attacks, but has the downside that login state is not maintained when navigating from external links. SameSite=Lax sends cookies on safe top-level navigations (GET).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value"
+  },
+  {
+    "id": "network-042",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is logged to the console after registering a Service Worker in the following code?",
+    "code": "navigator.serviceWorker.register('/sw.js')\n  .then(reg => console.log(reg.scope))\n  .catch(err => console.log(err.name));",
+    "options": [
+      "'/sw.js'",
+      "The URL scope controlled by the registered Service Worker (e.g., 'https://example.com/')",
+      "undefined",
+      "'ServiceWorker'"
+    ],
+    "correctIndex": 1,
+    "explanation": "The ServiceWorkerRegistration object's scope property returns the URL scope that the Service Worker controls. By default, it is determined by the script file's location. Registering '/sw.js' gives a scope of the site's root URL. You can specify a narrower scope via the scope option, but cannot set a scope broader than the script location.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/scope"
+  },
+  {
+    "id": "network-043",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the most appropriate client response when an API request returns HTTP 429 status code?",
+    "options": [
+      "Change the request URL and retry with a different endpoint",
+      "Refresh the authentication token and retry",
+      "Check the Retry-After header and retry after the specified time",
+      "Reduce the request body size and retry"
+    ],
+    "correctIndex": 2,
+    "explanation": "HTTP 429 Too Many Requests is returned when the client has exceeded the server's rate limit. The server usually includes a Retry-After header specifying how many seconds to wait before retrying. Clients should check this value and use an exponential backoff strategy for retries.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429"
+  },
+  {
+    "id": "network-044",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between the dns-prefetch and preconnect resource hints in HTML?",
+    "options": [
+      "dns-prefetch pre-downloads resources, while preconnect only performs DNS lookups",
+      "dns-prefetch only performs DNS lookups in advance, while preconnect performs DNS lookup, TCP connection, and TLS handshake in advance",
+      "Both hints have the same behavior, with preconnect being the newer standard",
+      "dns-prefetch only works with HTTP/2, while preconnect only works with HTTP/1.1"
+    ],
+    "correctIndex": 1,
+    "explanation": "dns-prefetch only performs a DNS lookup for the specified domain in advance, saving DNS resolution time on subsequent requests. preconnect goes further by also establishing a TCP connection and completing the TLS handshake (for HTTPS), providing greater time savings. Since preconnect uses more resources, it should only be used for critical domains.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preconnect"
+  },
+  {
+    "id": "network-045",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What value is logged to the console in the following code?",
+    "code": "const url = new URL('https://example.com/api/users?page=2');\nconsole.log(url.pathname);",
+    "options": [
+      "'/api/users?page=2'",
+      "'/api/users'",
+      "'https://example.com/api/users'",
+      "'api/users'"
+    ],
+    "correctIndex": 1,
+    "explanation": "The URL object's pathname property returns only the path portion of the URL, excluding the query string (?page=2) and fragment (#). To get the query string, use url.search. To manipulate individual parameters, use url.searchParams.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/URL/pathname"
+  },
+  {
+    "id": "network-046",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In what situation might navigator.sendBeacon fail in the following code?\n\nwindow.addEventListener('unload', () => {\n  navigator.sendBeacon('/analytics', JSON.stringify({ event: 'leave' }));\n});",
+    "options": [
+      "sendBeacon always fails in the unload event",
+      "sendBeacon cannot process strings returned by JSON.stringify",
+      "The browser's data size limit (typically 64KB) may be exceeded, or the unload event may not fire in some browsers",
+      "sendBeacon only works over HTTPS, so it fails in HTTP environments"
+    ],
+    "correctIndex": 2,
+    "explanation": "navigator.sendBeacon() is an API for reliably sending asynchronous requests when leaving a page, but it has limitations. The data size is typically limited to 64KB, and the unload event may not fire on mobile browsers. A more reliable alternative is to send data in the visibilitychange event when document.visibilityState === 'hidden'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon"
+  },
+  {
+    "id": "network-047",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the effect of setting the Vary header to 'Accept-Encoding' in an HTTP response?",
+    "options": [
+      "The server automatically compresses the response body with gzip",
+      "The browser is prevented from sending the Accept-Encoding header",
+      "Caches store and serve different response versions based on the request's Accept-Encoding header value",
+      "CDNs are instructed not to cache the response"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Vary header specifies which request headers should be part of the cache key. With Vary: Accept-Encoding, caches store different versions of the response for the same URL — one for clients that support gzip and one for those that don't. This ensures CDNs and proxy caches deliver the correct response version to each client.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary"
+  },
+  {
+    "id": "network-048",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What values are logged to the console in the following code?",
+    "code": "const response = await fetch('/api/data');\nconsole.log(response.redirected, response.type);",
+    "options": [
+      "undefined, undefined",
+      "false, 'basic'",
+      "true, 'cors'",
+      "false, 'default'"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Response object's redirected property returns a boolean indicating whether the request went through a redirect. The type property indicates the response type: 'basic' for same-origin requests, 'cors' for cross-origin CORS requests, and 'opaque' for no-cors mode. A relative URL like '/api/data' is always same-origin, so with no redirect the output is false, 'basic'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Response/type"
+  },
+  {
+    "id": "network-049",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between the Authorization and Cookie HTTP headers?",
+    "options": [
+      "Authorization can only be set by the server, while Cookie can only be set by the client",
+      "Cookie cannot be changed once set, but Authorization can be changed with every request",
+      "Authorization must be explicitly added by the client on each request, while Cookie is automatically included by the browser",
+      "Authorization can only contain encrypted data, while Cookie can only contain plaintext"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Authorization header must be explicitly set by the client on each request (typically with a Bearer token or Basic auth credentials). In contrast, cookies are set by the server via Set-Cookie and automatically included by the browser in subsequent requests. Because of this difference, Authorization header-based authentication is inherently safe from CSRF attacks, while cookie-based authentication requires separate CSRF defenses.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization"
+  },
+  {
+    "id": "network-050",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Why doesn't the catch block execute even when the fetch request fails with an error status in the following code?\n\nfetch('https://api.example.com/data')\n  .then(response => console.log(response.status))\n  .catch(err => console.log('Error occurred'));",
+    "options": [
+      "fetch does not support catch",
+      "Only errors inside the then handler are caught by catch",
+      "fetch does not reject the promise for HTTP error status codes (404, 500, etc.) — it resolves instead",
+      "The catch block can only handle synchronous errors"
+    ],
+    "correctIndex": 2,
+    "explanation": "The fetch API only rejects the promise when the network itself fails or the request cannot be made. Even when the server returns error status codes like 404 or 500, the network communication succeeded, so the promise resolves as fulfilled. To handle error statuses, you must check response.ok or response.status.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#checking_that_the_fetch_was_successful"
   }
 ]

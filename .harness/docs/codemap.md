@@ -193,7 +193,7 @@
 - dom-manipulation.json — 50 questions
 - event-loop.json — 48 questions
 - git-advanced.json — 50 questions
-- network.json — 40 questions
+- network.json — 50 questions
 - nodejs.json — 50 questions
 - promise.json — 48 questions
 - prototype.json — 48 questions
@@ -216,7 +216,7 @@
 - dom-manipulation.json — 50 questions
 - event-loop.json — 48 questions
 - git-advanced.json — 50 questions
-- network.json — 40 questions
+- network.json — 50 questions
 - nodejs.json — 50 questions
 - promise.json — 48 questions
 - prototype.json — 48 questions

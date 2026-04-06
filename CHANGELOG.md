@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-04-06
+
+### Features
+
+- **content**: fix — scope-050 error type and correctIndex d... (`fff1946`)
+
 ## 2026-04-05
 
 ### Features
