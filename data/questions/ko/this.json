@@ -663,5 +663,171 @@
     "correctIndex": 1,
     "explanation": "메서드 체이닝(method chaining)은 각 메서드에서 return this를 사용하여 같은 객체를 반환함으로써 연속적인 메서드 호출을 가능하게 합니다. builder.add('Hello')는 this(builder)를 반환하고, 이어서 .add(' World')가 호출되어 result가 'Hello World'가 됩니다. 마지막 .build()는 result 문자열을 반환합니다. jQuery, Lodash 등 많은 라이브러리가 이 패턴을 활용합니다.",
     "sourceUrl": "https://javascript.info/object-methods"
+  },
+  {
+    "id": "this-041",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function getThis() {\n  return this;\n}\nconsole.log(getThis.call(null) === globalThis);\nconsole.log(getThis.call(undefined) === globalThis);",
+    "options": [
+      "비엄격 모드에서 true, true",
+      "false, false",
+      "true, false",
+      "TypeError가 발생한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "비엄격 모드에서 call이나 apply에 null 또는 undefined를 전달하면, this는 전역 객체(globalThis)로 대체됩니다. 이를 'this 치환(this substitution)'이라 합니다. 엄격 모드에서는 이 치환이 일어나지 않아 this가 null이나 undefined 그대로 유지됩니다. 의도치 않은 전역 객체 수정을 방지하려면 엄격 모드를 사용하거나 Object.create(null)을 전달하는 것이 안전합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Function/call"
+  },
+  {
+    "id": "this-042",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "globalThis가 도입된 이유로 올바른 것은?",
+    "options": [
+      "화살표 함수에서 this를 대체하기 위해",
+      "strict mode에서 this를 사용하기 위해",
+      "브라우저(window), Node.js(global), Worker(self) 등 환경에 관계없이 전역 객체에 접근하기 위해",
+      "클래스 내부에서만 전역 변수를 선언하기 위해"
+    ],
+    "correctIndex": 2,
+    "explanation": "JavaScript의 전역 객체는 실행 환경마다 다릅니다. 브라우저는 window, Node.js는 global, Web Worker는 self를 사용합니다. ES2020에서 도입된 globalThis는 환경에 관계없이 항상 전역 객체를 참조하는 표준 방법을 제공합니다. typeof globalThis는 항상 'object'이며, 크로스 플랫폼 코드에서 전역 객체에 안전하게 접근할 때 사용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/globalThis"
+  },
+  {
+    "id": "this-043",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const obj = {\n  name: 'tagged',\n  tag(strings, ...values) {\n    return `${this.name}: ${strings[0]}${values[0]}`;\n  }\n};\nconst x = 42;\nconsole.log(obj.tag`value = ${x}`);",
+    "options": [
+      "undefined: value = 42",
+      "tagged: value = 42",
+      "TypeError",
+      "tagged: value = undefined"
+    ],
+    "correctIndex": 1,
+    "explanation": "태그드 템플릿 리터럴(tagged template literal)에서도 일반 메서드 호출과 동일한 this 바인딩 규칙이 적용됩니다. obj.tag`...`는 obj.tag(...)와 동일하게 점(.) 앞의 obj가 this로 바인딩됩니다. 따라서 this.name은 'tagged'이고, strings[0]은 'value = ', values[0]은 42가 되어 'tagged: value = 42'가 출력됩니다. 태그 함수를 변수에 저장하면 this 손실이 발생할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Template_literals"
+  },
+  {
+    "id": "this-044",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 this.cache에 접근할 수 없습니다. 원인은 무엇인가요?",
+    "code": "class DataService {\n  cache = new Map();\n  async fetchAll(ids) {\n    const results = await Promise.all(\n      ids.map(function(id) {\n        if (this.cache.has(id)) {\n          return this.cache.get(id);\n        }\n        return fetch(`/api/${id}`);\n      })\n    );\n    return results;\n  }\n}\nnew DataService().fetchAll([1, 2, 3]);",
+    "options": [
+      "async 함수에서는 this를 사용할 수 없기 때문",
+      "Map 객체에 has 메서드가 없기 때문",
+      "ids.map에 전달된 일반 함수 콜백에서 this가 DataService 인스턴스가 아닌 undefined로 바인딩되기 때문",
+      "Promise.all이 this를 변경하기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "async 메서드 자체의 this는 정상적으로 인스턴스에 바인딩됩니다. 문제는 ids.map에 전달된 일반 함수(function) 콜백입니다. 클래스 본문은 strict mode이므로 콜백 내부의 this는 undefined가 되어 this.cache 접근 시 TypeError가 발생합니다. 해결 방법: 1) 화살표 함수로 변경: ids.map((id) => { ... }), 2) map의 두 번째 인자로 this 전달: ids.map(function(id) { ... }, this).",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/map"
+  },
+  {
+    "id": "this-045",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "제너레이터 함수에서의 this 바인딩에 대한 설명으로 올바른 것은?",
+    "options": [
+      "제너레이터 함수는 항상 전역 객체를 this로 가진다",
+      "제너레이터는 this를 사용할 수 없으며 ReferenceError가 발생한다",
+      "제너레이터 함수의 this는 yield에 의해 매번 변경된다",
+      "제너레이터 함수의 this는 일반 함수와 동일한 규칙을 따르며, 호출 방식에 따라 결정된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "제너레이터 함수(function*)의 this 바인딩은 일반 함수와 동일한 규칙을 따릅니다. 메서드로 호출하면 해당 객체, call/apply로 호출하면 지정된 객체가 this가 됩니다. 단, new로 호출할 수 없다는 점이 다릅니다(TypeError 발생). yield로 실행을 중단하고 재개해도 this는 최초 호출 시 결정된 값이 유지됩니다. 화살표 제너레이터 함수는 문법적으로 존재하지 않습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/function*"
+  },
+  {
+    "id": "this-046",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function multiply(a, b) {\n  return a * b;\n}\nconst double = multiply.bind(null, 2);\nconsole.log(double(5));\nconsole.log(double(10));",
+    "options": [
+      "10, 20",
+      "NaN, NaN",
+      "undefined, undefined",
+      "TypeError"
+    ],
+    "correctIndex": 0,
+    "explanation": "bind는 this 바인딩뿐만 아니라 인자의 부분 적용(partial application)에도 사용됩니다. multiply.bind(null, 2)는 this를 null로 설정하고(이 함수에서는 this를 사용하지 않으므로 무관), 첫 번째 인자 a를 2로 고정합니다. 반환된 double 함수는 나머지 인자 b만 받습니다. double(5)는 multiply(2, 5)와 같아 10, double(10)은 multiply(2, 10)과 같아 20을 반환합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Function/bind"
+  },
+  {
+    "id": "this-047",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "new.target과 this의 관계에 대한 설명으로 올바른 것은?",
+    "options": [
+      "new.target은 this와 항상 같은 값을 가리킨다",
+      "new.target은 화살표 함수에서만 사용할 수 있다",
+      "new.target은 call/apply로 변경할 수 있다",
+      "new.target은 new로 호출된 생성자를 가리키며, this(새 인스턴스)와는 다른 값이다"
+    ],
+    "correctIndex": 3,
+    "explanation": "new.target은 new 키워드로 직접 호출된 생성자 함수/클래스를 가리키는 메타 프로퍼티입니다. this는 새로 생성된 인스턴스 객체를 가리키는 반면, new.target은 생성자 함수 자체를 참조합니다. 상속 시 new Child()를 호출하면 Parent 생성자 내에서 new.target은 Child를 가리키지만, this는 Child의 인스턴스입니다. new 없이 호출하면 new.target은 undefined가 됩니다. 이를 활용해 new 없이 호출되는 것을 방지할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/new.target"
+  },
+  {
+    "id": "this-048",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 TypeError가 발생합니다. 원인은 무엇인가요?",
+    "code": "class Validator {\n  #rules = [];\n  addRule(rule) {\n    this.#rules.push(rule);\n    return this;\n  }\n  validate(value) {\n    return this.#rules.every(rule => rule(value));\n  }\n}\nconst v = new Validator();\nconst { validate } = v;\nv.addRule(x => x > 0);\nvalidate(5);",
+    "options": [
+      "화살표 함수는 addRule의 인자로 전달할 수 없기 때문",
+      "구조 분해로 추출된 validate의 this가 인스턴스가 아니어서 private 필드 #rules에 접근할 수 없기 때문",
+      "every 메서드가 boolean을 반환하지 않기 때문",
+      "#rules는 static 필드이므로 인스턴스에서 접근할 수 없기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "private 필드(#)는 해당 클래스의 인스턴스에서만 접근할 수 있습니다. 구조 분해 할당으로 validate를 추출하면 this 바인딩이 분리됩니다. validate(5) 호출 시 this가 undefined(strict mode)가 되어, this.#rules 접근 시 TypeError가 발생합니다. private 필드는 public 프로퍼티와 달리 undefined.prop처럼 단순히 undefined를 반환하지 않고 TypeError를 던집니다. 해결법: v.validate(5)로 메서드 호출 패턴을 유지하거나 bind를 사용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Classes/Private_properties"
+  },
+  {
+    "id": "this-049",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const obj = {\n  value: 100,\n  [Symbol.toPrimitive](hint) {\n    if (hint === 'number') return this.value;\n    return `obj(${this.value})`;\n  }\n};\nconsole.log(+obj);\nconsole.log(`${obj}`);",
+    "options": [
+      "NaN, 'undefined'",
+      "100, 'obj(undefined)'",
+      "100, 'obj(100)'",
+      "TypeError"
+    ],
+    "correctIndex": 2,
+    "explanation": "Symbol.toPrimitive 메서드 내부의 this는 해당 메서드를 소유한 객체에 바인딩됩니다. +obj는 hint가 'number'인 변환을 트리거하여 this.value인 100을 반환합니다. `${obj}`는 hint가 'string'인 변환을 트리거하여 `obj(${this.value})`로 'obj(100)'을 반환합니다. 잘 알려진 심볼 메서드들(toString, valueOf, Symbol.toPrimitive 등)에서도 일반 메서드와 동일한 this 규칙이 적용됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive"
+  },
+  {
+    "id": "this-050",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "클래스의 static 블록(static { })과 static 메서드에서 this의 차이로 올바른 것은?",
+    "options": [
+      "둘 다 this가 클래스 자체를 가리키지만, static 블록은 클래스 정의 시 즉시 실행되고 static 메서드는 호출 시 실행된다",
+      "static 블록에서는 this를 사용할 수 없다",
+      "static 메서드의 this는 항상 인스턴스를 가리킨다",
+      "static 블록의 this는 전역 객체를 가리킨다"
+    ],
+    "correctIndex": 0,
+    "explanation": "ES2022에서 도입된 static 블록(static { ... })에서 this는 클래스 자체를 가리킵니다. 이는 static 메서드에서의 this와 동일합니다. 차이점은 실행 시점입니다: static 블록은 클래스가 평가될 때 즉시 실행되고, static 메서드는 명시적으로 호출될 때 실행됩니다. static 블록은 private 필드에 대한 외부 접근 설정이나 복잡한 static 초기화에 유용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Classes/Static_initialization_blocks"
   }
 ]

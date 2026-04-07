@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-04-07
+
+### Features
+
+- **content**: add 10 react-basics questions (041-050) (`53c9db3`)
+
 ## 2026-04-06
 
 ### Features

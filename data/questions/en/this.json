@@ -663,5 +663,171 @@
     "correctIndex": 1,
     "explanation": "Method chaining works by returning this from each method, enabling consecutive method calls on the same object. builder.add('Hello') returns this (builder), then .add(' World') is called making result 'Hello World'. Finally .build() returns the result string. This pattern is used extensively in libraries like jQuery, Lodash, and many builder APIs.",
     "sourceUrl": "https://javascript.info/object-methods"
+  },
+  {
+    "id": "this-041",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function getThis() {\n  return this;\n}\nconsole.log(getThis.call(null) === globalThis);\nconsole.log(getThis.call(undefined) === globalThis);",
+    "options": [
+      "true, true in non-strict mode",
+      "false, false",
+      "true, false",
+      "TypeError is thrown"
+    ],
+    "correctIndex": 0,
+    "explanation": "In non-strict mode, when null or undefined is passed to call or apply, this is replaced with the global object (globalThis). This is known as 'this substitution'. In strict mode, this substitution does not occur, and this remains null or undefined as provided. To prevent accidental global object modification, use strict mode or pass Object.create(null) instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call"
+  },
+  {
+    "id": "this-042",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Why was globalThis introduced?",
+    "options": [
+      "To replace this in arrow functions",
+      "To use this in strict mode",
+      "To access the global object consistently across environments like browsers (window), Node.js (global), and Workers (self)",
+      "To declare global variables only inside classes"
+    ],
+    "correctIndex": 2,
+    "explanation": "The global object differs across JavaScript environments: browsers use window, Node.js uses global, and Web Workers use self. globalThis, introduced in ES2020, provides a standard way to access the global object regardless of the environment. typeof globalThis is always 'object', making it safe for cross-platform code that needs to reference the global object.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis"
+  },
+  {
+    "id": "this-043",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  name: 'tagged',\n  tag(strings, ...values) {\n    return `${this.name}: ${strings[0]}${values[0]}`;\n  }\n};\nconst x = 42;\nconsole.log(obj.tag`value = ${x}`);",
+    "options": [
+      "undefined: value = 42",
+      "tagged: value = 42",
+      "TypeError",
+      "tagged: value = undefined"
+    ],
+    "correctIndex": 1,
+    "explanation": "Tagged template literals follow the same this binding rules as regular method calls. obj.tag`...` binds this to obj (the object before the dot), just like obj.tag(...) would. Therefore this.name is 'tagged', strings[0] is 'value = ', and values[0] is 42, producing 'tagged: value = 42'. If the tag function is stored in a variable, this loss can occur just like with any other method.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals"
+  },
+  {
+    "id": "this-044",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, this.cache cannot be accessed. What is the cause?",
+    "code": "class DataService {\n  cache = new Map();\n  async fetchAll(ids) {\n    const results = await Promise.all(\n      ids.map(function(id) {\n        if (this.cache.has(id)) {\n          return this.cache.get(id);\n        }\n        return fetch(`/api/${id}`);\n      })\n    );\n    return results;\n  }\n}\nnew DataService().fetchAll([1, 2, 3]);",
+    "options": [
+      "this cannot be used in async functions",
+      "The Map object has no has method",
+      "The regular function callback in ids.map has this bound to undefined instead of the DataService instance",
+      "Promise.all changes this"
+    ],
+    "correctIndex": 2,
+    "explanation": "The this of the async method itself is correctly bound to the instance. The problem is the regular function (function) callback passed to ids.map. Since class bodies run in strict mode, this inside the callback is undefined, causing a TypeError when accessing this.cache. Solutions: 1) Use an arrow function: ids.map((id) => { ... }), 2) Pass this as map's second argument: ids.map(function(id) { ... }, this).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map"
+  },
+  {
+    "id": "this-045",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about this binding in generator functions is correct?",
+    "options": [
+      "Generator functions always have the global object as this",
+      "Generators cannot use this and throw a ReferenceError",
+      "The this of a generator function changes with each yield",
+      "Generator functions follow the same this binding rules as regular functions, determined by how they are called"
+    ],
+    "correctIndex": 3,
+    "explanation": "Generator functions (function*) follow the same this binding rules as regular functions. When called as a method, this is the object; with call/apply, it is the specified object. However, unlike regular functions, generators cannot be called with new (throws TypeError). Even when execution is paused and resumed via yield, this retains the value determined at the initial call. Note that arrow generator functions do not exist syntactically.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*"
+  },
+  {
+    "id": "this-046",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "function multiply(a, b) {\n  return a * b;\n}\nconst double = multiply.bind(null, 2);\nconsole.log(double(5));\nconsole.log(double(10));",
+    "options": [
+      "10, 20",
+      "NaN, NaN",
+      "undefined, undefined",
+      "TypeError"
+    ],
+    "correctIndex": 0,
+    "explanation": "bind is used not only for this binding but also for partial application of arguments. multiply.bind(null, 2) sets this to null (irrelevant since this function doesn't use this) and fixes the first argument a to 2. The returned double function only accepts the remaining argument b. double(5) equals multiply(2, 5) = 10, and double(10) equals multiply(2, 10) = 20.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind"
+  },
+  {
+    "id": "this-047",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Which statement about the relationship between new.target and this is correct?",
+    "options": [
+      "new.target always points to the same value as this",
+      "new.target can only be used in arrow functions",
+      "new.target can be changed with call/apply",
+      "new.target refers to the constructor called with new, which is a different value from this (the new instance)"
+    ],
+    "correctIndex": 3,
+    "explanation": "new.target is a meta-property that refers to the constructor function/class directly called with the new keyword. While this refers to the newly created instance object, new.target references the constructor function itself. With inheritance, calling new Child() means that inside Parent's constructor, new.target points to Child while this is an instance of Child. Without new, new.target is undefined. This can be used to prevent functions from being called without new.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new.target"
+  },
+  {
+    "id": "this-048",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In the following code, a TypeError is thrown. What is the cause?",
+    "code": "class Validator {\n  #rules = [];\n  addRule(rule) {\n    this.#rules.push(rule);\n    return this;\n  }\n  validate(value) {\n    return this.#rules.every(rule => rule(value));\n  }\n}\nconst v = new Validator();\nconst { validate } = v;\nv.addRule(x => x > 0);\nvalidate(5);",
+    "options": [
+      "Arrow functions cannot be passed as arguments to addRule",
+      "The destructured validate loses its this binding, preventing access to the private field #rules",
+      "The every method does not return a boolean",
+      "#rules is a static field and cannot be accessed from instances"
+    ],
+    "correctIndex": 1,
+    "explanation": "Private fields (#) can only be accessed on instances of the declaring class. Destructuring validate from v detaches the this binding. When validate(5) is called, this is undefined (strict mode), and accessing this.#rules throws a TypeError. Unlike public properties that simply return undefined on wrong this, private fields throw a TypeError. Solution: use v.validate(5) to maintain the method call pattern, or use bind.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_properties"
+  },
+  {
+    "id": "this-049",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  value: 100,\n  [Symbol.toPrimitive](hint) {\n    if (hint === 'number') return this.value;\n    return `obj(${this.value})`;\n  }\n};\nconsole.log(+obj);\nconsole.log(`${obj}`);",
+    "options": [
+      "NaN, 'undefined'",
+      "100, 'obj(undefined)'",
+      "100, 'obj(100)'",
+      "TypeError"
+    ],
+    "correctIndex": 2,
+    "explanation": "Inside the Symbol.toPrimitive method, this is bound to the object that owns the method. +obj triggers a conversion with hint 'number', returning this.value which is 100. `${obj}` triggers a conversion with hint 'string', returning `obj(${this.value})` which is 'obj(100)'. Well-known symbol methods (toString, valueOf, Symbol.toPrimitive, etc.) follow the same this rules as regular methods.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive"
+  },
+  {
+    "id": "this-050",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between this in class static blocks (static { }) and static methods?",
+    "options": [
+      "Both have this pointing to the class itself, but static blocks execute immediately during class definition while static methods execute when called",
+      "this cannot be used in static blocks",
+      "The this of static methods always refers to the instance",
+      "The this of static blocks refers to the global object"
+    ],
+    "correctIndex": 0,
+    "explanation": "Static blocks (static { ... }), introduced in ES2022, have this pointing to the class itself. This is the same as this in static methods. The difference is execution timing: static blocks run immediately when the class is evaluated, while static methods run when explicitly called. Static blocks are useful for setting up external access to private fields or complex static initialization.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Static_initialization_blocks"
   }
 ]
