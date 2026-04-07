@@ -662,5 +662,171 @@
     "correctIndex": 1,
     "explanation": "??= (nullish coalescing assignment) assigns the right-hand value only when the left variable is null or undefined. ||= (logical OR assignment) assigns when the left variable is falsy (0, '', false, null, undefined, NaN). For example, let x = 0; x ??= 5 — x remains 0, but let y = 0; y ||= 5 — y becomes 5. This follows the same logic as the ?? vs || operator difference.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_assignment"
+  },
+  {
+    "id": "type-coercion-041",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What are the results of parseInt('0x1A') and parseInt('010', 8)?",
+    "options": [
+      "NaN, NaN",
+      "0, 0",
+      "1, 10",
+      "26, 8"
+    ],
+    "correctIndex": 3,
+    "explanation": "parseInt accepts a radix (base) as its second argument. '0x1A' is automatically parsed as hexadecimal due to the 0x prefix. Hexadecimal 1A is 1×16 + 10 = 26. parseInt('010', 8) explicitly parses in octal: 0×64 + 1×8 + 0 = 8. Without a radix, the default is base 10, but the 0x prefix is an exception that triggers hexadecimal parsing. Always specifying the radix is recommended to avoid confusion.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt"
+  },
+  {
+    "id": "type-coercion-042",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "console.log('10' > '9');\nconsole.log('banana' < 'cherry');\nconsole.log('a' > 'A');\nconsole.log('café' > 'cafb');",
+    "options": [
+      "true, true, true, true",
+      "true, true, false, true",
+      "false, true, true, true",
+      "false, true, true, false"
+    ],
+    "correctIndex": 2,
+    "explanation": "When both operands are strings, they are compared by Unicode code point order without numeric conversion. '10' > '9' compares the first character '1' (code 49) with '9' (code 57) — since 49 < 57, the result is false. 'banana' < 'cherry' compares 'b' (98) < 'c' (99), giving true. 'a' (97) > 'A' (65), giving true. 'café' vs 'cafb' — the first three characters match, then 'é' (233) > 'b' (98), giving true. The fact that '10' > '9' is false is a common source of mistakes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than"
+  },
+  {
+    "id": "type-coercion-043",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "The following code throws an error. What is the cause?",
+    "code": "const sym = Symbol('id');\nconsole.log('Symbol: ' + sym); // TypeError",
+    "options": [
+      "Symbols cannot be implicitly converted to strings, so using the + operator to concatenate with a string throws a TypeError",
+      "Symbols cannot be declared with const",
+      "Symbol() cannot receive a string argument",
+      "console.log does not support the Symbol type"
+    ],
+    "correctIndex": 0,
+    "explanation": "Symbol is a primitive type introduced in ES2015 that, unlike other primitive types, prohibits implicit string conversion. Using the + operator to concatenate a symbol with a string like 'text' + sym throws a TypeError. This is a design decision to prevent bugs from unintended conversions. Explicit conversion is possible: String(sym) returns 'Symbol(id)', and sym.toString() works similarly. You can also access the description string 'id' via sym.description.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol"
+  },
+  {
+    "id": "type-coercion-044",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "In the following code, case 0 does not match. What is the cause?",
+    "code": "const val = '0';\nswitch (val) {\n  case 0: console.log('zero'); break;\n  default: console.log('default'); // runs\n}",
+    "options": [
+      "switch statements cannot handle strings",
+      "A semicolon is missing after case 0",
+      "switch uses === (strict equality), so string '0' and number 0 have different types and do not match",
+      "val cannot be used in switch because it is declared with const"
+    ],
+    "correctIndex": 2,
+    "explanation": "The switch statement uses === (strict equality) for case comparisons. Since === compares both value and type without coercion, the string '0' and number 0 have different types and do not match. To fix this, use case '0' to compare with a string, or use switch(Number(val)) to convert to a number first. Note this differs from if-else statements that might use == for comparisons.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch"
+  },
+  {
+    "id": "type-coercion-045",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "console.log(1n == 1);\nconsole.log(1n === 1);\nconsole.log(typeof 1n);\nconsole.log(1n + 1);  // What happens on this line?",
+    "options": [
+      "true, false, 'bigint', 2",
+      "true, true, 'number', 2n",
+      "false, false, 'bigint', 2n",
+      "true, false, 'bigint', TypeError"
+    ],
+    "correctIndex": 3,
+    "explanation": "The == comparison between BigInt (1n) and Number (1) returns true when the values are equal (type coercion is allowed). === returns false because the types differ (bigint vs number). typeof 1n is 'bigint'. However, 1n + 1 throws a TypeError. JavaScript explicitly prohibits mixing BigInt and Number in arithmetic operations because implicit conversion could cause precision loss. You must match types: BigInt(1) + 1n or 1n + BigInt(1).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt"
+  },
+  {
+    "id": "type-coercion-046",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which is the correct way to check if a value is an array?",
+    "options": [
+      "typeof [] returns 'array', so use typeof",
+      "Array.isArray() returns true for arrays, overcoming the limitation that typeof [] returns 'object'",
+      "[] instanceof Object returns false, so use that",
+      "typeof [] returns 'undefined', so it cannot be used"
+    ],
+    "correctIndex": 1,
+    "explanation": "typeof [] returns 'object', not 'array', because arrays are a special form of objects in JavaScript. typeof alone cannot distinguish arrays from plain objects. Array.isArray() was introduced in ES5 to precisely determine whether a value is an array. While instanceof Array also works, it cannot detect arrays created in different iframes/realms. Array.isArray() works regardless of the realm, making it the most reliable method.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray"
+  },
+  {
+    "id": "type-coercion-047",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In the following code, the condition unexpectedly evaluates to true. What is the cause?",
+    "code": "const flag = new Boolean(false);\nif (flag) {\n  console.log('truthy!'); // runs\n}\nconsole.log(typeof flag); // 'object'",
+    "options": [
+      "The Boolean() function always returns true",
+      "The if statement compares the typeof result",
+      "Variables declared with const are always truthy",
+      "new Boolean(false) creates a Boolean wrapper object, and all objects are truthy — so even though the internal value is false, it evaluates to true in conditions"
+    ],
+    "correctIndex": 3,
+    "explanation": "new Boolean(false) creates a Boolean wrapper object, not the primitive value false. As shown by typeof returning 'object', this is an object. In JavaScript, all objects are truthy, so even though it wraps false internally, it evaluates to true in an if condition. Calling Boolean(false) without new returns the primitive false. For the same reason, new Number(0) and new String('') are also truthy. This is why using wrapper constructors with new is strongly discouraged.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean"
+  },
+  {
+    "id": "type-coercion-048",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Why do indexOf() and includes() handle NaN differently in arrays?",
+    "options": [
+      "indexOf() uses === (Strict Equality), so NaN === NaN is false and it cannot find NaN. includes() uses the SameValueZero algorithm and can find NaN",
+      "indexOf() converts NaN to a number",
+      "includes() treats all falsy values as equal",
+      "indexOf() is string-only and only includes() can handle numbers"
+    ],
+    "correctIndex": 0,
+    "explanation": "Array.prototype.indexOf() internally uses the Strict Equality Comparison (===). Since NaN === NaN is false, [NaN].indexOf(NaN) returns -1. Array.prototype.includes(), introduced in ES2016, uses the SameValueZero algorithm. SameValueZero considers NaN equal to itself, so [NaN].includes(NaN) returns true. This exists because ECMAScript defines four equality algorithms: Abstract Equality, Strict Equality, SameValue, and SameValueZero.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes"
+  },
+  {
+    "id": "type-coercion-049",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "console.log(new String('a') == 'a');\nconsole.log(new String('a') === 'a');\nconsole.log(new String('a') == new String('a'));\nconsole.log(new Number(0) == false);",
+    "options": [
+      "true, true, true, true",
+      "true, false, true, true",
+      "true, false, false, true",
+      "false, false, false, false"
+    ],
+    "correctIndex": 2,
+    "explanation": "new String('a') == 'a' is an object-primitive comparison, so ToPrimitive is called yielding 'a' == 'a' = true. new String('a') === 'a' is false because the types differ (object vs string). new String('a') == new String('a') is a reference comparison between two objects — since they are different objects, it's false. When both sides of == are objects, no ToPrimitive conversion occurs; only references are compared. new Number(0) == false: the boolean is first converted to 0, then ToPrimitive(new Number(0)) returns 0, so 0 == 0 = true.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String"
+  },
+  {
+    "id": "type-coercion-050",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Which of the following is truthy when used as an if condition?",
+    "options": [
+      "0",
+      "NaN",
+      "'' (empty string)",
+      "[] (empty array)"
+    ],
+    "correctIndex": 3,
+    "explanation": "In JavaScript's ToBoolean conversion, the falsy values are: false, 0, -0, 0n, '' (empty string), null, undefined, and NaN. Every value not in this list is truthy. An empty array [] is an object, and all objects are truthy. Similarly, an empty object {} is also truthy. An important caveat: [] == false is true (due to the type conversion process), but Boolean([]) is true. The == comparison and Boolean() conversion follow different rules.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Truthy"
   }
 ]

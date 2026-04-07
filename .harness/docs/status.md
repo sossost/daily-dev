@@ -1,17 +1,17 @@
 # DailyDev Status
 
-**Last Updated:** 2026-04-07T22:00:00Z
+**Last Updated:** 2026-04-08T10:00:00Z
 
 ## Last Run
 - Agent: content
 - Result: success
-- Summary: add 10 this questions (041-050)
+- Summary: add 10 type-coercion questions (041-050)
 
 ## Project Health
 
 | Area | Status | Note |
 |------|--------|------|
-| Questions | 957 (21 topics) | 10 this questions added (041-050) |
+| Questions | 967 (21 topics) | 10 type-coercion questions added (041-050) |
 | Tests | 298+ | 8 new tests, unhandled promise fixed |
 | Build | passing | |
 | Features | 12 major features | Endless practice mode added |
@@ -20,6 +20,7 @@
 
 | Date | Agent | Result | Summary |
 |------|-------|--------|---------|
+| 2026-04-08 10:00 | content | success | add 10 type-coercion questions (041-050) |
 | 2026-04-07 22:00 | content | success | add 10 this questions (041-050) |
 | 2026-04-07 10:00 | content | success | add 10 react-basics questions (041-050) |
 | 2026-04-06 22:00 | content | success | fix — network-048 ambiguous cross-origin URL |
@@ -29,7 +30,6 @@
 | 2026-04-04 22:00 | content | success | add 10 web-performance questions |
 | 2026-04-04 10:00 | content | success | add 10 dom-manipulation questions |
 | 2026-04-03 22:00 | content | success | fix — database-047 ambiguous option D |
-| 2026-04-03 10:00 | content | success | add 10 design-patterns questions |
 
 
 ## Notes

@@ -662,5 +662,171 @@
     "correctIndex": 1,
     "explanation": "??= (nullish coalescing assignment)는 왼쪽 변수가 null 또는 undefined일 때만 오른쪽 값을 할당합니다. ||= (logical OR assignment)는 왼쪽 변수가 falsy(0, '', false, null, undefined, NaN)일 때 오른쪽 값을 할당합니다. 예를 들어 let x = 0; x ??= 5에서 x는 여전히 0이지만, let y = 0; y ||= 5에서 y는 5가 됩니다. ?? vs || 연산자의 차이와 동일한 논리입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_assignment"
+  },
+  {
+    "id": "type-coercion-041",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "parseInt('0x1A')와 parseInt('010', 8)의 결과로 올바른 것은?",
+    "options": [
+      "NaN, NaN",
+      "0, 0",
+      "1, 10",
+      "26, 8"
+    ],
+    "correctIndex": 3,
+    "explanation": "parseInt는 두 번째 인자로 기수(radix)를 받습니다. '0x1A'는 0x 접두사로 인해 자동으로 16진수로 파싱됩니다. 16진수 1A는 1×16 + 10 = 26입니다. parseInt('010', 8)은 명시적으로 8진수로 파싱하여 0×64 + 1×8 + 0 = 8입니다. radix를 생략하면 10진수가 기본값이지만, 0x 접두사는 예외적으로 16진수로 인식됩니다. 혼란을 방지하려면 항상 radix를 명시하는 것이 권장됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/parseInt"
+  },
+  {
+    "id": "type-coercion-042",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log('10' > '9');\nconsole.log('banana' < 'cherry');\nconsole.log('a' > 'A');\nconsole.log('café' > 'cafb');",
+    "options": [
+      "true, true, true, true",
+      "true, true, false, true",
+      "false, true, true, true",
+      "false, true, true, false"
+    ],
+    "correctIndex": 2,
+    "explanation": "두 피연산자가 모두 문자열이면 숫자로 변환하지 않고 유니코드 코드 포인트 순서로 비교합니다. '10' > '9'는 첫 문자 '1'(코드 49)이 '9'(코드 57)보다 작으므로 false입니다. 'banana' < 'cherry'는 'b'(98) < 'c'(99)이므로 true입니다. 'a'(97) > 'A'(65)이므로 true입니다. 'café'와 'cafb'는 세 번째 문자까지 같고 네 번째 문자 'é'(233) > 'b'(98)이므로 true입니다. 문자열 비교에서 '10' > '9'가 false인 점은 흔한 실수 원인입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Less_than"
+  },
+  {
+    "id": "type-coercion-043",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 에러가 발생합니다. 원인은 무엇인가요?",
+    "code": "const sym = Symbol('id');\nconsole.log('Symbol: ' + sym); // TypeError",
+    "options": [
+      "Symbol은 문자열로 암시적 변환이 불가능하여 + 연산자로 문자열과 연결하면 TypeError가 발생한다",
+      "Symbol은 const로 선언할 수 없기 때문",
+      "Symbol()에 문자열 인자를 전달할 수 없기 때문",
+      "console.log가 Symbol 타입을 지원하지 않기 때문"
+    ],
+    "correctIndex": 0,
+    "explanation": "Symbol은 ES2015에서 도입된 원시 타입으로, 다른 원시 타입과 달리 암시적 문자열 변환이 금지되어 있습니다. 'text' + sym처럼 + 연산자로 문자열과 연결하면 TypeError가 발생합니다. 이는 의도치 않은 변환으로 인한 버그를 방지하기 위한 설계입니다. 명시적 변환은 가능합니다: String(sym)은 'Symbol(id)'를 반환하고, sym.toString()도 동일합니다. sym.description으로 설명 문자열 'id'에 접근할 수도 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Symbol"
+  },
+  {
+    "id": "type-coercion-044",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 case 0이 매칭되지 않습니다. 원인은 무엇인가요?",
+    "code": "const val = '0';\nswitch (val) {\n  case 0: console.log('zero'); break;\n  default: console.log('default'); // 실행됨\n}",
+    "options": [
+      "switch문은 문자열을 처리할 수 없기 때문",
+      "case 0 뒤에 세미콜론이 없기 때문",
+      "switch문은 ===(일치 연산자)로 비교하므로 문자열 '0'과 숫자 0은 타입이 달라 매칭되지 않는다",
+      "val이 const로 선언되어 switch에서 사용할 수 없기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "switch문의 case 비교는 ===(일치 연산자)를 사용합니다. ===(strict equality)는 타입 변환 없이 값과 타입 모두 비교하므로, 문자열 '0'과 숫자 0은 타입이 다르기 때문에 매칭되지 않습니다. 이를 해결하려면 case '0'으로 문자열과 비교하거나, switch(Number(val))로 먼저 숫자로 변환해야 합니다. ==를 사용하는 if-else와 다른 동작이므로 주의가 필요합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/switch"
+  },
+  {
+    "id": "type-coercion-045",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(1n == 1);\nconsole.log(1n === 1);\nconsole.log(typeof 1n);\nconsole.log(1n + 1);  // 이 줄의 결과는?",
+    "options": [
+      "true, false, 'bigint', 2",
+      "true, true, 'number', 2n",
+      "false, false, 'bigint', 2n",
+      "true, false, 'bigint', TypeError"
+    ],
+    "correctIndex": 3,
+    "explanation": "BigInt(1n)와 Number(1)의 ==비교는 값이 같으면 true를 반환합니다(타입 변환 허용). ===는 타입이 다르므로(bigint vs number) false입니다. typeof 1n은 'bigint'입니다. 그러나 1n + 1은 TypeError를 발생시킵니다. BigInt와 Number를 산술 연산자로 혼합 사용하면 암시적 변환 시 정밀도 손실이 발생할 수 있으므로 JavaScript는 이를 명시적으로 금지합니다. BigInt(1) + 1n 또는 1n + BigInt(1)처럼 타입을 맞춰야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/BigInt"
+  },
+  {
+    "id": "type-coercion-046",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "배열 타입을 확인하는 방법으로 올바른 것은?",
+    "options": [
+      "typeof []는 'array'를 반환하므로 typeof로 확인한다",
+      "Array.isArray()는 배열이면 true를 반환하며, typeof []가 'object'를 반환하는 한계를 해결한다",
+      "[] instanceof Object가 false이므로 이를 활용한다",
+      "typeof []는 'undefined'를 반환하므로 사용할 수 없다"
+    ],
+    "correctIndex": 1,
+    "explanation": "typeof []는 'array'가 아닌 'object'를 반환합니다. JavaScript에서 배열은 객체의 특수한 형태이기 때문입니다. typeof만으로는 배열과 일반 객체를 구분할 수 없습니다. Array.isArray()는 ES5에서 도입된 메서드로, 값이 배열인지 정확히 판별합니다. instanceof Array도 가능하지만, 다른 iframe/realm에서 생성된 배열은 감지하지 못하는 한계가 있습니다. Array.isArray()는 realm에 관계없이 동작하므로 가장 신뢰할 수 있는 방법입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray"
+  },
+  {
+    "id": "type-coercion-047",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 조건문이 의도와 달리 true로 평가됩니다. 원인은 무엇인가요?",
+    "code": "const flag = new Boolean(false);\nif (flag) {\n  console.log('truthy!'); // 실행됨\n}\nconsole.log(typeof flag); // 'object'",
+    "options": [
+      "Boolean() 함수가 항상 true를 반환하기 때문",
+      "if문이 typeof 결과를 비교하기 때문",
+      "flag가 const로 선언되어 항상 truthy이기 때문",
+      "new Boolean(false)는 Boolean 래퍼 객체를 생성하며, 모든 객체는 truthy이므로 내부 값이 false라도 조건문에서 true로 평가된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "new Boolean(false)는 원시값 false가 아닌 Boolean 래퍼 객체를 생성합니다. typeof가 'object'인 것에서 알 수 있듯이 이것은 객체입니다. JavaScript에서 모든 객체는 truthy이므로, 내부에 false를 담고 있더라도 if 조건에서 true로 평가됩니다. new 없이 Boolean(false)를 호출하면 원시값 false를 반환합니다. 같은 이유로 new Number(0)과 new String('')도 truthy입니다. 이 때문에 래퍼 객체 생성자를 new와 함께 사용하는 것은 강력히 권장되지 않습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Boolean"
+  },
+  {
+    "id": "type-coercion-048",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "배열의 indexOf()와 includes()가 NaN을 다르게 처리하는 이유로 올바른 것은?",
+    "options": [
+      "indexOf()는 ===(Strict Equality)를 사용하여 NaN === NaN이 false이므로 NaN을 찾지 못하고, includes()는 SameValueZero 알고리즘을 사용하여 NaN을 찾을 수 있다",
+      "indexOf()가 NaN을 숫자로 변환하기 때문",
+      "includes()가 모든 falsy 값을 동일하게 취급하기 때문",
+      "indexOf()는 문자열 전용이고 includes()만 숫자를 처리할 수 있기 때문"
+    ],
+    "correctIndex": 0,
+    "explanation": "Array.prototype.indexOf()는 내부적으로 Strict Equality Comparison(===)을 사용합니다. NaN === NaN은 false이므로 [NaN].indexOf(NaN)은 -1을 반환합니다. 반면 Array.prototype.includes()는 ES2016에서 도입되었으며 SameValueZero 알고리즘을 사용합니다. SameValueZero는 NaN을 자기 자신과 같다고 판단하므로 [NaN].includes(NaN)은 true를 반환합니다. 이는 ECMAScript가 네 가지 동등성 알고리즘(Abstract Equality, Strict Equality, SameValue, SameValueZero)을 정의하고 있기 때문입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/includes"
+  },
+  {
+    "id": "type-coercion-049",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(new String('a') == 'a');\nconsole.log(new String('a') === 'a');\nconsole.log(new String('a') == new String('a'));\nconsole.log(new Number(0) == false);",
+    "options": [
+      "true, true, true, true",
+      "true, false, true, true",
+      "true, false, false, true",
+      "false, false, false, false"
+    ],
+    "correctIndex": 2,
+    "explanation": "new String('a') == 'a'는 객체와 원시값 비교이므로 ToPrimitive가 호출되어 'a' == 'a' = true입니다. new String('a') === 'a'는 타입이 다르므로(object vs string) false입니다. new String('a') == new String('a')는 두 객체의 참조 비교이므로 서로 다른 객체라 false입니다. ==에서 양쪽이 모두 객체이면 ToPrimitive 변환 없이 참조만 비교합니다. new Number(0) == false는 객체와 불리언 비교로, 불리언이 먼저 0으로 변환되고 ToPrimitive(new Number(0))이 0을 반환하여 0 == 0 = true입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/String"
+  },
+  {
+    "id": "type-coercion-050",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "다음 중 if문의 조건으로 사용했을 때 truthy인 값은?",
+    "options": [
+      "0",
+      "NaN",
+      "''(빈 문자열)",
+      "[] (빈 배열)"
+    ],
+    "correctIndex": 3,
+    "explanation": "JavaScript의 ToBoolean 변환에서 falsy 값은 false, 0, -0, 0n, ''(빈 문자열), null, undefined, NaN으로 정해져 있습니다. 이 목록에 없는 모든 값은 truthy입니다. 빈 배열 []은 객체이며, 모든 객체는 truthy입니다. 이는 직관적이지 않을 수 있지만, 빈 객체 {}도 마찬가지로 truthy입니다. 주의할 점은 [] == false는 true이지만(타입 변환 과정을 거침) Boolean([])은 true라는 것입니다. ==와 Boolean() 변환은 서로 다른 규칙을 따릅니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Truthy"
   }
 ]
