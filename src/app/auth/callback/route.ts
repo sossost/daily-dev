@@ -23,7 +23,26 @@ export async function GET(request: Request) {
   const { error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error != null) {
+    const isNative = searchParams.get("native") === "true";
+    if (isNative) {
+      return NextResponse.redirect("dailydevapp://auth/error");
+    }
     return NextResponse.redirect(`${origin}/?error=auth_failed`);
+  }
+
+  const isNative = searchParams.get("native") === "true";
+
+  // For native app: pass session tokens via deep link
+  if (isNative) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session != null) {
+      const params = new URLSearchParams({
+        access_token: session.access_token,
+        refresh_token: session.refresh_token,
+      });
+      return NextResponse.redirect(`dailydevapp://auth/complete?${params}`);
+    }
+    return NextResponse.redirect("dailydevapp://auth/error");
   }
 
   // Transfer anonymous data to the authenticated account

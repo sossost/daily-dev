@@ -18,6 +18,8 @@ declare global {
     __DAILYDEV_APNS_TOKEN__?: string
     /** Platform identifier injected by the React Native shell */
     __DAILYDEV_PLATFORM__?: 'ios'
+    /** Auth session setter — exposed for native token injection */
+    __DAILYDEV_SET_SESSION__?: (accessToken: string, refreshToken: string) => Promise<void>
   }
 }
 

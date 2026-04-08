@@ -1,12 +1,14 @@
 "use client";
 
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useProgressStore } from "@/stores/useProgressStore";
 import { useBookmarkStore } from "@/stores/useBookmarkStore";
 import { setCurrentUser } from "@/lib/supabase/currentUser";
 import { migrateAnonymousData } from "@/lib/supabase/migrate";
 import { useNativePush } from "@/hooks/useNativePush";
+import { isNativeApp } from "@/lib/native-bridge";
+import { createClient } from "@/lib/supabase/client";
 import type { ServerUserData } from "@/lib/supabase/loadUserData";
 
 const LOCAL_STORAGE_PROGRESS_KEY = "daily-dev-progress";
@@ -79,6 +81,21 @@ export function DataProvider({
 
   // Register APNs token when running inside the React Native shell
   useNativePush(userId);
+
+  // Expose session setter for native OAuth token injection
+  useEffect(() => {
+    if (!isNativeApp()) return;
+
+    window.__DAILYDEV_SET_SESSION__ = async (accessToken: string, refreshToken: string) => {
+      const supabase = createClient();
+      await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+      router.refresh();
+    };
+
+    return () => {
+      window.__DAILYDEV_SET_SESSION__ = undefined;
+    };
+  }, [router]);
 
   if (!isReady) {
     return <DataProviderSkeleton />;
