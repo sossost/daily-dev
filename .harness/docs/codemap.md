@@ -182,51 +182,51 @@
 ## Data
 
 - algorithms.json — 50 questions
-- api-design.json — 45 questions
-- async.json — 48 questions
-- browser-api.json — 45 questions
+- api-design.json — 50 questions
+- async.json — 50 questions
+- browser-api.json — 50 questions
 - closure.json — 50 questions
 - css-layout.json — 50 questions
 - data-structures.json — 50 questions
 - database.json — 50 questions
 - design-patterns.json — 50 questions
 - dom-manipulation.json — 50 questions
-- event-loop.json — 48 questions
+- event-loop.json — 50 questions
 - git-advanced.json — 50 questions
 - network.json — 50 questions
 - nodejs.json — 50 questions
-- promise.json — 48 questions
-- prototype.json — 48 questions
+- promise.json — 50 questions
+- prototype.json — 50 questions
 - react-basics.json — 50 questions
 - scope.json — 50 questions
 - this.json — 50 questions
 - type-coercion.json — 50 questions
 - typescript.json — 50 questions
 - web-performance.json — 50 questions
-- web-security.json — 45 questions
+- web-security.json — 50 questions
 - algorithms.json — 50 questions
-- api-design.json — 45 questions
-- async.json — 48 questions
-- browser-api.json — 45 questions
+- api-design.json — 50 questions
+- async.json — 50 questions
+- browser-api.json — 50 questions
 - closure.json — 50 questions
 - css-layout.json — 50 questions
 - data-structures.json — 50 questions
 - database.json — 50 questions
 - design-patterns.json — 50 questions
 - dom-manipulation.json — 50 questions
-- event-loop.json — 48 questions
+- event-loop.json — 50 questions
 - git-advanced.json — 50 questions
 - network.json — 50 questions
 - nodejs.json — 50 questions
-- promise.json — 48 questions
-- prototype.json — 48 questions
+- promise.json — 50 questions
+- prototype.json — 50 questions
 - react-basics.json — 50 questions
 - scope.json — 50 questions
 - this.json — 50 questions
 - type-coercion.json — 50 questions
 - typescript.json — 50 questions
 - web-performance.json — 50 questions
-- web-security.json — 45 questions
+- web-security.json — 50 questions
 
 ## Modules
 

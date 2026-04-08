@@ -791,5 +791,39 @@
     "correctIndex": 2,
     "explanation": "In browsers, the 'unhandledrejection' event detects unhandled Promise rejections. Register it with window.addEventListener('unhandledrejection', handler). The event object provides promise and reason properties to access the rejected Promise and its reason. window.onerror only catches synchronous errors and does not detect Promise rejections.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/unhandledrejection_event"
+  },
+  {
+    "id": "promise-049",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const p = Promise.resolve();\n\np.then(() => {\n  console.log('A');\n  return Promise.resolve('B');\n}).then((val) => {\n  console.log(val);\n});\n\np.then(() => {\n  console.log('C');\n}).then(() => {\n  console.log('D');\n});",
+    "options": [
+      "A, C, B, D",
+      "A, B, C, D",
+      "A, C, D, B",
+      "C, A, D, B"
+    ],
+    "correctIndex": 2,
+    "explanation": "Both chains start from the same resolved Promise p. First microtask tick: 'A' and 'C' log (both are first-level .then handlers). Returning Promise.resolve('B') from the first chain introduces extra microtask ticks for thenable unwrapping (the spec requires at least one additional tick). So the second chain's 'D' runs before 'B' resolves. Final order: A, C, D, B.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "promise-050",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What happens if you call resolve() multiple times inside a Promise constructor?",
+    "code": "const p = new Promise((resolve) => {\n  resolve('first');\n  resolve('second');\n  console.log('inside');\n});\np.then((val) => console.log(val));",
+    "options": [
+      "An error is thrown because resolve was called twice",
+      "The Promise resolves with 'second' (last call wins)",
+      "'inside' logs, then the Promise resolves with 'first' — subsequent resolve calls are silently ignored",
+      "The Promise resolves with both values as an array ['first', 'second']"
+    ],
+    "correctIndex": 2,
+    "explanation": "A Promise can only be settled (resolved or rejected) once. The first call to resolve('first') sets the Promise's state to fulfilled with value 'first'. The second resolve('second') is silently ignored — it does not throw an error or change the value. The executor continues running synchronously, so 'inside' logs. Then the .then callback runs with 'first'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
   }
 ]

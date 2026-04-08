@@ -729,5 +729,86 @@
     "correctIndex": 2,
     "explanation": "Short Polling has the client send requests to the server at regular intervals, with the server responding immediately. Even when there is no new data, an empty response is returned, creating unnecessary requests. Long Polling has the server hold the response until new data is ready, then respond immediately. This enables near-real-time updates over HTTP.",
     "sourceUrl": "https://javascript.info/long-polling"
+  },
+  {
+    "id": "api-design-046",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the value of response.status in the following code?",
+    "code": "const response = await fetch('/api/users', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({ name: '' })\n});\n// Server validates: if name is empty, returns 422\nconsole.log(response.status);",
+    "options": [
+      "400 — Bad Request",
+      "422 — Unprocessable Entity",
+      "500 — Internal Server Error",
+      "204 — No Content"
+    ],
+    "correctIndex": 1,
+    "explanation": "HTTP 422 Unprocessable Entity indicates that the server understands the request syntax (so it's not a 400), but the content is semantically invalid — in this case, an empty name fails business validation. 422 is commonly used in REST APIs to distinguish validation errors from malformed requests (400).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422"
+  },
+  {
+    "id": "api-design-047",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the problem with the following API pagination implementation?\n\nGET /api/posts?page=2&limit=10\n// While user is on page 2, a new post is inserted at the top\nGET /api/posts?page=3&limit=10",
+    "options": [
+      "The limit value of 10 is too small for production use",
+      "Using offset-based pagination, inserting or deleting records between requests causes items to be duplicated or skipped across pages",
+      "The page parameter should start from 0, not 1",
+      "GET requests cannot include query parameters for pagination"
+    ],
+    "correctIndex": 1,
+    "explanation": "Offset-based pagination (page/limit) calculates results using OFFSET = (page - 1) * limit. When records are inserted or deleted between page requests, offsets shift — causing items to appear twice or be skipped entirely. Cursor-based pagination solves this by using a stable pointer (e.g., last item's ID or timestamp) instead of a numeric offset.",
+    "sourceUrl": "https://www.django-rest-framework.org/api-guide/pagination/#cursorpagination"
+  },
+  {
+    "id": "api-design-048",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the primary purpose of the Retry-After HTTP response header?",
+    "options": [
+      "It specifies the maximum number of retry attempts a client should make",
+      "It tells the client how long to wait before making a subsequent request, typically used with 429 or 503 responses",
+      "It instructs the browser to automatically retry the request without user intervention",
+      "It sets the timeout duration for the current request"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Retry-After header tells the client how long to wait before retrying a request. It is typically included with 429 Too Many Requests (rate limiting) or 503 Service Unavailable (temporary downtime) responses. Its value can be either a number of seconds or an HTTP-date. Well-designed API clients should honor this header to implement proper backoff.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After"
+  },
+  {
+    "id": "api-design-049",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which correctly describes the difference between API Gateway and Reverse Proxy?",
+    "options": [
+      "A reverse proxy handles load balancing, while an API gateway cannot",
+      "An API gateway only supports HTTP, while a reverse proxy supports all protocols",
+      "An API gateway provides API-specific features like authentication, rate limiting, and request transformation on top of reverse proxy capabilities",
+      "A reverse proxy is only used in microservices architecture, while an API gateway is for monolithic applications"
+    ],
+    "correctIndex": 2,
+    "explanation": "A reverse proxy forwards client requests to backend servers and handles concerns like load balancing, SSL termination, and caching. An API gateway builds on top of reverse proxy functionality by adding API-specific features: authentication/authorization, rate limiting, request/response transformation, API versioning, and analytics. In microservices architectures, the API gateway serves as a single entry point for all client requests.",
+    "sourceUrl": "https://www.nginx.com/learn/api-gateway/"
+  },
+  {
+    "id": "api-design-050",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "What is the issue with the following API response format?\n\n// Success\n{ \"status\": \"ok\", \"users\": [...] }\n\n// Error\n{ \"error\": true, \"message\": \"Not found\" }",
+    "options": [
+      "The success response should also include a 'message' field",
+      "The error response should use HTTP status codes instead of a boolean flag",
+      "Success and error responses use inconsistent envelope structures, making it harder for clients to parse responses uniformly",
+      "The 'users' field should be named 'data'"
+    ],
+    "correctIndex": 2,
+    "explanation": "When success responses use {status, users} and error responses use {error, message}, clients must handle two completely different shapes. A consistent envelope pattern — e.g., { data, error, meta } for all responses — lets clients use a single parsing path. The actual error details should be communicated via HTTP status codes and a predictable error object structure.",
+    "sourceUrl": "https://jsonapi.org/format/"
   }
 ]

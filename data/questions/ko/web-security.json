@@ -735,5 +735,88 @@
     "correctIndex": 3,
     "explanation": "COEP: require-corp과 COOP: same-origin을 함께 설정하면 교차 출처 격리(cross-origin isolation) 상태가 됩니다. 이 상태에서는 Spectre 같은 사이드채널 공격에 악용될 수 있는 SharedArrayBuffer, 고해상도 performance.now() 등의 API를 안전하게 사용할 수 있습니다. self.crossOriginIsolated 속성으로 격리 상태를 확인할 수 있습니다.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Embedder-Policy"
+  },
+  {
+    "id": "web-security-046",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 결과는 무엇인가요?",
+    "code": "const params = new URLSearchParams(window.location.search);\nconst name = params.get('name');\ndocument.getElementById('greeting').textContent = `Hello, ${name}!`;",
+    "options": [
+      "XSS 취약점 — 사용자 입력이 안전하지 않게 DOM에 주입된다",
+      "안전함 — textContent는 HTML을 파싱하지 않으므로 스크립트 주입이 불가능하다",
+      "에러 — URLSearchParams는 window.location.search를 읽을 수 없다",
+      "CSRF 취약점 — 쿼리 파라미터가 다른 사이트에서 위조될 수 있다"
+    ],
+    "correctIndex": 1,
+    "explanation": "textContent를 사용하여 요소 내용을 설정하면 XSS로부터 안전합니다. textContent는 값을 일반 텍스트로 취급하여 HTML 태그를 파싱하거나 스크립트를 실행하지 않기 때문입니다. 문자열을 HTML로 파싱하여 주입된 스크립트를 실행할 수 있는 innerHTML과 달리, textContent는 단순히 원본 문자열을 표시합니다. DOM에 사용자 제어 데이터를 표시할 때 권장되는 방법입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Node/textContent"
+  },
+  {
+    "id": "web-security-047",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드의 보안 취약점은 무엇인가요?",
+    "code": "app.get('/api/file', (req, res) => {\n  const filename = req.query.name;\n  const filepath = path.join(__dirname, 'uploads', filename);\n  res.sendFile(filepath);\n});",
+    "options": [
+      "path.join이 경로를 정규화하므로 코드가 안전하다",
+      "경로 탐색(Path Traversal) 취약점 — 공격자가 파일 이름에 '../' 시퀀스를 사용하여 uploads 디렉토리 외부의 파일에 접근할 수 있다",
+      "오리진 헤더를 설정하지 않아 CORS 취약점이 있다",
+      "파일 이름 파라미터를 통한 SQL 인젝션에 취약하다"
+    ],
+    "correctIndex": 1,
+    "explanation": "path.join은 경로를 정규화하지만 디렉토리 탐색을 방지하지는 않습니다. 공격자가 name=../../etc/passwd를 전달하면 uploads 디렉토리를 벗어나 서버의 임의 파일을 읽을 수 있습니다. 해결 방법은 path.resolve()를 사용하고 결과 경로가 의도한 디렉토리로 시작하는지 확인하거나, path.basename()을 사용하여 사용자 입력에서 디렉토리 구성 요소를 제거하는 것입니다.",
+    "sourceUrl": "https://owasp.org/www-community/attacks/Path_Traversal"
+  },
+  {
+    "id": "web-security-048",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Sec-Fetch-* 요청 헤더의 목적은 무엇인가요?",
+    "options": [
+      "안전한 전송을 위해 요청 본문을 암호화한다",
+      "요청의 출처, 모드, 목적지에 대한 메타데이터를 제공하여 서버가 의심스러운 요청을 거부할 수 있게 한다",
+      "교차 출처 요청에서 CORS 헤더를 대체한다",
+      "클라이언트가 지원하는 TLS 버전을 나타낸다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Sec-Fetch-* 헤더(Sec-Fetch-Site, Sec-Fetch-Mode, Sec-Fetch-Dest, Sec-Fetch-User)는 브라우저가 자동으로 설정하며 JavaScript로 수정할 수 없습니다. 이 헤더들은 요청이 어떻게 시작되었는지 — 동일 출처인지 교차 사이트인지, 탐색인지 fetch인지, 목적지가 무엇인지(문서, 이미지, 스크립트) — 를 서버에 알려줍니다. 서버는 이를 사용하여 예상치 못한 요청 패턴을 거부함으로써 CSRF 및 데이터 유출에 대한 방어 계층을 추가할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Sec-Fetch-Site"
+  },
+  {
+    "id": "web-security-049",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "웹 보안에서 대칭 암호화와 비대칭 암호화의 차이점은 무엇인가요?",
+    "options": [
+      "대칭 암호화는 파일에만 사용되고 비대칭 암호화는 네트워크 트래픽에만 사용된다",
+      "대칭 암호화는 암호화와 복호화에 하나의 공유 키를 사용하고, 비대칭 암호화는 공개키-개인키 쌍을 사용한다",
+      "비대칭 암호화가 항상 대칭 암호화보다 빠르다",
+      "대칭 암호화는 HTTPS에서, 비대칭 암호화는 HTTP에서 사용된다"
+    ],
+    "correctIndex": 1,
+    "explanation": "대칭 암호화(예: AES)는 암호화와 복호화에 동일한 키를 사용합니다 — 빠르지만 안전한 키 교환이 필요합니다. 비대칭 암호화(예: RSA)는 공개 키로 암호화하고 개인 키로 복호화합니다 — 느리지만 키 배포 문제를 해결합니다. HTTPS는 둘 다 사용합니다: TLS 핸드셰이크에서 비대칭 암호화로 대칭 키를 안전하게 교환한 후, 실제 데이터 전송에는 대칭 암호화를 사용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Symmetric-key_cryptography"
+  },
+  {
+    "id": "web-security-050",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 인증 코드의 보안 문제는 무엇인가요?",
+    "code": "app.post('/api/login', async (req, res) => {\n  const { username, password } = req.body;\n  const user = await db.findUser(username);\n  if (!user) return res.status(401).json({ error: 'User not found' });\n  const valid = await bcrypt.compare(password, user.hash);\n  if (!valid) return res.status(401).json({ error: 'Wrong password' });\n  return res.json({ token: generateToken(user) });\n});",
+    "options": [
+      "bcrypt.compare는 안전한 비교 함수가 아니다",
+      "'사용자를 찾을 수 없음'과 '비밀번호 틀림'에 대해 서로 다른 오류 메시지를 반환하여 사용자명 열거 공격이 가능하다",
+      "로그인에는 POST 대신 GET을 사용해야 한다",
+      "JSON 응답은 인증 토큰을 안전하게 전송할 수 없다"
+    ],
+    "correctIndex": 1,
+    "explanation": "서로 다른 오류 메시지('사용자를 찾을 수 없음' vs '비밀번호 틀림')를 반환하면, 공격자가 시스템에 해당 사용자명이 존재하는지 판별할 수 있습니다. 이를 사용자명 열거(username enumeration) 취약점이라 합니다. 공격자는 먼저 유효한 사용자명을 발견한 후, 해당 계정에 대해 무차별 대입 공격에 집중할 수 있습니다. 해결 방법은 두 경우 모두 '인증 정보가 올바르지 않습니다'와 같은 일반적인 메시지를 반환하는 것입니다.",
+    "sourceUrl": "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/03-Identity_Management_Testing/04-Testing_for_Account_Enumeration_and_Guessable_User_Account"
   }
 ]

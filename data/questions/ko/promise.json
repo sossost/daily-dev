@@ -791,5 +791,39 @@
     "correctIndex": 2,
     "explanation": "브라우저에서는 'unhandledrejection' 이벤트를 통해 처리되지 않은 Promise 거부를 감지할 수 있습니다. window.addEventListener('unhandledrejection', handler)로 등록하며, 이벤트 객체의 promise와 reason 속성으로 거부된 Promise와 사유에 접근할 수 있습니다. window.onerror는 동기 에러만 감지하며, Promise 거부는 감지하지 못합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Window/unhandledrejection_event"
+  },
+  {
+    "id": "promise-049",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const p = Promise.resolve();\n\np.then(() => {\n  console.log('A');\n  return Promise.resolve('B');\n}).then((val) => {\n  console.log(val);\n});\n\np.then(() => {\n  console.log('C');\n}).then(() => {\n  console.log('D');\n});",
+    "options": [
+      "A, C, B, D",
+      "A, B, C, D",
+      "A, C, D, B",
+      "C, A, D, B"
+    ],
+    "correctIndex": 2,
+    "explanation": "두 체인 모두 동일한 이행된 Promise p에서 시작합니다. 첫 번째 마이크로태스크 틱: 'A'와 'C'가 출력됩니다(둘 다 1단계 .then 핸들러). 첫 번째 체인에서 Promise.resolve('B')를 반환하면 thenable 언래핑을 위한 추가 마이크로태스크 틱이 발생합니다(스펙상 최소 1틱 추가). 따라서 두 번째 체인의 'D'가 'B'가 resolve되기 전에 실행됩니다. 최종 순서: A, C, D, B.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "promise-050",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Promise 생성자 내에서 resolve()를 여러 번 호출하면 어떻게 되나요?",
+    "code": "const p = new Promise((resolve) => {\n  resolve('first');\n  resolve('second');\n  console.log('inside');\n});\np.then((val) => console.log(val));",
+    "options": [
+      "resolve가 두 번 호출되었으므로 에러가 발생한다",
+      "마지막 호출이 우선하여 Promise가 'second'로 이행된다",
+      "'inside'가 출력된 후 Promise가 'first'로 이행된다 — 이후의 resolve 호출은 조용히 무시된다",
+      "Promise가 두 값 모두를 배열 ['first', 'second']로 이행한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Promise는 한 번만 settled(이행 또는 거부)될 수 있습니다. 첫 번째 resolve('first') 호출이 Promise 상태를 'first' 값으로 이행합니다. 두 번째 resolve('second')는 조용히 무시되며 에러를 던지거나 값을 변경하지 않습니다. executor는 동기적으로 계속 실행되므로 'inside'가 출력됩니다. 그 후 .then 콜백이 'first'와 함께 실행됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
   }
 ]

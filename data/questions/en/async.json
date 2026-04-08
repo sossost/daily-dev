@@ -793,5 +793,39 @@
     "correctIndex": 0,
     "explanation": "The unhandledrejection event fires when a Promise is rejected but no .catch() handler is attached. It can be registered with window.addEventListener('unhandledrejection', handler) and serves as a safety net for monitoring unhandled async errors across the application. Both browsers and Node.js (process.on('unhandledRejection')) support it.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/unhandledrejection_event"
+  },
+  {
+    "id": "async-049",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "async function foo() {\n  return 1;\n}\n\nconst result = foo();\nconsole.log(typeof result);\nconsole.log(result instanceof Promise);",
+    "options": [
+      "number, false",
+      "object, false",
+      "object, true",
+      "number, true"
+    ],
+    "correctIndex": 2,
+    "explanation": "An async function always returns a Promise, even if the return value is a primitive. When foo() returns 1, the async wrapper wraps it in Promise.resolve(1). Therefore typeof result is 'object' (since a Promise is an object) and result instanceof Promise is true. To get the actual value 1, you must use await or .then().",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function#return_value"
+  },
+  {
+    "id": "async-050",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the issue with the following code?",
+    "code": "async function processItems(items) {\n  items.forEach(async (item) => {\n    await saveToDatabase(item);\n  });\n  console.log('All items saved!');\n}",
+    "options": [
+      "forEach does not support async callbacks",
+      "The code throws a TypeError because items.forEach is not a function",
+      "console.log runs before all saves complete because forEach ignores the Promises returned by the async callback — use for...of or Promise.all instead",
+      "await cannot be used inside a callback function"
+    ],
+    "correctIndex": 2,
+    "explanation": "Array.forEach() calls the callback for each element but does not await the returned Promises. The async callback returns a Promise, but forEach simply ignores it and moves to the next iteration. As a result, console.log('All items saved!') executes before any saves complete. Use a for...of loop with await for sequential processing, or Promise.all(items.map(...)) for concurrent processing.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach#description"
   }
 ]

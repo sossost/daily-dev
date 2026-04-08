@@ -27,30 +27,30 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Topic | Questions |
 |-------|-----------|
 | Algorithms | 50 |
-| API Design | 45 |
-| Async | 48 |
-| Browser API | 45 |
+| API Design | 50 |
+| Async | 50 |
+| Browser API | 50 |
 | Closure | 50 |
 | CSS Layout | 50 |
 | Data Structures | 50 |
 | Database | 50 |
 | Design Patterns | 50 |
 | DOM Manipulation | 50 |
-| Event Loop | 48 |
+| Event Loop | 50 |
 | Git Advanced | 50 |
 | Network | 50 |
 | Node.js | 50 |
-| Promise | 48 |
-| Prototype | 48 |
+| Promise | 50 |
+| Prototype | 50 |
 | React Basics | 50 |
 | Scope | 50 |
 | this Keyword | 50 |
 | Type Coercion | 50 |
 | TypeScript | 50 |
 | Web Performance | 50 |
-| Web Security | 45 |
+| Web Security | 50 |
 
-**Total: 1127 questions across 23 topics**
+**Total: 1150 questions across 23 topics**
 
 ## Getting Started
 

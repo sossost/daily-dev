@@ -793,5 +793,38 @@
     "correctIndex": 0,
     "explanation": "When a function is defined, a prototype object is automatically created with a constructor property that points back to the function itself. For example, after function Foo() {}, Foo.prototype.constructor === Foo. This allows instances to reference their constructor via instance.constructor.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/constructor"
+  },
+  {
+    "id": "prototype-049",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function Animal(name) { this.name = name; }\nAnimal.prototype.speak = function() { return this.name; };\n\nfunction Dog(name) { Animal.call(this, name); }\nDog.prototype = Object.create(Animal.prototype);\n\nconst d = new Dog('Rex');\nconsole.log(d.speak());\nconsole.log(d.constructor === Dog);",
+    "options": [
+      "Rex, true",
+      "Rex, false",
+      "undefined, true",
+      "Error: d.speak is not a function"
+    ],
+    "correctIndex": 1,
+    "explanation": "d.speak() works correctly because Dog.prototype inherits from Animal.prototype via Object.create, so speak() is found on the prototype chain, and Animal.call(this, name) sets this.name. However, d.constructor is false for Dog because Dog.prototype was replaced with a new object created from Animal.prototype, and its constructor property points to Animal, not Dog. To fix this, add Dog.prototype.constructor = Dog after the assignment.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#classical_inheritance_with_object.create"
+  },
+  {
+    "id": "prototype-050",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between Object.getPrototypeOf(obj) and obj.__proto__?",
+    "options": [
+      "They are completely identical with no differences",
+      "Object.getPrototypeOf() is faster than __proto__",
+      "Object.getPrototypeOf() is the standardized method, while __proto__ is a legacy accessor property that may not work on all objects (e.g., Object.create(null))",
+      "__proto__ returns the prototype while Object.getPrototypeOf() returns a copy of the prototype"
+    ],
+    "correctIndex": 2,
+    "explanation": "Object.getPrototypeOf() is the standardized ES5+ method for accessing an object's [[Prototype]]. __proto__ is a historical accessor property defined on Object.prototype — it works on most objects but fails on objects with no prototype chain (e.g., Object.create(null) has no Object.prototype, so __proto__ is undefined). The spec includes __proto__ only for web compatibility, and Object.getPrototypeOf() is the recommended approach.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getPrototypeOf"
   }
 ]

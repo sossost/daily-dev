@@ -735,5 +735,88 @@
     "correctIndex": 3,
     "explanation": "Setting COEP: require-corp and COOP: same-origin together puts the page in a cross-origin isolated state. In this state, APIs that could be exploited for side-channel attacks like Spectre — such as SharedArrayBuffer and high-resolution performance.now() — can be safely used. You can check the isolation state via the self.crossOriginIsolated property.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Embedder-Policy"
+  },
+  {
+    "id": "web-security-046",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the result of the following code?",
+    "code": "const params = new URLSearchParams(window.location.search);\nconst name = params.get('name');\ndocument.getElementById('greeting').textContent = `Hello, ${name}!`;",
+    "options": [
+      "XSS vulnerability — the user input is injected into the DOM unsafely",
+      "Safe — textContent does not parse HTML, so script injection is not possible",
+      "Error — URLSearchParams cannot read window.location.search",
+      "CSRF vulnerability — the query parameter can be forged by another site"
+    ],
+    "correctIndex": 1,
+    "explanation": "Using textContent to set element content is safe from XSS because textContent treats the value as plain text and does not parse HTML tags or execute scripts. Unlike innerHTML, which parses the string as HTML and can execute injected scripts, textContent simply displays the raw string. This is a recommended practice for displaying user-controlled data in the DOM.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent"
+  },
+  {
+    "id": "web-security-047",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the security vulnerability in the following code?",
+    "code": "app.get('/api/file', (req, res) => {\n  const filename = req.query.name;\n  const filepath = path.join(__dirname, 'uploads', filename);\n  res.sendFile(filepath);\n});",
+    "options": [
+      "The code is safe because path.join normalizes the path",
+      "Path traversal vulnerability — an attacker can use '../' sequences in the filename to access files outside the uploads directory",
+      "The code has a CORS vulnerability because it doesn't set origin headers",
+      "The code is vulnerable to SQL injection through the filename parameter"
+    ],
+    "correctIndex": 1,
+    "explanation": "While path.join normalizes the path, it does NOT prevent directory traversal. An attacker can pass name=../../etc/passwd to escape the uploads directory and read arbitrary files on the server. The fix is to use path.resolve() and verify the resulting path starts with the intended directory, or use path.basename() to strip directory components from user input.",
+    "sourceUrl": "https://owasp.org/www-community/attacks/Path_Traversal"
+  },
+  {
+    "id": "web-security-048",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the purpose of the Sec-Fetch-* request headers?",
+    "options": [
+      "They encrypt the request body for secure transmission",
+      "They provide metadata about the request's origin, mode, and destination, allowing the server to reject suspicious requests",
+      "They replace CORS headers for cross-origin requests",
+      "They indicate which TLS version the client supports"
+    ],
+    "correctIndex": 1,
+    "explanation": "Sec-Fetch-* headers (Sec-Fetch-Site, Sec-Fetch-Mode, Sec-Fetch-Dest, Sec-Fetch-User) are automatically set by the browser and cannot be modified by JavaScript. They tell the server how the request was initiated — whether it's same-origin or cross-site, whether it's a navigate or fetch, and what the destination is (document, image, script). Servers can use these to reject unexpected request patterns, adding a defense layer against CSRF and data exfiltration.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Sec-Fetch-Site"
+  },
+  {
+    "id": "web-security-049",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between symmetric and asymmetric encryption in web security?",
+    "options": [
+      "Symmetric encryption is only used for files, while asymmetric encryption is only used for network traffic",
+      "Symmetric encryption uses a single shared key for both encryption and decryption, while asymmetric encryption uses a public-private key pair",
+      "Asymmetric encryption is always faster than symmetric encryption",
+      "Symmetric encryption is used in HTTPS, while asymmetric encryption is used in HTTP"
+    ],
+    "correctIndex": 1,
+    "explanation": "Symmetric encryption (e.g., AES) uses the same key for encryption and decryption — fast but requires secure key exchange. Asymmetric encryption (e.g., RSA) uses a public key for encryption and a private key for decryption — slower but solves the key distribution problem. HTTPS uses both: asymmetric encryption during the TLS handshake to securely exchange a symmetric key, then symmetric encryption for the actual data transfer.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Symmetric-key_cryptography"
+  },
+  {
+    "id": "web-security-050",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the security issue in the following authentication code?",
+    "code": "app.post('/api/login', async (req, res) => {\n  const { username, password } = req.body;\n  const user = await db.findUser(username);\n  if (!user) return res.status(401).json({ error: 'User not found' });\n  const valid = await bcrypt.compare(password, user.hash);\n  if (!valid) return res.status(401).json({ error: 'Wrong password' });\n  return res.json({ token: generateToken(user) });\n});",
+    "options": [
+      "bcrypt.compare is not a secure comparison function",
+      "The code returns different error messages for 'user not found' and 'wrong password', enabling username enumeration attacks",
+      "The code should use GET instead of POST for login",
+      "JSON responses cannot securely transmit authentication tokens"
+    ],
+    "correctIndex": 1,
+    "explanation": "By returning distinct error messages ('User not found' vs 'Wrong password'), an attacker can determine whether a username exists in the system. This is called a username enumeration vulnerability. The attacker can first discover valid usernames, then focus brute-force efforts on those accounts. The fix is to return a generic message like 'Invalid credentials' for both cases, making it impossible to distinguish between the two failure modes.",
+    "sourceUrl": "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/03-Identity_Management_Testing/04-Testing_for_Account_Enumeration_and_Guessable_User_Account"
   }
 ]

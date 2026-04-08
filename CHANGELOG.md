@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: fix — typescript-043 premise and correctIndex... (`c4ad84d`)
 - **content**: add 10 type-coercion questions (041-050) (`5dcba5e`)
 
 ## 2026-04-07

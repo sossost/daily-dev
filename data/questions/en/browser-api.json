@@ -739,5 +739,87 @@
     "correctIndex": 1,
     "explanation": "credentials: 'same-origin' (the default) includes credentials (cookies, Authorization headers, etc.) only for same-origin requests. credentials: 'include' includes credentials for cross-origin requests as well. To use 'include' with cross-origin requests, the server must return the Access-Control-Allow-Credentials: true header.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/fetch#credentials"
+  },
+  {
+    "id": "browser-api-046",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const channel = new MessageChannel();\nchannel.port1.onmessage = (e) => console.log('A:', e.data);\nchannel.port2.onmessage = (e) => console.log('B:', e.data);\nchannel.port1.postMessage('hello');\nchannel.port2.postMessage('world');",
+    "options": [
+      "A: hello, B: world",
+      "B: hello, A: world",
+      "A: world, B: hello",
+      "Error: ports must be transferred before use"
+    ],
+    "correctIndex": 1,
+    "explanation": "In a MessageChannel, messages sent via port1.postMessage() are received by port2.onmessage, and vice versa — the ports are connected endpoints. So port1.postMessage('hello') triggers port2's handler (logging 'B: hello'), and port2.postMessage('world') triggers port1's handler (logging 'A: world').",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel"
+  },
+  {
+    "id": "browser-api-047",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the primary purpose of the URL.createObjectURL() method?",
+    "options": [
+      "It generates a permanent URL that can be shared across different origins",
+      "It creates a temporary URL that references a Blob or File object in memory, usable for previews or downloads",
+      "It converts a relative URL to an absolute URL",
+      "It encodes special characters in a URL string"
+    ],
+    "correctIndex": 1,
+    "explanation": "URL.createObjectURL() creates a temporary blob: URL that points to a Blob or File object in the browser's memory. This is commonly used for previewing images before upload or creating download links without a server round-trip. The URL is valid only within the document's lifetime, and URL.revokeObjectURL() should be called to release the reference when no longer needed.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL_static"
+  },
+  {
+    "id": "browser-api-048",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the issue with the following code that attempts to observe DOM changes?",
+    "code": "const observer = new MutationObserver((mutations) => {\n  mutations.forEach((m) => {\n    document.title = `${m.addedNodes.length} nodes added`;\n  });\n});\nobserver.observe(document.body, { childList: true });",
+    "options": [
+      "MutationObserver cannot observe document.body",
+      "The callback does not call observer.disconnect(), so it runs indefinitely — and since it mutates document.title, it could trigger cascading observations if the title element is within body",
+      "addedNodes is not a valid property of MutationRecord",
+      "The observe method requires { attributes: true } to work"
+    ],
+    "correctIndex": 1,
+    "explanation": "The MutationObserver watches for childList changes on document.body and never disconnects, so it runs for the lifetime of the page. More critically, if the <title> element is a child of <body> (which it shouldn't be but sometimes happens in malformed HTML), modifying document.title could trigger another mutation, creating an infinite loop. Best practice is to disconnect observers when they are no longer needed.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver"
+  },
+  {
+    "id": "browser-api-049",
+    "topic": "browser-api",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between window.alert() and the <dialog> element?",
+    "options": [
+      "alert() is asynchronous while <dialog> is synchronous",
+      "alert() blocks JavaScript execution and cannot be styled, while <dialog> is non-blocking and fully customizable with CSS",
+      "<dialog> can only display text, while alert() supports HTML content",
+      "alert() and <dialog> behave identically on all browsers"
+    ],
+    "correctIndex": 1,
+    "explanation": "window.alert() displays a browser-native modal dialog that blocks all JavaScript execution on the page until the user dismisses it, and its appearance cannot be customized. The HTML <dialog> element creates a customizable modal that does not block JavaScript execution, can be styled with CSS, and supports any HTML content inside it. Modern web applications prefer <dialog> for better user experience.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog"
+  },
+  {
+    "id": "browser-api-050",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What does the navigator.connection API (Network Information API) provide?",
+    "options": [
+      "The exact download speed of the current network in Mbps",
+      "Information about the user's network connection type, effective bandwidth, and whether data saver mode is enabled",
+      "A WebSocket connection to monitor network health in real-time",
+      "The IP address and DNS server of the current network"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Network Information API (navigator.connection) exposes properties like effectiveType ('4g', '3g', '2g', 'slow-2g'), downlink (estimated bandwidth in Mbps), rtt (round-trip time), and saveData (whether data saver is enabled). These help developers adapt content delivery — for example, loading lower-resolution images on slow connections. Note that this API has limited browser support.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/NetworkInformation"
   }
 ]

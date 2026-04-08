@@ -793,5 +793,38 @@
     "correctIndex": 0,
     "explanation": "함수를 정의하면 자동으로 prototype 객체가 생성되고, 이 객체에는 constructor 프로퍼티가 설정됩니다. constructor는 해당 생성자 함수 자체를 가리킵니다. 예를 들어 function Foo() {}를 정의하면 Foo.prototype.constructor === Foo가 됩니다. 이를 통해 인스턴스에서 instance.constructor로 자신을 만든 생성자를 참조할 수 있습니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/constructor"
+  },
+  {
+    "id": "prototype-049",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function Animal(name) { this.name = name; }\nAnimal.prototype.speak = function() { return this.name; };\n\nfunction Dog(name) { Animal.call(this, name); }\nDog.prototype = Object.create(Animal.prototype);\n\nconst d = new Dog('Rex');\nconsole.log(d.speak());\nconsole.log(d.constructor === Dog);",
+    "options": [
+      "Rex, true",
+      "Rex, false",
+      "undefined, true",
+      "Error: d.speak is not a function"
+    ],
+    "correctIndex": 1,
+    "explanation": "d.speak()는 정상 작동합니다. Dog.prototype이 Object.create를 통해 Animal.prototype을 상속하므로 프로토타입 체인에서 speak()가 발견되고, Animal.call(this, name)이 this.name을 설정합니다. 하지만 d.constructor는 Dog이 아닙니다. Dog.prototype이 Animal.prototype에서 생성된 새 객체로 교체되었기 때문에, constructor 속성이 Dog이 아닌 Animal을 가리킵니다. 이를 수정하려면 Dog.prototype.constructor = Dog을 추가해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/create#classical_inheritance_with_object.create"
+  },
+  {
+    "id": "prototype-050",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Object.getPrototypeOf(obj)와 obj.__proto__의 차이점은 무엇인가요?",
+    "options": [
+      "완전히 동일하며 차이가 없다",
+      "Object.getPrototypeOf()가 __proto__보다 성능이 빠르다",
+      "Object.getPrototypeOf()는 표준화된 메서드이고, __proto__는 모든 객체에서 작동하지 않을 수 있는(예: Object.create(null)) 레거시 접근자 프로퍼티이다",
+      "__proto__는 프로토타입을 반환하고 Object.getPrototypeOf()는 프로토타입의 복사본을 반환한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Object.getPrototypeOf()는 객체의 [[Prototype]]에 접근하기 위한 ES5+ 표준 메서드입니다. __proto__는 Object.prototype에 정의된 역사적 접근자 프로퍼티로 대부분의 객체에서 작동하지만, 프로토타입 체인이 없는 객체(예: Object.create(null)은 Object.prototype이 없으므로 __proto__가 undefined)에서는 실패합니다. 스펙은 웹 호환성을 위해서만 __proto__를 포함하며, Object.getPrototypeOf()가 권장됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/getPrototypeOf"
   }
 ]

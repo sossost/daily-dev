@@ -794,5 +794,38 @@
     "correctIndex": 1,
     "explanation": "Synchronous code 'A' and 'F' execute first. Then microtasks run: the first chain's catch (B) and the second chain's then (which throws) are both queued. B executes and enqueues its chained .then(C). The second chain's throw enqueues .catch(D). Now C and D are queued in that order — C runs first, then D. D resolves and enqueues .then(E). Finally E runs. Result: A, F, B, C, D, E.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch"
+  },
+  {
+    "id": "event-loop-049",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output order of the following code?",
+    "code": "console.log('1');\nsetTimeout(() => console.log('2'), 0);\nrequestAnimationFrame(() => console.log('3'));\nPromise.resolve().then(() => console.log('4'));\nconsole.log('5');",
+    "options": [
+      "1, 5, 4, 2, 3",
+      "1, 5, 4, 3, 2",
+      "1, 5, 2, 3, 4",
+      "1, 5, 3, 4, 2"
+    ],
+    "correctIndex": 1,
+    "explanation": "Synchronous code runs first: '1', '5'. Then microtasks execute: Promise.then logs '4'. Next, before the browser repaints, requestAnimationFrame fires: '3'. Finally, the macrotask (setTimeout) runs: '2'. The key ordering is: synchronous > microtasks > requestAnimationFrame > macrotasks (setTimeout). rAF runs before the next paint but after microtasks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame"
+  },
+  {
+    "id": "event-loop-050",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the purpose of queueMicrotask() in the event loop?",
+    "options": [
+      "It schedules a callback as a macrotask, similar to setTimeout(fn, 0)",
+      "It runs the callback synchronously before continuing to the next line",
+      "It schedules a callback in the microtask queue, which runs after the current task completes but before any macrotasks or rendering",
+      "It creates a new thread to run the callback in parallel"
+    ],
+    "correctIndex": 2,
+    "explanation": "queueMicrotask() schedules a function to run in the microtask queue. Microtasks are processed after the current synchronous task finishes but before the event loop picks up the next macrotask (setTimeout, setInterval) or performs rendering. This is the same queue used by Promise.then() callbacks. It's useful when you need to defer work without yielding to the browser's rendering pipeline.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
   }
 ]
