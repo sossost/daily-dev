@@ -7,7 +7,7 @@ type HapticStyle = 'success' | 'error'
 
 type NativeMessage =
   | { type: 'haptic'; payload: { style: HapticStyle } }
-  | { type: 'appleSignIn' }
+  | { type: 'oauth'; payload: { url: string } }
 
 declare global {
   interface Window {
@@ -18,8 +18,6 @@ declare global {
     __DAILYDEV_APNS_TOKEN__?: string
     /** Platform identifier injected by the React Native shell */
     __DAILYDEV_PLATFORM__?: 'ios'
-    /** Apple ID token injected by the React Native shell after native Apple Sign In */
-    __DAILYDEV_APPLE_ID_TOKEN__?: string
   }
 }
 

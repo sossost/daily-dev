@@ -25,6 +25,8 @@ function handleSignIn(user: User): void {
   migrateFromLocalStorage().catch(() => {});
 }
 
+type OAuthProvider = "google" | "github" | "apple";
+
 export function useAuth() {
   const router = useRouter();
   const supabase = createClient();
@@ -71,53 +73,38 @@ export function useAuth() {
       },
     );
 
-    // Listen for native Apple Sign In token injection
-    const handleAppleToken = () => {
-      const idToken = window.__DAILYDEV_APPLE_ID_TOKEN__;
-      if (idToken == null) return;
-      window.__DAILYDEV_APPLE_ID_TOKEN__ = undefined;
-
-      supabase.auth.signInWithIdToken({
-        provider: "apple",
-        token: idToken,
-      });
-    };
-
-    window.addEventListener("appleIdTokenReceived", handleAppleToken);
-
     return () => {
       cancelled = true;
       subscription.unsubscribe();
-      window.removeEventListener("appleIdTokenReceived", handleAppleToken);
     };
   }, []);
 
-  const signInWithGoogle = useCallback(async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
-    });
-  }, []);
+  const signInWith = useCallback(async (provider: OAuthProvider) => {
+    const redirectTo = `${window.location.origin}/auth/callback`;
 
-  const signInWithGitHub = useCallback(async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "github",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
-    });
-  }, []);
-
-  const signInWithApple = useCallback(async () => {
     if (isNativeApp()) {
-      // Native iOS: delegate to the RN shell for ASAuthorizationAppleIDProvider
-      postNativeMessage({ type: 'appleSignIn' });
+      // Native: get the OAuth URL and open in SFSafariViewController
+      const { data } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: { redirectTo, skipBrowserRedirect: true },
+      });
+
+      if (data.url != null) {
+        postNativeMessage({ type: 'oauth', payload: { url: data.url } });
+      }
       return;
     }
+
     // Web: standard OAuth redirect
     await supabase.auth.signInWithOAuth({
-      provider: "apple",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      provider,
+      options: { redirectTo },
     });
   }, []);
+
+  const signInWithGoogle = useCallback(() => signInWith("google"), [signInWith]);
+  const signInWithGitHub = useCallback(() => signInWith("github"), [signInWith]);
+  const signInWithApple = useCallback(() => signInWith("apple"), [signInWith]);
 
   const signOut = useCallback(async () => {
     try {
