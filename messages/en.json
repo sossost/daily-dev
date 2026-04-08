@@ -39,6 +39,10 @@
       "challenge": {
         "title": "Challenge Mode | DailyDev",
         "description": "Test your speed and accuracy with timed developer quiz challenges."
+      },
+      "privacy": {
+        "title": "Privacy Policy | DailyDev",
+        "description": "DailyDev privacy policy — what data we collect and how we use it."
       }
     }
   },
@@ -342,6 +346,7 @@
     "loginTitle": "Login",
     "continueWithGoogle": "Continue with Google",
     "continueWithGitHub": "Continue with GitHub",
+    "continueWithApple": "Continue with Apple",
     "syncDescription": "Log in to sync your learning history across devices",
     "loginNudge": "Log in to sync your progress across devices",
     "loginAction": "Log in",
@@ -417,5 +422,56 @@
     "description": "An error occurred. Please retry or reset data.",
     "retry": "Retry",
     "resetData": "Reset Data"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: April 8, 2026",
+    "intro": "DailyDev (\"we\", \"our\", \"us\") operates the DailyDev mobile application and website (daily5.dev). This Privacy Policy describes how we collect, use, and protect your personal information.",
+    "sections": {
+      "collect": {
+        "title": "1. Information We Collect",
+        "items": {
+          "account": "Account information (email address, display name) when you sign up",
+          "learning": "Learning data (quiz answers, scores, session history, study streaks)",
+          "device": "Device push notification tokens for sending study reminders",
+          "usage": "Usage data (app interactions, feature usage patterns)"
+        }
+      },
+      "purpose": {
+        "title": "2. How We Use Your Information",
+        "items": {
+          "service": "To provide and improve the learning service",
+          "reminders": "To send daily study reminders via push notifications",
+          "progress": "To track and display your learning progress and statistics",
+          "srs": "To power the spaced repetition system for optimal learning"
+        }
+      },
+      "storage": {
+        "title": "3. Data Storage & Security",
+        "description": "Your data is stored securely on Supabase cloud infrastructure. We use industry-standard encryption and access controls to protect your information. Learning data is retained as long as your account is active."
+      },
+      "sharing": {
+        "title": "4. Data Sharing",
+        "description": "We do not sell, trade, or share your personal information with third parties. Your data is used solely for providing the DailyDev service."
+      },
+      "rights": {
+        "title": "5. Your Rights",
+        "items": {
+          "access": "Access your personal data at any time through the app",
+          "delete": "Request deletion of your account and all associated data",
+          "optOut": "Opt out of push notifications at any time via device settings",
+          "export": "Request a copy of your data"
+        }
+      },
+      "deletion": {
+        "title": "6. Data Deletion",
+        "description": "You can delete your account and all associated data at any time. Upon account deletion, all personal information, learning history, and push notification tokens are permanently removed within 30 days."
+      },
+      "contact": {
+        "title": "7. Contact Us",
+        "description": "If you have questions about this Privacy Policy or your data, please contact us at:"
+      }
+    },
+    "contactEmail": "privacy@daily5.dev"
   }
 }

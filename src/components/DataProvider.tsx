@@ -6,6 +6,7 @@ import { useProgressStore } from "@/stores/useProgressStore";
 import { useBookmarkStore } from "@/stores/useBookmarkStore";
 import { setCurrentUser } from "@/lib/supabase/currentUser";
 import { migrateAnonymousData } from "@/lib/supabase/migrate";
+import { useNativePush } from "@/hooks/useNativePush";
 import type { ServerUserData } from "@/lib/supabase/loadUserData";
 
 const LOCAL_STORAGE_PROGRESS_KEY = "daily-dev-progress";
@@ -75,6 +76,9 @@ export function DataProvider({
       .catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount
   }, []);
+
+  // Register APNs token when running inside the React Native shell
+  useNativePush(userId);
 
   if (!isReady) {
     return <DataProviderSkeleton />;

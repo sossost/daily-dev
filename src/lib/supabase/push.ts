@@ -1,11 +1,18 @@
 import { createClient } from '@/lib/supabase/client'
 import { getCurrentUserId } from '@/lib/supabase/currentUser'
 
+type PushPlatform = 'web' | 'ios'
+
 /**
- * Save an FCM push token to Supabase.
+ * Save a push token to Supabase.
  * Creates a new record or reactivates an existing one.
+ * Supports both FCM (web) and APNs (iOS) tokens.
  */
-export async function savePushToken(fcmToken: string, locale: string = 'en'): Promise<boolean> {
+export async function savePushToken(
+  token: string,
+  locale: string = 'en',
+  platform: PushPlatform = 'web',
+): Promise<boolean> {
   const userId = getCurrentUserId()
   if (userId == null) return false
 
@@ -15,12 +22,13 @@ export async function savePushToken(fcmToken: string, locale: string = 'en'): Pr
     .upsert(
       {
         user_id: userId,
-        fcm_token: fcmToken,
+        token,
+        platform,
         is_active: true,
         locale,
         updated_at: new Date().toISOString(),
       },
-      { onConflict: 'fcm_token' },
+      { onConflict: 'token,platform' },
     )
 
   return error == null
@@ -29,7 +37,7 @@ export async function savePushToken(fcmToken: string, locale: string = 'en'): Pr
 /**
  * Deactivate a push token (soft delete).
  */
-export async function deactivatePushToken(fcmToken: string): Promise<boolean> {
+export async function deactivatePushToken(token: string): Promise<boolean> {
   const userId = getCurrentUserId()
   if (userId == null) return false
 
@@ -37,7 +45,7 @@ export async function deactivatePushToken(fcmToken: string): Promise<boolean> {
   const { error } = await supabase
     .from('push_subscriptions')
     .update({ is_active: false, updated_at: new Date().toISOString() })
-    .eq('fcm_token', fcmToken)
+    .eq('token', token)
     .eq('user_id', userId)
 
   return error == null

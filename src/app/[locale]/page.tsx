@@ -24,8 +24,8 @@ export default function DashboardPage() {
   const showOnboarding = isHydrated && isOnboardingComplete === false
 
   return (
-    <div>
-      <header className="mb-8 flex items-center justify-between">
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900 -mx-4 px-4 -mt-8 pt-3 pb-3 mb-5 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">DailyDev</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">

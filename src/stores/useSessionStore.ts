@@ -5,6 +5,7 @@
  */
 import { create } from 'zustand'
 import type { SessionQuestion, SessionAnswer, Topic } from '@/types'
+import { triggerHaptic } from '@/lib/native-bridge'
 
 interface SessionState {
   questions: SessionQuestion[]
@@ -74,6 +75,8 @@ export const useSessionStore = create<SessionState>()((set, get) => ({
       isAnswered: true,
       answers: [...answers, answer],
     })
+
+    triggerHaptic(isCorrect ? 'success' : 'error')
   },
 
   nextQuestion: () => {

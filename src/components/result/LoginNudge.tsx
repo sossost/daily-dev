@@ -44,7 +44,7 @@ export function LoginNudge() {
   const t = useTranslations('auth')
   const [visible, setVisible] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { signInWithGoogle, signInWithGitHub } = useAuth()
+  const { signInWithGoogle, signInWithGitHub, signInWithApple } = useAuth()
 
   useEffect(() => {
     if (getIsAuthenticated()) return
@@ -104,6 +104,7 @@ export function LoginNudge() {
         onClose={() => setIsModalOpen(false)}
         onGoogle={signInWithGoogle}
         onGitHub={signInWithGitHub}
+        onApple={signInWithApple}
       />
     </>
   )

@@ -7,6 +7,7 @@ import { useProgressStore } from "@/stores/useProgressStore";
 import { useBookmarkStore } from "@/stores/useBookmarkStore";
 import { deactivateAllPushTokens } from "@/lib/supabase/push";
 import { FCM_TOKEN_KEY } from "@/hooks/usePushNotification";
+import { isNativeApp, postNativeMessage } from "@/lib/native-bridge";
 import type { User, AuthChangeEvent, Session } from "@supabase/supabase-js";
 
 interface AuthState {
@@ -70,9 +71,24 @@ export function useAuth() {
       },
     );
 
+    // Listen for native Apple Sign In token injection
+    const handleAppleToken = () => {
+      const idToken = window.__DAILYDEV_APPLE_ID_TOKEN__;
+      if (idToken == null) return;
+      window.__DAILYDEV_APPLE_ID_TOKEN__ = undefined;
+
+      supabase.auth.signInWithIdToken({
+        provider: "apple",
+        token: idToken,
+      });
+    };
+
+    window.addEventListener("appleIdTokenReceived", handleAppleToken);
+
     return () => {
       cancelled = true;
       subscription.unsubscribe();
+      window.removeEventListener("appleIdTokenReceived", handleAppleToken);
     };
   }, []);
 
@@ -86,6 +102,19 @@ export function useAuth() {
   const signInWithGitHub = useCallback(async () => {
     await supabase.auth.signInWithOAuth({
       provider: "github",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
+  }, []);
+
+  const signInWithApple = useCallback(async () => {
+    if (isNativeApp()) {
+      // Native iOS: delegate to the RN shell for ASAuthorizationAppleIDProvider
+      postNativeMessage({ type: 'appleSignIn' });
+      return;
+    }
+    // Web: standard OAuth redirect
+    await supabase.auth.signInWithOAuth({
+      provider: "apple",
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
   }, []);
@@ -109,6 +138,7 @@ export function useAuth() {
     isLoading: state.isLoading,
     signInWithGoogle,
     signInWithGitHub,
+    signInWithApple,
     signOut,
   };
 }

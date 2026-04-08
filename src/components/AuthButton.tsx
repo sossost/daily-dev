@@ -8,7 +8,7 @@ import { getIsAuthenticated } from "@/lib/supabase/currentUser";
 import { LoginModal } from "@/components/LoginModal";
 
 export function AuthButton() {
-  const { user, isLoading, signInWithGoogle, signInWithGitHub, signOut } =
+  const { user, isLoading, signInWithGoogle, signInWithGitHub, signInWithApple, signOut } =
     useAuth();
   const t = useTranslations("common");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,6 +64,7 @@ export function AuthButton() {
         onClose={() => setIsModalOpen(false)}
         onGoogle={signInWithGoogle}
         onGitHub={signInWithGitHub}
+        onApple={signInWithApple}
       />
     </div>
   );

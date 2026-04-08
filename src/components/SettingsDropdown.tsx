@@ -54,7 +54,7 @@ export function SettingsDropdown() {
 
   const { isInstallable, isInstalled, isIOS, install } = useInstallPrompt()
   const push = usePushNotification()
-  const { user, signInWithGoogle, signInWithGitHub, signOut } = useAuth()
+  const { user, signInWithGoogle, signInWithGitHub, signInWithApple, signOut } = useAuth()
   const isAuthenticated = getIsAuthenticated()
   const avatarUrl = user?.user_metadata?.avatar_url as string | undefined
   const userName = (user?.user_metadata?.full_name as string | undefined) ?? 'User'
@@ -357,6 +357,7 @@ export function SettingsDropdown() {
         onClose={() => setIsLoginOpen(false)}
         onGoogle={signInWithGoogle}
         onGitHub={signInWithGitHub}
+        onApple={signInWithApple}
       />
       <TopicFilterModal
         isOpen={isFilterOpen}
