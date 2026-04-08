@@ -80,13 +80,17 @@ export function useAuth() {
   }, []);
 
   const signInWith = useCallback(async (provider: OAuthProvider) => {
-    const redirectTo = `${window.location.origin}/auth/callback`;
+    const nativeRedirect = 'dailydevapp://auth/callback';
+    const webRedirect = `${window.location.origin}/auth/callback`;
 
     if (isNativeApp()) {
-      // Native: get the OAuth URL and open in SFSafariViewController
+      // Native: get OAuth URL with custom scheme callback
+      // SFSafariViewController opens the URL, ASWebAuthenticationSession
+      // captures the dailydevapp:// redirect, then the app navigates
+      // the WebView to the https equivalent to exchange the code
       const { data } = await supabase.auth.signInWithOAuth({
         provider,
-        options: { redirectTo, skipBrowserRedirect: true },
+        options: { redirectTo: nativeRedirect, skipBrowserRedirect: true },
       });
 
       if (data.url != null) {
@@ -98,7 +102,7 @@ export function useAuth() {
     // Web: standard OAuth redirect
     await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo },
+      options: { redirectTo: webRedirect },
     });
   }, []);
 
