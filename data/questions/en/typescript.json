@@ -668,5 +668,174 @@
     "correctIndex": 1,
     "explanation": "asserts val is string is an assertion function — when the function returns normally without throwing, val is narrowed to string in all subsequent code. No if statement is needed for narrowing. In contrast, val is string is a type predicate that must be used with conditionals like if/else, narrowing the type only in the branch where it returns true. Assert functions must throw when the condition fails, while is functions return boolean.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions"
+  },
+  {
+    "id": "typescript-041",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the `Result` type in the following code?",
+    "code": "async function fetchData(): Promise<string> {\n  return 'data';\n}\n\ntype Result = Awaited<ReturnType<typeof fetchData>>;",
+    "options": [
+      "string",
+      "Promise<string>",
+      "string | undefined",
+      "unknown"
+    ],
+    "correctIndex": 0,
+    "explanation": "ReturnType<typeof fetchData> extracts the function's return type, which is Promise<string>. Awaited<T> recursively unwraps Promises to return the inner type, so Awaited<Promise<string>> becomes string. Awaited was introduced in TypeScript 4.5 and can unwrap nested Promises (e.g., Promise<Promise<number>>) in one step.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/utility-types.html#awaitedtype"
+  },
+  {
+    "id": "typescript-042",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of `type-only imports` in TypeScript?",
+    "code": "import type { User } from './types';\nimport { fetchUser } from './api';",
+    "options": [
+      "They are a special syntax that can only import default exports",
+      "They are used to perform type checking at runtime",
+      "They load modules faster than regular imports",
+      "They import only types and are completely removed after compilation, having no impact on bundle size"
+    ],
+    "correctIndex": 3,
+    "explanation": "import type imports only type information and is completely removed during compilation (type erasure). This means it is not included in the bundle, preventing unnecessary module loading. It is useful for resolving circular dependency issues or explicitly indicating that a module is used only for types. Introduced in TypeScript 3.8, when used with the isolatedModules option, the compiler catches type imports used as values as errors.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/modules.html#type-only-imports-and-exports"
+  },
+  {
+    "id": "typescript-043",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does a compile error occur in the following code?",
+    "code": "type A = { value: string };\ntype B = { value: number };\ntype C = A & B;\n\nconst obj: C = { value: 'hello' };",
+    "options": [
+      "Properties with the same name cannot exist in intersection types",
+      "A and B have different value types, so intersection is forbidden",
+      "obj needs additional properties beyond value",
+      "value's type becomes string & number (never), so no value can be assigned to it"
+    ],
+    "correctIndex": 3,
+    "explanation": "In intersection types, when properties with the same name have incompatible types, the property type becomes the intersection of both. string & number has no overlap, so it becomes never. Since no value can be assigned to never, assigning 'hello' (string) to value causes 'Type string is not assignable to type never'. The intersection type itself can be created, but incompatible properties become never, making the type effectively unusable.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/objects.html#intersection-types"
+  },
+  {
+    "id": "typescript-044",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the `Params` type in the following code?",
+    "code": "function createUser(name: string, age: number, active: boolean) {\n  return { name, age, active };\n}\n\ntype Params = Parameters<typeof createUser>;",
+    "options": [
+      "[name: string, age: number, active: boolean]",
+      "{ name: string; age: number; active: boolean }",
+      "string | number | boolean",
+      "[string, number, boolean][]"
+    ],
+    "correctIndex": 0,
+    "explanation": "Parameters<T> is a utility type that extracts the parameter types of a function type T as a tuple. Internally it is implemented as T extends (...args: infer P) => any ? P : never, using the infer keyword to capture parameter types. Since createUser's parameters are (name: string, age: number, active: boolean), the result is a labeled tuple [name: string, age: number, active: boolean]. This can be used to create type-safe wrapper functions by reusing existing function signatures.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/utility-types.html#parameterstype"
+  },
+  {
+    "id": "typescript-045",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about TypeScript `abstract` classes is correct?",
+    "code": "abstract class Shape {\n  abstract getArea(): number;\n  describe(): string {\n    return `Area: ${this.getArea()}`;\n  }\n}",
+    "options": [
+      "Abstract classes are completely removed when compiled to JavaScript",
+      "All methods in an abstract class must be abstract",
+      "Abstract classes cannot be directly instantiated, and subclasses must implement abstract methods",
+      "Abstract classes are completely identical to interfaces"
+    ],
+    "correctIndex": 2,
+    "explanation": "Abstract classes cannot be instantiated directly with new — they must be inherited by subclasses. Abstract methods define only the signature, delegating implementation to subclasses. However, regular methods (like describe) can have implementations, making abstract classes suitable for the 'template method pattern' where common logic lives in the abstract class and variation points are abstract methods. Unlike interfaces, abstract classes exist at runtime and can have constructors and state (fields).",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/classes.html#abstract-classes-and-members"
+  },
+  {
+    "id": "typescript-046",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between `void` and `undefined`?",
+    "options": [
+      "void indicates a function does not return a value, undefined is an actual value. Return values of void functions cannot be used",
+      "void and undefined are completely identical and interchangeable",
+      "undefined cannot be used as a type, it only exists as a value",
+      "Any value can be assigned to a variable of type void"
+    ],
+    "correctIndex": 0,
+    "explanation": "void is a type indicating that a function does not return a meaningful value. undefined is an actual JavaScript value and type. When a callback type is declared as () => void, the return value is ignored so returning any value causes no error, but with () => undefined, you must explicitly return undefined. This distinction matters for cases like Array.forEach's callback where return values are discarded.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/functions.html#void"
+  },
+  {
+    "id": "typescript-047",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What are the `Keys` and `Values` types in the following code?",
+    "code": "const routes = {\n  home: '/',\n  about: '/about',\n  contact: '/contact',\n} as const;\n\ntype Keys = keyof typeof routes;\ntype Values = (typeof routes)[Keys];",
+    "options": [
+      "Keys: string, Values: string",
+      "Keys: 'home' | 'about' | 'contact', Values: '/' | '/about' | '/contact'",
+      "Keys: 'home' | 'about' | 'contact', Values: string",
+      "Keys: number, Values: string"
+    ],
+    "correctIndex": 1,
+    "explanation": "With as const, the typeof the object preserves literal types for each property. keyof typeof routes becomes the key literal union 'home' | 'about' | 'contact'. (typeof routes)[Keys] is an Indexed Access Type that returns the union of values for all keys: '/' | '/about' | '/contact'. This pattern is frequently used to restrict allowed keys and values at the type level for configuration objects.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/indexed-access-types.html"
+  },
+  {
+    "id": "typescript-048",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does a compile error occur in the following code?",
+    "code": "function merge<T extends object, U extends object>(\n  a: T, b: U\n): T & U {\n  return { ...a, ...b };\n}\n\nconst result = merge(\n  { name: 'Kim' },\n  { name: 'Lee', age: 30 }\n);\n\nresult.email;",
+    "options": [
+      "Object literals cannot be passed to generic functions",
+      "The name property conflicts between the two objects, causing an error at the merge call",
+      "email does not exist on result, so accessing it causes an error",
+      "The spread operator cannot be used with an intersection return type T & U"
+    ],
+    "correctIndex": 2,
+    "explanation": "The merge function merges two objects with the intersection type T & U. From the passed objects, T is inferred as { name: string } and U as { name: string; age: number }, so result's type is { name: string } & { name: string; age: number }, effectively { name: string; age: number }. Since email exists on neither object, accessing result.email causes a 'Property email does not exist' error. The name property has the same type string on both, so string & string = string merges without issues.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/generics.html#generic-constraints"
+  },
+  {
+    "id": "typescript-049",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Which statement about TypeScript's Variadic Tuple Types is correct?",
+    "code": "type Concat<A extends unknown[], B extends unknown[]> = [...A, ...B];\n\ntype Result = Concat<[1, 2], [3, 4]>; // [1, 2, 3, 4]",
+    "options": [
+      "Variadic tuple types are a feature for concatenating arrays at runtime",
+      "Spread syntax cannot be used at the type level",
+      "They enable combining, decomposing, and transforming tuples at the type level using spread syntax",
+      "Variadic tuple types support a maximum of 4 elements"
+    ],
+    "correctIndex": 2,
+    "explanation": "Variadic Tuple Types (TypeScript 4.0+) allow using ... spread syntax at the type level to combine or decompose tuples. You can concatenate two tuples like [...A, ...B], or insert a generic spread in the middle like [string, ...T, number]. This enables advanced type programming such as composing function parameters (e.g., typing a concat function) or connecting pipeline input/output types.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-0.html#variadic-tuple-types"
+  },
+  {
+    "id": "typescript-050",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between `const enum` and regular `enum`?",
+    "code": "enum Color { Red, Green, Blue }\nconst enum Direction { Up, Down, Left, Right }\n\nconsole.log(Color.Red);      // Runtime object access\nconsole.log(Direction.Up);   // Inlined substitution",
+    "options": [
+      "const enum has identical functionality, only the declaration syntax differs",
+      "Regular enum generates a runtime object, while const enum inlines values at usage sites leaving no runtime code",
+      "Only const enum can have string values",
+      "Regular enum cannot be used as a type"
+    ],
+    "correctIndex": 1,
+    "explanation": "Regular enums generate JavaScript objects after compilation that are accessible at runtime (e.g., Color[0] === 'Red' reverse mapping). const enums are substituted with literal values (inlined) at usage sites during compilation, so no runtime object is generated. Direction.Up is replaced with 0 after compilation. const enums reduce bundle size but have limitations in isolatedModules environments and do not support reverse mapping.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/enums.html#const-enums"
   }
 ]

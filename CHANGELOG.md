@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-04-08
+
+### Features
+
+- **content**: add 10 type-coercion questions (041-050) (`5dcba5e`)
+
 ## 2026-04-07
 
 ### Features

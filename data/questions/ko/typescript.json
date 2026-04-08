@@ -668,5 +668,174 @@
     "correctIndex": 1,
     "explanation": "asserts val is string은 assertion function으로, 함수가 에러 없이 정상 반환하면 이후 모든 코드에서 val이 string으로 좁혀집니다. if문 없이도 타입이 좁혀지는 것이 특징입니다. 반면 val is string은 type predicate로, if/else 등 조건문과 함께 사용해야 하며 true를 반환한 분기에서만 타입이 좁혀집니다. asserts 함수는 조건이 실패하면 반드시 throw해야 하고, is 함수는 boolean을 반환합니다.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions"
+  },
+  {
+    "id": "typescript-041",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 `Result` 타입은 무엇인가요?",
+    "code": "async function fetchData(): Promise<string> {\n  return 'data';\n}\n\ntype Result = Awaited<ReturnType<typeof fetchData>>;",
+    "options": [
+      "string",
+      "Promise<string>",
+      "string | undefined",
+      "unknown"
+    ],
+    "correctIndex": 0,
+    "explanation": "ReturnType<typeof fetchData>는 함수의 반환 타입인 Promise<string>을 추출합니다. Awaited<T>는 Promise를 재귀적으로 풀어(unwrap) 내부 타입을 반환하므로, Awaited<Promise<string>>은 string이 됩니다. Awaited는 TypeScript 4.5에서 도입되었으며, 중첩된 Promise(예: Promise<Promise<number>>)도 한 번에 풀어줍니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/utility-types.html#awaitedtype"
+  },
+  {
+    "id": "typescript-042",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "TypeScript에서 `type-only import`의 목적은 무엇인가요?",
+    "code": "import type { User } from './types';\nimport { fetchUser } from './api';",
+    "options": [
+      "default export만 가져올 수 있는 특수 구문이다",
+      "런타임에서 타입 검사를 수행하기 위해 사용한다",
+      "일반 import보다 빠르게 모듈을 로드한다",
+      "타입만 가져오며 컴파일 후 완전히 제거되어 번들 크기에 영향을 주지 않는다"
+    ],
+    "correctIndex": 3,
+    "explanation": "import type은 타입 정보만 가져오는 구문으로, 컴파일 시 완전히 제거됩니다(type erasure). 따라서 번들에 포함되지 않아 불필요한 모듈 로딩을 방지합니다. 순환 참조 문제를 해결하거나, 특정 모듈이 타입 용도로만 사용됨을 명시할 때 유용합니다. TypeScript 3.8에서 도입되었으며, isolatedModules 옵션과 함께 사용하면 컴파일러가 값으로 사용된 타입 import를 에러로 잡아줍니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/modules.html#type-only-imports-and-exports"
+  },
+  {
+    "id": "typescript-043",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 컴파일 에러가 발생하는 이유는?",
+    "code": "type A = { value: string };\ntype B = { value: number };\ntype C = A & B;\n\nconst obj: C = { value: 'hello' };",
+    "options": [
+      "인터섹션 타입에서 같은 이름의 속성은 존재할 수 없다",
+      "A와 B의 value 속성 타입이 다르므로 인터섹션이 금지된다",
+      "obj에 value 외에 추가 속성이 필요하다",
+      "value의 타입이 string & number, 즉 never가 되어 어떤 값도 할당할 수 없다"
+    ],
+    "correctIndex": 3,
+    "explanation": "인터섹션 타입에서 같은 이름의 속성(프로퍼티)이 서로 다른 타입을 가지면, 해당 속성의 타입도 인터섹션이 됩니다. string & number는 공통 부분이 없으므로 never가 됩니다. never 타입에는 어떤 값도 할당할 수 없으므로, value에 'hello'(string)를 할당하면 'Type string is not assignable to type never' 에러가 발생합니다. 인터섹션 타입 자체는 생성 가능하지만, 호환되지 않는 속성이 있으면 해당 속성이 never가 되어 사실상 사용 불가능한 타입이 됩니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/objects.html#intersection-types"
+  },
+  {
+    "id": "typescript-044",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드에서 `Params` 타입은 무엇인가요?",
+    "code": "function createUser(name: string, age: number, active: boolean) {\n  return { name, age, active };\n}\n\ntype Params = Parameters<typeof createUser>;",
+    "options": [
+      "[name: string, age: number, active: boolean]",
+      "{ name: string; age: number; active: boolean }",
+      "string | number | boolean",
+      "[string, number, boolean][]"
+    ],
+    "correctIndex": 0,
+    "explanation": "Parameters<T>는 함수 타입 T의 매개변수 타입을 튜플로 추출하는 유틸리티 타입입니다. 내부적으로 T extends (...args: infer P) => any ? P : never로 구현되어 있으며, infer 키워드로 매개변수 타입을 캡처합니다. createUser의 매개변수는 (name: string, age: number, active: boolean)이므로, 결과는 [name: string, age: number, active: boolean] 라벨이 붙은 튜플이 됩니다. 이를 활용하면 기존 함수의 시그니처를 재사용하여 래퍼 함수를 타입 안전하게 만들 수 있습니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/utility-types.html#parameterstype"
+  },
+  {
+    "id": "typescript-045",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "TypeScript에서 `abstract` 클래스에 대한 설명으로 올바른 것은?",
+    "code": "abstract class Shape {\n  abstract getArea(): number;\n  describe(): string {\n    return `Area: ${this.getArea()}`;\n  }\n}",
+    "options": [
+      "abstract 클래스는 JavaScript로 컴파일되면 완전히 제거된다",
+      "abstract 클래스의 모든 메서드는 반드시 abstract여야 한다",
+      "abstract 클래스는 직접 인스턴스화할 수 없으며, 상속받은 클래스에서 abstract 메서드를 구현해야 한다",
+      "abstract 클래스는 interface와 완전히 동일하다"
+    ],
+    "correctIndex": 2,
+    "explanation": "abstract 클래스는 new로 직접 인스턴스를 만들 수 없고, 반드시 서브클래스에서 상속받아 사용해야 합니다. abstract 메서드는 시그니처만 정의하고 구현은 서브클래스에 위임합니다. 하지만 일반 메서드(describe처럼)는 구현을 가질 수 있어, 공통 로직을 abstract 클래스에 두고 변경점만 abstract 메서드로 분리하는 '템플릿 메서드 패턴'에 적합합니다. interface와 달리 런타임에 존재하며, 생성자와 상태(필드)를 가질 수 있습니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/classes.html#abstract-classes-and-members"
+  },
+  {
+    "id": "typescript-046",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "`void`와 `undefined`의 차이점으로 올바른 것은?",
+    "options": [
+      "void는 함수가 값을 반환하지 않음을 나타내고, undefined는 실제 값이다. void 반환 함수는 반환값을 사용할 수 없다",
+      "void와 undefined는 완전히 동일하며 상호 교환 가능하다",
+      "undefined는 타입으로 사용할 수 없고, 값으로만 존재한다",
+      "void 타입의 변수에는 어떤 값이든 할당할 수 있다"
+    ],
+    "correctIndex": 0,
+    "explanation": "void는 함수가 의미 있는 값을 반환하지 않음을 나타내는 타입입니다. undefined는 실제 존재하는 JavaScript 값이자 타입입니다. 콜백 타입에서 () => void로 선언하면 반환값이 무시되어 어떤 값을 반환해도 에러가 나지 않지만, () => undefined로 선언하면 반드시 undefined를 반환해야 합니다. 이 차이는 Array.forEach의 콜백처럼 반환값이 무시되는 경우에 중요합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/functions.html#void"
+  },
+  {
+    "id": "typescript-047",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 `Keys` 타입은 무엇인가요?",
+    "code": "const routes = {\n  home: '/',\n  about: '/about',\n  contact: '/contact',\n} as const;\n\ntype Keys = keyof typeof routes;\ntype Values = (typeof routes)[Keys];",
+    "options": [
+      "Keys: string, Values: string",
+      "Keys: 'home' | 'about' | 'contact', Values: '/' | '/about' | '/contact'",
+      "Keys: 'home' | 'about' | 'contact', Values: string",
+      "Keys: number, Values: string"
+    ],
+    "correctIndex": 1,
+    "explanation": "as const로 선언된 객체의 typeof는 각 속성의 리터럴 타입을 보존합니다. keyof typeof routes는 객체의 키 리터럴 유니온 'home' | 'about' | 'contact'이 됩니다. (typeof routes)[Keys]는 인덱스 접근 타입(Indexed Access Type)으로, 모든 키에 해당하는 값의 유니온 '/' | '/about' | '/contact'을 반환합니다. 이 패턴은 설정 객체에서 허용되는 키와 값을 타입 수준에서 제한할 때 자주 사용됩니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/indexed-access-types.html"
+  },
+  {
+    "id": "typescript-048",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 컴파일 에러가 발생하는 이유는?",
+    "code": "function merge<T extends object, U extends object>(\n  a: T, b: U\n): T & U {\n  return { ...a, ...b };\n}\n\nconst result = merge(\n  { name: 'Kim' },\n  { name: 'Lee', age: 30 }\n);\n\nresult.email;",
+    "options": [
+      "제네릭 함수에 객체 리터럴을 전달할 수 없다",
+      "두 객체의 name 속성이 충돌하여 merge 호출에서 에러가 발생한다",
+      "result에 email 속성이 존재하지 않으므로 접근 시 에러가 발생한다",
+      "T & U 인터섹션 반환 타입에서 스프레드 연산자를 사용할 수 없다"
+    ],
+    "correctIndex": 2,
+    "explanation": "merge 함수는 두 객체를 인터섹션 타입 T & U로 병합합니다. 전달된 두 객체에서 T는 { name: string }, U는 { name: string; age: number }로 추론되므로, result의 타입은 { name: string } & { name: string; age: number }, 즉 { name: string; age: number }가 됩니다. email 속성은 어느 객체에도 없으므로 result.email 접근 시 'Property email does not exist' 에러가 발생합니다. 같은 이름의 name 속성은 둘 다 string이므로 string & string = string으로 문제없이 병합됩니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/generics.html#generic-constraints"
+  },
+  {
+    "id": "typescript-049",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "TypeScript의 가변 길이 튜플 타입(Variadic Tuple Types)에 대한 설명으로 올바른 것은?",
+    "code": "type Concat<A extends unknown[], B extends unknown[]> = [...A, ...B];\n\ntype Result = Concat<[1, 2], [3, 4]>; // [1, 2, 3, 4]",
+    "options": [
+      "가변 길이 튜플 타입은 런타임에 배열을 합치는 기능이다",
+      "스프레드 구문은 타입 수준에서 사용할 수 없다",
+      "타입 수준에서 튜플을 스프레드하여 결합, 분해, 변환할 수 있는 기능이다",
+      "가변 길이 튜플 타입은 최대 4개의 요소만 지원한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "가변 길이 튜플 타입(TypeScript 4.0+)은 타입 수준에서 ... 스프레드 구문을 사용하여 튜플을 결합하거나 분해할 수 있게 합니다. [...A, ...B]처럼 두 튜플을 이어붙이거나, [string, ...T, number]처럼 중간에 제네릭 스프레드를 삽입할 수 있습니다. 이를 통해 함수의 매개변수를 조합하거나(예: concat 함수의 타입), 파이프라인의 입출력 타입을 연결하는 등 고급 타입 프로그래밍이 가능합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-0.html#variadic-tuple-types"
+  },
+  {
+    "id": "typescript-050",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "`const enum`과 일반 `enum`의 차이점은?",
+    "code": "enum Color { Red, Green, Blue }\nconst enum Direction { Up, Down, Left, Right }\n\nconsole.log(Color.Red);      // 런타임 객체 접근\nconsole.log(Direction.Up);   // 인라인 치환",
+    "options": [
+      "const enum은 기능이 동일하지만 선언 방식만 다르다",
+      "일반 enum은 런타임 객체를 생성하고, const enum은 사용처에 값을 직접 인라인하여 런타임 코드가 남지 않는다",
+      "const enum만 문자열 값을 가질 수 있다",
+      "일반 enum은 타입으로 사용할 수 없다"
+    ],
+    "correctIndex": 1,
+    "explanation": "일반 enum은 컴파일 후 JavaScript 객체가 생성되어 런타임에 접근 가능합니다(예: Color[0] === 'Red' 역매핑). const enum은 컴파일 시 사용처에 리터럴 값으로 직접 치환(인라인)되어 런타임 객체가 생성되지 않습니다. Direction.Up은 컴파일 후 0으로 대체됩니다. const enum은 번들 크기를 줄이는 장점이 있지만, isolatedModules 환경에서는 제한이 있고 역매핑이 불가능합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/enums.html#const-enums"
   }
 ]
