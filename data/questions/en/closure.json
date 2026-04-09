@@ -387,7 +387,7 @@
     "type": "debugging",
     "difficulty": "medium",
     "question": "In the following code, why is the cache not shared between calls?",
-    "code": "function memoize(fn) {\n  const cache = {};\n  return function(arg) {\n    if (cache[arg] !== undefined) return cache[arg];\n    cache[arg] = fn(arg);\n    return cache[arg];\n  };\n}\nconst memo1 = memoize(x => x * 2);\nconst memo2 = memoize(x => x * 2);\nmemo1(5);\nconsole.log(memo2(5)); // cache hit이 아닌 새로 계산됨",
+    "code": "function memoize(fn) {\n  const cache = {};\n  return function(arg) {\n    if (cache[arg] !== undefined) return cache[arg];\n    cache[arg] = fn(arg);\n    return cache[arg];\n  };\n}\nconst memo1 = memoize(x => x * 2);\nconst memo2 = memoize(x => x * 2);\nmemo1(5);\nconsole.log(memo2(5)); // not a cache hit — computed fresh",
     "options": [
       "The cache object is declared with const so it cannot be modified",
       "Each call to memoize creates a new lexical environment, so each has its own independent cache",

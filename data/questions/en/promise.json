@@ -253,7 +253,7 @@
     "type": "debugging",
     "difficulty": "medium",
     "question": "What causes the unintended behavior in the following code?",
-    "code": "function getUser(id) {\n  return fetch(`/api/users/${id}`)\n    .then(res => {\n      if (!res.ok) {\n        throw new Error('Not found');\n      }\n      res.json(); // 의도: 파싱된 JSON 반환\n    });\n}",
+    "code": "function getUser(id) {\n  return fetch(`/api/users/${id}`)\n    .then(res => {\n      if (!res.ok) {\n        throw new Error('Not found');\n      }\n      res.json(); // intent: return parsed JSON\n    });\n}",
     "options": [
       "fetch works synchronously",
       "The res.ok check is incorrect",

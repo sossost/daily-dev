@@ -221,7 +221,7 @@
     "type": "output-prediction",
     "difficulty": "medium",
     "question": "Approximately how long does the following code take to execute?",
-    "code": "async function sequential() {\n  const a = await delay(1000);\n  const b = await delay(1000);\n  return a + b;\n}\nsequential();\n// delay(ms)는 ms밀리초 후 resolve되는 Promise",
+    "code": "async function sequential() {\n  const a = await delay(1000);\n  const b = await delay(1000);\n  return a + b;\n}\nsequential();\n// delay(ms) returns a Promise that resolves after ms milliseconds",
     "options": [
       "About 1 second",
       "About 2 seconds",

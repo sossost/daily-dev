@@ -88,7 +88,7 @@
     "type": "output-prediction",
     "difficulty": "hard",
     "question": "What is the output of the following code?",
-    "code": "function Timer() {\n  this.seconds = 0;\n  setInterval(function() {\n    this.seconds++;\n    console.log(this.seconds);\n  }, 1000);\n}\nconst timer = new Timer();\n// 1초 후 출력 결과는?",
+    "code": "function Timer() {\n  this.seconds = 0;\n  setInterval(function() {\n    this.seconds++;\n    console.log(this.seconds);\n  }, 1000);\n}\nconst timer = new Timer();\n// What is logged after 1 second?",
     "options": [
       "1",
       "NaN",

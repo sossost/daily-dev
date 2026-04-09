@@ -150,7 +150,7 @@
     "type": "output-prediction",
     "difficulty": "medium",
     "question": "What is the security vulnerability in the following code?",
-    "code": "app.get('/search', (req, res) => {\n  const query = req.query.q;\n  res.send(`<h1>검색 결과: ${query}</h1>`);\n});",
+    "code": "app.get('/search', (req, res) => {\n  const query = req.query.q;\n  res.send(`<h1>Search results: ${query}</h1>`);\n});",
     "options": [
       "req.query.q could be undefined, causing a runtime error",
       "res.json should be used instead of res.send",

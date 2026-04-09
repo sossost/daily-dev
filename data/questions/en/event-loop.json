@@ -138,7 +138,7 @@
     "type": "debugging",
     "difficulty": "easy",
     "question": "Why might the setTimeout in the following code not execute exactly after 1 second?",
-    "code": "setTimeout(() => console.log('실행'), 1000);\nfor (let i = 0; i < 1000000000; i++) {}",
+    "code": "setTimeout(() => console.log('executed'), 1000);\nfor (let i = 0; i < 1000000000; i++) {}",
     "options": [
       "The synchronous for loop occupies the call stack, so the setTimeout callback must wait",
       "setTimeout is an unreliable API that does not guarantee exact timing",
@@ -254,7 +254,7 @@
     "type": "debugging",
     "difficulty": "medium",
     "question": "In the following code, the while loop runs infinitely. What is the cause?",
-    "code": "let done = false;\nsetTimeout(() => { done = true; }, 1000);\nwhile (!done) {\n  // 기다리는 중...\n}",
+    "code": "let done = false;\nsetTimeout(() => { done = true; }, 1000);\nwhile (!done) {\n  // waiting...\n}",
     "options": [
       "done is declared with const so it cannot be changed",
       "The synchronous while loop occupies the call stack, so the setTimeout callback never gets a chance to execute",

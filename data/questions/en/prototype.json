@@ -221,7 +221,7 @@
     "type": "debugging",
     "difficulty": "hard",
     "question": "In the following code, the for...in loop outputs prototype properties as well. How do you output only own properties?",
-    "code": "const base = { shared: true };\nconst obj = Object.create(base);\nobj.own = 'mine';\nfor (const key in obj) {\n  console.log(key); // 'own', 'shared' 모두 출력\n}",
+    "code": "const base = { shared: true };\nconst obj = Object.create(base);\nobj.own = 'mine';\nfor (const key in obj) {\n  console.log(key); // outputs both 'own' and 'shared'\n}",
     "options": [
       "Use a for...of loop",
       "Call Object.freeze(base)",
@@ -320,7 +320,7 @@
     "type": "debugging",
     "difficulty": "hard",
     "question": "In the following code, an error occurs when super() is not called. What is the cause?",
-    "code": "class Base {\n  constructor() { this.x = 1; }\n}\nclass Child extends Base {\n  constructor() {\n    // super() 누락\n    this.y = 2; // ReferenceError\n  }\n}",
+    "code": "class Base {\n  constructor() { this.x = 1; }\n}\nclass Child extends Base {\n  constructor() {\n    // super() is missing\n    this.y = 2; // ReferenceError\n  }\n}",
     "options": [
       "Constructors cannot be defined in class syntax",
       "this.x must be initialized first",

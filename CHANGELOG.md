@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: fix — prototype-051 correctIndex and explanation (`dfb09c8`)
 - **content**: add 23 questions across 7 topics to 50 (`2dc18e9`)
 
 ## 2026-04-08

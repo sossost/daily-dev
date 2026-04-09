@@ -139,7 +139,7 @@
     "type": "debugging",
     "difficulty": "easy",
     "question": "In the following code, the condition unexpectedly evaluates to true. What is the cause?",
-    "code": "const value = '0';\nif (value) {\n  console.log('truthy!'); // 실행됨\n}",
+    "code": "const value = '0';\nif (value) {\n  console.log('truthy!'); // this runs\n}",
     "options": [
       "'0' is automatically converted to the number 0 which is falsy",
       "if statements always evaluate to true",
