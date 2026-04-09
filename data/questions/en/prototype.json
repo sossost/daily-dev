@@ -826,5 +826,88 @@
     "correctIndex": 2,
     "explanation": "Object.getPrototypeOf() is the standardized ES5+ method for accessing an object's [[Prototype]]. __proto__ is a historical accessor property defined on Object.prototype — it works on most objects but fails on objects with no prototype chain (e.g., Object.create(null) has no Object.prototype, so __proto__ is undefined). The spec includes __proto__ only for web compatibility, and Object.getPrototypeOf() is the recommended approach.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getPrototypeOf"
+  },
+  {
+    "id": "prototype-051",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const parent = { x: 1, y: 2 };\nObject.freeze(parent);\nconst child = Object.create(parent);\nchild.z = 3;\nconsole.log(child.x);\nconsole.log(child.z);\nchild.x = 10;\nconsole.log(child.x);",
+    "options": [
+      "TypeError on child.x = 10",
+      "1, 3, 1",
+      "TypeError on child.z = 3",
+      "1, 3, 10"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.freeze() makes parent's own properties non-writable. When the [[Set]] algorithm finds a non-writable data property on the prototype chain, it prevents creating a shadowing own property on the child — the assignment silently fails in sloppy mode. So child.z = 3 works (z doesn't exist on parent), but child.x = 10 silently fails because parent.x is non-writable. The final child.x still resolves to the inherited value 1.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze"
+  },
+  {
+    "id": "prototype-052",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What does new.target allow you to detect inside a constructor function?",
+    "options": [
+      "The number of arguments passed to the constructor",
+      "Whether the function was invoked with new or called directly",
+      "The prototype chain depth of the new object",
+      "Whether the constructor is defined as a class or a function"
+    ],
+    "correctIndex": 1,
+    "explanation": "new.target is a meta-property available inside functions. When a function is called with new, new.target refers to the constructor that was directly invoked. When called without new, new.target is undefined. This enables self-defending constructors: if (!new.target) throw new Error('Must use new'). In class hierarchies, new.target points to the most-derived constructor, which is useful for abstract base class patterns.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new.target"
+  },
+  {
+    "id": "prototype-053",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const proto = { a: 1, b: 2 };\nconst obj = Object.create(proto);\nobj.c = 3;\nconsole.log(Object.keys(obj));\nconsole.log(Object.values(obj));\nconsole.log(Object.entries(obj));",
+    "options": [
+      "['a','b','c'], [1,2,3], [['a',1],['b',2],['c',3]]",
+      "['c'], [3], [['c',3]]",
+      "['a','b','c'], [1,2,3], [['c',3]]",
+      "[], [], []"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.keys(), Object.values(), and Object.entries() all operate only on an object's own enumerable string-keyed properties. They do not traverse the prototype chain. Since obj's only own property is c (a and b are inherited from proto), all three methods return results containing only c. This is consistent with Object.assign() and the spread operator, which also ignore inherited properties.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries"
+  },
+  {
+    "id": "prototype-054",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The following code expects child objects to override the inherited read-only property, but it silently fails. What is the cause?",
+    "code": "const proto = {};\nObject.defineProperty(proto, 'id', {\n  value: 0,\n  writable: false,\n  enumerable: true,\n  configurable: false\n});\nconst child = Object.create(proto);\nchild.id = 42;\nconsole.log(child.id); // 0, not 42",
+    "options": [
+      "configurable: false prevents any access to the property",
+      "enumerable: true makes the property immutable",
+      "A non-writable property in the prototype prevents creating a same-named own property on descendants via simple assignment",
+      "Object.create copies property descriptors, so child.id is also non-writable"
+    ],
+    "correctIndex": 2,
+    "explanation": "When a property in the prototype chain is marked writable: false, the [[Set]] operation on a descendant object is blocked for that property name — even for creating a new own property. In sloppy mode the assignment silently fails; in strict mode it throws a TypeError. To work around this, use Object.defineProperty(child, 'id', { value: 42, writable: true }) which bypasses the prototype's writability check and creates a new own property directly.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty"
+  },
+  {
+    "id": "prototype-055",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between a mixin pattern using Object.assign and prototype-based inheritance?",
+    "options": [
+      "There is no difference — both approaches create identical object structures",
+      "Prototype inheritance copies methods as own properties, making them faster to access",
+      "Object.assign sets up a prototype chain link, so methods are shared across instances",
+      "Object.assign copies methods as own properties, so changes to the source after copying are not reflected in the target"
+    ],
+    "correctIndex": 3,
+    "explanation": "Object.assign() copies enumerable own properties from source objects to the target as own properties. This means each mixed-in method becomes a direct property of the target — changes to the original mixin object afterward do not propagate. In contrast, prototype-based inheritance establishes a live link via [[Prototype]], so all instances share the same method references and any change to the prototype is immediately visible to all instances. Mixins are useful for composing behavior from multiple sources (which single-prototype inheritance cannot do), but they use more memory since each object gets its own copy.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign"
   }
 ]

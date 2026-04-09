@@ -826,5 +826,88 @@
     "correctIndex": 2,
     "explanation": "Object.getPrototypeOf()는 객체의 [[Prototype]]에 접근하기 위한 ES5+ 표준 메서드입니다. __proto__는 Object.prototype에 정의된 역사적 접근자 프로퍼티로 대부분의 객체에서 작동하지만, 프로토타입 체인이 없는 객체(예: Object.create(null)은 Object.prototype이 없으므로 __proto__가 undefined)에서는 실패합니다. 스펙은 웹 호환성을 위해서만 __proto__를 포함하며, Object.getPrototypeOf()가 권장됩니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/getPrototypeOf"
+  },
+  {
+    "id": "prototype-051",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const parent = { x: 1, y: 2 };\nObject.freeze(parent);\nconst child = Object.create(parent);\nchild.z = 3;\nconsole.log(child.x);\nconsole.log(child.z);\nchild.x = 10;\nconsole.log(child.x);",
+    "options": [
+      "child.x = 10에서 TypeError 발생",
+      "1, 3, 1",
+      "child.z = 3에서 TypeError 발생",
+      "1, 3, 10"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.freeze()는 parent의 자체 프로퍼티를 non-writable로 만듭니다. [[Set]] 알고리즘은 프로토타입 체인에서 non-writable 데이터 프로퍼티를 발견하면, 자식 객체에 섀도잉 프로퍼티 생성을 차단합니다 — 비엄격 모드에서는 조용히 실패합니다. child.z = 3은 parent에 z가 없으므로 정상 동작하지만, child.x = 10은 parent.x가 non-writable이므로 조용히 실패합니다. 최종적으로 child.x는 상속된 값 1을 반환합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze"
+  },
+  {
+    "id": "prototype-052",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "new.target을 사용하면 생성자 함수 내부에서 무엇을 감지할 수 있나요?",
+    "options": [
+      "생성자에 전달된 인수의 개수",
+      "함수가 new로 호출되었는지 아니면 일반 호출되었는지 여부",
+      "새 객체의 프로토타입 체인 깊이",
+      "생성자가 class로 정의되었는지 function으로 정의되었는지 여부"
+    ],
+    "correctIndex": 1,
+    "explanation": "new.target은 함수 내부에서 사용할 수 있는 메타 프로퍼티입니다. new로 호출되면 new.target은 직접 호출된 생성자를 가리키고, new 없이 호출되면 undefined입니다. 이를 활용하면 자기 방어 생성자를 만들 수 있습니다: if (!new.target) throw new Error('Must use new'). 클래스 계층에서 new.target은 가장 하위 파생 클래스의 생성자를 가리키므로, 추상 기본 클래스 패턴 구현에 유용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/new.target"
+  },
+  {
+    "id": "prototype-053",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const proto = { a: 1, b: 2 };\nconst obj = Object.create(proto);\nobj.c = 3;\nconsole.log(Object.keys(obj));\nconsole.log(Object.values(obj));\nconsole.log(Object.entries(obj));",
+    "options": [
+      "['a','b','c'], [1,2,3], [['a',1],['b',2],['c',3]]",
+      "['c'], [3], [['c',3]]",
+      "['a','b','c'], [1,2,3], [['c',3]]",
+      "[], [], []"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.keys(), Object.values(), Object.entries()는 모두 객체 자신의 열거 가능한 문자열 키 프로퍼티만 대상으로 합니다. 프로토타입 체인을 순회하지 않습니다. obj의 자체 프로퍼티는 c뿐이고(a와 b는 proto에서 상속받은 것), 세 메서드 모두 c에 대한 결과만 반환합니다. 이는 Object.assign()이나 스프레드 연산자가 상속된 프로퍼티를 무시하는 것과 동일한 원리입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/entries"
+  },
+  {
+    "id": "prototype-054",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 자식 객체가 상속된 읽기 전용 프로퍼티를 오버라이드하려 하지만 조용히 실패합니다. 원인은 무엇인가요?",
+    "code": "const proto = {};\nObject.defineProperty(proto, 'id', {\n  value: 0,\n  writable: false,\n  enumerable: true,\n  configurable: false\n});\nconst child = Object.create(proto);\nchild.id = 42;\nconsole.log(child.id); // 0, 42가 아님",
+    "options": [
+      "configurable: false가 프로퍼티에 대한 모든 접근을 차단하기 때문",
+      "enumerable: true가 프로퍼티를 불변으로 만들기 때문",
+      "프로토타입의 writable: false 프로퍼티는 하위 객체에서 동일한 이름의 자체 프로퍼티를 단순 할당으로 생성하는 것을 차단하기 때문",
+      "Object.create가 프로퍼티 디스크립터를 복사하므로 child.id도 writable: false이기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "프로토타입 체인에서 writable: false로 표시된 프로퍼티가 있으면, 하위 객체에서 해당 프로퍼티 이름에 대한 [[Set]] 연산이 차단됩니다 — 새 자체 프로퍼티 생성까지 포함하여. 비엄격 모드에서는 할당이 조용히 무시되고, strict mode에서는 TypeError가 발생합니다. 이를 우회하려면 Object.defineProperty(child, 'id', { value: 42, writable: true })를 사용하여 프로토타입의 writable 검사를 건너뛰고 직접 자체 프로퍼티를 생성해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty"
+  },
+  {
+    "id": "prototype-055",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Object.assign을 사용한 믹스인 패턴과 프로토타입 기반 상속의 차이점은?",
+    "options": [
+      "차이가 없다 — 두 방식 모두 동일한 객체 구조를 생성한다",
+      "프로토타입 상속은 메서드를 자체 프로퍼티로 복사하므로 접근이 더 빠르다",
+      "Object.assign은 프로토타입 체인 링크를 설정하므로 메서드가 인스턴스 간에 공유된다",
+      "Object.assign은 메서드를 자체 프로퍼티로 복사하므로, 복사 후 원본 변경이 대상에 반영되지 않는다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Object.assign()은 소스 객체의 열거 가능한 자체 프로퍼티를 대상 객체의 자체 프로퍼티로 복사합니다. 따라서 믹스인된 각 메서드는 대상의 직접 프로퍼티가 되어, 이후 원본 믹스인 객체를 변경해도 전파되지 않습니다. 반면 프로토타입 기반 상속은 [[Prototype]]을 통한 라이브 링크를 설정하므로 모든 인스턴스가 같은 메서드 참조를 공유하며, 프로토타입 변경이 즉시 모든 인스턴스에 반영됩니다. 믹스인은 단일 프로토타입 상속으로 불가능한 여러 소스의 행동을 합성할 때 유용하지만, 각 객체가 자체 복사본을 가져 메모리를 더 사용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/assign"
   }
 ]
