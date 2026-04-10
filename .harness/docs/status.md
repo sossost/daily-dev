@@ -1,11 +1,11 @@
 # DailyDev Status
 
-**Last Updated:** 2026-04-10T10:00:00Z
+**Last Updated:** 2026-04-10T22:00:00Z
 
 ## Last Run
 - Agent: content
 - Result: success
-- Summary: add 5 browser-api questions, fix Korean text
+- Summary: fix — restore original event-loop-035 and event-loop-036
 
 ## Project Health
 
@@ -20,6 +20,7 @@
 
 | Date | Agent | Result | Summary |
 |------|-------|--------|---------|
+| 2026-04-10 22:00 | content | success | fix — restore original event-loop-035 and event-loop-036 |
 | 2026-04-10 10:00 | content | success | add 5 browser-api questions, fix Korean text |
 | 2026-04-09 22:00 | content | success | fix — prototype-051 correctIndex and explanation |
 | 2026-04-09 10:00 | content | success | add 23 questions across 7 topics to 50 |
@@ -29,7 +30,6 @@
 | 2026-04-07 10:00 | content | success | add 10 react-basics questions (041-050) |
 | 2026-04-06 22:00 | content | success | fix — network-048 ambiguous cross-origin URL |
 | 2026-04-06 10:00 | content | success | fix — scope-050 error type and correctIndex distribution |
-| 2026-04-05 22:00 | content | success | add 10 git-advanced questions |
 
 
 ## Notes

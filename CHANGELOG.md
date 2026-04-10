@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-04-10
+
+### Features
+
+- **content**: add 5 browser-api questions, fix Korean text (`870a6bf`)
+
 ## 2026-04-09
 
 ### Features

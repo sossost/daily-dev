@@ -827,5 +827,54 @@
     "correctIndex": 2,
     "explanation": "queueMicrotask() schedules a function to run in the microtask queue. Microtasks are processed after the current synchronous task finishes but before the event loop picks up the next macrotask (setTimeout, setInterval) or performs rendering. This is the same queue used by Promise.then() callbacks. It's useful when you need to defer work without yielding to the browser's rendering pipeline.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "event-loop-051",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output when button.click() is called programmatically?",
+    "code": "button.addEventListener('click', () => {\n  Promise.resolve().then(() => console.log('micro1'));\n  console.log('listener1');\n});\nbutton.addEventListener('click', () => {\n  Promise.resolve().then(() => console.log('micro2'));\n  console.log('listener2');\n});\nbutton.click();",
+    "options": [
+      "listener1, micro1, listener2, micro2",
+      "listener1, listener2",
+      "micro1, listener1, micro2, listener2",
+      "listener1, listener2, micro1, micro2"
+    ],
+    "correctIndex": 3,
+    "explanation": "When button.click() is called programmatically (as opposed to a real user click), the event dispatch happens synchronously within the current call stack. Both listeners execute as part of the same synchronous call — 'listener1' prints, then 'listener2' prints. The microtask checkpoint only occurs after the call stack is fully unwound, so both microtasks ('micro1', 'micro2') run after both listeners finish. With a real user click, the browser dispatches the event as a new task, and microtasks are flushed between each listener callback, producing: listener1, micro1, listener2, micro2. This distinction is important for understanding event dispatch behavior in tests vs real user interactions.",
+    "sourceUrl": "https://javascript.info/microtask-queue"
+  },
+  {
+    "id": "event-loop-052",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "When are requestIdleCallback tasks executed relative to setTimeout and requestAnimationFrame?",
+    "options": [
+      "requestIdleCallback runs during idle periods after rendering and other tasks, making it the lowest priority among the three",
+      "requestIdleCallback runs before requestAnimationFrame in every frame",
+      "requestIdleCallback and setTimeout have the same priority",
+      "requestIdleCallback runs immediately after microtasks, before any macrotasks"
+    ],
+    "correctIndex": 0,
+    "explanation": "The browser event loop processes tasks in this general order within each frame: macrotasks (including setTimeout) → microtasks → rendering (including requestAnimationFrame) → idle callbacks (requestIdleCallback). Idle callbacks only execute when the browser determines there is remaining time in a frame after all higher-priority work is done. This makes requestIdleCallback ideal for non-urgent background work like analytics or pre-fetching, since it won't interfere with user interactions, animations, or critical rendering. If no idle time is available, the callback may be deferred indefinitely unless a timeout option is specified.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback"
+  },
+  {
+    "id": "event-loop-053",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What happens to setTimeout and setInterval when a browser tab is in the background?",
+    "options": [
+      "They continue to execute at the same rate as when the tab is active",
+      "They are completely paused and resume only when the tab becomes active again",
+      "They are immediately cancelled by the browser",
+      "The browser throttles them to a minimum interval (typically 1 second), reducing their execution frequency"
+    ],
+    "correctIndex": 3,
+    "explanation": "Most browsers throttle timers in background tabs to conserve CPU and battery. Typically, setTimeout and setInterval callbacks in a background tab are clamped to a minimum interval of about 1000ms (1 second), regardless of the originally specified delay. This means a setInterval with a 100ms interval will only fire approximately once per second when the tab is not visible. requestAnimationFrame callbacks are usually paused entirely in background tabs. This throttling behavior is important to consider when building features that rely on precise timing, such as animations or real-time updates.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#reasons_for_delays_longer_than_specified"
   }
 ]
