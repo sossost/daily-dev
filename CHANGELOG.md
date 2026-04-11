@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: fix — restore original event-loop-035 and eve... (`2a1a7cd`)
 - **content**: add 5 browser-api questions, fix Korean text (`870a6bf`)
 
 ## 2026-04-09

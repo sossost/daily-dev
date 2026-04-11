@@ -813,5 +813,87 @@
     "correctIndex": 0,
     "explanation": "CSS Multi-column Layout은 column-count나 column-width를 사용하여 텍스트 콘텐츠를 여러 세로 컬럼으로 자동 분배합니다. 신문이나 잡지 스타일의 레이아웃에 적합하며, column-gap으로 컬럼 간격을, column-rule로 구분선을 설정할 수 있습니다. Grid나 Flexbox와 달리 콘텐츠 흐름을 자동으로 분배하는 것이 특징입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/CSS_multicol_layout"
+  },
+  {
+    "id": "css-layout-051",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "CSS scroll-snap-type: x mandatory가 스크롤 컨테이너에서 하는 역할은?",
+    "options": [
+      "수평 스크롤을 완전히 비활성화한다",
+      "스크롤이 끝나면 항상 정확한 스냅 포인트에 멈추도록 강제한다",
+      "부드러운 스크롤 애니메이션을 추가하지만 어느 위치에서든 멈출 수 있다",
+      "스크롤바 대신 페이지네이션 버튼을 생성한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "scroll-snap-type: x mandatory는 수평 축을 따라 스크롤 위치를 스냅하도록 지시하며, 'mandatory'는 컨테이너가 항상 유효한 스냅 포인트에 정지해야 함을 의미합니다. 스냅 포인트 사이에서 멈출 수 없습니다. 캐러셀이나 수평 갤러리에 널리 사용됩니다. 'proximity'는 스크롤 위치가 스냅 포인트에 가까울 때만 스냅합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/scroll-snap-type"
+  },
+  {
+    "id": "css-layout-052",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 CSS 단축 속성이 풀어서 쓰면 어떻게 되는가?",
+    "code": ".box {\n  inset: 10px 20px 30px 40px;\n}",
+    "options": [
+      "margin: 10px 20px 30px 40px",
+      "padding: 10px 20px 30px 40px",
+      "top: 10px; right: 20px; bottom: 30px; left: 40px",
+      "border-width: 10px 20px 30px 40px"
+    ],
+    "correctIndex": 2,
+    "explanation": "inset 속성은 top, right, bottom, left — positioned 요소에 사용되는 4개 오프셋 속성의 단축형입니다. margin, padding과 동일한 시계 방향 순서(위, 오른쪽, 아래, 왼쪽)를 따릅니다. inset: 0은 absolute 요소를 포함 블록에 꽉 채울 때 top: 0; right: 0; bottom: 0; left: 0 대신 간결하게 쓸 수 있는 방법입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/inset"
+  },
+  {
+    "id": "css-layout-053",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "aspect-ratio 속성이 등장하기 전에 사용하던 'padding-top 핵'과 비교했을 때, aspect-ratio의 핵심 장점은?",
+    "options": [
+      "aspect-ratio가 GPU 가속을 사용하여 더 빠르다",
+      "aspect-ratio는 빈 래퍼 없이 요소에 직접 적용할 수 있고, min/max-height 제약과 올바르게 상호작용한다",
+      "padding-top 핵이 퍼센트 기반이라 더 정확하다",
+      "aspect-ratio는 이미지에만 동작하고, padding 핵은 모든 요소에서 동작한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "padding-top 핵은 수직 패딩의 퍼센트가 요소 너비 기준으로 계산되는 점을 이용합니다. 이 방법은 콘텐츠를 위한 내부 래퍼가 필요하고, min-height나 max-height 제약이 적용될 때 깨집니다. aspect-ratio 속성은 요소에 직접 비율을 정의하며, 이미지뿐 아니라 모든 요소에서 동작하고, 높이 제약과 올바르게 상호작용합니다 — min/max 크기가 충돌하면 브라우저가 비율을 적절히 오버라이드합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/aspect-ratio"
+  },
+  {
+    "id": "css-layout-054",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "컨테이너에 writing-mode: vertical-rl을 설정했는데 width와 height가 여전히 가로 텍스트처럼 동작합니다. 원인은?",
+    "options": [
+      "writing-mode는 텍스트 방향만 변경하고 박스 모델 크기에는 영향을 주지 않는다",
+      "물리적 속성(width/height)을 사용해야 writing mode에 자동 적응한다",
+      "물리적 속성(width/height) 대신 writing mode에 적응하는 논리적 속성(inline-size/block-size)을 사용해야 한다",
+      "writing-mode: vertical-rl은 최신 브라우저에서 지원되지 않는다"
+    ],
+    "correctIndex": 2,
+    "explanation": "writing-mode가 텍스트 흐름 방향을 변경해도 물리적 속성인 width와 height는 여전히 각각 가로, 세로 축을 가리킵니다 — 적응하지 않습니다. 논리적 속성인 inline-size(인라인/텍스트 방향의 크기)와 block-size(텍스트에 수직인 방향의 크기)는 writing-mode에 따라 자동으로 조정됩니다. vertical-rl에서 inline-size는 height에, block-size는 width에 매핑됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/CSS_logical_properties_and_values"
+  },
+  {
+    "id": "css-layout-055",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 CSS 선택자가 대상으로 하는 요소는?",
+    "code": ".card:has(> img) {\n  grid-template-rows: 200px 1fr;\n}",
+    "options": [
+      "자식과 관계없이 모든 .card 요소",
+      ".card 안에 있는 img 요소만",
+      "직접 자식으로 img 요소를 가진 .card 요소만",
+      "img 요소의 자식인 .card 요소만"
+    ],
+    "correctIndex": 2,
+    "explanation": ":has() 의사 클래스는 하위 요소를 기반으로 요소를 선택합니다. .card:has(> img)는 직접 자식(>)으로 img 요소를 포함하는 .card 요소만 대상으로 합니다. 이를 통해 레이아웃 종속적 스타일링이 가능합니다 — 예를 들어 이미지가 있는 카드에만 다른 그리드 레이아웃을 적용할 수 있습니다. :has() 없이는 JavaScript나 추가 CSS 클래스가 필요했습니다. > 결합자는 깊이 중첩된 이미지가 아닌 직접 자식만 매칭합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/:has"
   }
 ]

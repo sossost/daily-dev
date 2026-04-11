@@ -31,7 +31,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Async | 50 |
 | Browser API | 55 |
 | Closure | 50 |
-| CSS Layout | 50 |
+| CSS Layout | 55 |
 | Data Structures | 50 |
 | Database | 50 |
 | Design Patterns | 50 |
@@ -50,7 +50,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Web Performance | 50 |
 | Web Security | 50 |
 
-**Total: 1163 questions across 23 topics**
+**Total: 1168 questions across 23 topics**
 
 ## Getting Started
 

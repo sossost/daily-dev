@@ -1,17 +1,17 @@
 # DailyDev Status
 
-**Last Updated:** 2026-04-10T22:00:00Z
+**Last Updated:** 2026-04-11T10:00:00Z
 
 ## Last Run
 - Agent: content
 - Result: success
-- Summary: fix — restore original event-loop-035 and event-loop-036
+- Summary: add 5 css-layout questions (051-055)
 
 ## Project Health
 
 | Area | Status | Note |
 |------|--------|------|
-| Questions | 995 (21 topics) | 5 browser-api questions added, Korean text fixed |
+| Questions | 1000 (21 topics) | 5 css-layout questions added (051-055) |
 | Tests | 298+ | 8 new tests, unhandled promise fixed |
 | Build | passing | |
 | Features | 12 major features | Endless practice mode added |
@@ -20,6 +20,7 @@
 
 | Date | Agent | Result | Summary |
 |------|-------|--------|---------|
+| 2026-04-11 10:00 | content | success | add 5 css-layout questions (051-055) |
 | 2026-04-10 22:00 | content | success | fix — restore original event-loop-035 and event-loop-036 |
 | 2026-04-10 10:00 | content | success | add 5 browser-api questions, fix Korean text |
 | 2026-04-09 22:00 | content | success | fix — prototype-051 correctIndex and explanation |
@@ -29,7 +30,6 @@
 | 2026-04-07 22:00 | content | success | add 10 this questions (041-050) |
 | 2026-04-07 10:00 | content | success | add 10 react-basics questions (041-050) |
 | 2026-04-06 22:00 | content | success | fix — network-048 ambiguous cross-origin URL |
-| 2026-04-06 10:00 | content | success | fix — scope-050 error type and correctIndex distribution |
 
 
 ## Notes

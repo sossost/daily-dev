@@ -813,5 +813,87 @@
     "correctIndex": 0,
     "explanation": "CSS Multi-column Layout uses column-count or column-width to automatically distribute text content across multiple vertical columns. It is ideal for newspaper or magazine-style layouts. column-gap sets the spacing between columns, and column-rule adds separator lines. Unlike Grid or Flexbox, its distinguishing feature is the automatic distribution of content flow.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_multicol_layout"
+  },
+  {
+    "id": "css-layout-051",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What does CSS scroll-snap-type: x mandatory do on a scroll container?",
+    "options": [
+      "It disables horizontal scrolling entirely",
+      "It forces the scroll position to always land exactly on a snap point after the user finishes scrolling",
+      "It adds a smooth scrolling animation but allows stopping at any position",
+      "It creates pagination buttons instead of a scrollbar"
+    ],
+    "correctIndex": 1,
+    "explanation": "scroll-snap-type: x mandatory tells the browser to snap the scroll position along the horizontal axis, and 'mandatory' means the container must always come to rest on a valid snap point — the user can never stop between snap points. This is widely used for carousels and horizontal galleries. The 'proximity' alternative only snaps when the scroll position is close to a snap point.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-snap-type"
+  },
+  {
+    "id": "css-layout-052",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What does the following CSS shorthand expand to?",
+    "code": ".box {\n  inset: 10px 20px 30px 40px;\n}",
+    "options": [
+      "margin: 10px 20px 30px 40px",
+      "padding: 10px 20px 30px 40px",
+      "top: 10px; right: 20px; bottom: 30px; left: 40px",
+      "border-width: 10px 20px 30px 40px"
+    ],
+    "correctIndex": 2,
+    "explanation": "The inset property is a shorthand for top, right, bottom, and left — all four offset properties used with positioned elements. It follows the same clockwise order as margin and padding shorthands (top, right, bottom, left). Writing inset: 0 is a concise way to stretch an absolutely positioned element to fill its containing block, replacing the verbose top: 0; right: 0; bottom: 0; left: 0.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/inset"
+  },
+  {
+    "id": "css-layout-053",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Before the aspect-ratio property existed, the common 'padding-top hack' was used to maintain element aspect ratios. What is the key advantage of aspect-ratio over this hack?",
+    "options": [
+      "aspect-ratio is faster because it uses GPU acceleration",
+      "aspect-ratio works directly on the element without needing an empty wrapper, and it interacts correctly with min/max-height constraints",
+      "The padding-top hack is more accurate because percentages are precise",
+      "aspect-ratio only works on images, while the padding hack works on all elements"
+    ],
+    "correctIndex": 1,
+    "explanation": "The padding-top hack relies on the fact that vertical padding percentages are calculated based on the element's width. This requires an inner wrapper for content and breaks when min-height or max-height constraints are applied. The aspect-ratio property directly defines the ratio on the element itself, works on any element (not just images), and correctly interacts with height constraints — the browser can override the ratio when min/max dimensions conflict.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio"
+  },
+  {
+    "id": "css-layout-054",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "A developer sets writing-mode: vertical-rl on a container, but width and height still behave as if the text were horizontal. What is the likely issue?",
+    "options": [
+      "writing-mode only affects text direction, not the box model dimensions",
+      "The developer should use physical properties (width/height) which automatically adapt to writing mode",
+      "The developer is using physical properties (width/height) instead of logical properties (inline-size/block-size) which adapt to the writing mode",
+      "writing-mode: vertical-rl is not supported in modern browsers"
+    ],
+    "correctIndex": 2,
+    "explanation": "When writing-mode changes the text flow direction, the physical properties width and height still refer to the horizontal and vertical axes respectively — they do not adapt. Logical properties like inline-size (size along the inline/text direction) and block-size (size perpendicular to the text direction) automatically adjust based on writing-mode. For vertical-rl, inline-size maps to height and block-size maps to width.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values"
+  },
+  {
+    "id": "css-layout-055",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What does the following CSS selector target?",
+    "code": ".card:has(> img) {\n  grid-template-rows: 200px 1fr;\n}",
+    "options": [
+      "All .card elements, regardless of their children",
+      "Only img elements that are inside a .card",
+      "Only .card elements that have a direct child img element",
+      "Only .card elements that are children of an img element"
+    ],
+    "correctIndex": 2,
+    "explanation": "The :has() pseudo-class selects elements based on their descendants. .card:has(> img) specifically targets .card elements that contain a direct child (>) img element. This enables layout-dependent styling — for example, applying a different grid layout only when a card contains an image. Without :has(), achieving this required JavaScript or additional CSS classes. The > combinator ensures only direct children are matched, not deeply nested images.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/:has"
   }
 ]
