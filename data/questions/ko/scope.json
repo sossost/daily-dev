@@ -829,5 +829,89 @@
     "correctIndex": 1,
     "explanation": "test 함수 내에 const x = 'inner'가 존재하므로, test 함수 블록 전체에서 x에 대한 TDZ가 형성됩니다. console.log(x)는 const x 선언 이전이므로 TDZ 내에서 접근하게 되어 ReferenceError가 발생합니다(실제로는 SyntaxError가 아닌 ReferenceError). 외부의 const x = 'outer'는 내부 선언에 의해 섀도잉됩니다. nested 함수의 x는 별도의 함수 스코프이므로 문제가 되지 않습니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/const"
+  },
+  {
+    "id": "scope-051",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function outer() {\n  const inner = () => {\n    console.log(typeof arguments);\n  };\n  inner();\n}\nouter(1, 2, 3);",
+    "options": [
+      "undefined",
+      "number",
+      "ReferenceError",
+      "object"
+    ],
+    "correctIndex": 3,
+    "explanation": "화살표 함수는 자체적인 arguments 객체를 가지지 않으며, 대신 자신을 감싸는 일반 함수의 arguments를 렉시컬 스코프를 통해 상속받습니다. 따라서 inner 내부의 arguments는 outer 함수의 arguments 객체를 참조하며, typeof는 'object'를 반환합니다. 화살표 함수에서 가변 인자를 처리하려면 나머지 매개변수(...args)를 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/Arrow_functions"
+  },
+  {
+    "id": "scope-052",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "JavaScript의 with 문이 스코프에 미치는 영향으로 올바른 것은?",
+    "options": [
+      "지정한 객체의 프로퍼티를 스코프 체인의 앞에 추가하여 프로퍼티를 변수처럼 접근하게 한다",
+      "let/const처럼 새로운 블록 스코프를 생성한다",
+      "두 스코프를 영구적으로 합병한다",
+      "전역 스코프를 지정한 객체로 교체한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "with 문은 지정한 객체를 스코프 체인의 최상단에 추가합니다. 블록 내에서 변수처럼 객체의 프로퍼티에 접근할 수 있지만, 어떤 이름이 프로퍼티인지 변수인지 정적으로 판단하기 어려워 최적화가 불가능합니다. strict mode에서는 사용이 금지되며, 현대 JavaScript에서는 구조 분해 할당이 더 안전한 대안입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/with"
+  },
+  {
+    "id": "scope-053",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(foo());\nfunction foo() { return 1; }\nfunction foo() { return 2; }",
+    "options": [
+      "1",
+      "TypeError",
+      "2",
+      "SyntaxError"
+    ],
+    "correctIndex": 2,
+    "explanation": "동일한 이름의 함수 선언문이 여러 개 있으면 호이스팅 시 마지막 선언이 이전 선언을 덮어씁니다. 두 함수 선언문 모두 호이스팅되지만, 소스 코드에서 나중에 등장하는 function foo() { return 2; }가 최종적으로 foo에 바인딩됩니다. 따라서 코드 최상단에서 foo()를 호출해도 2가 반환됩니다. 이런 혼란을 방지하려면 const와 함수 표현식을 사용하는 것이 좋습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Functions#function_hoisting"
+  },
+  {
+    "id": "scope-054",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "개발자가 delete 연산자로 변수를 삭제하려 했지만 여전히 접근 가능합니다. 원인은 무엇인가요?",
+    "code": "var score = 100;\ndelete score;\nconsole.log(score); // 100",
+    "options": [
+      "delete는 객체의 프로퍼티만 삭제할 수 있으며, var/let/const로 선언된 변수는 삭제할 수 없기 때문",
+      "delete는 strict mode에서만 동작하기 때문",
+      "delete는 숫자 타입의 변수를 삭제할 수 없기 때문",
+      "delete가 변수를 가비지 컬렉션 대상으로 표시하지만 즉시 삭제하지는 않기 때문"
+    ],
+    "correctIndex": 0,
+    "explanation": "delete 연산자는 객체의 프로퍼티를 제거하기 위한 것이며, var, let, const로 선언된 변수에는 효과가 없습니다. 선언된 변수는 내부적으로 configurable: false 속성을 가지므로 delete로 삭제할 수 없습니다. 비엄격 모드에서는 조용히 실패하고, strict mode에서는 SyntaxError가 발생합니다. 암묵적 전역(선언 없이 할당된 변수)은 전역 객체의 프로퍼티이므로 delete로 삭제할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/delete"
+  },
+  {
+    "id": "scope-055",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "var x = 'global';\nfunction makeFunc() {\n  var x = 'local';\n  return new Function('return x');\n}\nconsole.log(makeFunc()());",
+    "options": [
+      "'local'",
+      "undefined",
+      "'global'",
+      "ReferenceError"
+    ],
+    "correctIndex": 2,
+    "explanation": "new Function() 생성자로 만든 함수는 렉시컬 스코프가 아닌 전역 스코프에서 실행됩니다. 따라서 makeFunc 내부의 var x = 'local'에 접근할 수 없고, 전역의 var x = 'global'을 참조합니다. 이는 일반 함수 선언/표현식이 정의된 위치의 스코프 체인을 따르는 렉시컬 스코프 규칙과 대비되는 특수한 동작입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Function"
   }
 ]

@@ -829,5 +829,89 @@
     "correctIndex": 1,
     "explanation": "Since const x = 'inner' exists inside the test function, a TDZ is formed for x across the entire test function block. console.log(x) is before the const x declaration, so it accesses x within the TDZ, causing a ReferenceError. The outer const x = 'outer' is shadowed by the inner declaration. The nested function's x is in a separate function scope and does not cause issues.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const"
+  },
+  {
+    "id": "scope-051",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function outer() {\n  const inner = () => {\n    console.log(typeof arguments);\n  };\n  inner();\n}\nouter(1, 2, 3);",
+    "options": [
+      "undefined",
+      "number",
+      "ReferenceError",
+      "object"
+    ],
+    "correctIndex": 3,
+    "explanation": "Arrow functions do not have their own arguments object. Instead, they inherit arguments from the enclosing regular function through lexical scope. So arguments inside inner refers to outer's arguments object, and typeof returns 'object'. To handle variadic arguments in arrow functions, use rest parameters (...args) instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions#no_binding_of_arguments"
+  },
+  {
+    "id": "scope-052",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement correctly describes how the with statement affects scope in JavaScript?",
+    "options": [
+      "It adds the specified object's properties to the front of the scope chain, making them accessible as variables",
+      "It creates a new block scope like let and const",
+      "It permanently merges two scopes into one",
+      "It replaces the global scope with the specified object"
+    ],
+    "correctIndex": 0,
+    "explanation": "The with statement adds the specified object to the top of the scope chain. Inside the block, you can access the object's properties as if they were variables. However, it makes it impossible to statically determine whether a name refers to a property or a variable, preventing engine optimizations. It is forbidden in strict mode, and destructuring assignment is the modern, safer alternative.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/with"
+  },
+  {
+    "id": "scope-053",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "console.log(foo());\nfunction foo() { return 1; }\nfunction foo() { return 2; }",
+    "options": [
+      "1",
+      "TypeError",
+      "2",
+      "SyntaxError"
+    ],
+    "correctIndex": 2,
+    "explanation": "When multiple function declarations share the same name, the last declaration overwrites the previous ones during hoisting. Both function declarations are hoisted, but the one appearing later in the source code — function foo() { return 2; } — becomes the final binding for foo. So even calling foo() at the very top returns 2. To avoid this confusion, use const with function expressions instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions#function_hoisting"
+  },
+  {
+    "id": "scope-054",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "A developer tried to delete a variable using the delete operator, but it is still accessible. Why?",
+    "code": "var score = 100;\ndelete score;\nconsole.log(score); // 100",
+    "options": [
+      "delete can only remove object properties, not variables declared with var/let/const",
+      "delete only works in strict mode",
+      "delete cannot remove variables of numeric type",
+      "delete marks the variable for garbage collection but does not remove it immediately"
+    ],
+    "correctIndex": 0,
+    "explanation": "The delete operator is designed to remove properties from objects, and has no effect on variables declared with var, let, or const. Declared variables are internally marked as non-configurable, so delete cannot remove them. In non-strict mode it silently fails, and in strict mode it throws a SyntaxError. Implicit globals (assigned without a declaration keyword) are properties of the global object and can be deleted.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete"
+  },
+  {
+    "id": "scope-055",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "var x = 'global';\nfunction makeFunc() {\n  var x = 'local';\n  return new Function('return x');\n}\nconsole.log(makeFunc()());",
+    "options": [
+      "'local'",
+      "undefined",
+      "'global'",
+      "ReferenceError"
+    ],
+    "correctIndex": 2,
+    "explanation": "Functions created with the new Function() constructor do not follow lexical scoping — they execute in the global scope instead. So the function cannot access var x = 'local' inside makeFunc, and instead references var x = 'global' from the global scope. This contrasts with regular function declarations/expressions, which follow lexical scope rules and capture variables from where they are defined.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function#difference_between_function_constructor_and_function_declaration"
   }
 ]
