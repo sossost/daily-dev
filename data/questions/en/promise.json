@@ -825,5 +825,89 @@
     "correctIndex": 2,
     "explanation": "A Promise can only be settled (resolved or rejected) once. The first call to resolve('first') sets the Promise's state to fulfilled with value 'first'. The second resolve('second') is silently ignored — it does not throw an error or change the value. The executor continues running synchronously, so 'inside' logs. Then the .then callback runs with 'first'.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
+  },
+  {
+    "id": "promise-051",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What does Promise.withResolvers() return?",
+    "options": [
+      "Returns only a fulfilled Promise",
+      "Returns an object with { promise, resolve, reject } properties",
+      "Returns only the resolve function; reject must be called separately",
+      "Returns an array of Promises and a callback function"
+    ],
+    "correctIndex": 1,
+    "explanation": "Promise.withResolvers() is a static method introduced in ES2024 that returns a new Promise along with its resolve and reject functions as a single object. Previously, you had to capture resolve externally with a pattern like let resolve; new Promise(r => { resolve = r; }). With withResolvers(), you can write const { promise, resolve, reject } = Promise.withResolvers() for cleaner code. This is especially useful in event-driven code and stream processing.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/withResolvers"
+  },
+  {
+    "id": "promise-052",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "async function test() {\n  const a = await 42;\n  const b = await 'hello';\n  console.log(a, b);\n}\ntest();",
+    "options": [
+      "TypeError — await can only be used with Promises",
+      "undefined undefined",
+      "42 hello",
+      "Promise { 42 } Promise { 'hello' }"
+    ],
+    "correctIndex": 2,
+    "explanation": "The await operator automatically wraps non-Promise values with Promise.resolve() before extracting the fulfillment value. await 42 behaves the same as Promise.resolve(42) and returns 42, and await 'hello' returns 'hello'. This means await can be safely used with any value without needing to check whether it's a Promise first.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "promise-053",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "Promise.resolve('ok')\n  .then(v => { throw new Error('fail'); })\n  .catch(e => {\n    console.log('A:', e.message);\n    throw new Error('again');\n  })\n  .then(v => console.log('B:', v))\n  .catch(e => console.log('C:', e.message));",
+    "options": [
+      "A: fail, C: again",
+      "A: fail, B: undefined",
+      "A: fail",
+      "C: fail"
+    ],
+    "correctIndex": 0,
+    "explanation": "The first then throws an error, which the catch handler catches, logging 'A: fail'. However, this catch handler also throws new Error('again'), so the Promise returned by catch is rejected. The next then's fulfillment handler ('B' log) is skipped, and the final catch catches the new error, logging 'C: again'. When you throw inside a catch handler, the error is not recovered — it propagates down the chain.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises#chaining_after_a_catch"
+  },
+  {
+    "id": "promise-054",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const slow = new Promise(r => setTimeout(() => r('slow'), 200));\nconst fast = new Promise(r => setTimeout(() => r('fast'), 50));\n\nPromise.all([slow, fast]).then(v => console.log(v));",
+    "options": [
+      "['fast', 'slow']",
+      "'fast'",
+      "'slow'",
+      "['slow', 'fast']"
+    ],
+    "correctIndex": 3,
+    "explanation": "Promise.all() waits for all Promises to fulfill and returns the results as an array. The array order matches the input order, not the completion order. Even though fast resolves first, slow is at index 0 in the input array, so the result is ['slow', 'fast']. This order guarantee makes it safe to use destructuring assignment with Promise.all results.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+  },
+  {
+    "id": "promise-055",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the problem with the following async generator code?",
+    "code": "async function* fetchPages(urls) {\n  for (const url of urls) {\n    yield fetch(url).then(r => r.json());\n  }\n}\n\nasync function processAll(urls) {\n  for await (const data of fetchPages(urls)) {\n    process(data);\n  }\n}",
+    "options": [
+      "yield cannot be used inside an async generator",
+      "for await...of syntax is not compatible with async generators",
+      "Each yield starts a fetch but for await waits sequentially, so requests run serially — each one completes before the next starts",
+      "yield does not auto-resolve Promises, so data is a Promise object"
+    ],
+    "correctIndex": 2,
+    "explanation": "When combining async generators with for await...of, each yielded Promise is awaited sequentially by the consumer. The first fetch must complete before the second one starts, causing N requests to run serially with total latency equal to the sum of all individual request times. For parallel execution, use Promise.all(urls.map(url => fetch(url))) instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of"
   }
 ]

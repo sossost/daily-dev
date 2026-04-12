@@ -195,7 +195,7 @@
 - git-advanced.json — 50 questions
 - network.json — 50 questions
 - nodejs.json — 50 questions
-- promise.json — 50 questions
+- promise.json — 55 questions
 - prototype.json — 55 questions
 - react-basics.json — 50 questions
 - scope.json — 55 questions
@@ -218,7 +218,7 @@
 - git-advanced.json — 50 questions
 - network.json — 50 questions
 - nodejs.json — 50 questions
-- promise.json — 50 questions
+- promise.json — 55 questions
 - prototype.json — 55 questions
 - react-basics.json — 50 questions
 - scope.json — 55 questions

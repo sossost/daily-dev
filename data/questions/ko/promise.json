@@ -825,5 +825,89 @@
     "correctIndex": 2,
     "explanation": "Promise는 한 번만 settled(이행 또는 거부)될 수 있습니다. 첫 번째 resolve('first') 호출이 Promise 상태를 'first' 값으로 이행합니다. 두 번째 resolve('second')는 조용히 무시되며 에러를 던지거나 값을 변경하지 않습니다. executor는 동기적으로 계속 실행되므로 'inside'가 출력됩니다. 그 후 .then 콜백이 'first'와 함께 실행됩니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
+  },
+  {
+    "id": "promise-051",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Promise.withResolvers()가 반환하는 것은 무엇인가요?",
+    "options": [
+      "이행된 Promise 하나만 반환한다",
+      "{ promise, resolve, reject } 세 속성을 가진 객체를 반환한다",
+      "resolve 함수만 반환하고 reject는 별도로 호출해야 한다",
+      "Promise 배열과 콜백 함수를 반환한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Promise.withResolvers()는 ES2024에서 도입된 정적 메서드로, 새 Promise와 이를 제어하는 resolve, reject 함수를 하나의 객체로 반환합니다. 기존에는 let resolve; new Promise(r => { resolve = r; })처럼 외부 변수에 resolve를 캡처하는 패턴이 필요했지만, withResolvers()를 사용하면 const { promise, resolve, reject } = Promise.withResolvers()로 간결하게 작성할 수 있습니다. 이벤트 기반 코드나 스트림 처리에서 특히 유용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/withResolvers"
+  },
+  {
+    "id": "promise-052",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "async function test() {\n  const a = await 42;\n  const b = await 'hello';\n  console.log(a, b);\n}\ntest();",
+    "options": [
+      "TypeError가 발생한다 — await은 Promise만 받을 수 있다",
+      "undefined undefined",
+      "42 hello",
+      "Promise { 42 } Promise { 'hello' }"
+    ],
+    "correctIndex": 2,
+    "explanation": "await 연산자는 Promise가 아닌 값을 받으면 자동으로 Promise.resolve()로 래핑한 후 그 이행 값을 반환합니다. await 42는 Promise.resolve(42)와 동일하게 동작하여 42를 반환하고, await 'hello'는 'hello'를 반환합니다. 이 때문에 await은 모든 값에 안전하게 사용할 수 있으며, 값이 Promise인지 아닌지 미리 확인할 필요가 없습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "promise-053",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "Promise.resolve('ok')\n  .then(v => { throw new Error('fail'); })\n  .catch(e => {\n    console.log('A:', e.message);\n    throw new Error('again');\n  })\n  .then(v => console.log('B:', v))\n  .catch(e => console.log('C:', e.message));",
+    "options": [
+      "A: fail, C: again",
+      "A: fail, B: undefined",
+      "A: fail",
+      "C: fail"
+    ],
+    "correctIndex": 0,
+    "explanation": "첫 번째 then에서 에러를 throw하면 catch가 잡아서 'A: fail'을 출력합니다. 그런데 이 catch 핸들러에서 다시 throw new Error('again')를 하면, catch에서 반환된 Promise가 다시 거부됩니다. 다음 then의 이행 핸들러('B' 출력)는 건너뛰어지고, 마지막 catch가 'C: again'을 출력합니다. catch 핸들러에서 throw하면 에러가 복구되지 않고 체인 아래로 계속 전파됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Using_promises#chaining_after_a_catch"
+  },
+  {
+    "id": "promise-054",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const slow = new Promise(r => setTimeout(() => r('slow'), 200));\nconst fast = new Promise(r => setTimeout(() => r('fast'), 50));\n\nPromise.all([slow, fast]).then(v => console.log(v));",
+    "options": [
+      "['fast', 'slow']",
+      "'fast'",
+      "'slow'",
+      "['slow', 'fast']"
+    ],
+    "correctIndex": 3,
+    "explanation": "Promise.all()은 모든 Promise가 이행된 후 결과를 배열로 반환하며, 결과 배열의 순서는 완료 순서가 아니라 입력 배열의 순서를 따릅니다. fast가 먼저 완료되더라도 slow가 배열의 첫 번째이므로 결과는 ['slow', 'fast']입니다. 이 순서 보장 덕분에 Promise.all의 결과를 구조 분해 할당으로 안전하게 사용할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+  },
+  {
+    "id": "promise-055",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 async 제너레이터의 문제점은 무엇인가요?",
+    "code": "async function* fetchPages(urls) {\n  for (const url of urls) {\n    yield fetch(url).then(r => r.json());\n  }\n}\n\nasync function processAll(urls) {\n  for await (const data of fetchPages(urls)) {\n    process(data);\n  }\n}",
+    "options": [
+      "async 제너레이터에서 yield를 사용할 수 없다",
+      "for await...of 문법이 async 제너레이터와 호환되지 않는다",
+      "각 yield에서 fetch를 시작한 후 for await가 순차적으로 기다리므로, 요청이 병렬로 실행되지 않고 하나씩 완료된 후 다음 요청이 시작된다",
+      "yield가 Promise를 자동으로 resolve하지 않아 data가 Promise 객체이다"
+    ],
+    "correctIndex": 2,
+    "explanation": "async 제너레이터와 for await...of를 결합하면, 각 yield된 Promise가 소비자(for await)에 의해 순차적으로 대기됩니다. 첫 번째 fetch가 완료된 후에야 두 번째 fetch가 시작되므로 N개의 요청이 직렬로 처리되어 총 지연이 각 요청 시간의 합이 됩니다. 병렬 처리가 필요하면 Promise.all(urls.map(url => fetch(url)))을 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/for-await...of"
   }
 ]
