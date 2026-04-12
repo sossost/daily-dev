@@ -200,7 +200,7 @@
 - react-basics.json — 50 questions
 - scope.json — 55 questions
 - this.json — 50 questions
-- type-coercion.json — 50 questions
+- type-coercion.json — 55 questions
 - typescript.json — 50 questions
 - web-performance.json — 50 questions
 - web-security.json — 50 questions
@@ -223,7 +223,7 @@
 - react-basics.json — 50 questions
 - scope.json — 55 questions
 - this.json — 50 questions
-- type-coercion.json — 50 questions
+- type-coercion.json — 55 questions
 - typescript.json — 50 questions
 - web-performance.json — 50 questions
 - web-security.json — 50 questions

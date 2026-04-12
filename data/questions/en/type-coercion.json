@@ -828,5 +828,89 @@
     "correctIndex": 3,
     "explanation": "In JavaScript's ToBoolean conversion, the falsy values are: false, 0, -0, 0n, '' (empty string), null, undefined, and NaN. Every value not in this list is truthy. An empty array [] is an object, and all objects are truthy. Similarly, an empty object {} is also truthy. An important caveat: [] == false is true (due to the type conversion process), but Boolean([]) is true. The == comparison and Boolean() conversion follow different rules.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Truthy"
+  },
+  {
+    "id": "type-coercion-051",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  toString() { return 'hello'; },\n  valueOf() { return 42; }\n};\nconsole.log(`${obj}`);\nconsole.log(obj + '');",
+    "options": [
+      "hello, hello",
+      "42, 42",
+      "hello, 42",
+      "42, hello"
+    ],
+    "correctIndex": 2,
+    "explanation": "Template literals use the 'string' hint when coercing values, which calls toString() first. So `${obj}` calls obj.toString() and produces 'hello'. The + operator with a string operand uses the 'default' hint, which calls valueOf() first. obj.valueOf() returns 42, so obj + '' produces '42'. This demonstrates how different coercion contexts invoke different methods on the same object.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive"
+  },
+  {
+    "id": "type-coercion-052",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "console.log('10' > 9);\nconsole.log('10' > '9');",
+    "options": [
+      "true, true",
+      "true, false",
+      "false, true",
+      "false, false"
+    ],
+    "correctIndex": 1,
+    "explanation": "When comparing a string and a number with relational operators (<, >, <=, >=), the string is converted to a number. '10' becomes 10, so 10 > 9 is true. However, when both operands are strings, comparison is done lexicographically (character by character using Unicode code points). '1' (U+0031) is less than '9' (U+0039), so '10' > '9' is false. This is a common source of bugs when sorting or comparing user input without explicit type conversion.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Greater_than"
+  },
+  {
+    "id": "type-coercion-053",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "console.log(3.9 | 0);\nconsole.log(-3.9 | 0);\nconsole.log(2147483648 | 0);",
+    "options": [
+      "3, -3, -2147483648",
+      "3, -3, 2147483648",
+      "4, -4, 2147483648",
+      "3, -4, 0"
+    ],
+    "correctIndex": 0,
+    "explanation": "Bitwise operators in JavaScript implicitly convert their operands to signed 32-bit integers using the ToInt32 abstract operation. This truncates the decimal part (not rounding): 3.9 becomes 3, -3.9 becomes -3. The trick x | 0 is sometimes used as a fast Math.trunc() alternative. However, ToInt32 also wraps values outside the 32-bit signed range (-2^31 to 2^31-1). 2147483648 (2^31) overflows to -2147483648 because it wraps around in 32-bit two's complement representation.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_OR"
+  },
+  {
+    "id": "type-coercion-054",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about mixing BigInt and Number in arithmetic is correct?",
+    "options": [
+      "BigInt and Number are automatically converted to a common type",
+      "The result type depends on the left operand",
+      "BigInt is silently converted to Number before the operation",
+      "A TypeError is thrown because implicit conversion is not allowed"
+    ],
+    "correctIndex": 3,
+    "explanation": "JavaScript throws a TypeError when you attempt to mix BigInt and Number in arithmetic operations (e.g., 1n + 2). Unlike most type coercion scenarios in JavaScript where implicit conversion happens automatically, BigInt was designed to prevent silent precision loss. You must explicitly convert one type to the other: Number(1n) + 2 or 1n + BigInt(2). Comparison operators (==, <, >) do work across these types, but arithmetic does not.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt#operators"
+  },
+  {
+    "id": "type-coercion-055",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const a = {};\nconst b = { key: 'b' };\nconst c = { key: 'c' };\n\na[b] = 100;\na[c] = 200;\n\nconsole.log(a[b]);",
+    "options": [
+      "100",
+      "200",
+      "undefined",
+      "TypeError"
+    ],
+    "correctIndex": 1,
+    "explanation": "JavaScript object property keys must be strings or Symbols. When a non-string, non-Symbol value is used as a key, it is implicitly converted to a string via toString(). Both b.toString() and c.toString() return '[object Object]' — the default Object.prototype.toString() result. So a[b] = 100 sets a['[object Object]'] = 100, then a[c] = 200 overwrites the same key. Therefore a[b] returns 200. To use objects as unique keys, use a Map instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors"
   }
 ]

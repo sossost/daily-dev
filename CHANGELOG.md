@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 5 promise questions (051-055) (`02e2ab6`)
 - **content**: add 5 scope questions (051-055) (`7b86ae2`)
 
 ## 2026-04-11
