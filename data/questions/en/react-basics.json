@@ -820,5 +820,87 @@
     "correctIndex": 2,
     "explanation": "Prop drilling is the problem of having to pass data through intermediate components that don't use it. Using the Context API allows direct access to data from anywhere in the component tree without going through intermediate components. State management libraries like Zustand and Redux also solve the same problem.",
     "sourceUrl": "https://react.dev/learn/passing-data-deeply-with-context"
+  },
+  {
+    "id": "react-basics-051",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the core heuristic React's reconciliation algorithm uses when comparing trees?",
+    "options": [
+      "It assumes elements of different types produce different trees, and uses keys to stably identify children",
+      "It performs a depth-first comparison of every node one by one",
+      "It determines update targets based only on changed CSS properties",
+      "It serializes the previous render result as a string and compares it"
+    ],
+    "correctIndex": 0,
+    "explanation": "React's reconciliation algorithm achieves O(n) time complexity using two heuristics: 1) Elements of different types (e.g., <div> → <span>) are assumed to produce entirely different subtrees, so the old tree is discarded and rebuilt from scratch. 2) Developers provide stable identification of child elements via the key prop, enabling efficient comparison.",
+    "sourceUrl": "https://react.dev/learn/preserving-and-resetting-state#different-components-at-the-same-position-reset-state"
+  },
+  {
+    "id": "react-basics-052",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the order of console output when the button is clicked in the following code?",
+    "code": "import { flushSync } from 'react-dom';\n\nfunction App() {\n  const [count, setCount] = useState(0);\n  const [flag, setFlag] = useState(false);\n\n  function handleClick() {\n    flushSync(() => {\n      setCount(c => c + 1);\n    });\n    console.log('A:', document.getElementById('count').textContent);\n\n    flushSync(() => {\n      setFlag(f => !f);\n    });\n    console.log('B:', document.getElementById('flag').textContent);\n  }\n\n  return (\n    <div>\n      <span id=\"count\">{count}</span>\n      <span id=\"flag\">{String(flag)}</span>\n      <button onClick={handleClick}>Click</button>\n    </div>\n  );\n}",
+    "options": [
+      "A: 0, B: false",
+      "A: 0, B: true",
+      "A: 1, B: false",
+      "A: 1, B: true"
+    ],
+    "correctIndex": 3,
+    "explanation": "flushSync forces state updates inside its callback to be synchronously flushed to the DOM. Normally React batches multiple state updates in event handlers, but flushSync causes each call to immediately trigger a render. After the first flushSync, count is reflected as 1 in the DOM; after the second, flag becomes true in the DOM.",
+    "sourceUrl": "https://react.dev/reference/react-dom/flushSync"
+  },
+  {
+    "id": "react-basics-053",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the bug in the following code when the user clicks '+' several times and then clicks 'Submit'?",
+    "code": "function Parent() {\n  const [count, setCount] = useState(0);\n\n  const handleSubmit = useCallback(() => {\n    fetch('/api/submit', { method: 'POST', body: JSON.stringify({ count }) });\n  }, []);\n\n  return (\n    <div>\n      <button onClick={() => setCount(c => c + 1)}>+</button>\n      <p>Count: {count}</p>\n      <ExpensiveChild onSubmit={handleSubmit} />\n    </div>\n  );\n}\n\nconst ExpensiveChild = React.memo(({ onSubmit }) => {\n  return <button onClick={onSubmit}>Submit</button>;\n});",
+    "options": [
+      "handleSubmit always sends count as 0 because count is missing from useCallback's dependency array, creating a stale closure",
+      "React.memo prevents ExpensiveChild from ever re-rendering, so the button stops working",
+      "useCallback cannot be used with functions that call fetch",
+      "useState's updater function causes count to reset when handleSubmit is called"
+    ],
+    "correctIndex": 0,
+    "explanation": "useCallback memoizes the callback using the dependency array to decide when to create a new version. Because count is omitted from the dependency array ([]), the callback captures the initial value of count (0) and never updates. This is a stale closure — even after the user clicks '+' multiple times, handleSubmit still references the original count value. The fix is to add count to the dependency array: useCallback(() => { ... }, [count]).",
+    "sourceUrl": "https://react.dev/reference/react/useCallback#updating-state-from-a-memoized-callback"
+  },
+  {
+    "id": "react-basics-054",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Which statement correctly compares Higher-Order Components (HOC) and custom hooks?",
+    "options": [
+      "HOCs have better performance while custom hooks are slower",
+      "Custom hooks cannot share state but HOCs can",
+      "HOCs were completely removed in React 19",
+      "Custom hooks reuse logic without wrapping components, making composition easier and avoiding wrapper hell compared to HOCs"
+    ],
+    "correctIndex": 3,
+    "explanation": "Higher-Order Components (HOCs) take a component as an argument and return a new component. Nesting multiple HOCs creates wrapper hell. Custom hooks reuse logic through function calls without adding extra wrappers to the component tree. The React team also recommends custom hooks for new code.",
+    "sourceUrl": "https://react.dev/learn/reusing-logic-with-custom-hooks"
+  },
+  {
+    "id": "react-basics-055",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What core problem does React 18's useSyncExternalStore hook solve?",
+    "options": [
+      "Synchronizing client state in server components",
+      "Sharing state across multiple browser tabs",
+      "Automatically converting localStorage data into React state",
+      "Preventing tearing (inconsistency) when subscribing to external stores during concurrent rendering"
+    ],
+    "correctIndex": 3,
+    "explanation": "During concurrent rendering, React may pause and resume rendering. If an external store's value changes between these interruptions, different parts of the same render may read different values — a phenomenon called 'tearing'. useSyncExternalStore reads external store values synchronously to prevent this inconsistency. State management libraries like Redux and Zustand use this hook internally.",
+    "sourceUrl": "https://react.dev/reference/react/useSyncExternalStore"
   }
 ]

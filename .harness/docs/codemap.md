@@ -197,7 +197,7 @@
 - nodejs.json — 50 questions
 - promise.json — 55 questions
 - prototype.json — 55 questions
-- react-basics.json — 50 questions
+- react-basics.json — 55 questions
 - scope.json — 55 questions
 - this.json — 50 questions
 - type-coercion.json — 55 questions
@@ -220,7 +220,7 @@
 - nodejs.json — 50 questions
 - promise.json — 55 questions
 - prototype.json — 55 questions
-- react-basics.json — 50 questions
+- react-basics.json — 55 questions
 - scope.json — 55 questions
 - this.json — 50 questions
 - type-coercion.json — 55 questions

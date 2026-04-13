@@ -820,5 +820,87 @@
     "correctIndex": 2,
     "explanation": "Prop drilling은 데이터를 사용하지 않는 중간 컴포넌트를 통해 깊이 전달해야 하는 문제입니다. Context API를 사용하면 컴포넌트 트리 어디서든 데이터에 직접 접근할 수 있어 중간 컴포넌트를 거치지 않아도 됩니다. Zustand, Redux 같은 상태 관리 라이브러리도 같은 문제를 해결합니다.",
     "sourceUrl": "https://react.dev/learn/passing-data-deeply-with-context"
+  },
+  {
+    "id": "react-basics-051",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "React의 재조정(Reconciliation) 알고리즘이 트리 비교 시 사용하는 핵심 휴리스틱은?",
+    "options": [
+      "다른 타입의 엘리먼트는 다른 트리를 생성한다고 가정하고, key를 통해 자식 요소의 안정적 식별을 수행한다",
+      "모든 노드를 깊이 우선 탐색으로 하나씩 비교한다",
+      "변경된 CSS 속성만을 기준으로 업데이트 대상을 결정한다",
+      "이전 렌더링의 결과를 문자열로 직렬화하여 비교한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "React의 재조정 알고리즘은 O(n) 시간 복잡도를 달성하기 위해 두 가지 휴리스틱을 사용합니다: 1) 다른 타입의 엘리먼트(예: <div> → <span>)는 완전히 다른 하위 트리를 생성한다고 가정하여 기존 트리를 버리고 새로 구축합니다. 2) 개발자가 key prop으로 자식 엘리먼트의 안정적 식별을 제공하면, 이를 기반으로 효율적인 비교를 수행합니다.",
+    "sourceUrl": "https://react.dev/learn/preserving-and-resetting-state#different-components-at-the-same-position-reset-state"
+  },
+  {
+    "id": "react-basics-052",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드에서 버튼을 클릭하면 콘솔에 출력되는 순서는?",
+    "code": "import { flushSync } from 'react-dom';\n\nfunction App() {\n  const [count, setCount] = useState(0);\n  const [flag, setFlag] = useState(false);\n\n  function handleClick() {\n    flushSync(() => {\n      setCount(c => c + 1);\n    });\n    console.log('A:', document.getElementById('count').textContent);\n\n    flushSync(() => {\n      setFlag(f => !f);\n    });\n    console.log('B:', document.getElementById('flag').textContent);\n  }\n\n  return (\n    <div>\n      <span id=\"count\">{count}</span>\n      <span id=\"flag\">{String(flag)}</span>\n      <button onClick={handleClick}>Click</button>\n    </div>\n  );\n}",
+    "options": [
+      "A: 0, B: false",
+      "A: 0, B: true",
+      "A: 1, B: false",
+      "A: 1, B: true"
+    ],
+    "correctIndex": 3,
+    "explanation": "flushSync는 콜백 내부의 상태 업데이트를 즉시 동기적으로 DOM에 반영합니다. 일반적으로 React는 이벤트 핸들러 내의 여러 상태 업데이트를 배칭하지만, flushSync를 사용하면 각 호출이 즉시 렌더링을 트리거합니다. 첫 번째 flushSync 후 count가 1로 DOM에 반영되고, 두 번째 flushSync 후 flag가 true로 반영됩니다.",
+    "sourceUrl": "https://react.dev/reference/react-dom/flushSync"
+  },
+  {
+    "id": "react-basics-053",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 '+' 버튼을 여러 번 클릭한 후 'Submit'을 클릭하면 발생하는 버그는?",
+    "code": "function Parent() {\n  const [count, setCount] = useState(0);\n\n  const handleSubmit = useCallback(() => {\n    fetch('/api/submit', { method: 'POST', body: JSON.stringify({ count }) });\n  }, []);\n\n  return (\n    <div>\n      <button onClick={() => setCount(c => c + 1)}>+</button>\n      <p>Count: {count}</p>\n      <ExpensiveChild onSubmit={handleSubmit} />\n    </div>\n  );\n}\n\nconst ExpensiveChild = React.memo(({ onSubmit }) => {\n  return <button onClick={onSubmit}>Submit</button>;\n});",
+    "options": [
+      "handleSubmit이 항상 count를 0으로 전송합니다. useCallback의 의존성 배열에 count가 빠져 있어 stale closure가 발생하기 때문입니다",
+      "React.memo가 ExpensiveChild의 리렌더링을 완전히 막아 버튼이 작동하지 않습니다",
+      "useCallback은 fetch를 호출하는 함수와 함께 사용할 수 없습니다",
+      "useState의 업데이터 함수가 handleSubmit 호출 시 count를 초기화합니다"
+    ],
+    "correctIndex": 0,
+    "explanation": "useCallback은 의존성 배열을 사용하여 콜백을 메모이제이션하고 새 버전을 생성할 시점을 결정합니다. count가 의존성 배열([])에서 빠져 있으므로 콜백은 count의 초기값(0)을 캡처한 채로 업데이트되지 않습니다. 이것이 stale closure입니다 — 사용자가 '+'를 여러 번 클릭해도 handleSubmit은 여전히 원래의 count 값을 참조합니다. 수정 방법은 의존성 배열에 count를 추가하는 것입니다: useCallback(() => { ... }, [count]).",
+    "sourceUrl": "https://react.dev/reference/react/useCallback#updating-state-from-a-memoized-callback"
+  },
+  {
+    "id": "react-basics-054",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "고차 컴포넌트(HOC)와 커스텀 훅의 비교로 올바른 것은?",
+    "options": [
+      "HOC는 성능이 더 좋고 커스텀 훅은 더 느리다",
+      "커스텀 훅은 상태를 공유할 수 없지만 HOC는 가능하다",
+      "HOC는 React 19에서 완전히 제거되었다",
+      "커스텀 훅은 컴포넌트 래핑 없이 로직을 재사용하며, HOC보다 합성이 쉽고 wrapper hell을 피할 수 있다"
+    ],
+    "correctIndex": 3,
+    "explanation": "고차 컴포넌트(HOC)는 컴포넌트를 인자로 받아 새 컴포넌트를 반환하는 패턴으로, 여러 HOC를 중첩하면 wrapper hell이 발생합니다. 커스텀 훅은 함수 호출로 로직을 재사용하므로 컴포넌트 트리에 추가 래퍼가 생기지 않습니다. React 팀도 새로운 코드에서는 커스텀 훅 사용을 권장합니다.",
+    "sourceUrl": "https://react.dev/learn/reusing-logic-with-custom-hooks"
+  },
+  {
+    "id": "react-basics-055",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "React 18의 useSyncExternalStore 훅이 해결하는 핵심 문제는?",
+    "options": [
+      "서버 컴포넌트에서 클라이언트 상태를 동기화하는 것",
+      "여러 브라우저 탭 간에 상태를 공유하는 것",
+      "localStorage의 데이터를 자동으로 React 상태로 변환하는 것",
+      "동시성 렌더링에서 외부 스토어 구독 시 발생하는 tearing(불일치) 현상을 방지하는 것"
+    ],
+    "correctIndex": 3,
+    "explanation": "동시성 렌더링(concurrent rendering)에서 React가 렌더링을 중단하고 재개하는 사이에 외부 스토어의 값이 변경되면, 같은 렌더링 내에서 서로 다른 값을 읽는 'tearing' 현상이 발생할 수 있습니다. useSyncExternalStore는 외부 스토어의 값을 동기적으로 읽어 이 불일치를 방지합니다. Redux, Zustand 등의 상태 관리 라이브러리가 내부적으로 이 훅을 사용합니다.",
+    "sourceUrl": "https://react.dev/reference/react/useSyncExternalStore"
   }
 ]
