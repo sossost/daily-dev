@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: fix — reframe react-basics-053 stale closure (`89be3cd`)
 - **content**: add 5 type-coercion questions (051-055) (`687b8c0`)
 
 ## 2026-04-12

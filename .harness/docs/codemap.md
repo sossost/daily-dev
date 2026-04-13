@@ -199,7 +199,7 @@
 - prototype.json — 55 questions
 - react-basics.json — 55 questions
 - scope.json — 55 questions
-- this.json — 50 questions
+- this.json — 55 questions
 - type-coercion.json — 55 questions
 - typescript.json — 50 questions
 - web-performance.json — 50 questions
@@ -222,7 +222,7 @@
 - prototype.json — 55 questions
 - react-basics.json — 55 questions
 - scope.json — 55 questions
-- this.json — 50 questions
+- this.json — 55 questions
 - type-coercion.json — 55 questions
 - typescript.json — 50 questions
 - web-performance.json — 50 questions

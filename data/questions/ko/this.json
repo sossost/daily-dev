@@ -829,5 +829,87 @@
     "correctIndex": 0,
     "explanation": "ES2022에서 도입된 static 블록(static { ... })에서 this는 클래스 자체를 가리킵니다. 이는 static 메서드에서의 this와 동일합니다. 차이점은 실행 시점입니다: static 블록은 클래스가 평가될 때 즉시 실행되고, static 메서드는 명시적으로 호출될 때 실행됩니다. static 블록은 private 필드에 대한 외부 접근 설정이나 복잡한 static 초기화에 유용합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Classes/Static_initialization_blocks"
+  },
+  {
+    "id": "this-051",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "JSON.stringify의 replacer 함수에서 this가 가리키는 것은?",
+    "options": [
+      "전역 객체(window 또는 global)",
+      "JSON 객체 자체",
+      "replacer 함수 자신",
+      "현재 처리 중인 프로퍼티를 소유한 객체"
+    ],
+    "correctIndex": 3,
+    "explanation": "JSON.stringify(value, replacer)에서 replacer 함수는 (key, value) 형태로 호출되며, this는 현재 처리 중인 프로퍼티를 포함하는 객체에 바인딩됩니다. 최상위 호출에서는 { '': value } 형태의 래퍼 객체가 this가 되고, 이후 중첩 객체를 처리할 때는 해당 부모 객체가 this가 됩니다. 이를 활용하면 형제 프로퍼티의 값을 참조하여 직렬화 로직을 구성할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify"
+  },
+  {
+    "id": "this-052",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Reflect.apply와 Function.prototype.apply의 차이로 올바른 것은?",
+    "options": [
+      "Reflect.apply는 this를 변경할 수 없고, Function.prototype.apply만 변경할 수 있다",
+      "둘 다 동일하게 동작하며 차이가 전혀 없다",
+      "Reflect.apply는 대상이 함수가 아니면 TypeError를 던지고, Function.prototype.apply는 apply가 재정의될 수 있어 안전하지 않을 수 있다",
+      "Reflect.apply는 비동기로 실행되고, Function.prototype.apply는 동기로 실행된다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Reflect.apply(target, thisArg, args)와 Function.prototype.apply(thisArg, args)는 모두 지정된 this와 인자로 함수를 호출합니다. 핵심 차이는: 1) Reflect.apply는 target이 호출 가능하지 않으면 즉시 TypeError를 던져 안전합니다. 2) Function.prototype.apply는 프로토타입 체인을 통해 접근하므로, 누군가 apply를 재정의하면 예상과 다르게 동작할 수 있습니다. 3) Reflect.apply는 정적 메서드로 fn.apply 대신 Reflect.apply(fn, thisArg, args) 형태로 사용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Reflect/apply"
+  },
+  {
+    "id": "this-053",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 mixin 패턴 코드에서 logger.log()가 TypeError를 발생시킵니다. 원인은 무엇인가요?",
+    "code": "const LogMixin = {\n  log() {\n    console.log(`[${this.name}] ${this.getMessage()}`);\n  }\n};\n\nclass Service {\n  name = 'MyService';\n  getMessage() { return 'running'; }\n}\n\nObject.assign(Service.prototype, LogMixin);\nconst svc = new Service();\nconst logger = { log: svc.log };\nlogger.log();",
+    "options": [
+      "logger 객체에 getMessage 메서드가 없어 this.getMessage()가 TypeError를 발생시킨다",
+      "Object.assign은 메서드를 복사할 수 없기 때문",
+      "LogMixin이 클래스가 아니라 일반 객체이기 때문",
+      "Service.prototype에 이미 log 메서드가 있어 충돌하기 때문"
+    ],
+    "correctIndex": 0,
+    "explanation": "Object.assign으로 LogMixin의 메서드를 Service.prototype에 복사하면, svc.log() 호출 시 this는 svc를 가리키므로 정상 동작합니다. 그러나 logger = { log: svc.log }로 메서드 참조를 추출하면 this가 logger 객체에 바인딩됩니다. logger에는 name은 없어 undefined가 되고(에러 아님), getMessage 메서드가 없어 this.getMessage()에서 TypeError가 발생합니다. mixin 메서드도 일반 메서드와 동일한 this 바인딩 규칙을 따릅니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/assign"
+  },
+  {
+    "id": "this-054",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Symbol.iterator 메서드에서 this가 가리키는 것은?",
+    "options": [
+      "항상 전역 객체를 가리킨다",
+      "Symbol 객체 자체를 가리킨다",
+      "iterator 프로토콜의 next 메서드를 가리킨다",
+      "Symbol.iterator 메서드가 호출된 객체(이터러블)를 가리킨다"
+    ],
+    "correctIndex": 3,
+    "explanation": "[Symbol.iterator]() 메서드 내부의 this는 해당 메서드가 호출된 객체에 바인딩됩니다. for...of 루프나 스프레드 연산자가 obj[Symbol.iterator]()를 호출하면, this는 obj를 가리킵니다. 이를 통해 이터레이터가 객체의 내부 상태(배열 요소, 범위 등)에 접근할 수 있습니다. 예: class Range { [Symbol.iterator]() { let cur = this.start; ... } }에서 this.start는 Range 인스턴스의 start에 접근합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Symbol/iterator"
+  },
+  {
+    "id": "this-055",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "다음 두 코드의 this 동작 차이로 올바른 것은?\n\n코드 A: obj[methodName]()\n코드 B: const fn = obj[methodName]; fn()",
+    "options": [
+      "둘 다 동일하게 this가 obj를 가리킨다",
+      "코드 A에서 this는 obj를 가리키지만, 코드 B에서는 함수 참조가 분리되어 this가 전역(또는 undefined)이 된다",
+      "코드 A에서 this는 전역을 가리키고, 코드 B에서만 obj를 가리킨다",
+      "계산된 프로퍼티 접근([])에서는 this 바인딩이 발생하지 않는다"
+    ],
+    "correctIndex": 1,
+    "explanation": "obj[methodName]()처럼 대괄호를 사용한 계산된 프로퍼티 접근도 점(.) 표기법과 동일한 메서드 호출 패턴입니다. 프로퍼티 접근과 호출이 하나의 표현식에서 이루어지면 this는 obj에 바인딩됩니다. 그러나 코드 B처럼 const fn = obj[methodName]으로 함수 참조를 변수에 저장하면 호출 컨텍스트가 분리됩니다. fn()은 단독 호출이므로 this는 전역(비엄격) 또는 undefined(엄격)가 됩니다. 이 패턴은 동적 디스패치에서 흔히 발생하는 this 손실 사례입니다."
+,
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Property_accessors"
   }
 ]

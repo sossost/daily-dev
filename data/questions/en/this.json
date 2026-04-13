@@ -829,5 +829,86 @@
     "correctIndex": 0,
     "explanation": "Static blocks (static { ... }), introduced in ES2022, have this pointing to the class itself. This is the same as this in static methods. The difference is execution timing: static blocks run immediately when the class is evaluated, while static methods run when explicitly called. Static blocks are useful for setting up external access to private fields or complex static initialization.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Static_initialization_blocks"
+  },
+  {
+    "id": "this-051",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What does this refer to inside a JSON.stringify replacer function?",
+    "options": [
+      "The global object (window or global)",
+      "The JSON object itself",
+      "The replacer function itself",
+      "The object that owns the property currently being processed"
+    ],
+    "correctIndex": 3,
+    "explanation": "In JSON.stringify(value, replacer), the replacer function is called as (key, value) and this is bound to the object containing the property being processed. On the initial call, this is a wrapper object { '': value }, and for nested objects, this is the parent object. This allows the replacer to reference sibling properties when deciding how to serialize a value.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify"
+  },
+  {
+    "id": "this-052",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between Reflect.apply and Function.prototype.apply?",
+    "options": [
+      "Reflect.apply cannot change this, only Function.prototype.apply can",
+      "They work identically with no difference whatsoever",
+      "Reflect.apply throws TypeError if the target is not callable, while Function.prototype.apply can be overridden making it potentially unsafe",
+      "Reflect.apply executes asynchronously, while Function.prototype.apply executes synchronously"
+    ],
+    "correctIndex": 2,
+    "explanation": "Both Reflect.apply(target, thisArg, args) and Function.prototype.apply(thisArg, args) call a function with a specified this and arguments. The key differences are: 1) Reflect.apply immediately throws TypeError if target is not callable, making it safer. 2) Function.prototype.apply is accessed through the prototype chain, so if someone overrides apply it may behave unexpectedly. 3) Reflect.apply is a static method used as Reflect.apply(fn, thisArg, args) rather than fn.apply(thisArg, args).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect/apply"
+  },
+  {
+    "id": "this-053",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In the following mixin pattern code, logger.log() throws a TypeError. What is the cause?",
+    "code": "const LogMixin = {\n  log() {\n    console.log(`[${this.name}] ${this.getMessage()}`);\n  }\n};\n\nclass Service {\n  name = 'MyService';\n  getMessage() { return 'running'; }\n}\n\nObject.assign(Service.prototype, LogMixin);\nconst svc = new Service();\nconst logger = { log: svc.log };\nlogger.log();",
+    "options": [
+      "The logger object has no getMessage method, so this.getMessage() throws a TypeError",
+      "Object.assign cannot copy methods",
+      "LogMixin must be a class, not a plain object",
+      "Service.prototype already has a log method causing a conflict"
+    ],
+    "correctIndex": 0,
+    "explanation": "When LogMixin methods are copied to Service.prototype via Object.assign, calling svc.log() works because this points to svc which has both name and getMessage. However, logger = { log: svc.log } extracts the method reference, and logger.log() binds this to the logger object. logger has no name (becomes undefined, not an error) and no getMessage method, so this.getMessage() throws a TypeError. Mixin methods follow the same this binding rules as regular methods.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign"
+  },
+  {
+    "id": "this-054",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What does this refer to inside a Symbol.iterator method?",
+    "options": [
+      "It always refers to the global object",
+      "It refers to the Symbol object itself",
+      "It refers to the iterator protocol's next method",
+      "It refers to the object (iterable) on which Symbol.iterator was called"
+    ],
+    "correctIndex": 3,
+    "explanation": "Inside [Symbol.iterator](), this is bound to the object on which the method was called. When a for...of loop or spread operator calls obj[Symbol.iterator](), this points to obj. This allows the iterator to access the object's internal state (array elements, range bounds, etc.). For example: class Range { [Symbol.iterator]() { let cur = this.start; ... } } — here this.start accesses the Range instance's start property.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/iterator"
+  },
+  {
+    "id": "this-055",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference in this behavior between the following two code patterns?\n\nCode A: obj[methodName]()\nCode B: const fn = obj[methodName]; fn()",
+    "options": [
+      "Both have this pointing to obj identically",
+      "In Code A, this points to obj, but in Code B the function reference is detached so this becomes global (or undefined)",
+      "In Code A, this points to global, and only Code B has this pointing to obj",
+      "Computed property access ([]) never produces a this binding"
+    ],
+    "correctIndex": 1,
+    "explanation": "Computed property access with brackets (obj[methodName]()) follows the same method call pattern as dot notation (obj.method()). When property access and invocation happen in a single expression, this is bound to obj. However, in Code B, const fn = obj[methodName] stores only the function reference in a variable, detaching the call context. fn() is a standalone call so this becomes global (non-strict) or undefined (strict). This is a common this-loss scenario in dynamic dispatch patterns.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors"
   }
 ]
