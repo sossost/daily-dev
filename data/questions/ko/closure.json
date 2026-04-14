@@ -827,5 +827,88 @@
     "correctIndex": 1,
     "explanation": "클로저로 이터레이터를 구현하면 index, items 등의 상태 변수를 직접 관리하고 next() 함수가 클로저를 통해 이 변수들을 갱신합니다. 제너레이터 함수는 function*와 yield를 사용하여 실행 컨텍스트 자체가 중단/재개되므로, 지역 변수가 자동으로 보존됩니다. 제너레이터는 복잡한 상태 머신을 더 선언적으로 표현할 수 있는 장점이 있습니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Generator"
+  },
+  {
+    "id": "closure-051",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function createMultipliers(arr) {\n  return arr.map(n => {\n    return (x) => x * n;\n  });\n}\nconst [double, triple, quadruple] = createMultipliers([2, 3, 4]);\nconsole.log(double(5), triple(5), quadruple(5));",
+    "options": [
+      "5, 5, 5",
+      "2, 3, 4",
+      "10, 15, 20",
+      "NaN, NaN, NaN"
+    ],
+    "correctIndex": 2,
+    "explanation": "map의 콜백은 매 반복마다 새로운 매개변수 n을 받습니다. 반환되는 각 화살표 함수는 자신만의 n 값을 클로저로 캡처합니다. 이는 forEach나 map의 콜백 매개변수가 각 호출마다 새로운 바인딩을 생성하기 때문입니다. double은 n=2, triple은 n=3, quadruple은 n=4를 캡처하므로, double(5)=10, triple(5)=15, quadruple(5)=20이 출력됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/map"
+  },
+  {
+    "id": "closure-052",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "for...of 루프에서 let 대신 const를 사용할 수 있는 이유와 클로저의 관계로 올바른 것은?",
+    "options": [
+      "for...of에서 const는 사용할 수 없다",
+      "const는 루프 전체에서 하나의 바인딩만 생성한다",
+      "for...of와 클로저는 아무런 관련이 없다",
+      "for...of는 매 반복마다 새로운 블록 스코프를 생성하므로 const도 반복마다 새 바인딩을 갖고, 콜백에서 클로저로 캡처해도 각 반복의 값이 유지된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "for...of 루프는 매 반복마다 새로운 블록 스코프를 생성합니다. const로 선언된 변수도 각 반복에서 새로운 바인딩을 받기 때문에 for (const item of array) 형태가 가능합니다. setTimeout이나 이벤트 핸들러 등의 콜백이 이 변수를 참조하면, 각 반복의 독립적인 값을 클로저로 캡처합니다. 이는 var를 사용한 전통적인 for 루프의 클로저 문제를 근본적으로 방지합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/for...of"
+  },
+  {
+    "id": "closure-053",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function makeConfig({ host, port }) {\n  let connectionCount = 0;\n  return {\n    connect() {\n      connectionCount++;\n      return `${host}:${port} (#${connectionCount})`;\n    },\n    updatePort(newPort) {\n      port = newPort;\n    }\n  };\n}\nconst cfg = makeConfig({ host: 'localhost', port: 3000 });\nconsole.log(cfg.connect());\ncfg.updatePort(8080);\nconsole.log(cfg.connect());",
+    "options": [
+      "localhost:3000 (#1) / localhost:8080 (#2)",
+      "localhost:3000 (#1) / localhost:3000 (#2)",
+      "localhost:3000 (#1) / localhost:8080 (#1)",
+      "TypeError: Cannot assign to port"
+    ],
+    "correctIndex": 0,
+    "explanation": "구조 분해 매개변수(destructured parameters)는 함수 스코프에 새로운 지역 변수를 생성합니다. host와 port는 makeConfig의 지역 변수이므로 클로저로 캡처됩니다. updatePort에서 port에 새 값을 할당하면 클로저가 참조하는 동일한 바인딩이 변경됩니다. 따라서 두 번째 connect() 호출 시 변경된 port(8080)와 증가된 connectionCount(2)가 반영됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment"
+  },
+  {
+    "id": "closure-054",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 items 배열이 이미 비워졌는데도 process가 계속 호출되는 이유는?",
+    "code": "function processQueue(items) {\n  function process() {\n    if (items.length === 0) return;\n    console.log(items.shift());\n    setTimeout(process, 100);\n  }\n  process();\n  items = [];\n}",
+    "options": [
+      "setTimeout이 동기적으로 실행되기 때문",
+      "클로저는 변수의 바인딩을 캡처하지만, 첫 process() 호출이 동기적으로 실행되어 원본 배열의 shift()가 먼저 수행되고, setTimeout 콜백도 원본 배열을 계속 참조하기 때문",
+      "shift() 메서드가 배열을 수정하지 않기 때문",
+      "items = []가 새로운 빈 배열을 items에 할당하고, setTimeout 콜백의 클로저가 참조하는 items도 이제 새로운 빈 배열을 가리키므로, 실제로는 첫 번째 요소 이후 process가 멈춘다"
+    ],
+    "correctIndex": 3,
+    "explanation": "process 함수는 클로저를 통해 items 변수의 바인딩을 캡처합니다. 첫 process() 호출 시 items는 원본 배열을 가리킵니다. 동기적으로 shift()를 하고 setTimeout을 등록합니다. 그 후 items = []이 실행되어 items 변수가 새 빈 배열을 가리키게 되지만, setTimeout 콜백의 process는 클로저를 통해 같은 items 바인딩을 참조합니다. 따라서 setTimeout 콜백이 실행될 때 items는 이미 빈 배열([])을 가리키므로 즉시 return됩니다. 실제로는 원본 배열의 첫 요소만 처리되고 멈춥니다.",
+    "sourceUrl": "https://javascript.info/closure"
+  },
+  {
+    "id": "closure-055",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "클로저로 구현한 private 상태와 WeakMap을 활용한 private 상태의 차이로 올바른 것은?",
+    "options": [
+      "WeakMap 방식은 클로저를 전혀 사용하지 않으므로 메모리 사용량이 항상 적다",
+      "클로저 방식은 프로토타입 메서드를 공유할 수 없어 인스턴스마다 메서드가 복제되지만, WeakMap 방식은 인스턴스를 키로 사용하여 프로토타입 메서드 공유와 private 상태를 동시에 달성할 수 있다",
+      "두 방식 모두 인스턴스마다 메서드를 복제해야 한다",
+      "클로저 방식이 WeakMap보다 항상 성능이 우수하다"
+    ],
+    "correctIndex": 1,
+    "explanation": "클로저로 private 상태를 구현하면 생성자 함수 내부에서 메서드를 정의해야 하므로, 각 인스턴스가 메서드의 독립적인 복사본을 갖게 됩니다. 이는 인스턴스가 많을 때 메모리 비효율적입니다. WeakMap을 사용하면 모듈 스코프에 WeakMap을 두고 인스턴스(this)를 키로 private 데이터를 저장할 수 있으므로, 메서드는 프로토타입에 한 번만 정의하면서도 인스턴스별 private 상태를 유지할 수 있습니다. WeakMap의 키가 약한 참조이므로 인스턴스가 가비지 컬렉션될 때 private 데이터도 함께 정리됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/WeakMap"
   }
 ]

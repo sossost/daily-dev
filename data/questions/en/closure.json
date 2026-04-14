@@ -827,5 +827,88 @@
     "correctIndex": 1,
     "explanation": "Implementing an iterator with closures requires manually managing state variables like index and items, with the next() function updating them through the closure. Generator functions use function* and yield to suspend and resume the execution context itself, automatically preserving local variables. Generators can express complex state machines more declaratively.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator"
+  },
+  {
+    "id": "closure-051",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function createMultipliers(arr) {\n  return arr.map(n => {\n    return (x) => x * n;\n  });\n}\nconst [double, triple, quadruple] = createMultipliers([2, 3, 4]);\nconsole.log(double(5), triple(5), quadruple(5));",
+    "options": [
+      "5, 5, 5",
+      "2, 3, 4",
+      "10, 15, 20",
+      "NaN, NaN, NaN"
+    ],
+    "correctIndex": 2,
+    "explanation": "The map callback receives a new parameter n on each iteration. Each returned arrow function captures its own n value via closure. This works because callback parameters create a new binding per invocation—unlike var in a traditional for loop. double captures n=2, triple captures n=3, and quadruple captures n=4, so double(5)=10, triple(5)=15, quadruple(5)=20.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map"
+  },
+  {
+    "id": "closure-052",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Why can const be used in a for...of loop, and what does this mean for closures?",
+    "options": [
+      "const cannot be used in for...of loops",
+      "const creates a single binding for the entire loop",
+      "for...of has nothing to do with closures",
+      "for...of creates a new block scope per iteration, so const gets a fresh binding each time, and callbacks that capture it via closure retain each iteration's value"
+    ],
+    "correctIndex": 3,
+    "explanation": "A for...of loop creates a new block scope on every iteration. A const-declared variable receives a fresh binding each time, which is why for (const item of array) is valid. If a setTimeout or event handler callback references this variable, it captures the independent value from that specific iteration via closure. This fundamentally prevents the classic closure bug seen with var in traditional for loops.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of"
+  },
+  {
+    "id": "closure-053",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function makeConfig({ host, port }) {\n  let connectionCount = 0;\n  return {\n    connect() {\n      connectionCount++;\n      return `${host}:${port} (#${connectionCount})`;\n    },\n    updatePort(newPort) {\n      port = newPort;\n    }\n  };\n}\nconst cfg = makeConfig({ host: 'localhost', port: 3000 });\nconsole.log(cfg.connect());\ncfg.updatePort(8080);\nconsole.log(cfg.connect());",
+    "options": [
+      "localhost:3000 (#1) / localhost:8080 (#2)",
+      "localhost:3000 (#1) / localhost:3000 (#2)",
+      "localhost:3000 (#1) / localhost:8080 (#1)",
+      "TypeError: Cannot assign to port"
+    ],
+    "correctIndex": 0,
+    "explanation": "Destructured parameters create new local variables in the function scope. host and port become local variables of makeConfig and are captured by the closure. When updatePort assigns a new value to port, it modifies the same binding that the closure references. Therefore the second connect() call reflects the updated port (8080) and the incremented connectionCount (2).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment"
+  },
+  {
+    "id": "closure-054",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, the items array has already been emptied, yet process keeps being called. Why?",
+    "code": "function processQueue(items) {\n  function process() {\n    if (items.length === 0) return;\n    console.log(items.shift());\n    setTimeout(process, 100);\n  }\n  process();\n  items = [];\n}",
+    "options": [
+      "setTimeout executes synchronously",
+      "The closure captures the variable binding, but the first process() call runs synchronously so it shifts from the original array first, and the setTimeout callback also keeps referencing the original array",
+      "The shift() method does not modify the array",
+      "items = [] assigns a new empty array to items, but the setTimeout callback's closure references items which now points to the new empty array, so process actually stops after the first element"
+    ],
+    "correctIndex": 3,
+    "explanation": "The process function captures the items variable binding via closure. The first process() call runs synchronously—it shifts the first element and schedules setTimeout. Then items = [] executes, reassigning items to a new empty array. When the setTimeout callback runs, it reads items through the same closure binding, which now points to the empty array, so items.length === 0 is true and it returns immediately. Only the first element gets processed. This demonstrates that closures capture variable bindings, not object references—reassignment changes what all closure-using code sees.",
+    "sourceUrl": "https://javascript.info/closure"
+  },
+  {
+    "id": "closure-055",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the key difference between closure-based private state and WeakMap-based private state?",
+    "options": [
+      "WeakMap never uses closures, so it always uses less memory",
+      "Closure-based private state requires defining methods inside the constructor so each instance gets its own copy, while WeakMap allows sharing prototype methods while still maintaining per-instance private state using the instance as the key",
+      "Both approaches require copying methods per instance",
+      "Closure-based private state always outperforms WeakMap in terms of speed"
+    ],
+    "correctIndex": 1,
+    "explanation": "With closure-based private state, methods must be defined inside the constructor function to access the private variables, so each instance gets its own copy of every method. This is memory-inefficient with many instances. Using a WeakMap in module scope with the instance (this) as the key lets you store private data per instance while defining methods once on the prototype. Since WeakMap keys are weak references, private data is automatically cleaned up when instances are garbage collected.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap"
   }
 ]
