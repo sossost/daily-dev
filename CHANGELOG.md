@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: fix — closure-054 Korean option text contradi... (`339a97a`)
 - **content**: add 5 this-binding questions (051-055) (`be25c0e`)
 
 ## 2026-04-13
