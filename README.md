@@ -48,9 +48,9 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Type Coercion | 55 |
 | TypeScript | 50 |
 | Web Performance | 50 |
-| Web Security | 50 |
+| Web Security | 55 |
 
-**Total: 1208 questions across 23 topics**
+**Total: 1213 questions across 23 topics**
 
 ## Getting Started
 

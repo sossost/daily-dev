@@ -818,5 +818,86 @@
     "correctIndex": 1,
     "explanation": "By returning distinct error messages ('User not found' vs 'Wrong password'), an attacker can determine whether a username exists in the system. This is called a username enumeration vulnerability. The attacker can first discover valid usernames, then focus brute-force efforts on those accounts. The fix is to return a generic message like 'Invalid credentials' for both cases, making it impossible to distinguish between the two failure modes.",
     "sourceUrl": "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/03-Identity_Management_Testing/04-Testing_for_Account_Enumeration_and_Guessable_User_Account"
+  },
+  {
+    "id": "web-security-051",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the primary purpose of applying rate limiting to a login API?",
+    "options": [
+      "To prevent brute force attacks by limiting the number of requests within a given time period",
+      "To reduce server memory usage",
+      "To minimize the number of database queries",
+      "To reduce the number of HTTPS handshakes"
+    ],
+    "correctIndex": 0,
+    "explanation": "Rate limiting restricts the number of requests a specific IP or account can make within a given time window. When applied to login endpoints, it effectively blocks brute force attacks where an attacker automatically tries thousands of passwords. Common implementations include locking out after 5 failed attempts for a set period, or applying exponential backoff to increase delays between retries.",
+    "sourceUrl": "https://owasp.org/www-community/controls/Blocking_Brute_Force_Attacks"
+  },
+  {
+    "id": "web-security-052",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the security vulnerability in the following WebSocket code?",
+    "code": "const ws = new WebSocket('ws://api.example.com/chat');\nws.onmessage = (event) => {\n  document.getElementById('messages').innerHTML += event.data;\n};",
+    "options": [
+      "The URL format in the WebSocket constructor is incorrect",
+      "addEventListener should be used instead of onmessage",
+      "The ws:// protocol transmits data unencrypted, and inserting received data via innerHTML is vulnerable to XSS",
+      "WebSocket is not a supported browser API"
+    ],
+    "correctIndex": 2,
+    "explanation": "This code has two security issues. First, ws:// is an unencrypted WebSocket connection, making it vulnerable to man-in-the-middle attacks. You should use wss:// (WebSocket Secure) instead. Second, inserting data received from the server into the DOM via innerHTML allows malicious HTML/scripts to execute. Use textContent instead, or sanitize the received data before insertion.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications"
+  },
+  {
+    "id": "web-security-053",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Why should you set the Cache-Control: no-store header on API responses that return sensitive data?",
+    "options": [
+      "To improve server response speed",
+      "To enable more efficient caching on CDNs",
+      "To prevent the response from being stored in browser caches, proxies, or CDNs, preventing sensitive data leakage",
+      "To delete client cookies"
+    ],
+    "correctIndex": 2,
+    "explanation": "Cache-Control: no-store instructs that the response must not be stored in any cache. If responses containing personal information, authentication tokens, or financial data are stored in the browser's disk cache or shared proxies, other users could access them. This also prevents the issue where someone on a shared computer could see a previous user's data by pressing the back button.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#no-store"
+  },
+  {
+    "id": "web-security-054",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the purpose of the Refresh Token Rotation pattern in JWT-based authentication?",
+    "options": [
+      "To reduce the size of Access Tokens",
+      "To issue a new token and invalidate the previous one each time a Refresh Token is used, minimizing damage from token theft",
+      "To enable simultaneous login across multiple devices",
+      "To eliminate the need for server-side session storage"
+    ],
+    "correctIndex": 1,
+    "explanation": "Refresh Token Rotation is a pattern where the server issues a new Refresh Token and invalidates the previous one each time a client uses a Refresh Token. If an attacker steals and uses a Refresh Token, the legitimate user will end up using an already-invalidated token, allowing the server to detect token reuse. At that point, the server can invalidate all tokens in that token family, blocking further damage.",
+    "sourceUrl": "https://datatracker.ietf.org/doc/html/rfc6749#section-10.4"
+  },
+  {
+    "id": "web-security-055",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between input validation and output encoding?",
+    "options": [
+      "Input validation alone can completely prevent XSS, making output encoding unnecessary",
+      "Output encoding is applied when storing data in the database, and input validation is applied when displaying data on screen",
+      "Both are applied at the same time in the same way",
+      "Input validation checks format and range when data enters the system, while output encoding escapes data appropriately for the specific context (HTML, URL, JS) when rendering it"
+    ],
+    "correctIndex": 3,
+    "explanation": "Input validation checks incoming data against allowed formats (email, numbers, etc.) and rejects invalid data at the system boundary. Output encoding escapes special characters when inserting data into specific contexts like HTML, JavaScript, or URLs. These two defense strategies are complementary and should be used together. Input validation alone cannot prevent all XSS — output encoding is the primary defense against XSS, ensuring that user data is never interpreted as code regardless of its content.",
+    "sourceUrl": "https://owasp.org/www-community/xss-filter-evasion-cheatsheet"
   }
 ]
