@@ -811,5 +811,86 @@
     "correctIndex": 2,
     "explanation": "The fetch API only rejects the promise when the network itself fails or the request cannot be made. Even when the server returns error status codes like 404 or 500, the network communication succeeded, so the promise resolves as fulfilled. To handle error statuses, you must check response.ok or response.status.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#checking_that_the_fetch_was_successful"
+  },
+  {
+    "id": "network-051",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between <link rel=\"preload\"> and <link rel=\"prefetch\"> in HTML?",
+    "options": [
+      "preload immediately loads resources needed for the current page with high priority, while prefetch fetches resources that may be needed for future navigation with low priority",
+      "prefetch loads resources for the current page, and preload loads resources for the next page",
+      "preload can only be used for JavaScript files, while prefetch can be used for all resource types",
+      "Both attributes have the same behavior and only differ in browser compatibility"
+    ],
+    "correctIndex": 0,
+    "explanation": "preload instructs the browser to immediately fetch resources critical for the current page rendering (fonts, important scripts, etc.) with high priority. prefetch downloads resources that the user might need on subsequent pages during the browser's idle time with low priority. Overusing preload can actually interfere with loading truly critical resources.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload"
+  },
+  {
+    "id": "network-052",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What happens when a browser sends a conditional request and receives a 304 Not Modified response?",
+    "options": [
+      "The browser downloads the resource from scratch",
+      "The server sends the full resource body along with the 304 response",
+      "The browser invalidates the previous cache and displays an empty response",
+      "The server returns only a 304 status with no body, and the browser reuses the resource stored in local cache"
+    ],
+    "correctIndex": 3,
+    "explanation": "Conditional requests use If-None-Match (ETag comparison) or If-Modified-Since (date comparison) headers to check whether a resource has changed. If the resource hasn't changed, the server returns only 304 Not Modified without a body, and the browser reuses the resource from its local cache. This saves bandwidth by avoiding unnecessary data transfers.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Conditional_requests"
+  },
+  {
+    "id": "network-053",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What security threat does Subresource Integrity (SRI) protect against?",
+    "options": [
+      "User input data theft through XSS attacks",
+      "It blocks execution of tampered code when scripts served from CDNs or external servers have been modified",
+      "Authenticated request forgery through CSRF attacks",
+      "Incorrect server connections through DNS spoofing"
+    ],
+    "correctIndex": 1,
+    "explanation": "SRI is a security mechanism where the integrity attribute on <script> or <link> tags specifies a hash of the resource, which the browser compares against the downloaded file. If the CDN is compromised or the file is tampered with via a man-in-the-middle attack, the hash won't match and the browser blocks execution of the resource. It must be used with the crossorigin attribute and plays a critical role in defending against supply-chain attacks on third-party scripts.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity"
+  },
+  {
+    "id": "network-054",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "When processing a streaming response using ReadableStream, what is the structure of the object returned by reader.read()?",
+    "code": "const response = await fetch('/api/stream');\nconst reader = response.body.getReader();\nconst { done, value } = await reader.read();\nconsole.log(typeof done, value?.constructor.name);",
+    "options": [
+      "\"string\", \"String\"",
+      "\"number\", \"ArrayBuffer\"",
+      "\"boolean\", \"Uint8Array\"",
+      "\"boolean\", \"String\""
+    ],
+    "correctIndex": 2,
+    "explanation": "The ReadableStreamDefaultReader's read() method returns an object of the form { done: boolean, value: Uint8Array | undefined }. done is a boolean indicating whether the stream has ended, and value is the chunk data as a Uint8Array type. When the stream ends, done is true and value is undefined. To convert to text, you need to use TextDecoder.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/ReadableStreamDefaultReader/read"
+  },
+  {
+    "id": "network-055",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference between a forward proxy and a reverse proxy?",
+    "options": [
+      "A forward proxy sends requests to external servers on behalf of the client, while a reverse proxy receives client requests on behalf of the server and forwards them to backend servers",
+      "A reverse proxy is installed on the client side, and a forward proxy is installed on the server side",
+      "A forward proxy supports only HTTPS, while a reverse proxy supports only HTTP",
+      "Both proxies serve the same role and only differ in placement location"
+    ],
+    "correctIndex": 0,
+    "explanation": "A forward proxy sits in front of clients, hiding client IPs and performing access control or caching (e.g., corporate network proxy servers). A reverse proxy sits in front of servers, handling load balancing, SSL termination, caching, and DDoS protection (e.g., Nginx, Cloudflare). Clients are unaware of the reverse proxy's existence, and the actual server's IP is not exposed externally.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Proxy_server"
   }
 ]

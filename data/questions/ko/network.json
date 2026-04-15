@@ -811,5 +811,86 @@
     "correctIndex": 2,
     "explanation": "fetch API는 네트워크 장애나 요청 자체가 실패한 경우에만 프로미스를 reject합니다. 서버가 404나 500 같은 에러 상태 코드를 반환해도 네트워크 통신 자체는 성공했으므로 프로미스가 fulfilled 상태로 resolve됩니다. 에러 상태를 처리하려면 response.ok 또는 response.status를 확인해야 합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Fetch_API/Using_Fetch#checking_that_the_fetch_was_successful"
+  },
+  {
+    "id": "network-051",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "HTML의 <link rel=\"preload\">와 <link rel=\"prefetch\">의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "preload는 현재 페이지에서 곧 필요한 리소스를 높은 우선순위로 즉시 로드하고, prefetch는 향후 탐색에서 필요할 수 있는 리소스를 낮은 우선순위로 미리 가져온다",
+      "prefetch는 현재 페이지의 리소스를 로드하고, preload는 다음 페이지의 리소스를 로드한다",
+      "preload는 JavaScript 파일에만 사용할 수 있고, prefetch는 모든 리소스 유형에 사용할 수 있다",
+      "두 속성은 동일한 동작을 하며, 브라우저 호환성만 다르다"
+    ],
+    "correctIndex": 0,
+    "explanation": "preload는 현재 페이지 렌더링에 반드시 필요한 리소스(폰트, 중요 스크립트 등)를 높은 우선순위로 즉시 가져오도록 브라우저에 지시합니다. prefetch는 사용자가 다음에 방문할 가능성이 있는 페이지의 리소스를 브라우저의 유휴 시간에 낮은 우선순위로 미리 다운로드합니다. preload를 과도하게 사용하면 오히려 중요한 리소스의 로딩을 방해할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTML/Attributes/rel/preload"
+  },
+  {
+    "id": "network-052",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "브라우저가 서버에 조건부 요청(Conditional Request)을 보내고 304 Not Modified 응답을 받았을 때 어떤 일이 일어나나요?",
+    "options": [
+      "브라우저가 리소스를 처음부터 다시 다운로드한다",
+      "서버가 304 응답과 함께 전체 리소스 body를 다시 전송한다",
+      "브라우저가 이전 캐시를 무효화하고 빈 응답을 표시한다",
+      "서버가 body 없이 304 상태만 반환하고, 브라우저는 로컬 캐시에 저장된 리소스를 재사용한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "조건부 요청은 If-None-Match(ETag 비교) 또는 If-Modified-Since(날짜 비교) 헤더를 사용하여 리소스가 변경되었는지 서버에 확인합니다. 리소스가 변경되지 않았으면 서버는 body 없이 304 Not Modified만 반환하고, 브라우저는 로컬 캐시의 리소스를 그대로 사용합니다. 이를 통해 불필요한 데이터 전송을 줄여 대역폭을 절약합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Conditional_requests"
+  },
+  {
+    "id": "network-053",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Subresource Integrity(SRI)가 보호하는 보안 위협은 무엇인가요?",
+    "options": [
+      "XSS 공격으로 인한 사용자 입력 데이터 탈취",
+      "CDN이나 외부 서버에서 제공하는 스크립트가 변조되었을 때 변조된 코드의 실행을 차단한다",
+      "CSRF 공격으로 인한 인증된 요청 위조",
+      "DNS 스푸핑으로 인한 잘못된 서버 연결"
+    ],
+    "correctIndex": 1,
+    "explanation": "SRI는 <script>나 <link> 태그에 integrity 속성으로 리소스의 해시값을 지정하여, 브라우저가 다운로드한 파일의 해시와 비교하는 보안 메커니즘입니다. CDN이 해킹되거나 중간자 공격으로 파일이 변조된 경우, 해시가 일치하지 않아 브라우저가 해당 리소스의 실행을 차단합니다. crossorigin 속성과 함께 사용해야 하며, 서드파티 스크립트의 공급망 공격을 방어하는 데 핵심적인 역할을 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/Security/Subresource_Integrity"
+  },
+  {
+    "id": "network-054",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 ReadableStream을 사용한 스트리밍 응답 처리 시, reader.read()가 반환하는 객체의 구조는 무엇인가요?",
+    "code": "const response = await fetch('/api/stream');\nconst reader = response.body.getReader();\nconst { done, value } = await reader.read();\nconsole.log(typeof done, value?.constructor.name);",
+    "options": [
+      "\"string\", \"String\"",
+      "\"number\", \"ArrayBuffer\"",
+      "\"boolean\", \"Uint8Array\"",
+      "\"boolean\", \"String\""
+    ],
+    "correctIndex": 2,
+    "explanation": "ReadableStreamDefaultReader의 read() 메서드는 { done: boolean, value: Uint8Array | undefined } 형태의 객체를 반환합니다. done은 스트림이 끝났는지를 나타내는 boolean이고, value는 읽은 청크 데이터로 Uint8Array 타입입니다. 스트림이 끝나면 done이 true이고 value는 undefined가 됩니다. 텍스트로 변환하려면 TextDecoder를 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/ReadableStreamDefaultReader/read"
+  },
+  {
+    "id": "network-055",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "포워드 프록시(Forward Proxy)와 리버스 프록시(Reverse Proxy)의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "포워드 프록시는 클라이언트를 대신하여 외부 서버에 요청을 보내고, 리버스 프록시는 서버를 대신하여 클라이언트의 요청을 받아 백엔드 서버에 전달한다",
+      "리버스 프록시는 클라이언트 측에 설치되고, 포워드 프록시는 서버 측에 설치된다",
+      "포워드 프록시는 HTTPS만 지원하고, 리버스 프록시는 HTTP만 지원한다",
+      "두 프록시는 동일한 역할을 하며, 배치 위치만 다르다"
+    ],
+    "correctIndex": 0,
+    "explanation": "포워드 프록시는 클라이언트 앞에 위치하여 클라이언트의 IP를 숨기고 접근 제어나 캐싱을 수행합니다(예: 기업 네트워크의 프록시 서버). 리버스 프록시는 서버 앞에 위치하여 로드 밸런싱, SSL 종료, 캐싱, DDoS 방어 등을 담당합니다(예: Nginx, Cloudflare). 클라이언트는 리버스 프록시의 존재를 알 수 없으며, 실제 서버의 IP가 외부에 노출되지 않습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Proxy_server"
   }
 ]
