@@ -837,5 +837,89 @@
     "correctIndex": 1,
     "explanation": "일반 enum은 컴파일 후 JavaScript 객체가 생성되어 런타임에 접근 가능합니다(예: Color[0] === 'Red' 역매핑). const enum은 컴파일 시 사용처에 리터럴 값으로 직접 치환(인라인)되어 런타임 객체가 생성되지 않습니다. Direction.Up은 컴파일 후 0으로 대체됩니다. const enum은 번들 크기를 줄이는 장점이 있지만, isolatedModules 환경에서는 제한이 있고 역매핑이 불가능합니다.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/enums.html#const-enums"
+  },
+  {
+    "id": "typescript-051",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "TypeScript에서 `.d.ts` 선언 파일(declaration file)의 역할은?",
+    "options": [
+      "JavaScript 코드를 TypeScript로 자동 변환하는 파일이다",
+      "런타임에 타입 검사를 수행하는 설정 파일이다",
+      "컴파일 시 JavaScript로 변환되어 실행되는 파일이다",
+      "타입 정보만 포함하며, JavaScript 라이브러리에 타입을 제공하기 위해 사용된다"
+    ],
+    "correctIndex": 3,
+    "explanation": ".d.ts 파일은 구현 코드 없이 타입 선언만 포함하는 파일입니다. JavaScript로 작성된 라이브러리에 TypeScript 타입 정보를 제공하여, 해당 라이브러리를 TypeScript 프로젝트에서 타입 안전하게 사용할 수 있게 합니다. DefinitelyTyped(@types/*)에서 제공하는 타입 패키지가 대표적인 예이며, tsc --declaration 옵션으로 .ts 파일에서 자동 생성할 수도 있습니다. .d.ts 파일은 컴파일 후 JavaScript로 변환되지 않습니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/type-declarations.html"
+  },
+  {
+    "id": "typescript-052",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 재귀 타입에서 `DeepReadonly<User>`의 결과 타입은?",
+    "code": "type DeepReadonly<T> = {\n  readonly [P in keyof T]: T[P] extends object ? DeepReadonly<T[P]> : T[P];\n};\n\ninterface User {\n  name: string;\n  address: {\n    city: string;\n    zip: number;\n  };\n}\n\ntype ReadonlyUser = DeepReadonly<User>;",
+    "options": [
+      "{ readonly name: string; readonly address: { readonly city: string; readonly zip: number } }",
+      "{ readonly name: string; address: { city: string; zip: number } }",
+      "{ name: string; address: { readonly city: string; readonly zip: number } }",
+      "{ readonly name: string; readonly address: { city: string; zip: number } }"
+    ],
+    "correctIndex": 0,
+    "explanation": "DeepReadonly<T>는 재귀적 매핑 타입으로, 모든 속성에 readonly를 추가하되 속성 값이 object이면 재귀적으로 DeepReadonly를 적용합니다. name은 string(원시 타입)이므로 readonly string이 되고, address는 object이므로 DeepReadonly가 재귀 적용되어 내부의 city와 zip도 readonly가 됩니다. TypeScript의 내장 Readonly<T>는 얕은(shallow) readonly만 적용하므로, 깊은 불변성이 필요하면 이처럼 재귀 타입을 직접 정의해야 합니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/mapped-types.html"
+  },
+  {
+    "id": "typescript-053",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드에서 `type B`는 무엇인가요?",
+    "code": "const user = {\n  name: 'Kim',\n  age: 25,\n  roles: ['admin', 'user'],\n};\n\ntype A = typeof user;\ntype B = A['roles'][number];",
+    "options": [
+      "string[]",
+      "['admin', 'user']",
+      "number",
+      "string"
+    ],
+    "correctIndex": 3,
+    "explanation": "typeof user는 { name: string; age: number; roles: string[] }를 추론합니다(as const가 없으므로 리터럴이 아닌 넓은 타입). A['roles']는 인덱스 접근 타입으로 string[]을 가져옵니다. 배열 타입에 [number]로 인덱스 접근하면 배열 요소의 타입을 추출하므로 string[]의 요소 타입인 string이 됩니다. 이 T[number] 패턴은 배열이나 튜플에서 요소 타입을 추출하는 관용적인 방법으로, readonly 배열에도 동일하게 적용됩니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/indexed-access-types.html"
+  },
+  {
+    "id": "typescript-054",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "TypeScript에서 함수 매개변수의 타입 호환성(반공변성)에 대한 설명으로 올바른 것은?",
+    "code": "type Handler = (event: MouseEvent) => void;\n\nconst generalHandler: (event: Event) => void = (e) => console.log(e.type);\nconst specificHandler: (event: MouseEvent) => void = (e) => console.log(e.clientX);\n\n// strictFunctionTypes: true\nconst a: Handler = generalHandler;  // ?\nconst b: Handler = specificHandler; // ?",
+    "options": [
+      "strictFunctionTypes는 정확한 매개변수 타입 일치를 요구하므로 a와 b 모두 에러가 발생한다",
+      "a만 에러가 발생한다. 매개변수 타입은 반공변적이라 더 넓은 타입(Event)을 받는 함수만 호환된다",
+      "a와 b 모두 할당 가능하다. strictFunctionTypes에서 매개변수 타입은 반공변(contravariant)이므로 더 넓은 타입(Event)의 핸들러가 더 좁은 타입(MouseEvent)의 핸들러에 할당 가능하다",
+      "b만 에러가 발생한다. MouseEvent를 받는 함수는 Handler에 할당할 수 없다"
+    ],
+    "correctIndex": 2,
+    "explanation": "strictFunctionTypes가 활성화되면 함수 매개변수는 반공변(contravariant)으로 검사됩니다. Handler는 (event: MouseEvent) => void이므로, 매개변수가 더 넓은 Event인 generalHandler는 할당 가능합니다(Event가 MouseEvent를 포함하므로 안전). specificHandler는 매개변수가 정확히 같은 MouseEvent이므로 당연히 할당 가능합니다. 만약 매개변수가 MouseEvent보다 더 좁은 타입이었다면(예: 특정 커스텀 이벤트) 에러가 발생합니다. 반환 타입은 반대로 공변(covariant)입니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/functions.html#function-type-compatibility"
+  },
+  {
+    "id": "typescript-055",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 컴파일 에러가 발생하는 이유와 해결 방법은?",
+    "code": "interface ApiResponse<T = unknown> {\n  data: T;\n  status: number;\n}\n\nfunction processResponse(res: ApiResponse) {\n  const name: string = res.data.name;\n}",
+    "options": [
+      "ApiResponse 인터페이스에 제네릭을 사용할 수 없다",
+      "제네릭 기본값 unknown 때문에 res.data가 unknown 타입이 되어, name 속성에 직접 접근할 수 없다. 타입 인수를 명시하거나 타입 가드를 사용해야 한다",
+      "status 속성이 number가 아닌 string이어야 한다",
+      "함수에 반환 타입을 명시하지 않아서 에러가 발생한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "ApiResponse<T = unknown>에서 T의 기본값은 unknown입니다. processResponse의 매개변수 타입이 ApiResponse(타입 인수 생략)이면 T가 기본값 unknown으로 바인딩되어, res.data는 unknown 타입이 됩니다. unknown은 타입을 좁히지 않으면 속성 접근이 불가능하므로 res.data.name에서 에러가 발생합니다. 해결 방법: 1) ApiResponse<{ name: string }>처럼 타입 인수를 명시하거나, 2) typeof/instanceof 등 타입 가드로 data의 타입을 좁혀야 합니다. 기본 타입이 any였다면 에러가 나지 않지만 타입 안전성이 보장되지 않습니다.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/generics.html#generic-parameter-defaults"
   }
 ]

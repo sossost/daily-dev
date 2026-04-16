@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 5 database questions (051-055) (`ad9b24f`)
 - **content**: add 5 web-security questions (051-055) (`d85168d`)
 
 ## 2026-04-15

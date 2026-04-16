@@ -837,5 +837,89 @@
     "correctIndex": 1,
     "explanation": "Regular enums generate JavaScript objects after compilation that are accessible at runtime (e.g., Color[0] === 'Red' reverse mapping). const enums are substituted with literal values (inlined) at usage sites during compilation, so no runtime object is generated. Direction.Up is replaced with 0 after compilation. const enums reduce bundle size but have limitations in isolatedModules environments and do not support reverse mapping.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/enums.html#const-enums"
+  },
+  {
+    "id": "typescript-051",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of `.d.ts` declaration files in TypeScript?",
+    "options": [
+      "They automatically convert JavaScript code to TypeScript",
+      "They perform type checking at runtime as configuration files",
+      "They are compiled into JavaScript and executed at runtime",
+      "They contain only type information and are used to provide types for JavaScript libraries"
+    ],
+    "correctIndex": 3,
+    "explanation": ".d.ts files contain only type declarations without implementation code. They provide TypeScript type information for JavaScript libraries, enabling type-safe usage of those libraries in TypeScript projects. Type packages from DefinitelyTyped (@types/*) are a prime example. You can also auto-generate them from .ts files using the tsc --declaration option. .d.ts files are not compiled into JavaScript.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/type-declarations.html"
+  },
+  {
+    "id": "typescript-052",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the resulting type of `DeepReadonly<User>` with the following recursive type?",
+    "code": "type DeepReadonly<T> = {\n  readonly [P in keyof T]: T[P] extends object ? DeepReadonly<T[P]> : T[P];\n};\n\ninterface User {\n  name: string;\n  address: {\n    city: string;\n    zip: number;\n  };\n}\n\ntype ReadonlyUser = DeepReadonly<User>;",
+    "options": [
+      "{ readonly name: string; readonly address: { readonly city: string; readonly zip: number } }",
+      "{ readonly name: string; address: { city: string; zip: number } }",
+      "{ name: string; address: { readonly city: string; readonly zip: number } }",
+      "{ readonly name: string; readonly address: { city: string; zip: number } }"
+    ],
+    "correctIndex": 0,
+    "explanation": "DeepReadonly<T> is a recursive mapped type that adds readonly to all properties and recursively applies DeepReadonly when a property value is an object. name is a string (primitive type) so it becomes readonly string, while address is an object so DeepReadonly is applied recursively, making city and zip also readonly. TypeScript's built-in Readonly<T> only applies shallow readonly, so for deep immutability you need to define a recursive type like this.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/mapped-types.html"
+  },
+  {
+    "id": "typescript-053",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is `type B` in the following code?",
+    "code": "const user = {\n  name: 'Kim',\n  age: 25,\n  roles: ['admin', 'user'],\n};\n\ntype A = typeof user;\ntype B = A['roles'][number];",
+    "options": [
+      "string[]",
+      "['admin', 'user']",
+      "number",
+      "string"
+    ],
+    "correctIndex": 3,
+    "explanation": "typeof user infers { name: string; age: number; roles: string[] } (without as const, types are widened rather than literal). A['roles'] uses indexed access types to get string[]. Indexing an array type with [number] extracts the element type, so string[]'s element type is string. This T[number] pattern is an idiomatic way to extract element types from arrays or tuples, and works the same with readonly arrays.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/indexed-access-types.html"
+  },
+  {
+    "id": "typescript-054",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about function parameter type compatibility (contravariance) in TypeScript is correct?",
+    "code": "type Handler = (event: MouseEvent) => void;\n\nconst generalHandler: (event: Event) => void = (e) => console.log(e.type);\nconst specificHandler: (event: MouseEvent) => void = (e) => console.log(e.clientX);\n\n// strictFunctionTypes: true\nconst a: Handler = generalHandler;  // ?\nconst b: Handler = specificHandler; // ?",
+    "options": [
+      "Both a and b cause errors because strictFunctionTypes requires exact parameter type matches",
+      "Only a causes an error. Parameter types are contravariant so only functions accepting a wider type (Event) are compatible",
+      "a is assignable and b is assignable. Under strictFunctionTypes, parameter types are contravariant, so a handler with a wider parameter type (Event) can be assigned to a handler expecting a narrower type (MouseEvent)",
+      "Only b causes an error. A function accepting MouseEvent cannot be assigned to Handler"
+    ],
+    "correctIndex": 2,
+    "explanation": "With strictFunctionTypes enabled, function parameters are checked contravariantly. Since Handler expects (event: MouseEvent) => void, generalHandler with a wider parameter type Event is assignable (Event encompasses MouseEvent, so it's safe). specificHandler has the exact same parameter type MouseEvent, so it's naturally assignable. If the parameter were a narrower type than MouseEvent (e.g., a specific custom event), an error would occur. Return types are covariant (the opposite direction).",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/functions.html#function-type-compatibility"
+  },
+  {
+    "id": "typescript-055",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the following code cause a compile error, and how can it be fixed?",
+    "code": "interface ApiResponse<T = unknown> {\n  data: T;\n  status: number;\n}\n\nfunction processResponse(res: ApiResponse) {\n  const name: string = res.data.name;\n}",
+    "options": [
+      "Generics cannot be used with the ApiResponse interface",
+      "Because the generic default is unknown, res.data is of type unknown and name property cannot be accessed directly. You must specify a type argument or use a type guard",
+      "The status property should be string instead of number",
+      "The error occurs because no return type is specified for the function"
+    ],
+    "correctIndex": 1,
+    "explanation": "In ApiResponse<T = unknown>, T defaults to unknown. When the parameter type is ApiResponse (type argument omitted), T is bound to the default unknown, making res.data of type unknown. Since unknown doesn't allow property access without narrowing, res.data.name causes an error. Solutions: 1) Specify the type argument like ApiResponse<{ name: string }>, or 2) use type guards like typeof/instanceof to narrow data's type. If the default were any instead, no error would occur but type safety wouldn't be guaranteed.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/generics.html#generic-parameter-defaults"
   }
 ]
