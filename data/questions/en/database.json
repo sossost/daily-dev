@@ -820,5 +820,88 @@
     "correctIndex": 0,
     "explanation": "WAL (Write-Ahead Logging) records changes to a log file before modifying the actual data pages. In case of a system failure, the log can be replayed to recover committed transactions and roll back incomplete ones, guaranteeing the Durability property of ACID.",
     "sourceUrl": "https://www.postgresql.org/docs/current/wal-intro.html"
+  },
+  {
+    "id": "database-051",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the main purpose of a CTE (Common Table Expression) in SQL?",
+    "options": [
+      "A construct that uses the WITH clause to define a named temporary result set within a query, improving readability and reusability",
+      "A DDL command that creates a permanent table",
+      "It is stored in the database like a View and can be reused across different sessions",
+      "CTEs are always optimized to execute faster than subqueries"
+    ],
+    "correctIndex": 0,
+    "explanation": "A CTE (Common Table Expression) uses the WITH clause to define a named temporary result set within a single query. It separates complex subqueries into logical blocks for better readability, and the same CTE can be referenced multiple times within the query. Recursive CTEs also enable processing of hierarchical data structures.",
+    "sourceUrl": "https://www.postgresql.org/docs/current/queries-with.html"
+  },
+  {
+    "id": "database-052",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the result of the following SQL query?\n\nnames table: id(1,2,3,4), name('Alice','Bob','Alex','Charlie')\n\nSELECT name FROM names WHERE name LIKE 'Al%';",
+    "code": "SELECT name FROM names WHERE name LIKE 'Al%';",
+    "options": [
+      "Alice",
+      "Alice, Bob",
+      "Alice, Alex, Charlie",
+      "Alice, Alex"
+    ],
+    "correctIndex": 3,
+    "explanation": "The '%' wildcard in the LIKE operator matches zero or more arbitrary characters. The pattern 'Al%' matches any string starting with 'Al'. Both 'Alice' and 'Alex' start with 'Al', so these two rows are returned. 'Bob' and 'Charlie' do not match the pattern.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_like.asp"
+  },
+  {
+    "id": "database-053",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between a regular View and a Materialized View?",
+    "options": [
+      "A regular View physically stores data, while a Materialized View executes the query each time",
+      "A Materialized View physically stores query results for fast retrieval, but requires manual or automatic refresh when the source data changes",
+      "Both views can freely perform INSERT, UPDATE, and DELETE operations",
+      "A Materialized View can only reference a single table, while only regular Views support joins"
+    ],
+    "correctIndex": 1,
+    "explanation": "A regular View is a stored query that re-queries the source tables each time it is accessed. A Materialized View physically stores the query results on disk, providing fast performance for repeated queries. However, when the source data changes, a REFRESH command or similar mechanism is needed to keep the materialized view up to date.",
+    "sourceUrl": "https://www.postgresql.org/docs/current/rules-materializedviews.html"
+  },
+  {
+    "id": "database-054",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The following query performs a full table scan despite having separate indexes on both the name and email columns. What is the cause?\n\nSELECT * FROM users WHERE name = 'Alice' OR email = 'alice@test.com';",
+    "code": "-- name column: index exists\n-- email column: index exists\nSELECT * FROM users\nWHERE name = 'Alice'\n   OR email = 'alice@test.com';",
+    "options": [
+      "SELECT * cannot use indexes",
+      "More than two conditions cannot be used in a WHERE clause",
+      "When OR conditions involve different column indexes, the optimizer may find it inefficient to combine them and choose a full table scan instead",
+      "String comparisons cannot utilize indexes"
+    ],
+    "correctIndex": 2,
+    "explanation": "When OR conditions search across different columns, the optimizer must scan each index separately and merge the results (Index Merge). If this cost is estimated to be higher than a full table scan, the optimizer ignores the indexes. Splitting the query using UNION allows each index to be utilized independently, improving performance.",
+    "sourceUrl": "https://use-the-index-luke.com/sql/where-clause/searching-for-ranges/greater-less-between-and"
+  },
+  {
+    "id": "database-055",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "How many rows does the following SQL query return?\n\nscores table: id(1,2,3,4,5), value(10, 25, 50, 75, 100)\n\nSELECT * FROM scores WHERE value BETWEEN 20 AND 80;",
+    "code": "SELECT * FROM scores\nWHERE value BETWEEN 20 AND 80;",
+    "options": [
+      "3 rows (value: 25, 50, 75)",
+      "2 rows (value: 50, 75)",
+      "5 rows (all rows)",
+      "1 row (value: 50)"
+    ],
+    "correctIndex": 0,
+    "explanation": "The BETWEEN operator is inclusive of both boundary values. That is, it is equivalent to value >= 20 AND value <= 80. Three rows with values 25, 50, and 75 fall within this range. 10 is less than 20 and 100 is greater than 80, so they are excluded.",
+    "sourceUrl": "https://www.w3schools.com/sql/sql_between.asp"
   }
 ]
