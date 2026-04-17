@@ -814,5 +814,87 @@
     "correctIndex": 2,
     "explanation": "dns-prefetch hints the browser to perform DNS resolution for the specified domain in advance. DNS lookups typically take 20-120ms, and for pages using resources from multiple external domains, this time accumulates. It's a lighter hint than preconnect and is suitable for domains you might not definitely connect to. preconnect performs DNS + TCP + TLS, so it's more suitable for domains you'll definitely use.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/dns-prefetch"
+  },
+  {
+    "id": "web-performance-051",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of the browser's Back/Forward Cache (bfcache)?",
+    "options": [
+      "It sends a new request to the server to fetch the latest page when navigating back/forward",
+      "It caches only the CSS of previous pages to reduce style reapplication time",
+      "It is a persistent storage that preserves session data even when browser tabs are closed",
+      "It keeps a complete snapshot of the page (including DOM and JavaScript state) in memory during back/forward navigation for instant restoration"
+    ],
+    "correctIndex": 3,
+    "explanation": "bfcache is a browser optimization that fully preserves previous pages in memory for instant restoration when the user navigates back or forward. The page is displayed immediately without re-parsing HTML, re-executing JavaScript, or re-downloading resources, dramatically improving navigation speed. Having an unload event listener disables bfcache, so you should use pagehide/pageshow events instead.",
+    "sourceUrl": "https://web.dev/articles/bfcache"
+  },
+  {
+    "id": "web-performance-052",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "Why does the following code use requestAnimationFrame?",
+    "code": "function animate() {\n  element.style.transform = `translateX(${pos}px)`;\n  pos += 2;\n  if (pos < 300) {\n    requestAnimationFrame(animate);\n  }\n}\nrequestAnimationFrame(animate);",
+    "options": [
+      "requestAnimationFrame executes callbacks in sync with the browser's rendering cycle (typically 60fps), ensuring smooth animations without frame drops",
+      "requestAnimationFrame runs animations in a Web Worker so it doesn't block the main thread",
+      "requestAnimationFrame renders directly on the GPU so CPU usage is 0%",
+      "requestAnimationFrame executes at shorter intervals (1ms) than setInterval, making animations faster"
+    ],
+    "correctIndex": 0,
+    "explanation": "requestAnimationFrame (rAF) executes its callback right before the browser's next repaint. It's typically called at the display's refresh rate (60Hz ≈ 16.7ms), updating exactly once per frame. setInterval and setTimeout don't guarantee precise timing, which can cause frames to be skipped or unnecessary computations. Additionally, rAF automatically pauses when the tab is inactive, saving CPU and battery.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame"
+  },
+  {
+    "id": "web-performance-053",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between prerendering with the Speculation Rules API and traditional <link rel=\"prefetch\">?",
+    "options": [
+      "prefetch is always faster and uses less memory than prerendering",
+      "Speculation Rules API only works with HTTP/1.1, while prefetch is HTTP/2 only",
+      "Both download resources in advance and perform the same level of page preparation",
+      "prefetch only downloads resources in advance, while the Speculation Rules API's prerendering fully renders the page in the background, providing near-instant page transitions"
+    ],
+    "correctIndex": 3,
+    "explanation": "prefetch downloads resources (HTML, JS, etc.) that may be needed in the future at low priority — download only. In contrast, the Speculation Rules API's prerender fully loads and renders the page in a hidden tab. When the user clicks the link, the already-prepared page is instantly activated, making perceived loading time nearly zero. However, prerendering uses more memory and CPU, so it should only be applied to pages with a high probability of being visited.",
+    "sourceUrl": "https://developer.chrome.com/docs/web-platform/prerender-pages"
+  },
+  {
+    "id": "web-performance-054",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the difference between Reflow (layout recalculation) and Repaint, and how do they impact performance?",
+    "options": [
+      "Reflow recalculates layout when geometric properties (size, position) change and triggers a subsequent repaint, making it more expensive than Repaint alone",
+      "Repaint is always more expensive than Reflow because pixel rendering is more complex than layout calculation",
+      "Reflow and Repaint are the same operation, just named differently across browsers",
+      "Reflow only occurs from CSS changes, while Repaint only occurs from JavaScript changes"
+    ],
+    "correctIndex": 0,
+    "explanation": "Reflow (Layout) is the process of recalculating the full or partial layout when an element's size or position changes. When Reflow occurs, a Repaint inevitably follows to redraw the affected area. In contrast, property changes that don't affect layout (like color or background-color) only trigger a Repaint. Therefore, Reflow has a greater performance impact. Using transform instead of width/height/margin avoids Reflow entirely.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Reflow"
+  },
+  {
+    "id": "web-performance-055",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What performance impact does loading=\"lazy\" have in the following HTML?",
+    "code": "<img src=\"hero.jpg\" alt=\"Hero\" fetchpriority=\"high\">\n<img src=\"below-fold.jpg\" alt=\"Below\" loading=\"lazy\">\n<img src=\"footer.jpg\" alt=\"Footer\" loading=\"lazy\">",
+    "options": [
+      "All three images are downloaded immediately when the page loads",
+      "Images with loading=\"lazy\" are never loaded",
+      "loading=\"lazy\" conflicts with fetchpriority, blocking the loading of all images",
+      "hero.jpg loads immediately, while below-fold.jpg and footer.jpg defer loading until they approach the viewport, saving initial network bandwidth"
+    ],
+    "correctIndex": 3,
+    "explanation": "loading=\"lazy\" is a native attribute that tells the browser to defer loading the image until it reaches near the viewport. This reduces network requests for off-screen images during initial page load, saving bandwidth and loading time. However, loading=\"lazy\" should never be used on hero images visible in the first viewport — it can worsen LCP. Instead, use fetchpriority=\"high\" to prioritize loading for above-the-fold images.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#loading"
   }
 ]

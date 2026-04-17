@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-04-17
+
+### Features
+
+- **content**: fix — typescript-054 option contradictions (`7a0de84`)
+
 ## 2026-04-16
 
 ### Features
