@@ -814,18 +814,100 @@
   {
     "id": "async-050",
     "topic": "async",
-    "type": "debugging",
+    "type": "concept",
     "difficulty": "medium",
-    "question": "What is the issue with the following code?",
-    "code": "async function processItems(items) {\n  items.forEach(async (item) => {\n    await saveToDatabase(item);\n  });\n  console.log('All items saved!');\n}",
+    "question": "When one Promise in Promise.all() rejects, what happens to the remaining Promises?",
     "options": [
-      "forEach does not support async callbacks",
-      "The code throws a TypeError because items.forEach is not a function",
-      "console.log runs before all saves complete because forEach ignores the Promises returned by the async callback — use for...of or Promise.all instead",
-      "await cannot be used inside a callback function"
+      "The remaining Promises are automatically cancelled",
+      "The remaining Promises immediately resolve",
+      "The remaining Promises continue running but their results are ignored — only the first rejection reason is returned",
+      "The remaining Promises' results are returned as an array"
     ],
     "correctIndex": 2,
-    "explanation": "Array.forEach() calls the callback for each element but does not await the returned Promises. The async callback returns a Promise, but forEach simply ignores it and moves to the next iteration. As a result, console.log('All items saved!') executes before any saves complete. Use a for...of loop with await for sequential processing, or Promise.all(items.map(...)) for concurrent processing.",
-    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach#description"
+    "explanation": "When one Promise in Promise.all() rejects, the returned Promise immediately rejects, but the remaining Promises are not cancelled — they continue running. JavaScript Promises have no built-in cancellation mechanism. However, their results are ignored. If cancellation is needed, pass an AbortController to each Promise. If you need all results regardless of failures, use Promise.allSettled().",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+  },
+  {
+    "id": "async-051",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const original = Promise.resolve('hello');\nconst wrapped = Promise.resolve(original);\nconsole.log(original === wrapped);",
+    "options": [
+      "true",
+      "false",
+      "TypeError",
+      "undefined"
+    ],
+    "correctIndex": 0,
+    "explanation": "When Promise.resolve() receives a native Promise object, it returns the exact same object instead of creating a new one. This behavior is specified in the ECMAScript specification and only applies when the argument is a Promise from the same constructor. Thenables or Promises from other realms are wrapped in a new Promise. This optimization prevents unnecessary Promise wrapping.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "async-052",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of the async IIFE pattern — (async () => { await ... })()?",
+    "options": [
+      "To automatically convert regular functions into async functions",
+      "To write immediately-executed async code in environments where top-level await is not available",
+      "To prevent memory leaks",
+      "To execute Promises synchronously"
+    ],
+    "correctIndex": 1,
+    "explanation": "An async IIFE (Immediately Invoked Function Expression) has the form (async () => { ... })(). Before ES modules introduced top-level await, you could not use await at the module top level. The async IIFE pattern was used to work around this limitation. It remains useful in CommonJS environments and regular script tags where top-level await is not supported.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/IIFE"
+  },
+  {
+    "id": "async-053",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why is the final value of count not 3 in the following code?",
+    "code": "let count = 0;\n\nasync function increment() {\n  const current = count;\n  await Promise.resolve();\n  count = current + 1;\n}\n\nawait Promise.all([increment(), increment(), increment()]);\nconsole.log(count);",
+    "options": [
+      "Promise.all executes the functions sequentially",
+      "await Promise.resolve() has no effect",
+      "Async functions cannot modify external variables",
+      "All three functions read count=0 before the await and each writes count=1 afterward, overwriting each other"
+    ],
+    "correctIndex": 3,
+    "explanation": "All three increment() calls start concurrently. Before the await, each synchronously reads count (which is 0) and stores it in current. After await Promise.resolve(), each sets count = 0 + 1 = 1, so the final value is 1, not 3. This is a race condition in async code that occurs when shared state is read and written concurrently. The fix is to process sequentially or use an atomic update pattern.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "async-054",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output order of the following code?",
+    "code": "async function run() {\n  console.log(1);\n  const p = Promise.resolve(2);\n  console.log(3);\n  const v = await p;\n  console.log(v);\n}\nrun();\nconsole.log(4);",
+    "options": [
+      "1, 2, 3, 4",
+      "1, 3, 2, 4",
+      "1, 3, 4, 2",
+      "4, 1, 3, 2"
+    ],
+    "correctIndex": 2,
+    "explanation": "When run() is called, it executes synchronously until it hits await. console.log(1) outputs first. Promise.resolve(2) creates a Promise but does not log anything. console.log(3) outputs next. At await p, the run function pauses and control returns to the caller. console.log(4) executes synchronously. Then the microtask resumes run, and console.log(2) outputs last.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await"
+  },
+  {
+    "id": "async-055",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about the ES2022 Error cause option is correct?",
+    "options": [
+      "It replaces the error's stack trace",
+      "It preserves the original error while creating a new one, enabling error chaining",
+      "It automatically stores the file path where the error occurred",
+      "It handles errors automatically without try-catch"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Error cause option, introduced in ES2022, is used as new Error('message', { cause: originalError }). When catching low-level errors in async code and re-throwing them as higher-level meaningful errors, the original cause is preserved. You can access the original error via err.cause, making it possible to trace the full context of an error chain during debugging.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause"
   }
 ]

@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 5 web-performance questions (051-055) (`3109c2e`)
 - **content**: fix — typescript-054 option contradictions (`7a0de84`)
 
 ## 2026-04-16
