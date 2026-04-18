@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-04-18
+
+### Features
+
+- **content**: add 5 async questions, fix duplicate (`2b336d0`)
+
 ## 2026-04-17
 
 ### Features

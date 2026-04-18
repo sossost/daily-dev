@@ -810,5 +810,87 @@
     "correctIndex": 2,
     "explanation": "When success responses use {status, users} and error responses use {error, message}, clients must handle two completely different shapes. A consistent envelope pattern — e.g., { data, error, meta } for all responses — lets clients use a single parsing path. The actual error details should be communicated via HTTP status codes and a predictable error object structure.",
     "sourceUrl": "https://jsonapi.org/format/"
+  },
+  {
+    "id": "api-design-051",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is logged to the console in the following code?",
+    "code": "const headers = new Headers();\nheaders.append('X-Custom', 'value1');\nheaders.append('X-Custom', 'value2');\nconsole.log(headers.get('X-Custom'));",
+    "options": [
+      "value1, value2",
+      "value2",
+      "value1",
+      "['value1', 'value2']"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Headers.append() method adds a new value to an existing header, or creates the header if it doesn't exist. Unlike set(), which replaces the value, append() combines multiple values for the same header name into a comma-separated string. So headers.get('X-Custom') returns 'value1, value2'. This follows the HTTP specification where multiple header values are combined with commas.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Headers/append"
+  },
+  {
+    "id": "api-design-052",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the primary purpose of the Vary HTTP response header in API caching?",
+    "options": [
+      "It specifies which request headers the server used to select the response, so caches can correctly store and match variants",
+      "It indicates the total number of response variants the server supports",
+      "It disables caching for specific HTTP methods",
+      "It sets the maximum number of concurrent requests allowed per client"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Vary header tells caches which request headers were used to determine the response. For example, 'Vary: Accept-Language' means the response may differ based on the client's Accept-Language header, so the cache must store separate variants for each language. Without Vary, a cache might serve a JSON response to a client expecting XML if both share the same URL. This is critical for content negotiation in APIs.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary"
+  },
+  {
+    "id": "api-design-053",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the problem with the following API endpoint design?\n\nPATCH /api/users/123\nBody: { \"email\": \"new@example.com\" }\nResponse: 200 OK (no body)",
+    "options": [
+      "PATCH should not be used for partial updates",
+      "The email field should be sent as a query parameter",
+      "The response should return the updated resource so the client has the current state without needing an additional GET request",
+      "A 204 status code should never follow a PATCH request"
+    ],
+    "correctIndex": 2,
+    "explanation": "While returning 200 with no body is technically valid, it forces the client to make an additional GET request to see the current state of the resource. Best practice for PATCH (and PUT) is to return the full updated resource in the response body. This avoids race conditions where the client's local state diverges from the server, and it reduces unnecessary network round-trips. The pattern is sometimes called 'echo back'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PATCH"
+  },
+  {
+    "id": "api-design-054",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Which correctly describes the difference between HTTP status codes 301 and 302?",
+    "options": [
+      "301 is for GET requests only, while 302 works with all HTTP methods",
+      "302 indicates a permanent redirect, while 301 indicates a temporary redirect",
+      "Both status codes behave identically in all situations",
+      "301 indicates a permanent redirect (browsers cache it), while 302 indicates a temporary redirect (browsers do not cache it)"
+    ],
+    "correctIndex": 3,
+    "explanation": "301 Moved Permanently tells the client that the resource has permanently moved to a new URL. Browsers and search engines cache this redirect and update their references. 302 Found indicates a temporary redirect — the original URL is still valid and should be used for future requests. Choosing the wrong one affects SEO, caching behavior, and whether bookmarks get updated. For APIs, 301 is used when endpoints are permanently renamed.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301"
+  },
+  {
+    "id": "api-design-055",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the final output of the following code?",
+    "code": "const url = new URL('https://api.example.com/search');\nurl.searchParams.set('q', 'hello world');\nurl.searchParams.append('tag', 'js');\nurl.searchParams.append('tag', 'api');\nconsole.log(url.searchParams.getAll('tag').length);\nconsole.log(url.search);",
+    "options": [
+      "1\n?q=hello+world&tag=api",
+      "2\n?q=hello%20world&tag=js&tag=api",
+      "2\n?q=hello+world&tag=js&tag=api",
+      "1\n?q=hello+world&tag=js%2Capi"
+    ],
+    "correctIndex": 2,
+    "explanation": "URLSearchParams.append() adds a new key-value pair without removing existing ones, so both 'tag=js' and 'tag=api' are kept — getAll('tag') returns an array of length 2. The set() method for 'q' creates a single entry. URLSearchParams encodes spaces as '+' (application/x-www-form-urlencoded format), not '%20'. The resulting search string is '?q=hello+world&tag=js&tag=api'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams"
   }
 ]

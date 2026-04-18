@@ -810,5 +810,87 @@
     "correctIndex": 2,
     "explanation": "성공 응답이 {status, users}를 사용하고 오류 응답이 {error, message}를 사용하면, 클라이언트는 완전히 다른 두 가지 형태를 처리해야 합니다. 일관된 엔벨로프 패턴(예: 모든 응답에 { data, error, meta })을 사용하면 클라이언트가 단일 파싱 경로를 사용할 수 있습니다. 실제 오류 세부 정보는 HTTP 상태 코드와 예측 가능한 오류 객체 구조를 통해 전달해야 합니다.",
     "sourceUrl": "https://jsonapi.org/format/"
+  },
+  {
+    "id": "api-design-051",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 콘솔에 출력되는 값은 무엇인가요?",
+    "code": "const headers = new Headers();\nheaders.append('X-Custom', 'value1');\nheaders.append('X-Custom', 'value2');\nconsole.log(headers.get('X-Custom'));",
+    "options": [
+      "value1, value2",
+      "value2",
+      "value1",
+      "['value1', 'value2']"
+    ],
+    "correctIndex": 0,
+    "explanation": "Headers.append() 메서드는 기존 헤더에 새 값을 추가하거나, 헤더가 존재하지 않으면 새로 생성합니다. 값을 대체하는 set()과 달리, append()는 같은 헤더 이름에 대해 여러 값을 쉼표로 구분된 문자열로 결합합니다. 따라서 headers.get('X-Custom')은 'value1, value2'를 반환합니다. 이는 여러 헤더 값을 쉼표로 결합하는 HTTP 명세를 따릅니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Headers/append"
+  },
+  {
+    "id": "api-design-052",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "API 캐싱에서 Vary HTTP 응답 헤더의 주요 목적은 무엇인가요?",
+    "options": [
+      "서버가 응답을 선택하는 데 사용한 요청 헤더를 명시하여, 캐시가 변형을 올바르게 저장하고 매칭할 수 있도록 한다",
+      "서버가 지원하는 응답 변형의 총 개수를 나타낸다",
+      "특정 HTTP 메서드에 대해 캐싱을 비활성화한다",
+      "클라이언트당 허용되는 최대 동시 요청 수를 설정한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "Vary 헤더는 응답을 결정하는 데 어떤 요청 헤더가 사용되었는지 캐시에 알려줍니다. 예를 들어 'Vary: Accept-Language'는 클라이언트의 Accept-Language 헤더에 따라 응답이 달라질 수 있으므로, 캐시가 각 언어별로 별도의 변형을 저장해야 함을 의미합니다. Vary가 없으면 캐시가 XML을 기대하는 클라이언트에게 JSON 응답을 제공할 수 있습니다. 이는 API의 콘텐츠 협상에 매우 중요합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Vary"
+  },
+  {
+    "id": "api-design-053",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 API 엔드포인트 설계의 문제점은 무엇인가요?\n\nPATCH /api/users/123\nBody: { \"email\": \"new@example.com\" }\nResponse: 200 OK (본문 없음)",
+    "options": [
+      "PATCH는 부분 업데이트에 사용하면 안 된다",
+      "email 필드는 쿼리 파라미터로 보내야 한다",
+      "응답에 업데이트된 리소스를 포함해야 클라이언트가 추가 GET 요청 없이 현재 상태를 알 수 있다",
+      "PATCH 요청 뒤에는 절대 204 상태 코드를 사용하면 안 된다"
+    ],
+    "correctIndex": 2,
+    "explanation": "본문 없이 200을 반환하는 것이 기술적으로 유효하지만, 클라이언트는 리소스의 현재 상태를 확인하기 위해 추가 GET 요청을 보내야 합니다. PATCH(및 PUT)의 모범 사례는 응답 본문에 업데이트된 전체 리소스를 반환하는 것입니다. 이렇게 하면 클라이언트의 로컬 상태가 서버와 달라지는 경쟁 조건을 방지하고, 불필요한 네트워크 왕복을 줄입니다. 이 패턴을 'echo back'이라고도 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Methods/PATCH"
+  },
+  {
+    "id": "api-design-054",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "HTTP 상태 코드 301과 302의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "301은 GET 요청에만 사용되고, 302는 모든 HTTP 메서드에서 동작한다",
+      "302는 영구 리다이렉트이고, 301은 임시 리다이렉트이다",
+      "두 상태 코드는 모든 상황에서 동일하게 동작한다",
+      "301은 영구 리다이렉트(브라우저가 캐시함)이고, 302는 임시 리다이렉트(브라우저가 캐시하지 않음)이다"
+    ],
+    "correctIndex": 3,
+    "explanation": "301 Moved Permanently는 리소스가 새 URL로 영구적으로 이동했음을 클라이언트에 알립니다. 브라우저와 검색 엔진은 이 리다이렉트를 캐시하고 참조를 업데이트합니다. 302 Found는 임시 리다이렉트를 나타내며, 원래 URL이 여전히 유효하고 향후 요청에 사용해야 합니다. 잘못된 선택은 SEO, 캐싱 동작, 북마크 업데이트 여부에 영향을 미칩니다. API에서 301은 엔드포인트가 영구적으로 변경될 때 사용됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Status/301"
+  },
+  {
+    "id": "api-design-055",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 최종 출력 결과는 무엇인가요?",
+    "code": "const url = new URL('https://api.example.com/search');\nurl.searchParams.set('q', 'hello world');\nurl.searchParams.append('tag', 'js');\nurl.searchParams.append('tag', 'api');\nconsole.log(url.searchParams.getAll('tag').length);\nconsole.log(url.search);",
+    "options": [
+      "1\n?q=hello+world&tag=api",
+      "2\n?q=hello%20world&tag=js&tag=api",
+      "2\n?q=hello+world&tag=js&tag=api",
+      "1\n?q=hello+world&tag=js%2Capi"
+    ],
+    "correctIndex": 2,
+    "explanation": "URLSearchParams.append()는 기존 값을 제거하지 않고 새 키-값 쌍을 추가하므로, 'tag=js'와 'tag=api' 모두 유지됩니다. getAll('tag')는 길이 2인 배열을 반환합니다. 'q'에 대한 set()은 단일 항목을 생성합니다. URLSearchParams는 공백을 '%20'이 아닌 '+'로 인코딩합니다(application/x-www-form-urlencoded 형식). 결과 검색 문자열은 '?q=hello+world&tag=js&tag=api'입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/URLSearchParams"
   }
 ]

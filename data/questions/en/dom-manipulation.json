@@ -822,5 +822,88 @@
     "correctIndex": 3,
     "explanation": "previousSibling returns the previous sibling node, which can be any node type including text nodes, comment nodes, and Element nodes. previousElementSibling returns only the previous sibling that is an Element node. Since line breaks and whitespace in HTML create text nodes, it is safer to use previousElementSibling when traversing only elements.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/previousElementSibling"
+  },
+  {
+    "id": "dom-manipulation-051",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const div = document.createElement('div');\ndiv.dataset.userId = '42';\ndiv.dataset.userName = 'Alice';\nconsole.log(div.getAttribute('data-user-name'));\nconsole.log(Object.keys(div.dataset).length);",
+    "options": [
+      "null, 2",
+      "Alice, 2",
+      "undefined, 2",
+      "Alice, 0"
+    ],
+    "correctIndex": 1,
+    "explanation": "The dataset property provides a DOMStringMap for reading and writing data-* attributes. Property names in dataset use camelCase (userName), which maps to the kebab-case HTML attribute (data-user-name). Setting div.dataset.userName = 'Alice' is equivalent to div.setAttribute('data-user-name', 'Alice'). getAttribute('data-user-name') returns 'Alice', and Object.keys(div.dataset) returns both 'userId' and 'userName', giving a length of 2.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset"
+  },
+  {
+    "id": "dom-manipulation-052",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What happens when you call element.attachShadow({ mode: 'open' }) on an element that already has a shadow root?",
+    "options": [
+      "The existing shadow root is replaced with a new one",
+      "A second shadow root is added alongside the first",
+      "An error is thrown because each element can have at most one shadow root",
+      "The existing shadow root is returned without creating a new one"
+    ],
+    "correctIndex": 2,
+    "explanation": "Each element can have at most one shadow root. Calling attachShadow() on an element that already has a shadow root throws a DOMException with the name 'NotSupportedError'. This is by design — the shadow DOM encapsulation model requires a single, stable shadow tree per host element. To modify an existing shadow root, access it via element.shadowRoot (if mode is 'open') and manipulate its children directly.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/attachShadow"
+  },
+  {
+    "id": "dom-manipulation-053",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the following code not remove the event listener as intended?",
+    "code": "const btn = document.querySelector('button');\nbtn.addEventListener('click', () => console.log('clicked'));\nbtn.removeEventListener('click', () => console.log('clicked'));",
+    "options": [
+      "removeEventListener requires a third options argument",
+      "Arrow functions cannot be used as event listeners",
+      "Each arrow function expression creates a new function reference, so removeEventListener cannot match the original listener",
+      "removeEventListener only works with events added via onclick"
+    ],
+    "correctIndex": 2,
+    "explanation": "removeEventListener must receive the exact same function reference that was passed to addEventListener. Even though both arrow functions have identical code, each () => console.log('clicked') expression creates a new, distinct function object. Since the references differ, removeEventListener has nothing to match and silently does nothing. The fix is to store the handler in a variable and pass that same reference to both addEventListener and removeEventListener.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener"
+  },
+  {
+    "id": "dom-manipulation-054",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between element.children and element.childNodes?",
+    "options": [
+      "children returns all node types, while childNodes returns only Element nodes",
+      "Both properties return the same collection",
+      "children returns only Element nodes, while childNodes returns all node types including text and comment nodes",
+      "childNodes is a live collection but children is static"
+    ],
+    "correctIndex": 2,
+    "explanation": "element.childNodes returns a NodeList containing all child nodes, including text nodes (whitespace between tags), comment nodes, and element nodes. element.children returns an HTMLCollection containing only child elements (Element nodes). Both are live collections that update automatically when the DOM changes. When you only need to work with element children and want to skip whitespace text nodes, use children.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/children"
+  },
+  {
+    "id": "dom-manipulation-055",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const div = document.createElement('div');\nconst p = document.createElement('p');\np.textContent = 'first';\ndiv.appendChild(p);\nconst p2 = document.createElement('p');\np2.textContent = 'second';\ndiv.insertBefore(p2, p);\nconsole.log(div.innerHTML);",
+    "options": [
+      "<p>first</p><p>second</p>",
+      "<p>second</p><p>first</p>",
+      "<p>second</p>",
+      "<p>first</p>"
+    ],
+    "correctIndex": 1,
+    "explanation": "insertBefore(newNode, referenceNode) inserts newNode before the referenceNode within the parent. After appendChild(p), div contains '<p>first</p>'. Then insertBefore(p2, p) inserts p2 ('second') before p ('first'). The result is '<p>second</p><p>first</p>'. insertBefore does not replace the reference node — it positions the new node directly before it in the child list.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Node/insertBefore"
   }
 ]
