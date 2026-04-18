@@ -824,5 +824,89 @@
     "correctIndex": 2,
     "explanation": "일반 객체는 V8 같은 엔진에서 히든 클래스(hidden class)를 사용하여 프로퍼티 접근을 최적화합니다. 프로퍼티를 자주 추가/삭제하면 히든 클래스가 반복적으로 재생성되어 성능이 저하됩니다. Map은 처음부터 동적 키-값 저장에 최적화된 해시 테이블로 구현되어 이런 오버헤드 없이 효율적으로 동작합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Map#objects_vs._maps"
+  },
+  {
+    "id": "data-structures-051",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const sentences = ['hello world', 'foo bar'];\nconst words = sentences.flatMap(s => s.split(' '));\nconsole.log(words);",
+    "options": [
+      "[['hello', 'world'], ['foo', 'bar']]",
+      "['hello world', 'foo bar']",
+      "['hello', 'world', 'foo', 'bar']",
+      "['h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd']"
+    ],
+    "correctIndex": 2,
+    "explanation": "flatMap()은 map()과 flat(1)을 결합한 메서드입니다. 각 문자열에 split(' ')을 적용하면 [['hello', 'world'], ['foo', 'bar']]가 되고, 이를 깊이 1로 평탄화하면 ['hello', 'world', 'foo', 'bar']가 됩니다. map() 후 flat()을 따로 호출하는 것보다 효율적입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap"
+  },
+  {
+    "id": "data-structures-052",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const arr = [10, 20, 30, 40, 50];\nconst newArr = arr.with(2, 99);\nconsole.log(arr[2], newArr[2], arr === newArr);",
+    "options": [
+      "99 99 true",
+      "99 99 false",
+      "30 99 false",
+      "30 99 true"
+    ],
+    "correctIndex": 2,
+    "explanation": "Array.prototype.with()는 ES2023에서 추가된 불변 메서드로, 지정한 인덱스의 값을 변경한 새 배열을 반환합니다. 원본 배열(arr)은 변경되지 않으므로 arr[2]는 여전히 30이고, newArr[2]는 99입니다. 새 배열이 반환되므로 arr === newArr는 false입니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/with"
+  },
+  {
+    "id": "data-structures-053",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "JavaScript의 Map이 삽입 순서를 보장하는 것과 관련하여, 다음 중 올바른 설명은 무엇인가요?",
+    "options": [
+      "Map의 순회 순서는 엔진마다 다를 수 있으며 명세에 정의되어 있지 않다",
+      "Map은 삽입 순서대로 순회하며, 기존 키에 값을 재설정해도 순서가 변하지 않는다",
+      "Map은 키를 알파벳 순서로 자동 정렬한다",
+      "Map의 순회 순서는 삽입 순서이지만, delete 후 다시 set하면 원래 위치에 삽입된다"
+    ],
+    "correctIndex": 1,
+    "explanation": "ECMAScript 명세에 따르면 Map은 삽입 순서를 보장합니다. 이미 존재하는 키에 set()을 호출하면 값만 갱신되고 순서는 최초 삽입 시점 그대로 유지됩니다. 단, delete()로 키를 제거한 후 다시 set()하면 새로운 삽입으로 취급되어 맨 뒤에 추가됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Map#description"
+  },
+  {
+    "id": "data-structures-054",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 Object.groupBy()와 Map.groupBy()의 차이로 인해 발생할 수 있는 문제는 무엇인가요?",
+    "code": "const items = [\n  { name: 'apple', quantity: 1 },\n  { name: 'banana', quantity: 5 },\n  { name: 'cherry', quantity: 0 }\n];\nconst grouped = Object.groupBy(items, item =>\n  item.quantity > 0 ? 'inStock' : 'outOfStock'\n);\nconsole.log(grouped.hasOwnProperty('inStock'));",
+    "options": [
+      "Object.groupBy()는 프로토타입이 null인 객체를 반환하므로 hasOwnProperty 호출 시 TypeError가 발생한다",
+      "Object.groupBy()는 Map을 반환하므로 hasOwnProperty를 사용할 수 없다",
+      "grouped가 undefined이므로 에러가 발생한다",
+      "정상적으로 true를 출력한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "Object.groupBy()는 Object.create(null)로 생성된 프로토타입이 없는 객체를 반환합니다. 따라서 Object.prototype에서 상속받는 hasOwnProperty() 메서드가 존재하지 않아 TypeError가 발생합니다. Object.hasOwn(grouped, 'inStock')이나 'inStock' in grouped를 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/groupBy"
+  },
+  {
+    "id": "data-structures-055",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const iterable = {\n  [Symbol.iterator]() {\n    let n = 0;\n    return {\n      next() {\n        n++;\n        return n <= 3\n          ? { value: n * 10, done: false }\n          : { value: undefined, done: true };\n      }\n    };\n  }\n};\nconst first = [...iterable];\nconst second = [...iterable];\nconsole.log(first, second);",
+    "options": [
+      "[10, 20, 30] []",
+      "[10, 20, 30] [10, 20, 30]",
+      "[10, 20, 30] [40, 50, 60]",
+      "TypeError: iterable is not iterable"
+    ],
+    "correctIndex": 1,
+    "explanation": "Symbol.iterator 메서드가 호출될 때마다 새로운 이터레이터 객체가 생성되고, 클로저 변수 n이 0으로 초기화됩니다. 따라서 동일한 이터러블을 여러 번 스프레드해도 매번 처음부터 순회하여 같은 결과 [10, 20, 30]을 생성합니다. 이것이 이터레이터(소모되면 끝)와 이터러블(반복 순회 가능)의 핵심 차이입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Iteration_protocols#the_iterable_protocol"
   }
 ]

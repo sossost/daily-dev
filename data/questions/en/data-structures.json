@@ -824,5 +824,89 @@
     "correctIndex": 2,
     "explanation": "Plain objects use hidden classes in engines like V8 to optimize property access. Frequently adding and deleting properties causes repeated hidden class regeneration, degrading performance. Map is implemented as a hash table optimized for dynamic key-value storage from the start, operating efficiently without this overhead.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#objects_vs._maps"
+  },
+  {
+    "id": "data-structures-051",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const sentences = ['hello world', 'foo bar'];\nconst words = sentences.flatMap(s => s.split(' '));\nconsole.log(words);",
+    "options": [
+      "[['hello', 'world'], ['foo', 'bar']]",
+      "['hello world', 'foo bar']",
+      "['hello', 'world', 'foo', 'bar']",
+      "['h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd']"
+    ],
+    "correctIndex": 2,
+    "explanation": "flatMap() combines map() and flat(1) into a single method. Applying split(' ') to each string produces [['hello', 'world'], ['foo', 'bar']], which is then flattened one level deep to ['hello', 'world', 'foo', 'bar']. This is more efficient than calling map() followed by flat() separately.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap"
+  },
+  {
+    "id": "data-structures-052",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const arr = [10, 20, 30, 40, 50];\nconst newArr = arr.with(2, 99);\nconsole.log(arr[2], newArr[2], arr === newArr);",
+    "options": [
+      "99 99 true",
+      "99 99 false",
+      "30 99 false",
+      "30 99 true"
+    ],
+    "correctIndex": 2,
+    "explanation": "Array.prototype.with() is an immutable method added in ES2023 that returns a new array with the value at the specified index changed. The original array (arr) is not modified, so arr[2] remains 30, while newArr[2] is 99. Since a new array is returned, arr === newArr is false.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/with"
+  },
+  {
+    "id": "data-structures-053",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Regarding JavaScript Map's guarantee of insertion order, which of the following statements is correct?",
+    "options": [
+      "Map's iteration order may vary between engines and is not defined in the specification",
+      "Map iterates in insertion order, and re-setting a value for an existing key does not change its position",
+      "Map automatically sorts keys in alphabetical order",
+      "Map iterates in insertion order, but deleting and re-adding a key restores it to its original position"
+    ],
+    "correctIndex": 1,
+    "explanation": "According to the ECMAScript specification, Map guarantees insertion order. When you call set() on an existing key, only the value is updated while the order remains at the original insertion position. However, if you delete() a key and then set() it again, it is treated as a new insertion and added at the end.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#description"
+  },
+  {
+    "id": "data-structures-054",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What problem can arise from the difference between Object.groupBy() and Map.groupBy() in the following code?",
+    "code": "const items = [\n  { name: 'apple', quantity: 1 },\n  { name: 'banana', quantity: 5 },\n  { name: 'cherry', quantity: 0 }\n];\nconst grouped = Object.groupBy(items, item =>\n  item.quantity > 0 ? 'inStock' : 'outOfStock'\n);\nconsole.log(grouped.hasOwnProperty('inStock'));",
+    "options": [
+      "Object.groupBy() returns an object with a null prototype, so calling hasOwnProperty throws a TypeError",
+      "Object.groupBy() returns a Map, so hasOwnProperty cannot be used",
+      "grouped is undefined, causing an error",
+      "It successfully outputs true"
+    ],
+    "correctIndex": 0,
+    "explanation": "Object.groupBy() returns an object created with Object.create(null), which has no prototype. Therefore, the hasOwnProperty() method inherited from Object.prototype does not exist, causing a TypeError. Use Object.hasOwn(grouped, 'inStock') or 'inStock' in grouped instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/groupBy"
+  },
+  {
+    "id": "data-structures-055",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const iterable = {\n  [Symbol.iterator]() {\n    let n = 0;\n    return {\n      next() {\n        n++;\n        return n <= 3\n          ? { value: n * 10, done: false }\n          : { value: undefined, done: true };\n      }\n    };\n  }\n};\nconst first = [...iterable];\nconst second = [...iterable];\nconsole.log(first, second);",
+    "options": [
+      "[10, 20, 30] []",
+      "[10, 20, 30] [10, 20, 30]",
+      "[10, 20, 30] [40, 50, 60]",
+      "TypeError: iterable is not iterable"
+    ],
+    "correctIndex": 1,
+    "explanation": "Each time the Symbol.iterator method is called, a new iterator object is created with the closure variable n initialized to 0. Therefore, spreading the same iterable multiple times produces the same result [10, 20, 30] each time. This is the key difference between an iterator (consumed once) and an iterable (can be iterated repeatedly).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_iterable_protocol"
   }
 ]

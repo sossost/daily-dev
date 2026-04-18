@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 5 api-design & 5 dom-manipulation questions (`931744c`)
 - **content**: add 5 async questions, fix duplicate (`2b336d0`)
 
 ## 2026-04-17
