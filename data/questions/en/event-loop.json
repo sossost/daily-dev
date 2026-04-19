@@ -12,7 +12,7 @@
       "It is a garbage collector that manages memory"
     ],
     "correctIndex": 0,
-    "explanation": "The event loop is a runtime mechanism that continuously monitors the call stack and task queues (macrotask and microtask). When the call stack is empty, it first processes all microtask queue entries, then moves one callback from the macrotask queue to the call stack for execution. JavaScript is single-threaded, but the event loop enables asynchronous processing — this model is called the 'concurrency model'.",
+    "explanation": "The event loop is a runtime mechanism that continuously monitors the call stack and task queues (macrotask and microtask). When the call stack is empty, it first processes all microtask queue entries, then moves one callback from the macrotask queue to the call stack for execution. JavaScript is single-threaded, but the event loop enables asynchronous processing \u2014 this model is called the 'concurrency model'.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop"
   },
   {
@@ -361,7 +361,7 @@
       "It stops automatically without clearInterval"
     ],
     "correctIndex": 1,
-    "explanation": "setInterval registers callbacks in the macrotask queue at specified intervals. Since JavaScript is single-threaded, callbacks never run simultaneously — they only execute when the call stack is empty. If a callback takes longer than the interval, subsequent callbacks queue up but never overlap. You must explicitly stop it with clearInterval.",
+    "explanation": "setInterval registers callbacks in the macrotask queue at specified intervals. Since JavaScript is single-threaded, callbacks never run simultaneously \u2014 they only execute when the call stack is empty. If a callback takes longer than the interval, subsequent callbacks queue up but never overlap. You must explicitly stop it with clearInterval.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/setInterval"
   },
   {
@@ -427,7 +427,7 @@
       "Rendering runs in a separate process independent of the event loop"
     ],
     "correctIndex": 2,
-    "explanation": "One cycle of the browser event loop is: 'execute 1 macrotask → drain microtask queue → render if needed'. Rendering happens when the browser determines a screen update is necessary (typically at 60fps). This is why heavy synchronous work blocks the UI, and why requestAnimationFrame runs just before the render step.",
+    "explanation": "One cycle of the browser event loop is: 'execute 1 macrotask \u2192 drain microtask queue \u2192 render if needed'. Rendering happens when the browser determines a screen update is necessary (typically at 60fps). This is why heavy synchronous work blocks the UI, and why requestAnimationFrame runs just before the render step.",
     "sourceUrl": "https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model"
   },
   {
@@ -510,7 +510,7 @@
       "The event loop automatically stops the recursion"
     ],
     "correctIndex": 2,
-    "explanation": "Actually, both 'caught' and 'end' are printed. Infinite recursion exceeds the call stack's maximum size and throws a RangeError (Maximum call stack size exceeded). The try-catch catches this error, printing 'caught', and then the synchronous code 'end' executes normally. A stack overflow does not stop the event loop itself — if the error is properly handled, execution continues.",
+    "explanation": "Actually, both 'caught' and 'end' are printed. Infinite recursion exceeds the call stack's maximum size and throws a RangeError (Maximum call stack size exceeded). The try-catch catches this error, printing 'caught', and then the synchronous code 'end' executes normally. A stack overflow does not stop the event loop itself \u2014 if the error is properly handled, execution continues.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Too_much_recursion"
   },
   {
@@ -658,7 +658,7 @@
       "A, B, D, F, C, E"
     ],
     "correctIndex": 1,
-    "explanation": "Synchronous code 'A' and 'F' execute first. The first then callbacks from each chain — 'B' and 'D' — are registered in the microtask queue. 'B' executes and chains 'C' into the queue. 'D' executes and chains 'E' into the queue. The microtask queue continues draining: 'C', then 'E'. This is the interleaving pattern where two Promise chains alternate execution.",
+    "explanation": "Synchronous code 'A' and 'F' execute first. The first then callbacks from each chain \u2014 'B' and 'D' \u2014 are registered in the microtask queue. 'B' executes and chains 'C' into the queue. 'D' executes and chains 'E' into the queue. The microtask queue continues draining: 'C', then 'E'. This is the interleaving pattern where two Promise chains alternate execution.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
   },
   {
@@ -685,13 +685,13 @@
     "difficulty": "medium",
     "question": "What is the correct order of phases in the Node.js event loop?",
     "options": [
-      "poll → check → timers → close callbacks",
-      "timers → close callbacks → poll → check",
-      "check → timers → poll → close callbacks",
-      "timers → pending callbacks → poll → check → close callbacks"
+      "poll \u2192 check \u2192 timers \u2192 close callbacks",
+      "timers \u2192 close callbacks \u2192 poll \u2192 check",
+      "check \u2192 timers \u2192 poll \u2192 close callbacks",
+      "timers \u2192 pending callbacks \u2192 poll \u2192 check \u2192 close callbacks"
     ],
     "correctIndex": 3,
-    "explanation": "The Node.js event loop (based on libuv) consists of several phases. The main order is: timers (setTimeout/setInterval callbacks) → pending callbacks (deferred I/O callbacks) → idle/prepare (internal use) → poll (wait for new I/O events) → check (setImmediate callbacks) → close callbacks (close events). Microtasks (nextTick, Promise) are processed between each phase.",
+    "explanation": "The Node.js event loop (based on libuv) consists of several phases. The main order is: timers (setTimeout/setInterval callbacks) \u2192 pending callbacks (deferred I/O callbacks) \u2192 idle/prepare (internal use) \u2192 poll (wait for new I/O events) \u2192 check (setImmediate callbacks) \u2192 close callbacks (close events). Microtasks (nextTick, Promise) are processed between each phase.",
     "sourceUrl": "https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick"
   },
   {
@@ -724,7 +724,7 @@
       "Calling abort() synchronously fires registered abort event listeners, which can cancel in-progress async operations like fetch"
     ],
     "correctIndex": 3,
-    "explanation": "When AbortController's abort() method is called, the AbortSignal's abort event listeners fire synchronously. APIs like fetch monitor the AbortSignal, and when it is aborted, they cancel the network request and reject with an AbortError. This does not interrupt synchronous code on the call stack — rather, it provides a mechanism to abandon waiting for async operation completion.",
+    "explanation": "When AbortController's abort() method is called, the AbortSignal's abort event listeners fire synchronously. APIs like fetch monitor the AbortSignal, and when it is aborted, they cancel the network request and reject with an AbortError. This does not interrupt synchronous code on the call stack \u2014 rather, it provides a mechanism to abandon waiting for async operation completion.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/AbortController"
   },
   {
@@ -792,7 +792,7 @@
       "A, F, B, D, E, C"
     ],
     "correctIndex": 1,
-    "explanation": "Synchronous code 'A' and 'F' execute first. Then microtasks run: the first chain's catch (B) and the second chain's then (which throws) are both queued. B executes and enqueues its chained .then(C). The second chain's throw enqueues .catch(D). Now C and D are queued in that order — C runs first, then D. D resolves and enqueues .then(E). Finally E runs. Result: A, F, B, C, D, E.",
+    "explanation": "Synchronous code 'A' and 'F' execute first. Then microtasks run: the first chain's catch (B) and the second chain's then (which throws) are both queued. B executes and enqueues its chained .then(C). The second chain's throw enqueues .catch(D). Now C and D are queued in that order \u2014 C runs first, then D. D resolves and enqueues .then(E). Finally E runs. Result: A, F, B, C, D, E.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch"
   },
   {
@@ -842,7 +842,7 @@
       "listener1, listener2, micro1, micro2"
     ],
     "correctIndex": 3,
-    "explanation": "When button.click() is called programmatically (as opposed to a real user click), the event dispatch happens synchronously within the current call stack. Both listeners execute as part of the same synchronous call — 'listener1' prints, then 'listener2' prints. The microtask checkpoint only occurs after the call stack is fully unwound, so both microtasks ('micro1', 'micro2') run after both listeners finish. With a real user click, the browser dispatches the event as a new task, and microtasks are flushed between each listener callback, producing: listener1, micro1, listener2, micro2. This distinction is important for understanding event dispatch behavior in tests vs real user interactions.",
+    "explanation": "When button.click() is called programmatically (as opposed to a real user click), the event dispatch happens synchronously within the current call stack. Both listeners execute as part of the same synchronous call \u2014 'listener1' prints, then 'listener2' prints. The microtask checkpoint only occurs after the call stack is fully unwound, so both microtasks ('micro1', 'micro2') run after both listeners finish. With a real user click, the browser dispatches the event as a new task, and microtasks are flushed between each listener callback, producing: listener1, micro1, listener2, micro2. This distinction is important for understanding event dispatch behavior in tests vs real user interactions.",
     "sourceUrl": "https://javascript.info/microtask-queue"
   },
   {
@@ -858,7 +858,7 @@
       "requestIdleCallback runs immediately after microtasks, before any macrotasks"
     ],
     "correctIndex": 0,
-    "explanation": "The browser event loop processes tasks in this general order within each frame: macrotasks (including setTimeout) → microtasks → rendering (including requestAnimationFrame) → idle callbacks (requestIdleCallback). Idle callbacks only execute when the browser determines there is remaining time in a frame after all higher-priority work is done. This makes requestIdleCallback ideal for non-urgent background work like analytics or pre-fetching, since it won't interfere with user interactions, animations, or critical rendering. If no idle time is available, the callback may be deferred indefinitely unless a timeout option is specified.",
+    "explanation": "The browser event loop processes tasks in this general order within each frame: macrotasks (including setTimeout) \u2192 microtasks \u2192 rendering (including requestAnimationFrame) \u2192 idle callbacks (requestIdleCallback). Idle callbacks only execute when the browser determines there is remaining time in a frame after all higher-priority work is done. This makes requestIdleCallback ideal for non-urgent background work like analytics or pre-fetching, since it won't interfere with user interactions, animations, or critical rendering. If no idle time is available, the callback may be deferred indefinitely unless a timeout option is specified.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback"
   },
   {
@@ -876,5 +876,38 @@
     "correctIndex": 3,
     "explanation": "Most browsers throttle timers in background tabs to conserve CPU and battery. Typically, setTimeout and setInterval callbacks in a background tab are clamped to a minimum interval of about 1000ms (1 second), regardless of the originally specified delay. This means a setInterval with a 100ms interval will only fire approximately once per second when the tab is not visible. requestAnimationFrame callbacks are usually paused entirely in background tabs. This throttling behavior is important to consider when building features that rely on precise timing, such as animations or real-time updates.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#reasons_for_delays_longer_than_specified"
+  },
+  {
+    "id": "event-loop-054",
+    "topic": "event-loop",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the following async generator not yield values as expected?",
+    "code": "async function* ticker(ms) {\n  while (true) {\n    await new Promise(r => setTimeout(r, ms));\n    yield Date.now();\n  }\n}\nasync function main() {\n  for await (const tick of ticker(100)) {\n    console.log(tick);\n    await new Promise(r => setTimeout(r, 500));\n  }\n}\nmain();",
+    "options": [
+      "async generators cannot be used with for-await-of loops",
+      "The while(true) causes an infinite synchronous loop that blocks the event loop",
+      "The generator yields timestamps approximately every 600ms instead of every 100ms because each iteration awaits both the generator and the 500ms delay sequentially",
+      "Date.now() returns the same value because the event loop is paused during await"
+    ],
+    "correctIndex": 2,
+    "explanation": "In a for-await-of loop, each iteration waits for the yielded promise to resolve, then executes the loop body. The generator awaits 100ms before yielding, then the loop body awaits 500ms. These delays are sequential, not concurrent \u2014 so each tick arrives roughly every 600ms, not every 100ms. The event loop is not blocked; it is free between awaits. To achieve true 100ms ticks regardless of processing time, you would need to decouple production from consumption using a queue or event-based approach.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of"
+  },
+  {
+    "id": "event-loop-055",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the key difference between structuredClone and JSON.parse(JSON.stringify()) with respect to the event loop?",
+    "options": [
+      "JSON.parse(JSON.stringify()) is asynchronous while structuredClone is synchronous",
+      "structuredClone uses a Web Worker internally, moving the copy operation off the main thread",
+      "structuredClone handles circular references and non-JSON types (Date, RegExp, ArrayBuffer) while JSON serialization loses them, but both execute synchronously on the main thread",
+      "structuredClone queues the copy as a microtask while JSON methods execute immediately"
+    ],
+    "correctIndex": 2,
+    "explanation": "Both structuredClone and JSON.parse(JSON.stringify()) are synchronous operations that execute on the main thread and block the event loop during execution. The key difference is in what they can copy: structuredClone uses the structured clone algorithm which handles circular references, Date objects, RegExp, ArrayBuffer, Map, Set, and other non-JSON types. JSON serialization silently drops functions, converts Dates to strings, throws on circular references, and loses prototype information. Neither offloads work to another thread \u2014 for large data, both can cause frame drops.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/structuredClone"
   }
 ]

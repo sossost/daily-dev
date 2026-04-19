@@ -823,5 +823,88 @@
     "correctIndex": 2,
     "explanation": "명세 패턴은 비즈니스 규칙이나 필터 조건을 독립적인 객체로 분리하여 재사용하고 조합할 수 있게 합니다. 각 명세는 isSatisfiedBy(candidate) 메서드를 구현하며, AND, OR, NOT 등의 논리 연산으로 복잡한 조건을 선언적으로 합성할 수 있습니다. JavaScript에서는 고차 함수나 배열의 filter 콜백으로 자연스럽게 구현됩니다.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter"
+  },
+  {
+    "id": "design-patterns-051",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 커스텀 이터레이터 코드의 출력 결과는 무엇인가요?",
+    "code": "const range = {\n  from: 1,\n  to: 3,\n  [Symbol.iterator]() {\n    let current = this.from;\n    const last = this.to;\n    return {\n      next() {\n        return current <= last\n          ? { value: current++, done: false }\n          : { done: true };\n      }\n    };\n  }\n};\nconsole.log([...range]);",
+    "options": [
+      "[1, 2]",
+      "[1, 3]",
+      "[0, 1, 2, 3]",
+      "[1, 2, 3]"
+    ],
+    "correctIndex": 3,
+    "explanation": "Symbol.iterator 프로토콜을 사용하면 객체의 커스텀 반복 동작을 정의할 수 있습니다. 이터레이터는 from(1)에서 시작하여 current <= to(3)인 동안 값을 산출하며, 각 산출 후 증가합니다. 스프레드 연산자 [...range]가 이터레이터를 소비하여 [1, 2, 3]을 생성합니다. 이것은 JavaScript의 내장 이터레이터 프로토콜을 사용하여 구현된 이터레이터 디자인 패턴입니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/iterator"
+  },
+  {
+    "id": "design-patterns-052",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 Pub/Sub 구현이 메모리 누수를 일으키는 이유는 무엇인가요?",
+    "code": "class EventBus {\n  constructor() { this.listeners = {}; }\n  on(event, fn) {\n    (this.listeners[event] ??= []).push(fn);\n  }\n  emit(event, data) {\n    (this.listeners[event] ?? []).forEach(fn => fn(data));\n  }\n}\nconst bus = new EventBus();\nfunction setupWidget() {\n  const bigData = new Array(100000).fill(\"x\");\n  bus.on(\"update\", () => console.log(bigData.length));\n}\nsetupWidget();\n// 위젯이 더 이상 필요 없지만...",
+    "options": [
+      "emit 메서드가 호출할 때마다 새 배열을 생성한다",
+      "EventBus 클래스가 리스너에 WeakRef를 사용하지 않는다",
+      "리스너로 등록된 클로저가 여전히 bigData를 참조하므로 가비지 컬렉션이 되지 않는다",
+      "??= 연산자가 배열을 올바르게 초기화하지 못한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "bus.on()에 전달된 익명 콜백은 bigData에 대한 클로저를 형성합니다. setupWidget()이 완료된 후에도 콜백이 listeners 배열에 남아있어 bigData에 대한 참조를 유지하고 가비지 컬렉션을 방지합니다. 이것은 전형적인 Pub/Sub 메모리 누수입니다 — off()나 구독 해제 메커니즘이 없으면 리스너와 그 클로저가 무한히 축적됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "design-patterns-053",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "브릿지(Bridge) 패턴과 어댑터(Adapter) 패턴의 핵심 차이점은 무엇인가요?",
+    "options": [
+      "브릿지는 함수형 프로그래밍에서만 사용되고, 어댑터는 OOP에서만 사용된다",
+      "브릿지는 추상화와 구현을 분리하기 위해 사전에 설계되고, 어댑터는 호환되지 않는 인터페이스를 기존 코드와 함께 작동하도록 사후에 적용된다",
+      "어댑터는 새로운 기능을 추가하고 브릿지는 데이터 형식만 변환한다",
+      "브릿지는 상속이 필요하고 어댑터는 합성만 사용한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "브릿지 패턴은 사전적 설계 결정입니다. 추상화와 구현이 독립적으로 변할 수 있도록 의도적으로 분리합니다. 어댑터 패턴은 반응적입니다 — 호환되지 않는 인터페이스를 가진 기존 클래스를 감싸서 다른 인터페이스가 예상되는 곳에서 작동하게 합니다. 브릿지는 시스템 설계 초기에 적용되고, 어댑터는 호환되지 않는 요소를 연결하기 위해 사후에 적용됩니다.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/bridge"
+  },
+  {
+    "id": "design-patterns-054",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "모나드(Monad) 패턴이 JavaScript에서 해결하는 문제는 무엇인가요?",
+    "options": [
+      "런타임에 함수 인자를 검증하여 타입 안전성을 제공한다",
+      "비동기 코드의 멀티 스레드 실행을 가능하게 한다",
+      "객체 생성 시 new 키워드의 필요성을 대체한다",
+      "래핑된 값에 대한 연산을 체이닝하면서 null이나 에러 같은 부수 효과를 조합 가능한 방식으로 처리한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "모나드는 값을 감싸고 flatMap(또는 chain/then) 메서드를 제공하여 감싸진 값에 함수를 적용하고 새로운 모나드를 반환합니다. 이를 통해 중첩된 조건문 없이 엣지 케이스(null, 에러, 비동기)를 처리하는 조합 가능한 파이프라인을 구성할 수 있습니다. JavaScript의 Promise가 가장 널리 사용되는 모나드입니다 — .then()은 resolved 값을 언래핑하고, 함수를 적용하고, 새 Promise를 반환하여 비동기 작업의 깔끔한 체이닝을 가능하게 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "design-patterns-055",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 데코레이터 구현이 원래 함수의 이름을 보존하지 못하는 이유는 무엇인가요?",
+    "code": "function withLogging(fn) {\n  return function(...args) {\n    console.log();\n    return fn.apply(this, args);\n  };\n}\nfunction add(a, b) { return a + b; }\nconst loggedAdd = withLogging(add);\nconsole.log(loggedAdd.name);",
+    "options": [
+      "fn.apply가 this 컨텍스트를 올바르게 전달하지 못한다",
+      "loggedAdd 변수가 원래 add 함수를 섀도잉한다",
+      "나머지 매개변수 ...args가 인자를 문자열로 변환한다",
+      "반환된 익명 함수에는 name 속성이 없으므로 loggedAdd.name이 \"add\" 대신 빈 문자열이 된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "JavaScript에서 함수의 name 속성은 정의 방식에 따라 설정됩니다. withLogging이 반환하는 래퍼는 익명 함수 표현식이므로 name이 빈 문자열입니다. 메타데이터를 보존하려면 Object.defineProperty를 사용하여 name을 복사하거나, 기명 함수 표현식을 사용해야 합니다. lodash 같은 라이브러리는 이를 처리하는 wrap 유틸리티를 사용합니다. 네이티브 Reflect API와 데코레이터 제안도 이 메타데이터 보존 문제를 다룹니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name"
   }
 ]

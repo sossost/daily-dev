@@ -689,7 +689,7 @@
       "Error occurs"
     ],
     "correctIndex": 1,
-    "explanation": "First dispatch('START') transitions idle → running. Second dispatch('PAUSE') transitions running → paused. Third dispatch('START') — the paused state only defines RESUME and STOP transitions, not START, so next is undefined and the state remains unchanged. The final state is 'paused'.",
+    "explanation": "First dispatch('START') transitions idle \u2192 running. Second dispatch('PAUSE') transitions running \u2192 paused. Third dispatch('START') \u2014 the paused state only defines RESUME and STOP transitions, not START, so next is undefined and the state remains unchanged. The final state is 'paused'.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/State_machine"
   },
   {
@@ -789,7 +789,7 @@
       "The spread operator only performs a shallow copy, so the address object is shared and the original city also changes to 'Busan'"
     ],
     "correctIndex": 3,
-    "explanation": "The spread operator ({ ...obj }) performs a shallow copy — only one level deep. The user object is newly created, but the nested address object still shares the same reference as the original. So modifying newState.user.address.city also changes state.user.address.city. For deep immutable updates, all nested objects along the modified path must be copied.",
+    "explanation": "The spread operator ({ ...obj }) performs a shallow copy \u2014 only one level deep. The user object is newly created, but the nested address object still shares the same reference as the original. So modifying newState.user.address.city also changes state.user.address.city. For deep immutable updates, all nested objects along the modified path must be copied.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax"
   },
   {
@@ -823,5 +823,88 @@
     "correctIndex": 2,
     "explanation": "The Specification pattern separates business rules or filter conditions into independent objects that can be reused and composed. Each specification implements an isSatisfiedBy(candidate) method and can be combined with logical operations like AND, OR, and NOT to declaratively compose complex conditions. In JavaScript, this is naturally implemented using higher-order functions or array filter callbacks.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter"
+  },
+  {
+    "id": "design-patterns-051",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following custom iterator code?",
+    "code": "const range = {\n  from: 1,\n  to: 3,\n  [Symbol.iterator]() {\n    let current = this.from;\n    const last = this.to;\n    return {\n      next() {\n        return current <= last\n          ? { value: current++, done: false }\n          : { done: true };\n      }\n    };\n  }\n};\nconsole.log([...range]);",
+    "options": [
+      "[1, 2]",
+      "[1, 3]",
+      "[0, 1, 2, 3]",
+      "[1, 2, 3]"
+    ],
+    "correctIndex": 3,
+    "explanation": "The Symbol.iterator protocol allows objects to define custom iteration behavior. The iterator starts at from (1) and yields values while current <= to (3), incrementing after each yield. The spread operator [...range] consumes the iterator, producing [1, 2, 3]. This is the Iterator design pattern implemented using JavaScript's built-in iterator protocol.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/iterator"
+  },
+  {
+    "id": "design-patterns-052",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the following Pub/Sub implementation cause a memory leak?",
+    "code": "class EventBus {\n  constructor() { this.listeners = {}; }\n  on(event, fn) {\n    (this.listeners[event] ??= []).push(fn);\n  }\n  emit(event, data) {\n    (this.listeners[event] ?? []).forEach(fn => fn(data));\n  }\n}\nconst bus = new EventBus();\nfunction setupWidget() {\n  const bigData = new Array(100000).fill(\"x\");\n  bus.on(\"update\", () => console.log(bigData.length));\n}\nsetupWidget();\n// widget is no longer needed, but...",
+    "options": [
+      "The emit method creates new arrays on every call",
+      "The EventBus class does not use WeakRef for listeners",
+      "The bigData array cannot be garbage collected because the closure registered as a listener still references it",
+      "The ??= operator does not correctly initialize the array"
+    ],
+    "correctIndex": 2,
+    "explanation": "The anonymous callback passed to bus.on() forms a closure over bigData. Even after setupWidget() finishes, the callback remains in the listeners array, keeping a reference to bigData and preventing garbage collection. This is a classic Pub/Sub memory leak \u2014 without an off() or unsubscribe mechanism, listeners and their closures accumulate indefinitely.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "design-patterns-053",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the key difference between the Bridge pattern and the Adapter pattern?",
+    "options": [
+      "Bridge is used only in functional programming, while Adapter is used only in OOP",
+      "Bridge is designed up-front to separate abstraction from implementation, while Adapter retrofits an incompatible interface to work with existing code",
+      "Adapter adds new functionality while Bridge only converts data formats",
+      "Bridge requires inheritance while Adapter uses only composition"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Bridge pattern is a proactive design decision: you intentionally separate an abstraction from its implementation so both can vary independently. The Adapter pattern is reactive \u2014 it wraps an existing class with an incompatible interface to make it work where a different interface is expected. Bridge is designed into the system from the start; Adapter is applied after the fact to glue incompatible pieces together.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/bridge"
+  },
+  {
+    "id": "design-patterns-054",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What problem does the Monad pattern solve in JavaScript?",
+    "options": [
+      "It provides type safety by validating function arguments at runtime",
+      "It enables multi-threaded execution of asynchronous code",
+      "It replaces the need for the new keyword when creating objects",
+      "It chains operations on wrapped values while handling side effects like null or errors in a composable way"
+    ],
+    "correctIndex": 3,
+    "explanation": "A Monad wraps a value and provides a flatMap (or chain/then) method that applies a function to the wrapped value and returns a new Monad. This enables composable pipelines that handle edge cases (null, errors, async) without nested conditionals. JavaScript's Promise is the most widely used Monad \u2014 .then() unwraps the resolved value, applies a function, and returns a new Promise, allowing clean chaining of async operations.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "design-patterns-055",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the following Decorator implementation fail to preserve the original function's name?",
+    "code": "function withLogging(fn) {\n  return function(...args) {\n    console.log();\n    return fn.apply(this, args);\n  };\n}\nfunction add(a, b) { return a + b; }\nconst loggedAdd = withLogging(add);\nconsole.log(loggedAdd.name);",
+    "options": [
+      "fn.apply does not forward the this context correctly",
+      "The loggedAdd variable shadows the original add function",
+      "The rest parameter ...args converts arguments to strings",
+      "The returned anonymous function has no name property, so loggedAdd.name is an empty string instead of \"add\""
+    ],
+    "correctIndex": 3,
+    "explanation": "In JavaScript, a function's name property is set based on how it is defined. The wrapper returned by withLogging is an anonymous function expression, so its name is an empty string. To preserve metadata, you should use Object.defineProperty to copy the name, or use a named function expression. Libraries like lodash use a wrap utility that handles this. The native Reflect API and decorators proposal also address this metadata preservation problem.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name"
   }
 ]
