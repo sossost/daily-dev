@@ -822,5 +822,87 @@
     "correctIndex": 2,
     "explanation": "When a circular dependency occurs in CommonJS, instead of entering an infinite loop, Node.js returns a 'partial' exports object of the module that has not yet finished executing. When a.js requires b.js, and b.js then requires a.js, a.js's module.exports has not been set yet, so an empty object ({}) is returned. Therefore a.value is undefined.",
     "sourceUrl": "https://nodejs.org/api/modules.html#cycles"
+  },
+  {
+    "id": "nodejs-051",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the key feature of the Node.js built-in test runner (node:test)?",
+    "options": [
+      "It can run in the browser environment",
+      "Tests must be written in TypeScript",
+      "It allows writing and running tests with describe, it, and assert without any external packages",
+      "It automatically sends test results to CI servers"
+    ],
+    "correctIndex": 2,
+    "explanation": "The node:test module, stabilized since Node.js 18, allows writing tests using describe, it (test), and assert without external test frameworks like Jest or Mocha. It runs with the --test flag and provides TAP-format output by default. It also includes built-in features for mocking, snapshots, and coverage.",
+    "sourceUrl": "https://nodejs.org/api/test.html"
+  },
+  {
+    "id": "nodejs-052",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following Node.js code?",
+    "code": "const { performance, PerformanceObserver } = require('perf_hooks');\n\nconst obs = new PerformanceObserver((list) => {\n  const entry = list.getEntries()[0];\n  console.log(`${entry.name}: ${entry.duration > 0}`);\n});\nobs.observe({ entryTypes: ['measure'] });\n\nperformance.mark('start');\nfor (let i = 0; i < 1000000; i++) {}\nperformance.mark('end');\nperformance.measure('loop', 'start', 'end');",
+    "options": [
+      "loop: false",
+      "loop: true",
+      "start: true",
+      "An error is thrown"
+    ],
+    "correctIndex": 1,
+    "explanation": "The perf_hooks module's performance.mark() records two points in time, and performance.measure() measures the elapsed time between them. The PerformanceObserver executes its callback when a 'measure' entry is created. Since the loop of 1 million iterations takes more than 0ms, 'loop: true' is output. This is the recommended approach for precise performance measurement over Date.now().",
+    "sourceUrl": "https://nodejs.org/api/perf_hooks.html"
+  },
+  {
+    "id": "nodejs-053",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between console.time()/console.timeEnd() and perf_hooks' performance.measure() in Node.js?",
+    "options": [
+      "console.time() uses milliseconds while performance.measure() uses seconds",
+      "They are completely identical in functionality and performance",
+      "console.time() is for simple console output while performance.measure() allows programmatic access to measurements and integration with PerformanceObserver",
+      "performance.measure() is only available in browsers"
+    ],
+    "correctIndex": 2,
+    "explanation": "console.time()/timeEnd() is a simple debugging tool that prints elapsed time to the console. In contrast, performance.measure() stores results as PerformanceEntry objects that can be accessed programmatically, collected asynchronously via PerformanceObserver, or integrated with APM tools for production monitoring.",
+    "sourceUrl": "https://nodejs.org/api/perf_hooks.html#performancemeasurename-startmarkoroptions-endmark"
+  },
+  {
+    "id": "nodejs-054",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Why does the following code cause a file descriptor leak?",
+    "code": "const fs = require('fs');\n\nasync function processFiles(paths) {\n  for (const filePath of paths) {\n    const fd = fs.openSync(filePath, 'r');\n    const buffer = Buffer.alloc(1024);\n    fs.readSync(fd, buffer);\n    // file processing logic\n    if (buffer.includes('error')) {\n      throw new Error('Invalid file');\n    }\n    fs.closeSync(fd);\n  }\n}",
+    "options": [
+      "Async open should be used instead of openSync",
+      "Buffer.allocUnsafe should be used instead of Buffer.alloc",
+      "fs.closeSync(fd) is not called before the throw, so the file descriptor remains open when an exception occurs",
+      "The offset argument is missing from readSync"
+    ],
+    "correctIndex": 2,
+    "explanation": "Since fs.closeSync(fd) is not called before throw new Error(), encountering a file containing 'error' leaves the file descriptor open. A try-finally block should be used to ensure the fd is always closed regardless of exceptions. Alternatively, using APIs like fs.readFileSync() that manage file descriptors automatically is safer.",
+    "sourceUrl": "https://nodejs.org/api/fs.html#fsclosesyncfd"
+  },
+  {
+    "id": "nodejs-055",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What functionality does the Node.js diagnostics_channel module provide?",
+    "options": [
+      "It automatically saves application logs to files",
+      "It creates new channels for inter-process communication (IPC)",
+      "It provides a pub/sub mechanism to publish and subscribe to diagnostic data through named channels without modifying code",
+      "It automatically generates and analyzes V8 heap snapshots"
+    ],
+    "correctIndex": 2,
+    "explanation": "diagnostics_channel is a publish/subscribe mechanism for exchanging diagnostic data between modules. Library authors publish diagnostic events to named channels, and APM tools or logging systems subscribe to those channels to collect data. Node.js core and major libraries use it for HTTP request tracing, database query monitoring, and more.",
+    "sourceUrl": "https://nodejs.org/api/diagnostics_channel.html"
   }
 ]

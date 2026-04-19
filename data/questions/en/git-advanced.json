@@ -809,5 +809,87 @@
     "correctIndex": 1,
     "explanation": "git notes lets you attach additional information (code review memos, CI results, related issue numbers, etc.) to existing commits without altering their hashes. Modifying a commit changes its hash and rewrites history, but notes are stored in a separate reference namespace (refs/notes/) so they leave the original commit untouched.",
     "sourceUrl": "https://git-scm.com/docs/git-notes"
+  },
+  {
+    "id": "git-advanced-051",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the result after running these commands in order?\n\ngit commit -m \"feature A\"\ngit commit --fixup HEAD\ngit rebase -i --autosquash HEAD~2",
+    "code": "git commit -m \"feature A\"\ngit commit --fixup HEAD\ngit rebase -i --autosquash HEAD~2",
+    "options": [
+      "Both commits remain and the 'fixup! feature A' commit stays in history",
+      "The fixup commit is automatically merged into the 'feature A' commit, leaving a single commit with the message 'feature A'",
+      "Both commits are deleted",
+      "A new commit is created with the combined messages of 'feature A' and 'fixup! feature A'"
+    ],
+    "correctIndex": 1,
+    "explanation": "git commit --fixup creates a correction commit for the specified commit with an automatic 'fixup! <original message>' prefix. When running interactive rebase with --autosquash, the fixup commit is automatically moved below and merged into its target commit. Unlike squash, fixup preserves only the original commit message.",
+    "sourceUrl": "https://git-scm.com/docs/git-commit"
+  },
+  {
+    "id": "git-advanced-052",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the purpose of the git bundle command and when would you use it?",
+    "options": [
+      "It merges multiple repositories into one",
+      "It compresses the project source code into a zip file",
+      "It bundles npm packages into a Git repository",
+      "It packages Git objects and references into a single file for transferring or backing up repositories without network access"
+    ],
+    "correctIndex": 3,
+    "explanation": "git bundle packages Git objects and references into a single binary file. This is useful for transferring repositories via USB in environments without network access or creating offline backups. You can create a bundle with git bundle create and use it with git clone <bundle-file> or git fetch <bundle-file>.",
+    "sourceUrl": "https://git-scm.com/docs/git-bundle"
+  },
+  {
+    "id": "git-advanced-053",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "How can you recover a stash that was accidentally deleted with git stash drop?",
+    "options": [
+      "Use the git stash undo command",
+      "Deleted stashes cannot be recovered by any method",
+      "Find the deleted stash's commit hash in git reflog and recover it with git stash apply <hash>",
+      "Use git stash list --deleted to view deleted entries"
+    ],
+    "correctIndex": 2,
+    "explanation": "Git stash entries are internally commit objects, so their hashes can be found in git reflog. You can use git fsck --unreachable or git log --walk-reflogs to find unreachable stash commits and recover them with git stash apply <hash>. However, this must be done before garbage collection runs.",
+    "sourceUrl": "https://git-scm.com/docs/git-stash"
+  },
+  {
+    "id": "git-advanced-054",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between git archive and git clone --depth 1?",
+    "options": [
+      "git archive extracts source code as a tar/zip without the .git directory, while clone --depth 1 creates a shallow Git repository clone",
+      "git archive includes full history while clone --depth 1 excludes history",
+      "Both produce identical results, differing only in format",
+      "git archive works only on remotes while clone --depth 1 works only locally"
+    ],
+    "correctIndex": 0,
+    "explanation": "git archive extracts source code from a specific commit or branch as a tar or zip file without any .git metadata, making it ideal for release distribution or source code sharing. In contrast, git clone --depth 1 creates a Git repository with only the latest commit's history, allowing continued use of git commands afterward.",
+    "sourceUrl": "https://git-scm.com/docs/git-archive"
+  },
+  {
+    "id": "git-advanced-055",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What does the following command output?\n\ngit rev-parse HEAD",
+    "code": "git rev-parse HEAD",
+    "options": [
+      "The name of the current branch",
+      "The full SHA-1 hash of the commit that HEAD points to",
+      "The number of commits from HEAD to the root commit",
+      "The list of changed files in the HEAD commit"
+    ],
+    "correctIndex": 1,
+    "explanation": "git rev-parse translates Git references into their corresponding SHA-1 hashes. git rev-parse HEAD outputs the full 40-character SHA-1 hash of the commit that HEAD currently points to. It is frequently used in scripts to store the current commit hash in a variable. The --short option can be used to get an abbreviated hash.",
+    "sourceUrl": "https://git-scm.com/docs/git-rev-parse"
   }
 ]

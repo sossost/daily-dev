@@ -822,5 +822,87 @@
     "correctIndex": 2,
     "explanation": "CommonJS에서 순환 의존성이 발생하면, Node.js는 무한 루프 대신 아직 완료되지 않은 모듈의 '부분적인' exports 객체를 반환합니다. a.js가 b.js를 require하면 b.js가 실행되며 a.js를 require하는데, 이때 a.js의 module.exports는 아직 설정 전이므로 빈 객체({})가 반환됩니다. 따라서 a.value는 undefined입니다.",
     "sourceUrl": "https://nodejs.org/api/modules.html#cycles"
+  },
+  {
+    "id": "nodejs-051",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Node.js 내장 테스트 러너(node:test)의 주요 특징은 무엇인가요?",
+    "options": [
+      "브라우저 환경에서도 실행할 수 있다",
+      "반드시 TypeScript로 테스트를 작성해야 한다",
+      "외부 패키지 없이 describe, it, assert를 사용한 테스트를 작성하고 실행할 수 있다",
+      "테스트 결과를 자동으로 CI 서버에 전송한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Node.js 18부터 안정화된 node:test 모듈은 외부 테스트 프레임워크(Jest, Mocha 등) 없이도 describe, it(test), assert를 사용한 테스트를 작성할 수 있습니다. --test 플래그로 실행하며, TAP 형식의 출력을 기본 제공합니다. mock, snapshot, coverage 등의 기능도 내장되어 있습니다.",
+    "sourceUrl": "https://nodejs.org/api/test.html"
+  },
+  {
+    "id": "nodejs-052",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 Node.js 코드의 출력 결과는 무엇인가요?",
+    "code": "const { performance, PerformanceObserver } = require('perf_hooks');\n\nconst obs = new PerformanceObserver((list) => {\n  const entry = list.getEntries()[0];\n  console.log(`${entry.name}: ${entry.duration > 0}`);\n});\nobs.observe({ entryTypes: ['measure'] });\n\nperformance.mark('start');\nfor (let i = 0; i < 1000000; i++) {}\nperformance.mark('end');\nperformance.measure('loop', 'start', 'end');",
+    "options": [
+      "loop: false",
+      "loop: true",
+      "start: true",
+      "에러가 발생한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "perf_hooks 모듈의 performance.mark()로 두 시점을 기록하고, performance.measure()로 그 사이의 시간을 측정합니다. PerformanceObserver는 'measure' 엔트리가 생성될 때 콜백을 실행합니다. 100만 번 반복의 실행 시간은 0보다 크므로 'loop: true'가 출력됩니다. 이는 정밀한 성능 측정에 Date.now()보다 권장되는 방법입니다.",
+    "sourceUrl": "https://nodejs.org/api/perf_hooks.html"
+  },
+  {
+    "id": "nodejs-053",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Node.js에서 console.time()/console.timeEnd()와 perf_hooks의 performance.measure()의 차이점은 무엇인가요?",
+    "options": [
+      "console.time()은 밀리초, performance.measure()는 초 단위를 사용한다",
+      "둘은 완전히 동일한 기능이며 성능도 같다",
+      "console.time()은 간단한 콘솔 출력용이고, performance.measure()는 프로그래밍 방식으로 측정값에 접근하고 PerformanceObserver와 연동할 수 있다",
+      "performance.measure()는 브라우저에서만 사용 가능하다"
+    ],
+    "correctIndex": 2,
+    "explanation": "console.time()/timeEnd()는 콘솔에 경과 시간을 출력하는 간단한 디버깅 도구입니다. 반면 performance.measure()는 측정 결과를 PerformanceEntry 객체로 저장하여 프로그래밍 방식으로 접근할 수 있고, PerformanceObserver를 통해 비동기적으로 수집하거나 APM 도구와 연동할 수 있습니다.",
+    "sourceUrl": "https://nodejs.org/api/perf_hooks.html#performancemeasurename-startmarkoroptions-endmark"
+  },
+  {
+    "id": "nodejs-054",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 파일 디스크립터 누수가 발생하는 이유는 무엇인가요?",
+    "code": "const fs = require('fs');\n\nasync function processFiles(paths) {\n  for (const filePath of paths) {\n    const fd = fs.openSync(filePath, 'r');\n    const buffer = Buffer.alloc(1024);\n    fs.readSync(fd, buffer);\n    // 파일 처리 로직\n    if (buffer.includes('error')) {\n      throw new Error('Invalid file');\n    }\n    fs.closeSync(fd);\n  }\n}",
+    "options": [
+      "openSync 대신 비동기 open을 사용해야 한다",
+      "Buffer.alloc 대신 Buffer.allocUnsafe를 사용해야 한다",
+      "throw 전에 fs.closeSync(fd)를 호출하지 않아, 예외 발생 시 열린 파일 디스크립터가 닫히지 않는다",
+      "readSync에 오프셋 인자가 누락되었다"
+    ],
+    "correctIndex": 2,
+    "explanation": "throw new Error() 전에 fs.closeSync(fd)가 호출되지 않으므로, 'error'를 포함한 파일을 만나면 파일 디스크립터가 열린 채로 남습니다. try-finally 블록을 사용하여 예외 발생 여부와 관계없이 항상 fd를 닫아야 합니다. 또는 fs.readFileSync()처럼 자동으로 fd를 관리하는 API를 사용하는 것이 안전합니다.",
+    "sourceUrl": "https://nodejs.org/api/fs.html#fsclosesyncfd"
+  },
+  {
+    "id": "nodejs-055",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Node.js의 diagnostics_channel 모듈이 제공하는 기능은 무엇인가요?",
+    "options": [
+      "애플리케이션의 로그를 파일로 자동 저장한다",
+      "프로세스 간 통신(IPC)을 위한 새로운 채널을 생성한다",
+      "코드를 수정하지 않고 명명된 채널을 통해 진단 데이터를 발행하고 구독할 수 있는 pub/sub 메커니즘을 제공한다",
+      "V8 힙 스냅샷을 자동으로 생성하고 분석한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "diagnostics_channel은 모듈 간에 진단 데이터를 교환하기 위한 발행/구독 메커니즘입니다. 라이브러리 작성자가 명명된 채널에 진단 이벤트를 발행하면, APM 도구나 로깅 시스템이 해당 채널을 구독하여 데이터를 수집할 수 있습니다. HTTP 요청 추적, DB 쿼리 모니터링 등에 Node.js 코어와 주요 라이브러리가 활용하고 있습니다.",
+    "sourceUrl": "https://nodejs.org/api/diagnostics_channel.html"
   }
 ]

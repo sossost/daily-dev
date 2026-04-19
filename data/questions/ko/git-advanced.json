@@ -809,5 +809,87 @@
     "correctIndex": 1,
     "explanation": "git notes는 기존 커밋의 해시를 변경하지 않으면서 추가 정보(코드 리뷰 메모, CI 결과, 관련 이슈 번호 등)를 첨부할 수 있는 기능입니다. 커밋을 수정하면 해시가 변경되어 히스토리가 변하지만, notes는 별도의 참조 네임스페이스(refs/notes/)에 저장되므로 원본 커밋에 영향을 주지 않습니다.",
     "sourceUrl": "https://git-scm.com/docs/git-notes"
+  },
+  {
+    "id": "git-advanced-051",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 명령어를 순서대로 실행했을 때 결과는 무엇인가요?\n\ngit commit -m \"feature A\"\ngit commit --fixup HEAD\ngit rebase -i --autosquash HEAD~2",
+    "code": "git commit -m \"feature A\"\ngit commit --fixup HEAD\ngit rebase -i --autosquash HEAD~2",
+    "options": [
+      "두 커밋이 그대로 유지되고 'fixup! feature A' 커밋이 남는다",
+      "fixup 커밋이 'feature A' 커밋에 자동으로 합쳐지며, 최종적으로 'feature A' 메시지를 가진 하나의 커밋만 남는다",
+      "두 커밋이 모두 삭제된다",
+      "'feature A'와 'fixup! feature A' 메시지가 합쳐진 새로운 커밋이 생성된다"
+    ],
+    "correctIndex": 1,
+    "explanation": "git commit --fixup은 지정된 커밋에 대한 수정 커밋을 생성하며 'fixup! <원래 메시지>' 형식의 메시지를 자동으로 붙입니다. --autosquash 옵션과 함께 interactive rebase를 실행하면, fixup 커밋이 자동으로 대상 커밋 아래로 이동하고 합쳐집니다. squash와 달리 fixup은 원래 커밋 메시지만 유지합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-commit"
+  },
+  {
+    "id": "git-advanced-052",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "git bundle 명령어의 용도와 사용 시나리오는 무엇인가요?",
+    "options": [
+      "여러 저장소를 하나로 합치는 데 사용한다",
+      "프로젝트의 소스 코드를 zip 파일로 압축한다",
+      "npm 패키지를 Git 저장소에 번들링한다",
+      "Git 객체와 참조를 단일 파일로 패키징하여 네트워크 없이 저장소를 전송하거나 백업할 수 있다"
+    ],
+    "correctIndex": 3,
+    "explanation": "git bundle은 Git 객체와 참조를 하나의 바이너리 파일로 패키징합니다. 네트워크가 없는 환경에서 USB 등을 통해 저장소를 전달하거나 오프라인 백업을 만들 때 유용합니다. git bundle create로 생성하고, git clone <bundle-file>이나 git fetch <bundle-file>로 사용할 수 있습니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-bundle"
+  },
+  {
+    "id": "git-advanced-053",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "git stash drop을 실수로 실행하여 스태시를 삭제했을 때 복구하는 방법은 무엇인가요?",
+    "options": [
+      "git stash undo 명령어를 사용한다",
+      "삭제된 스태시는 어떤 방법으로도 복구할 수 없다",
+      "git reflog에서 삭제된 스태시의 커밋 해시를 찾아 git stash apply <해시>로 복구한다",
+      "git stash list --deleted로 삭제된 항목을 확인한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "Git stash 항목도 내부적으로 커밋 객체이므로, git reflog에서 해당 커밋 해시를 찾을 수 있습니다. git fsck --unreachable 또는 git log --walk-reflogs를 사용해 도달 불가능한 스태시 커밋을 찾고, git stash apply <해시>로 복구할 수 있습니다. 단, gc가 실행되기 전에 복구해야 합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-stash"
+  },
+  {
+    "id": "git-advanced-054",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "git archive와 git clone --depth 1의 차이점은 무엇인가요?",
+    "options": [
+      "git archive는 .git 디렉토리 없이 소스 코드만 tar/zip으로 추출하고, clone --depth 1은 Git 저장소로 얕은 복제를 생성한다",
+      "git archive는 전체 히스토리를 포함하고, clone --depth 1은 히스토리를 제외한다",
+      "둘 다 동일한 결과를 생성하며 형식만 다르다",
+      "git archive는 원격에서만 동작하고, clone --depth 1은 로컬에서만 동작한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "git archive는 특정 커밋이나 브랜치의 소스 코드를 .git 메타데이터 없이 tar 또는 zip 파일로 추출합니다. 릴리스 배포나 소스 코드 공유에 적합합니다. 반면 git clone --depth 1은 최신 커밋의 히스토리만 포함하는 Git 저장소를 생성하므로, 이후 git 명령어를 계속 사용할 수 있습니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-archive"
+  },
+  {
+    "id": "git-advanced-055",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 명령어의 출력은 무엇을 보여주나요?\n\ngit rev-parse HEAD",
+    "code": "git rev-parse HEAD",
+    "options": [
+      "현재 브랜치의 이름을 출력한다",
+      "HEAD가 가리키는 커밋의 전체 SHA-1 해시를 출력한다",
+      "HEAD부터 루트 커밋까지의 커밋 수를 출력한다",
+      "HEAD 커밋의 변경 파일 목록을 출력한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "git rev-parse는 Git 참조를 해당하는 SHA-1 해시로 변환합니다. git rev-parse HEAD는 현재 HEAD가 가리키는 커밋의 전체 40자 SHA-1 해시를 출력합니다. 스크립트에서 현재 커밋 해시를 변수에 저장할 때 자주 사용되며, --short 옵션으로 축약 해시를 얻을 수도 있습니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-rev-parse"
   }
 ]

@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 7 design-patterns & event-loop questions (`1fc0f76`)
 - **content**: add 5 data-structures questions (051-055) (`2791e2e`)
 
 ## 2026-04-18
