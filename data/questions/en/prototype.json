@@ -909,5 +909,89 @@
     "correctIndex": 3,
     "explanation": "Object.assign() copies enumerable own properties from source objects to the target as own properties. This means each mixed-in method becomes a direct property of the target — changes to the original mixin object afterward do not propagate. In contrast, prototype-based inheritance establishes a live link via [[Prototype]], so all instances share the same method references and any change to the prototype is immediately visible to all instances. Mixins are useful for composing behavior from multiple sources (which single-prototype inheritance cannot do), but they use more memory since each object gets its own copy.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign"
+  },
+  {
+    "id": "prototype-056",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const parent = { x: 10 };\nconst child = Object.create(parent);\nchild.x = 20;\ndelete child.x;\nconsole.log(child.x);",
+    "options": [
+      "undefined",
+      "20",
+      "null",
+      "10"
+    ],
+    "correctIndex": 3,
+    "explanation": "When child.x = 20 is assigned, it creates an own property on child that shadows parent.x. The delete operator only removes own properties — it does not affect the prototype chain. After deleting child's own x, the prototype chain lookup resumes and finds parent.x, which is 10. This demonstrates that delete cannot remove inherited properties; it only removes the shadowing own property, revealing the prototype's value underneath.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete"
+  },
+  {
+    "id": "prototype-057",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "class Counter {\n  count = 0;\n  [Symbol.toPrimitive](hint) {\n    if (hint === 'number') return ++this.count;\n    return `Counter(${this.count})`;\n  }\n}\nconst c = new Counter();\nconsole.log(+c, +c, `${c}`);",
+    "options": [
+      "1 2 Counter(2)",
+      "0 0 Counter(0)",
+      "NaN NaN Counter(0)",
+      "1 1 Counter(1)"
+    ],
+    "correctIndex": 0,
+    "explanation": "Symbol.toPrimitive is called whenever an object must be coerced to a primitive value. The hint argument tells you which type is preferred: 'number' for numeric contexts (+c), 'string' for string contexts (template literal), and 'default' for ambiguous ones. Each +c triggers the 'number' hint, incrementing count and returning 1 then 2. The template literal triggers the 'string' hint, returning Counter(2) because count is already 2 at that point. This protocol supersedes both valueOf() and toString() when present.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive"
+  },
+  {
+    "id": "prototype-058",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What happens when Object.assign is used to copy an object that has inherited methods from its prototype?",
+    "options": [
+      "Both own and inherited properties are copied to the target",
+      "Inherited methods are copied but as non-enumerable properties",
+      "An error is thrown if the source has prototype properties",
+      "Only own enumerable properties are copied; inherited properties are ignored"
+    ],
+    "correctIndex": 3,
+    "explanation": "Object.assign() iterates over the source's own enumerable string-keyed properties only. It does not walk the prototype chain. This means methods defined on the prototype (via Constructor.prototype or Object.create) are not transferred to the target. Similarly, the spread operator ({...obj}) behaves the same way — only own enumerable properties are included. If you need inherited properties, you must manually walk the chain using a for...in loop or recursively call Object.getPrototypeOf().",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign"
+  },
+  {
+    "id": "prototype-059",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const range = {\n  start: 1,\n  end: 4,\n  [Symbol.iterator]() {\n    let current = this.start;\n    const end = this.end;\n    return {\n      next() {\n        return current <= end\n          ? { value: current++, done: false }\n          : { done: true };\n      }\n    };\n  }\n};\nconsole.log([...range]);",
+    "options": [
+      "[1, 4]",
+      "TypeError: range is not iterable",
+      "[1, 2, 3, 4]",
+      "[]"
+    ],
+    "correctIndex": 2,
+    "explanation": "When an object defines a Symbol.iterator method, it becomes iterable — meaning it can be used with for...of, the spread operator, destructuring, and other iteration protocols. The method must return an iterator object with a next() method that produces { value, done } results. Here, the iterator yields values from start (1) to end (4) inclusive, producing [1, 2, 3, 4]. This is how custom objects integrate with JavaScript's built-in iteration protocol without extending Array.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/iterator"
+  },
+  {
+    "id": "prototype-060",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "The following code expects child to have its own copy of the items array, but modifying child.items also changes parent.items. What is the cause?",
+    "code": "const parent = { items: [1, 2, 3] };\nconst child = Object.create(parent);\nchild.items.push(4);\nconsole.log(parent.items); // [1, 2, 3, 4]",
+    "options": [
+      "Object.create performs a deep clone, so both arrays are the same object",
+      "push() is not supported on inherited arrays",
+      "child.items resolves to parent.items via the prototype chain, so mutating it modifies the shared reference",
+      "Arrays cannot be inherited through the prototype chain"
+    ],
+    "correctIndex": 2,
+    "explanation": "Object.create(parent) does not copy parent's properties — it sets parent as child's [[Prototype]]. When child.items is accessed, JavaScript does not find an own 'items' property on child, so it walks up the prototype chain and returns parent.items. Since push() mutates the array in place (rather than creating a new value), it modifies the same array referenced by parent.items. To avoid this, assign a new array to child: child.items = [...parent.items] before pushing, which creates an own property that shadows the inherited one.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create"
   }
 ]
