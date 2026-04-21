@@ -910,5 +910,90 @@
     "correctIndex": 1,
     "explanation": "With closure-based private state, methods must be defined inside the constructor function to access the private variables, so each instance gets its own copy of every method. This is memory-inefficient with many instances. Using a WeakMap in module scope with the instance (this) as the key lets you store private data per instance while defining methods once on the prototype. Since WeakMap keys are weak references, private data is automatically cleaned up when instances are garbage collected.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap"
+  },
+  {
+    "id": "closure-056",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function createLogger(prefix = 'LOG') {\n  let count = 0;\n  return function(msg) {\n    count++;\n    return `[${prefix} #${count}] ${msg}`;\n  };\n}\nconst log = createLogger();\nconst warn = createLogger('WARN');\nconsole.log(log('hello'));\nconsole.log(log('world'));\nconsole.log(warn('oops'));",
+    "options": [
+      "[LOG #1] hello / [LOG #1] world / [WARN #3] oops",
+      "[LOG #1] hello / [LOG #2] world / [WARN #2] oops",
+      "[undefined #1] hello / [undefined #2] world / [WARN #1] oops",
+      "[LOG #1] hello / [LOG #2] world / [WARN #1] oops"
+    ],
+    "correctIndex": 3,
+    "explanation": "Default parameters are treated as local variables and are captured by closures. createLogger() captures prefix='LOG', while createLogger('WARN') captures prefix='WARN'. Each call creates an independent lexical environment, so log and warn have separate count variables. Calling log twice increments its count from 1 to 2, while warn starts with its own count at 1. Default parameters are evaluated when the function is called and the value is bound in the closure scope.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters"
+  },
+  {
+    "id": "closure-057",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function createTasks() {\n  const tasks = [];\n  for (let i = 1; i <= 3; i++) {\n    tasks.push(async () => {\n      const result = await Promise.resolve(i * 10);\n      return result;\n    });\n  }\n  return tasks;\n}\ncreateTasks().forEach(async (task) => {\n  console.log(await task());\n});",
+    "options": [
+      "30, 30, 30",
+      "NaN, NaN, NaN",
+      "Promise, Promise, Promise",
+      "10, 20, 30"
+    ],
+    "correctIndex": 3,
+    "explanation": "Async functions form closures just like regular functions. The let-declared i creates a new block-scope binding for each loop iteration. Each async arrow function captures its iteration's i (1, 2, 3) via closure. Even after the await resolves the Promise, the captured i value remains unchanged. The async/await syntax does not affect the variable capture mechanism of closures — the already-captured value is used when the Promise resolves.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "closure-058",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, user.name was changed but the closure returns the updated value. Why?",
+    "code": "function createGetter(obj) {\n  return function(key) {\n    return obj[key];\n  };\n}\nconst user = { name: 'Alice' };\nconst getName = createGetter(user);\nuser.name = 'Bob';\nconsole.log(getName('name')); // 'Bob'",
+    "options": [
+      "The closure captures the reference to the obj parameter, so property changes on the original object are reflected in the closure",
+      "createGetter creates a new object each time it is called",
+      "getName directly references the global variable user",
+      "JavaScript objects are immutable"
+    ],
+    "correctIndex": 0,
+    "explanation": "Closures capture variable bindings. The obj parameter stores a reference (memory address) to the user object. When the closure captures obj, it retains this reference, so property changes on the original object are visible through the closure. This is different from variable reassignment (obj = newObj), which changes the binding itself. Property mutation only changes the content of the referenced object. If immutability is needed, a deep clone should be made at capture time.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-059",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the arguments object in closures is correct?",
+    "code": "function outer() {\n  return function inner() {\n    return arguments.length;\n  };\n}\nconsole.log(outer('a', 'b')()); // 0",
+    "options": [
+      "inner captures outer's arguments via closure and returns 2",
+      "The arguments object is shared through closures, so NaN is returned",
+      "Each function has its own arguments object, so inner's arguments.length is 0",
+      "arguments can only be used in arrow functions"
+    ],
+    "correctIndex": 2,
+    "explanation": "Regular functions (declared with the function keyword) create their own arguments object on each invocation. inner() is called with no arguments, so inner's arguments.length is 0. Unlike regular variables captured by closures, arguments is a special object created fresh for each function call. If inner were an arrow function, it would not have its own arguments, so it would look up the scope chain and reference outer's arguments, returning 2. This is a key difference between arrow functions and regular functions regarding arguments handling.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments"
+  },
+  {
+    "id": "closure-060",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function createTag(tag) {\n  return function(strings, ...values) {\n    return strings.reduce((result, str, i) => {\n      return result + str + (values[i] !== undefined ? `<${tag}>${values[i]}</${tag}>` : '');\n    }, '');\n  };\n}\nconst bold = createTag('b');\nconst italic = createTag('i');\nconst name = 'World';\nconsole.log(bold`Hello ${name}!`);",
+    "options": [
+      "Hello World!",
+      "Hello <b>World</b>!",
+      "<b>Hello World!</b>",
+      "Hello <i>World</i>!"
+    ],
+    "correctIndex": 1,
+    "explanation": "createTag returns a tagged template function that captures the tag parameter via closure. bold captures tag='b'. A tagged template function receives the string parts (strings) and interpolated values (values) as arguments. For bold`Hello ${name}!`, strings=['Hello ', '!'] and values=['World']. The reduce combines each string part with its corresponding value wrapped in the captured tag, producing 'Hello <b>World</b>!'. This pattern combines closures with tagged templates to create reusable string transformers — an advanced technique for building DSLs or sanitizers.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals"
   }
 ]

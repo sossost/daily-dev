@@ -910,5 +910,90 @@
     "correctIndex": 1,
     "explanation": "클로저로 private 상태를 구현하면 생성자 함수 내부에서 메서드를 정의해야 하므로, 각 인스턴스가 메서드의 독립적인 복사본을 갖게 됩니다. 이는 인스턴스가 많을 때 메모리 비효율적입니다. WeakMap을 사용하면 모듈 스코프에 WeakMap을 두고 인스턴스(this)를 키로 private 데이터를 저장할 수 있으므로, 메서드는 프로토타입에 한 번만 정의하면서도 인스턴스별 private 상태를 유지할 수 있습니다. WeakMap의 키가 약한 참조이므로 인스턴스가 가비지 컬렉션될 때 private 데이터도 함께 정리됩니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/WeakMap"
+  },
+  {
+    "id": "closure-056",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function createLogger(prefix = 'LOG') {\n  let count = 0;\n  return function(msg) {\n    count++;\n    return `[${prefix} #${count}] ${msg}`;\n  };\n}\nconst log = createLogger();\nconst warn = createLogger('WARN');\nconsole.log(log('hello'));\nconsole.log(log('world'));\nconsole.log(warn('oops'));",
+    "options": [
+      "[LOG #1] hello / [LOG #1] world / [WARN #3] oops",
+      "[LOG #1] hello / [LOG #2] world / [WARN #2] oops",
+      "[undefined #1] hello / [undefined #2] world / [WARN #1] oops",
+      "[LOG #1] hello / [LOG #2] world / [WARN #1] oops"
+    ],
+    "correctIndex": 3,
+    "explanation": "기본 매개변수(default parameter)도 함수의 지역 변수로 취급되어 클로저에 캡처됩니다. createLogger()는 prefix='LOG'를, createLogger('WARN')은 prefix='WARN'을 캡처합니다. 각 호출은 독립적인 렉시컬 환경을 생성하므로 log와 warn은 별도의 count 변수를 가집니다. log를 두 번 호출하면 count가 1→2로 증가하고, warn은 자신만의 count를 1로 시작합니다. 기본 매개변수는 함수가 호출될 때 평가되며, 해당 값이 클로저 스코프에 바인딩됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/Default_parameters"
+  },
+  {
+    "id": "closure-057",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function createTasks() {\n  const tasks = [];\n  for (let i = 1; i <= 3; i++) {\n    tasks.push(async () => {\n      const result = await Promise.resolve(i * 10);\n      return result;\n    });\n  }\n  return tasks;\n}\ncreateTasks().forEach(async (task) => {\n  console.log(await task());\n});",
+    "options": [
+      "30, 30, 30",
+      "NaN, NaN, NaN",
+      "Promise, Promise, Promise",
+      "10, 20, 30"
+    ],
+    "correctIndex": 3,
+    "explanation": "async 함수도 일반 함수와 동일하게 클로저를 형성합니다. let으로 선언된 i는 for 루프의 각 반복마다 새로운 블록 스코프 바인딩을 생성합니다. 각 async 화살표 함수는 자신의 반복에 해당하는 i(1, 2, 3)를 클로저로 캡처합니다. await가 Promise를 해제(resolve)한 후에도 캡처된 i 값은 변하지 않습니다. async/await 문법은 클로저의 변수 캡처 메커니즘에 영향을 주지 않으며, Promise가 resolve된 시점에 이미 캡처된 값이 사용됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "closure-058",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 user.name을 변경했는데 클로저가 변경된 값을 반환하는 이유는?",
+    "code": "function createGetter(obj) {\n  return function(key) {\n    return obj[key];\n  };\n}\nconst user = { name: 'Alice' };\nconst getName = createGetter(user);\nuser.name = 'Bob';\nconsole.log(getName('name')); // 'Bob'",
+    "options": [
+      "클로저가 obj 매개변수의 참조(reference)를 캡처하므로, 원본 객체의 프로퍼티 변경이 클로저에도 반영된다",
+      "createGetter가 호출될 때마다 새로운 객체를 생성하기 때문",
+      "getName이 전역 변수 user를 직접 참조하기 때문",
+      "JavaScript 객체는 불변(immutable)이기 때문"
+    ],
+    "correctIndex": 0,
+    "explanation": "클로저는 변수의 바인딩을 캡처합니다. obj 매개변수에는 user 객체의 참조(메모리 주소)가 저장됩니다. 클로저가 obj를 캡처하면 이 참조를 유지하므로, 원본 객체의 프로퍼티가 변경되면 클로저에서도 변경된 값을 볼 수 있습니다. 이는 변수 재할당(obj = newObj)과는 다릅니다. 재할당은 바인딩 자체를 변경하지만, 프로퍼티 변경은 참조하는 객체의 내용만 변경합니다. 객체의 불변성이 필요하다면 캡처 시점에 깊은 복사(deep clone)를 해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "closure-059",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "클로저에서 arguments 객체의 동작에 대한 설명으로 올바른 것은?",
+    "code": "function outer() {\n  return function inner() {\n    return arguments.length;\n  };\n}\nconsole.log(outer('a', 'b')()); // 0",
+    "options": [
+      "inner 함수는 outer의 arguments를 클로저로 캡처하여 2를 반환한다",
+      "arguments 객체는 클로저에 의해 공유되므로 NaN이 반환된다",
+      "각 함수는 자신만의 arguments 객체를 가지므로 inner의 arguments.length는 0이다",
+      "arguments는 화살표 함수에서만 사용할 수 있다"
+    ],
+    "correctIndex": 2,
+    "explanation": "일반 함수(function 키워드)는 호출 시 자신만의 arguments 객체를 생성합니다. inner()는 인자 없이 호출되었으므로 inner의 arguments.length는 0입니다. arguments는 클로저로 캡처되는 일반 변수와 달리, 각 함수 호출마다 새로 생성되는 특수 객체입니다. 만약 inner가 화살표 함수라면 자체 arguments가 없으므로 스코프 체인을 따라 outer의 arguments를 참조하여 2를 반환했을 것입니다. 이것이 화살표 함수와 일반 함수의 arguments 처리 차이입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/arguments"
+  },
+  {
+    "id": "closure-060",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function createTag(tag) {\n  return function(strings, ...values) {\n    return strings.reduce((result, str, i) => {\n      return result + str + (values[i] !== undefined ? `<${tag}>${values[i]}</${tag}>` : '');\n    }, '');\n  };\n}\nconst bold = createTag('b');\nconst italic = createTag('i');\nconst name = 'World';\nconsole.log(bold`Hello ${name}!`);",
+    "options": [
+      "Hello World!",
+      "Hello <b>World</b>!",
+      "<b>Hello World!</b>",
+      "Hello <i>World</i>!"
+    ],
+    "correctIndex": 1,
+    "explanation": "createTag는 tag 매개변수를 클로저로 캡처하는 태그 함수(tagged template function)를 반환합니다. bold는 tag='b'를 캡처한 태그 함수입니다. 태그 함수는 템플릿 리터럴의 문자열 부분(strings)과 보간 값(values)을 인자로 받습니다. bold`Hello ${name}!`에서 strings=['Hello ', '!']이고 values=['World']입니다. reduce를 통해 각 문자열과 값을 조합하면서 값을 <b> 태그로 감싸므로 'Hello <b>World</b>!'가 됩니다. 이 패턴은 클로저와 태그 템플릿을 결합하여 재사용 가능한 문자열 변환기를 만드는 고급 기법입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Template_literals"
   }
 ]
