@@ -909,5 +909,88 @@
     "correctIndex": 1,
     "explanation": "The Error cause option, introduced in ES2022, is used as new Error('message', { cause: originalError }). When catching low-level errors in async code and re-throwing them as higher-level meaningful errors, the original cause is preserved. You can access the original error via err.cause, making it possible to trace the full context of an error chain during debugging.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause"
+  },
+  {
+    "id": "async-056",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between .then(onFulfilled, onRejected) and .then(onFulfilled).catch(onRejected)?",
+    "options": [
+      "The second argument of .then (onRejected) cannot catch errors thrown in onFulfilled of the same .then, but a separate .catch() can",
+      "Both behave identically with no difference",
+      ".catch() never executes on fulfilled Promises",
+      "The second argument of .then always executes before .catch()"
+    ],
+    "correctIndex": 0,
+    "explanation": "In .then(onFulfilled, onRejected), the onRejected handler only catches rejections from the previous Promise. If onFulfilled throws an error in the same .then(), onRejected will NOT be called. In contrast, .then(onFulfilled).catch(onRejected) has .catch() handling rejections from the new Promise returned by .then(), so it can catch errors thrown inside onFulfilled. This distinction is critical when designing error handling strategies in Promise chains.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+  },
+  {
+    "id": "async-057",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about Promise.withResolvers(), introduced in ES2024, is correct?",
+    "options": [
+      "It sets up a timer that auto-resolves the Promise",
+      "It returns a { promise, resolve, reject } object, separating Promise creation from control",
+      "It merges multiple Promises into one",
+      "It allows calling resolve and reject simultaneously"
+    ],
+    "correctIndex": 1,
+    "explanation": "Promise.withResolvers() returns a new Promise along with its resolve and reject functions as a single object. Previously, the cumbersome pattern of let resolve; const p = new Promise(r => { resolve = r; }) was needed to expose resolve externally. Now const { promise, resolve, reject } = Promise.withResolvers() achieves the same thing concisely. This is especially useful for event-driven code or scenarios where Promise resolution needs to be controlled externally.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/withResolvers"
+  },
+  {
+    "id": "async-058",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "Promise.reject('X')\n  .catch(e => { throw new Error('Y'); })\n  .catch(e => e.message)\n  .then(v => console.log(v));",
+    "options": [
+      "X",
+      "Error: Y",
+      "Y",
+      "undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "Promise.reject('X') is rejected, so the first .catch() executes. This callback throws a new Error, which rejects the Promise returned by that .catch(). The second .catch() receives this Error and returns e.message, which is the string 'Y'. Since catch returns a value (not throwing), the Promise recovers to fulfilled state, and .then() receives 'Y'. The key takeaway is that re-throwing in a catch propagates to the next catch in the chain.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch"
+  },
+  {
+    "id": "async-059",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why might the cleanup function never execute in this code?",
+    "code": "async function processJob(job) {\n  const resource = await acquire();\n  const result = await process(resource, job);\n  await cleanup(resource);\n  return result;\n}",
+    "options": [
+      "Multiple awaits cannot be used inside an async function",
+      "If process() rejects, the function exits before reaching cleanup()",
+      "cleanup() is not an async function",
+      "acquire() and process() run concurrently so order is not guaranteed"
+    ],
+    "correctIndex": 1,
+    "explanation": "If await process(resource, job) rejects, an exception is thrown inside the async function and subsequent code is skipped. cleanup() never gets called, causing a resource leak. To prevent this, use a try-finally pattern: try { const result = await process(resource, job); return result; } finally { await cleanup(resource); }. The finally block always executes whether the operation succeeds or fails, guaranteeing resource cleanup.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch"
+  },
+  {
+    "id": "async-060",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const p = Promise.resolve('done');\nconsole.log(p === Promise.resolve(p));\nconsole.log(p === Promise.resolve('done'));",
+    "options": [
+      "true, true",
+      "true, false",
+      "false, false",
+      "false, true"
+    ],
+    "correctIndex": 1,
+    "explanation": "When a native Promise object is passed to Promise.resolve(), it returns the same object without creating a new one. So p === Promise.resolve(p) is true. However, Promise.resolve('done') creates a new Promise object each time it is called with a non-Promise value, so p === Promise.resolve('done') is false. This behavior is defined in the ECMAScript specification as an optimization to avoid unnecessary Promise wrapping.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
   }
 ]

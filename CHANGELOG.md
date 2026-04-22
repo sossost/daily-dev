@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-04-22
+
+### Features
+
+- **content**: fix — this-060 incorrect sourceUrl (`aa48c9c`)
+
 ## 2026-04-21
 
 ### Features
