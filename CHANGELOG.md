@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 5 closure questions (056-060) (`6af6ea3`)
 - **content**: add 5 prototype questions (056-060) (`e386da3`)
 
 ## 2026-04-20

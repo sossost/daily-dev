@@ -910,5 +910,88 @@
     "correctIndex": 1,
     "explanation": "Computed property access with brackets (obj[methodName]()) follows the same method call pattern as dot notation (obj.method()). When property access and invocation happen in a single expression, this is bound to obj. However, in Code B, const fn = obj[methodName] stores only the function reference in a variable, detaching the call context. fn() is a standalone call so this becomes global (non-strict) or undefined (strict). This is a common this-loss scenario in dynamic dispatch patterns.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors"
+  },
+  {
+    "id": "this-056",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  value: 42,\n  get doubled() {\n    return this.value * 2;\n  }\n};\n\nconst copy = Object.create(null, {\n  value: { value: 10 },\n  doubled: Object.getOwnPropertyDescriptor(obj, 'doubled')\n});\n\nconsole.log(copy.doubled);",
+    "options": [
+      "20",
+      "84",
+      "undefined",
+      "TypeError"
+    ],
+    "correctIndex": 0,
+    "explanation": "When a getter is copied via Object.getOwnPropertyDescriptor, the getter function itself is transferred. Accessing copy.doubled invokes the getter, and this is bound to the receiver object — copy. Since copy.value is 10, the result is 10 * 2 = 20. Inside getters and setters, this refers to the object on which the property is accessed (the receiver), not the object that originally defined the property descriptor.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get"
+  },
+  {
+    "id": "this-057",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function tag(strings, ...values) {\n  return this.prefix + values.join('');\n}\n\nconst formatter = {\n  prefix: '>> ',\n  format(name) {\n    return tag.call(this, `Hello `, name);\n  }\n};\n\nconsole.log(formatter.format('World'));",
+    "options": [
+      "undefined World",
+      ">> World",
+      "Hello World",
+      "TypeError"
+    ],
+    "correctIndex": 1,
+    "explanation": "When tag is invoked via tag.call(this, ...), this inside tag is bound to the formatter object. Here tag is called as a regular function (not as a tagged template), so strings receives the first argument ('Hello ') and values receives ['World']. this.prefix is '>> ' and values.join('') is 'World', producing '>> World'. Whether a function is designed for tagged templates or called normally, this binding follows the same rules based on the call pattern.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals"
+  },
+  {
+    "id": "this-058",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about this binding with optional chaining is correct?",
+    "options": [
+      "Optional chaining always makes this undefined",
+      "In obj?.method(), if obj is not null, this is bound to obj",
+      "Optional chaining always runs in strict mode making this undefined",
+      "obj?.method() is the same as obj.method.call(null)"
+    ],
+    "correctIndex": 1,
+    "explanation": "When using obj?.method(), if obj is not null or undefined, the call behaves identically to obj.method() — this is bound to obj. Optional chaining only checks whether the access target is nullish; it does not alter the this binding mechanism. If obj is null or undefined, the method is never called and undefined is returned immediately, so no this binding occurs at all.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining"
+  },
+  {
+    "id": "this-059",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, this.count inside the queueMicrotask callback is undefined. What is the cause?",
+    "code": "class Counter {\n  count = 0;\n  increment() {\n    this.count++;\n    queueMicrotask(function() {\n      console.log(this.count);\n    });\n  }\n}\nconst c = new Counter();\nc.increment();",
+    "options": [
+      "queueMicrotask runs the callback asynchronously so this is destroyed",
+      "queueMicrotask cannot be used inside class methods",
+      "Class bodies run in strict mode, so this in the standalone function callback is undefined",
+      "queueMicrotask forcibly binds the callback's this to null"
+    ],
+    "correctIndex": 2,
+    "explanation": "Class bodies always execute in strict mode. The regular function (function keyword) passed to queueMicrotask is invoked as a standalone call, and in strict mode this is undefined. Accessing this.count on undefined throws a TypeError. Using an arrow function instead would inherit this from the enclosing scope (the Counter instance), solving the problem. This this-loss pattern applies equally to setTimeout, addEventListener, and all other callback-based APIs.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "this-060",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference between return this (for method chaining) and return () => this in a fluent API?",
+    "options": [
+      "return this returns the current instance enabling chaining, while return () => this returns a function that returns the instance when called",
+      "Both work identically with no difference",
+      "return () => this always captures the global object",
+      "return this cannot be used in strict mode"
+    ],
+    "correctIndex": 0,
+    "explanation": "return this returns the instance itself, enabling chaining like obj.a().b().c(). In contrast, return () => this returns a function — the arrow function captures this (the instance) via closure at the time the method is called. Invoking the returned function produces the instance, but you cannot directly chain on it (obj.a() is a function, not the instance). Understanding this distinction is key for correctly implementing builder patterns and lazy evaluation patterns.",
+    "sourceUrl": "https://javascript.info/object-methods#method-chaining"
   }
 ]

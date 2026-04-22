@@ -911,5 +911,88 @@
     "explanation": "obj[methodName]()처럼 대괄호를 사용한 계산된 프로퍼티 접근도 점(.) 표기법과 동일한 메서드 호출 패턴입니다. 프로퍼티 접근과 호출이 하나의 표현식에서 이루어지면 this는 obj에 바인딩됩니다. 그러나 코드 B처럼 const fn = obj[methodName]으로 함수 참조를 변수에 저장하면 호출 컨텍스트가 분리됩니다. fn()은 단독 호출이므로 this는 전역(비엄격) 또는 undefined(엄격)가 됩니다. 이 패턴은 동적 디스패치에서 흔히 발생하는 this 손실 사례입니다."
 ,
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Property_accessors"
+  },
+  {
+    "id": "this-056",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const obj = {\n  value: 42,\n  get doubled() {\n    return this.value * 2;\n  }\n};\n\nconst copy = Object.create(null, {\n  value: { value: 10 },\n  doubled: Object.getOwnPropertyDescriptor(obj, 'doubled')\n});\n\nconsole.log(copy.doubled);",
+    "options": [
+      "20",
+      "84",
+      "undefined",
+      "TypeError"
+    ],
+    "correctIndex": 0,
+    "explanation": "Object.getOwnPropertyDescriptor로 getter를 복사하면 getter 함수 자체가 그대로 전달됩니다. copy.doubled에 접근하면 getter가 호출되고, 이때 this는 프로퍼티 접근의 주체인 copy에 바인딩됩니다. copy.value는 10이므로 10 * 2 = 20이 반환됩니다. getter/setter 내부의 this는 해당 프로퍼티를 소유한 객체가 아니라 접근 시점의 수신자 객체에 바인딩됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/get"
+  },
+  {
+    "id": "this-057",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function tag(strings, ...values) {\n  return this.prefix + values.join('');\n}\n\nconst formatter = {\n  prefix: '>> ',\n  format(name) {\n    return tag.call(this, `Hello `, name);\n  }\n};\n\nconsole.log(formatter.format('World'));",
+    "options": [
+      "undefined World",
+      ">> World",
+      "Hello World",
+      "TypeError"
+    ],
+    "correctIndex": 1,
+    "explanation": "tag 함수를 tag.call(this, ...)로 호출하면 this는 formatter 객체에 바인딩됩니다. 여기서 tag는 태그드 템플릿이 아닌 일반 함수 호출이므로 strings는 첫 번째 인자('Hello ')가 되고, values는 ['World']가 됩니다. this.prefix는 '>> '이고 values.join('')은 'World'이므로 '>> World'가 출력됩니다. 태그드 템플릿 리터럴로 호출하든 일반 함수로 호출하든, this 바인딩은 호출 방식에 따라 동일하게 적용됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Template_literals"
+  },
+  {
+    "id": "this-058",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "옵셔널 체이닝(optional chaining)으로 메서드를 호출할 때 this 바인딩에 대한 설명으로 올바른 것은?",
+    "options": [
+      "옵셔널 체이닝은 this 바인딩을 항상 undefined로 만든다",
+      "obj?.method()에서 obj가 null이 아니면 this는 obj에 바인딩된다",
+      "옵셔널 체이닝은 항상 strict mode로 동작하여 this가 undefined이다",
+      "obj?.method()는 obj.method.call(null)과 동일하다"
+    ],
+    "correctIndex": 1,
+    "explanation": "obj?.method() 구문에서 obj가 null이나 undefined가 아니면 obj.method()와 동일하게 동작하여 this는 obj에 바인딩됩니다. 옵셔널 체이닝은 접근 대상이 nullish인지만 검사할 뿐, this 바인딩 메커니즘을 변경하지 않습니다. obj가 null이나 undefined이면 메서드를 호출하지 않고 즉시 undefined를 반환하므로 this 바인딩 자체가 발생하지 않습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Optional_chaining"
+  },
+  {
+    "id": "this-059",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 queueMicrotask 콜백 내부의 this.count가 undefined입니다. 원인은 무엇인가요?",
+    "code": "class Counter {\n  count = 0;\n  increment() {\n    this.count++;\n    queueMicrotask(function() {\n      console.log(this.count);\n    });\n  }\n}\nconst c = new Counter();\nc.increment();",
+    "options": [
+      "queueMicrotask는 콜백을 비동기로 실행하여 this가 소멸되기 때문",
+      "class 내부의 메서드에서는 queueMicrotask를 사용할 수 없기 때문",
+      "클래스 본문은 strict mode이므로 일반 함수 콜백의 this가 undefined가 되기 때문",
+      "queueMicrotask가 콜백의 this를 null로 강제 바인딩하기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "클래스 본문은 항상 strict mode로 실행됩니다. queueMicrotask에 전달된 일반 함수(function 키워드)는 단독 호출되므로 strict mode에서 this는 undefined가 됩니다. 따라서 this.count 접근 시 TypeError가 발생합니다(undefined의 프로퍼티에 접근). 화살표 함수를 사용하면 외부 스코프의 this(Counter 인스턴스)를 상속하여 문제가 해결됩니다. 이는 setTimeout, addEventListener 등 모든 콜백 기반 API에서 동일하게 적용되는 this 손실 패턴입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "this-060",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "메서드 체이닝(fluent API)에서 return this와 화살표 함수를 사용한 return () => this의 차이로 올바른 것은?",
+    "options": [
+      "return this는 현재 인스턴스를 반환하여 체이닝을 가능하게 하지만, return () => this는 호출 시 인스턴스를 반환하는 함수를 반환한다",
+      "둘 다 동일하게 동작하며 차이가 없다",
+      "return () => this는 항상 전역 객체를 캡처한다",
+      "return this는 strict mode에서 사용할 수 없다"
+    ],
+    "correctIndex": 0,
+    "explanation": "return this는 메서드가 호출된 인스턴스 자체를 반환하여 obj.a().b().c() 형태의 체이닝을 가능하게 합니다. 반면 return () => this는 함수를 반환하며, 이 화살표 함수는 선언 시점의 this(메서드 호출 시 인스턴스)를 클로저로 캡처합니다. 반환된 함수를 호출하면 인스턴스가 반환되지만, 직접 체이닝할 수는 없습니다(obj.a()는 함수이지 인스턴스가 아니므로). 이 차이를 이해하면 빌더 패턴이나 지연 평가 패턴을 올바르게 구현할 수 있습니다.",
+    "sourceUrl": "https://javascript.info/object-methods#method-chaining"
   }
 ]
