@@ -903,5 +903,87 @@
     "correctIndex": 0,
     "explanation": "Synchronous code runs first: 'A' then 'E'. Next, the microtask queue is drained before any macrotasks. queueMicrotask() and Promise.then() both schedule microtasks, and they execute in the order they were queued: 'B' then 'D'. Finally, the setTimeout macrotask runs: 'C'. The key insight is that queueMicrotask() provides direct access to the microtask queue, behaving identically to Promise.then() in terms of scheduling priority.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "browser-api-056",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the primary purpose of window.matchMedia()?",
+    "options": [
+      "It dynamically loads and unloads CSS files",
+      "It allows JavaScript to check whether a CSS media query matches and detect changes",
+      "It returns the current computed style values of an element",
+      "It detects the format of media files (images, videos)"
+    ],
+    "correctIndex": 1,
+    "explanation": "window.matchMedia() takes a CSS media query string and returns a MediaQueryList object. The matches property indicates whether the query currently matches, and addEventListener('change', callback) lets you react to viewport changes. This enables responsive logic in JavaScript and is commonly used for dark mode detection (prefers-color-scheme) or branching behavior based on screen size.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia"
+  },
+  {
+    "id": "browser-api-057",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const mq = window.matchMedia('(min-width: 768px)');\nconsole.log(typeof mq.matches);\nconsole.log(typeof mq.media);",
+    "options": [
+      "boolean, string",
+      "string, string",
+      "boolean, object",
+      "object, string"
+    ],
+    "correctIndex": 0,
+    "explanation": "The MediaQueryList object returned by matchMedia() has a matches property that is a boolean indicating whether the media query currently matches. The media property is a string containing the media query that was passed when creating the object. For example, mq.media returns '(min-width: 768px)', and mq.matches is true or false depending on the current viewport width.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList"
+  },
+  {
+    "id": "browser-api-058",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "The following code attempts to perform work during idle time. What is the problem?",
+    "code": "requestIdleCallback((deadline) => {\n  while (deadline.timeRemaining() > 0) {\n    processNextItem();\n  }\n}, { timeout: 2000 });\n\nfunction processNextItem() {\n  const items = document.querySelectorAll('.pending');\n  if (items.length > 0) {\n    items[0].classList.replace('pending', 'done');\n  }\n}",
+    "options": [
+      "requestIdleCallback is a non-standard API that is not supported by browsers",
+      "The timeout option cannot be used with requestIdleCallback",
+      "Querying and modifying the DOM on every iteration causes layout thrashing — DOM changes in idle callbacks trigger layout recalculation for the next frame",
+      "deadline.timeRemaining() always returns 0, so the loop never executes"
+    ],
+    "correctIndex": 2,
+    "explanation": "requestIdleCallback is designed to run low-priority tasks when the main thread is idle. However, this code queries the DOM with querySelectorAll and modifies classList on every iteration, triggering style recalculation and layout. DOM mutations inside idle callbacks increase layout costs for the next frame, defeating the purpose of using idle time. DOM changes should be batched and applied via requestAnimationFrame instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback"
+  },
+  {
+    "id": "browser-api-059",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of the Permissions API (navigator.permissions)?",
+    "options": [
+      "It directly displays a permission prompt to the user",
+      "It automatically approves permissions in browser settings",
+      "It allows programmatic querying of the current permission state for features like camera, location, and notifications",
+      "It controls client access permissions on the server side"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Permissions API lets you query the permission state for specific browser features via navigator.permissions.query(). The returned PermissionStatus object has a state property that is one of 'granted', 'denied', or 'prompt'. This allows checking the current state before displaying a permission prompt, enabling better UX. For example, if permission was already denied, you can show guidance to change it in settings.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API"
+  },
+  {
+    "id": "browser-api-060",
+    "topic": "browser-api",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which correctly describes the difference between Canvas toDataURL() and toBlob()?",
+    "options": [
+      "toDataURL() synchronously returns a base64-encoded string, while toBlob() asynchronously delivers a Blob object via a callback",
+      "toDataURL() only supports PNG, while toBlob() supports all image formats",
+      "toBlob() is synchronous, while toDataURL() is asynchronous",
+      "toDataURL() has no file size limit, while toBlob() is limited to 1MB"
+    ],
+    "correctIndex": 0,
+    "explanation": "canvas.toDataURL() synchronously returns the canvas contents as a base64-encoded data: URI string. While simple to use, base64 encoding produces a string roughly 33% larger than the original binary data, making it memory-inefficient. canvas.toBlob() asynchronously delivers a Blob object via a callback, avoiding main thread blocking and working with binary data directly. This makes toBlob() more suitable for server uploads or processing large images.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob"
   }
 ]
