@@ -909,5 +909,87 @@
     "correctIndex": 2,
     "explanation": "When combining async generators with for await...of, each yielded Promise is awaited sequentially by the consumer. The first fetch must complete before the second one starts, causing N requests to run serially with total latency equal to the sum of all individual request times. For parallel execution, use Promise.all(urls.map(url => fetch(url))) instead.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of"
+  },
+  {
+    "id": "promise-056",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the error handling issue in the following async function?",
+    "code": "async function fetchData() {\n  try {\n    return fetch('/api/data').then(r => r.json());\n  } catch (e) {\n    console.log('caught:', e);\n    return null;\n  }\n}",
+    "options": [
+      "fetch() cannot be used inside an async function",
+      "Using return instead of return await causes the try/catch to miss the Promise rejection — return await is required",
+      "Errors inside then() callbacks are always forwarded to the global error handler",
+      "Arrow functions cannot be used inside .then()"
+    ],
+    "correctIndex": 1,
+    "explanation": "The difference between return promise and return await promise matters inside try/catch blocks. With just return, the Promise is passed through directly, so if it rejects later, the try/catch cannot catch the error. With return await, the Promise is awaited first — if it rejects, the catch block handles the error. This is a common pitfall in async functions that mix Promise chains with try/catch.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "promise-057",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What problem arises when a Promise is rejected with a non-Error value (e.g., a string or number)?",
+    "options": [
+      "A TypeError is thrown and the program crashes immediately",
+      "The rejected value is automatically wrapped in an Error object",
+      "No stack trace is captured, making debugging difficult, and error.message/error.stack are inaccessible in the catch handler",
+      "Promise.reject() only accepts Error objects as arguments"
+    ],
+    "correctIndex": 2,
+    "explanation": "Promise.reject() accepts any value as an argument, but rejecting with a non-Error value means no stack trace is captured. This makes it impossible to access error.message or error.stack in the catch handler, severely hindering debugging. Additionally, many error monitoring tools expect Error instances and may not report non-Error rejections properly. Always reject with new Error() as a best practice.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/reject"
+  },
+  {
+    "id": "promise-058",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the key difference between promisifying a callback-based API and using a native Promise API?",
+    "options": [
+      "Promisified functions use the macrotask queue instead of the microtask queue",
+      "Native Promise APIs are always faster than callback-based ones",
+      "Promisify wraps an existing callback pattern, relying on the original function's error-first callback convention and requiring manual conversion",
+      "Promisified functions cannot be used with async/await"
+    ],
+    "correctIndex": 2,
+    "explanation": "Promisification converts a callback-based function into one that returns a Promise, using Node.js util.promisify() or manual wrapping. The key difference is that promisification depends on the original function's error-first callback convention (first argument is the error). Native Promise APIs (fetch, Promise.resolve, etc.) are designed as Promises from the start and require no conversion. Promisified functions return standard Promises and work perfectly with async/await.",
+    "sourceUrl": "https://javascript.info/promisify"
+  },
+  {
+    "id": "promise-059",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "Promise.reject('error')\n  .catch(e => {\n    console.log('A:', e);\n    return 'recovered';\n  })\n  .then(v => console.log('B:', v))\n  .catch(e => console.log('C:', e));",
+    "options": [
+      "A: error",
+      "A: error → C: error",
+      "A: error → B: recovered",
+      "C: error"
+    ],
+    "correctIndex": 2,
+    "explanation": "Returning a value from a catch handler 'recovers' the Promise chain, causing subsequent then handlers to execute normally. Promise.reject('error') is caught by the first catch, which logs 'A: error' and returns 'recovered'. This return value becomes a fulfilled Promise, so the next then receives 'recovered' and logs 'B: recovered'. The second catch is skipped because no error occurred after the recovery.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch"
+  },
+  {
+    "id": "promise-060",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What does dynamic import() return?",
+    "options": [
+      "It synchronously returns the module object",
+      "It returns only the module's default export",
+      "It returns undefined and registers the module globally",
+      "It returns a Promise that resolves to the module's namespace object"
+    ],
+    "correctIndex": 3,
+    "explanation": "Dynamic import() returns a Promise, unlike static import declarations. This Promise resolves to the requested module's namespace object, which includes both the default export and all named exports. This allows loading modules asynchronously using then() or await, enabling code splitting and conditional module loading. If the module fails to load, the Promise rejects.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import"
   }
 ]
