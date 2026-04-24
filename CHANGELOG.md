@@ -6,6 +6,7 @@
 
 ### Features
 
+- **content**: add 5 design-patterns questions (056-060) (`3bfa7ab`)
 - **content**: add 5 browser-api questions (056-060) (`06658f4`)
 
 ## 2026-04-23

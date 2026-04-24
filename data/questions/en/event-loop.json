@@ -909,5 +909,88 @@
     "correctIndex": 2,
     "explanation": "Both structuredClone and JSON.parse(JSON.stringify()) are synchronous operations that execute on the main thread and block the event loop during execution. The key difference is in what they can copy: structuredClone uses the structured clone algorithm which handles circular references, Date objects, RegExp, ArrayBuffer, Map, Set, and other non-JSON types. JSON serialization silently drops functions, converts Dates to strings, throws on circular references, and loses prototype information. Neither offloads work to another thread \u2014 for large data, both can cause frame drops.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/structuredClone"
+  },
+  {
+    "id": "event-loop-056",
+    "topic": "event-loop",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the 'unhandledrejection' event handler not prevent the error from appearing in the console in the following code?",
+    "code": "window.addEventListener('unhandledrejection', (e) => {\n  console.log('caught');\n});\n\nPromise.reject(new Error('oops'));",
+    "options": [
+      "The handler must call e.preventDefault() to suppress the default browser behavior of logging the error",
+      "The 'unhandledrejection' event only fires for rejections inside async functions",
+      "Promise.reject() bypasses the event loop entirely and logs synchronously",
+      "The handler must return false to suppress the error"
+    ],
+    "correctIndex": 0,
+    "explanation": "The 'unhandledrejection' event fires when a Promise is rejected and no rejection handler is attached by the end of the microtask queue processing. However, simply listening for the event does not suppress the browser's default behavior of logging the error to the console. You must call event.preventDefault() inside the handler to tell the browser not to log it. This is similar to how DOM events work — the default action occurs unless explicitly prevented.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/unhandledrejection_event"
+  },
+  {
+    "id": "event-loop-057",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "How does window.postMessage() interact with the event loop when sending a message to the same window?",
+    "options": [
+      "The message handler executes synchronously, like dispatchEvent",
+      "The message is queued as a microtask, executing before the next macrotask",
+      "The message is queued as a macrotask, but typically with less minimum delay than setTimeout(fn, 0)",
+      "The message bypasses both the microtask and macrotask queues"
+    ],
+    "correctIndex": 2,
+    "explanation": "When you call window.postMessage() targeting the same window, the 'message' event is dispatched asynchronously as a macrotask. Unlike setTimeout which has a minimum delay (often 4ms for nested calls in browsers), postMessage typically has lower overhead, making it a common technique for scheduling immediate macrotasks with less delay. This is why libraries sometimes use a postMessage-based approach for breaking up long-running work into chunks without the setTimeout minimum delay penalty.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage"
+  },
+  {
+    "id": "event-loop-058",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output order of the following code?",
+    "code": "const el = document.createElement('div');\nel.addEventListener('click', () => console.log('A'));\nel.addEventListener('click', () => console.log('B'));\n\nconsole.log('1');\nel.dispatchEvent(new Event('click'));\nconsole.log('2');",
+    "options": [
+      "1, 2, A, B",
+      "1, A, 2, B",
+      "1, A, B, 2",
+      "A, B, 1, 2"
+    ],
+    "correctIndex": 2,
+    "explanation": "When dispatchEvent() is called programmatically, event listeners execute synchronously within the dispatchEvent call — they are NOT queued as separate tasks. The call to dispatchEvent blocks until all listeners have completed. So '1' logs first, then dispatchEvent triggers both listeners synchronously ('A' then 'B'), and finally '2' logs. This is different from user-initiated events, where the browser creates a new task for each event dispatch.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent"
+  },
+  {
+    "id": "event-loop-059",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output order of the following code?",
+    "code": "Promise.resolve().then(() => {\n  console.log('A');\n  Promise.resolve().then(() => console.log('B'));\n});\n\nPromise.resolve().then(() => {\n  console.log('C');\n  Promise.resolve().then(() => console.log('D'));\n});",
+    "options": [
+      "A, B, C, D",
+      "A, C, B, D",
+      "A, C, D, B",
+      "C, A, D, B"
+    ],
+    "correctIndex": 1,
+    "explanation": "Both top-level .then() callbacks are queued as microtasks. The first microtask runs and logs 'A', then schedules a new microtask for 'B'. The second microtask runs and logs 'C', then schedules a new microtask for 'D'. The microtask queue is drained in FIFO order: 'B' was scheduled first, then 'D', so 'B' runs before 'D'. The final order is A, C, B, D. This demonstrates that the microtask queue is processed sequentially — newly added microtasks go to the end of the queue and are processed after all currently queued microtasks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask"
+  },
+  {
+    "id": "event-loop-060",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between scheduler.postTask() and setTimeout() for task scheduling?",
+    "options": [
+      "They are identical — scheduler.postTask() is just an alias for setTimeout",
+      "scheduler.postTask() executes callbacks as microtasks while setTimeout uses macrotasks",
+      "scheduler.postTask() allows specifying priority levels (user-blocking, user-visible, background) while setTimeout only controls delay",
+      "setTimeout can be cancelled but scheduler.postTask() cannot"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Scheduler API (scheduler.postTask()) provides priority-based task scheduling that setTimeout cannot offer. It accepts a priority option with three levels: 'user-blocking' (highest, for tasks critical to user interaction), 'user-visible' (default, for tasks the user will notice), and 'background' (lowest, for non-urgent work). This gives the browser better information to schedule tasks without blocking important user interactions. setTimeout only allows specifying a minimum delay, with no way to express priority. scheduler.postTask() also returns a Promise and supports AbortController for cancellation.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Scheduler/postTask"
   }
 ]

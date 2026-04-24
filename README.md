@@ -36,7 +36,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Database | 55 |
 | Design Patterns | 60 |
 | DOM Manipulation | 55 |
-| Event Loop | 55 |
+| Event Loop | 60 |
 | Git Advanced | 55 |
 | Network | 55 |
 | Node.js | 55 |
@@ -50,7 +50,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Web Performance | 55 |
 | Web Security | 55 |
 
-**Total: 1295 questions across 23 topics**
+**Total: 1300 questions across 23 topics**
 
 ## Getting Started
 
