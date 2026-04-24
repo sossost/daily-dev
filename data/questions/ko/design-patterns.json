@@ -906,5 +906,88 @@
     "correctIndex": 3,
     "explanation": "JavaScript에서 함수의 name 속성은 정의 방식에 따라 설정됩니다. withLogging이 반환하는 래퍼는 익명 함수 표현식이므로 name이 빈 문자열입니다. 메타데이터를 보존하려면 Object.defineProperty를 사용하여 name을 복사하거나, 기명 함수 표현식을 사용해야 합니다. lodash 같은 라이브러리는 이를 처리하는 wrap 유틸리티를 사용합니다. 네이티브 Reflect API와 데코레이터 제안도 이 메타데이터 보존 문제를 다룹니다.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name"
+  },
+  {
+    "id": "design-patterns-056",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "인터프리터(Interpreter) 패턴이 JavaScript에서 가장 적합한 사용 사례는 무엇인가요?",
+    "options": [
+      "DOM 이벤트 위임을 처리할 때",
+      "DSL(도메인 특화 언어)이나 규칙 엔진의 표현식을 평가할 때",
+      "HTTP 요청을 병렬로 처리할 때",
+      "객체를 깊은 복사할 때"
+    ],
+    "correctIndex": 1,
+    "explanation": "인터프리터 패턴은 언어의 문법을 클래스 계층으로 표현하고 각 규칙을 해석하는 interpret 메서드를 정의합니다. JavaScript에서는 템플릿 엔진, 수식 파서, 쿼리 빌더, 유효성 검사 규칙 엔진 등 DSL을 파싱하고 평가할 때 유용합니다. 각 문법 규칙이 노드 객체가 되어 트리 구조로 조합되며, evaluate() 호출로 재귀적으로 해석됩니다.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/interpreter"
+  },
+  {
+    "id": "design-patterns-057",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 고차 함수(Higher-Order Function) 래핑 패턴 코드의 출력 결과는 무엇인가요?",
+    "code": "function withRetry(fn, retries) {\n  let attempts = 0;\n  return function(...args) {\n    while (attempts < retries) {\n      try {\n        return fn(...args);\n      } catch (e) {\n        attempts++;\n      }\n    }\n    return 'failed';\n  };\n}\nlet callCount = 0;\nconst unstable = () => {\n  callCount++;\n  if (callCount < 3) throw new Error('fail');\n  return 'ok';\n};\nconst safe = withRetry(unstable, 3);\nconsole.log(safe());",
+    "options": [
+      "Error: fail",
+      "'failed'",
+      "'ok'",
+      "undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "withRetry는 함수를 감싸서 실패 시 재시도하는 고차 함수입니다. unstable은 callCount가 3 미만일 때 예외를 던지고, 3 이상이면 'ok'를 반환합니다. retries가 3이므로 최대 3번 시도합니다. 첫 두 번은 예외가 발생하여 attempts가 2가 되고, 세 번째 시도에서 callCount가 3이 되어 'ok'를 반환합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/First-class_Function"
+  },
+  {
+    "id": "design-patterns-058",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "서비스 로케이터(Service Locator) 패턴과 의존성 주입(Dependency Injection) 패턴의 핵심 차이점은 무엇인가요?",
+    "options": [
+      "서비스 로케이터는 싱글톤만 관리하고, DI는 모든 종류의 객체를 관리한다",
+      "DI는 런타임에만 의존성을 해결하고, 서비스 로케이터는 컴파일 타임에 해결한다",
+      "서비스 로케이터는 비동기 의존성만 처리할 수 있다",
+      "DI는 의존성을 외부에서 주입받지만, 서비스 로케이터는 컴포넌트가 직접 레지스트리에 요청하여 의존성을 가져온다"
+    ],
+    "correctIndex": 3,
+    "explanation": "핵심 차이는 제어의 방향입니다. DI에서는 외부 컨테이너가 의존성을 생성자나 프로퍼티를 통해 주입하므로 컴포넌트는 자신의 의존성이 어디서 오는지 알 필요가 없습니다. 반면 서비스 로케이터에서는 컴포넌트가 직접 중앙 레지스트리(locator)에 접근하여 필요한 서비스를 요청합니다. DI는 테스트와 교체가 더 용이하지만, 서비스 로케이터는 레지스트리에 대한 숨겨진 의존성을 만들어 테스트를 어렵게 할 수 있습니다.",
+    "sourceUrl": "https://www.martinfowler.com/articles/injection.html"
+  },
+  {
+    "id": "design-patterns-059",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 함수 합성(Compose) 구현에서 함수들이 예상과 반대 순서로 실행되는 이유는 무엇인가요?",
+    "code": "const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);\nconst compose = (...fns) => x => fns.reduce((v, f) => f(v), x);\n\nconst add1 = x => x + 1;\nconst double = x => x * 2;\n\nconsole.log(compose(double, add1)(5));",
+    "options": [
+      "compose가 reduceRight 대신 reduce를 사용하여 왼쪽에서 오른쪽으로 실행되기 때문",
+      "fns 배열이 스프레드 연산자에 의해 역순으로 저장되기 때문",
+      "reduce의 초기값 x가 마지막 함수에 먼저 전달되기 때문",
+      "화살표 함수가 일반 함수와 다른 실행 순서를 가지기 때문"
+    ],
+    "correctIndex": 0,
+    "explanation": "수학적 함수 합성 compose(f, g)(x)는 f(g(x))로, 오른쪽에서 왼쪽으로 실행됩니다. 하지만 이 코드에서 compose는 pipe와 동일하게 reduce를 사용하여 왼쪽에서 오른쪽으로 실행합니다. 따라서 compose(double, add1)(5)는 double(5)=10 → add1(10)=11이 됩니다. 올바른 compose는 reduceRight를 사용해야 add1(5)=6 → double(6)=12가 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/reduceRight"
+  },
+  {
+    "id": "design-patterns-060",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 CQRS(Command Query Responsibility Segregation) 스타일 코드의 출력 결과는 무엇인가요?",
+    "code": "class EventStore {\n  constructor() { this.events = []; }\n  append(event) { this.events = [...this.events, event]; }\n  getAll() { return [...this.events]; }\n}\n\nfunction buildState(events) {\n  return events.reduce((state, e) => {\n    if (e.type === 'ADD') return { ...state, total: (state.total || 0) + e.value };\n    if (e.type === 'MULTIPLY') return { ...state, total: (state.total || 0) * e.value };\n    return state;\n  }, {});\n}\n\nconst store = new EventStore();\nstore.append({ type: 'ADD', value: 5 });\nstore.append({ type: 'MULTIPLY', value: 3 });\nstore.append({ type: 'ADD', value: 2 });\nconsole.log(buildState(store.getAll()).total);",
+    "options": [
+      "21",
+      "10",
+      "15",
+      "17"
+    ],
+    "correctIndex": 3,
+    "explanation": "이벤트 소싱과 CQRS 패턴에서 상태는 이벤트를 순서대로 재생하여 구축합니다. reduce로 이벤트를 순회하면: 1) ADD 5 → total=5, 2) MULTIPLY 3 → total=15, 3) ADD 2 → total=17. 최종 결과는 17입니다. 이 패턴에서 상태는 저장하지 않고 이벤트 로그에서 파생되므로, 어떤 시점의 상태든 이벤트를 재생하여 복원할 수 있습니다.",
+    "sourceUrl": "https://www.martinfowler.com/bliki/CQRS.html"
   }
 ]

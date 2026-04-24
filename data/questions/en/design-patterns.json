@@ -906,5 +906,88 @@
     "correctIndex": 3,
     "explanation": "In JavaScript, a function's name property is set based on how it is defined. The wrapper returned by withLogging is an anonymous function expression, so its name is an empty string. To preserve metadata, you should use Object.defineProperty to copy the name, or use a named function expression. Libraries like lodash use a wrap utility that handles this. The native Reflect API and decorators proposal also address this metadata preservation problem.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name"
+  },
+  {
+    "id": "design-patterns-056",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the most appropriate use case for the Interpreter pattern in JavaScript?",
+    "options": [
+      "Handling DOM event delegation",
+      "Evaluating expressions in a DSL (Domain-Specific Language) or rule engine",
+      "Processing HTTP requests in parallel",
+      "Deep copying objects"
+    ],
+    "correctIndex": 1,
+    "explanation": "The Interpreter pattern represents a language's grammar as a class hierarchy and defines an interpret method for each rule. In JavaScript, it is useful for parsing and evaluating DSLs such as template engines, expression parsers, query builders, and validation rule engines. Each grammar rule becomes a node object composed into a tree structure, interpreted recursively via an evaluate() call.",
+    "sourceUrl": "https://refactoring.guru/design-patterns/interpreter"
+  },
+  {
+    "id": "design-patterns-057",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following Higher-Order Function wrapping pattern code?",
+    "code": "function withRetry(fn, retries) {\n  let attempts = 0;\n  return function(...args) {\n    while (attempts < retries) {\n      try {\n        return fn(...args);\n      } catch (e) {\n        attempts++;\n      }\n    }\n    return 'failed';\n  };\n}\nlet callCount = 0;\nconst unstable = () => {\n  callCount++;\n  if (callCount < 3) throw new Error('fail');\n  return 'ok';\n};\nconst safe = withRetry(unstable, 3);\nconsole.log(safe());",
+    "options": [
+      "Error: fail",
+      "'failed'",
+      "'ok'",
+      "undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "withRetry wraps a function to retry on failure. unstable throws an error when callCount is less than 3, and returns 'ok' when it reaches 3 or more. With retries set to 3, it attempts up to 3 times. The first two attempts throw exceptions incrementing attempts to 2, and on the third attempt callCount reaches 3, so 'ok' is returned.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/First-class_Function"
+  },
+  {
+    "id": "design-patterns-058",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the key difference between the Service Locator pattern and the Dependency Injection (DI) pattern?",
+    "options": [
+      "Service Locator only manages singletons, while DI manages all types of objects",
+      "DI resolves dependencies only at runtime, while Service Locator resolves them at compile time",
+      "Service Locator can only handle asynchronous dependencies",
+      "DI receives dependencies from the outside, while Service Locator has the component actively request dependencies from a registry"
+    ],
+    "correctIndex": 3,
+    "explanation": "The key difference is the direction of control. In DI, an external container injects dependencies through constructors or properties, so the component does not need to know where its dependencies come from. In contrast, with Service Locator, the component directly accesses a central registry (locator) to request the services it needs. DI makes testing and replacement easier, while Service Locator creates hidden dependencies on the registry that can make testing more difficult.",
+    "sourceUrl": "https://www.martinfowler.com/articles/injection.html"
+  },
+  {
+    "id": "design-patterns-059",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why are the functions in the following compose implementation executed in the opposite order than expected?",
+    "code": "const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);\nconst compose = (...fns) => x => fns.reduce((v, f) => f(v), x);\n\nconst add1 = x => x + 1;\nconst double = x => x * 2;\n\nconsole.log(compose(double, add1)(5));",
+    "options": [
+      "Because compose uses reduce instead of reduceRight, executing left-to-right",
+      "Because the fns array is stored in reverse order by the spread operator",
+      "Because the initial value x in reduce is passed to the last function first",
+      "Because arrow functions have a different execution order than regular functions"
+    ],
+    "correctIndex": 0,
+    "explanation": "Mathematical function composition compose(f, g)(x) means f(g(x)), executing right-to-left. However, this code's compose uses reduce (same as pipe), which executes left-to-right. So compose(double, add1)(5) becomes double(5)=10 then add1(10)=11. A correct compose should use reduceRight so that add1(5)=6 then double(6)=12.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduceRight"
+  },
+  {
+    "id": "design-patterns-060",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following CQRS (Command Query Responsibility Segregation) style code?",
+    "code": "class EventStore {\n  constructor() { this.events = []; }\n  append(event) { this.events = [...this.events, event]; }\n  getAll() { return [...this.events]; }\n}\n\nfunction buildState(events) {\n  return events.reduce((state, e) => {\n    if (e.type === 'ADD') return { ...state, total: (state.total || 0) + e.value };\n    if (e.type === 'MULTIPLY') return { ...state, total: (state.total || 0) * e.value };\n    return state;\n  }, {});\n}\n\nconst store = new EventStore();\nstore.append({ type: 'ADD', value: 5 });\nstore.append({ type: 'MULTIPLY', value: 3 });\nstore.append({ type: 'ADD', value: 2 });\nconsole.log(buildState(store.getAll()).total);",
+    "options": [
+      "21",
+      "10",
+      "15",
+      "17"
+    ],
+    "correctIndex": 3,
+    "explanation": "In Event Sourcing and CQRS patterns, state is built by replaying events in order. Iterating through events with reduce: 1) ADD 5 → total=5, 2) MULTIPLY 3 → total=15, 3) ADD 2 → total=17. The final result is 17. In this pattern, state is not stored directly but derived from the event log, so the state at any point can be reconstructed by replaying events.",
+    "sourceUrl": "https://www.martinfowler.com/bliki/CQRS.html"
   }
 ]

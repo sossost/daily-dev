@@ -189,7 +189,7 @@
 - css-layout.json — 55 questions
 - data-structures.json — 55 questions
 - database.json — 55 questions
-- design-patterns.json — 55 questions
+- design-patterns.json — 60 questions
 - dom-manipulation.json — 55 questions
 - event-loop.json — 55 questions
 - git-advanced.json — 55 questions
@@ -212,7 +212,7 @@
 - css-layout.json — 55 questions
 - data-structures.json — 55 questions
 - database.json — 55 questions
-- design-patterns.json — 55 questions
+- design-patterns.json — 60 questions
 - dom-manipulation.json — 55 questions
 - event-loop.json — 55 questions
 - git-advanced.json — 55 questions
