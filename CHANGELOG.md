@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-04-25
+
+### Features
+
+- **content**: add 5 promise questions (056-060) (`260115d`)
+
 ## 2026-04-24
 
 ### Features

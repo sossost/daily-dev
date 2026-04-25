@@ -907,5 +907,88 @@
     "correctIndex": 3,
     "explanation": "The standard technique for separating levels in BFS is to record the current queue size (levelSize) at the start of each iteration and process exactly that many nodes. After processing levelSize nodes, the remaining nodes in the queue belong to the next level. This approach accurately separates levels without additional data structures and is widely used for level-by-level computations like averages or zigzag traversals.",
     "sourceUrl": "https://en.wikipedia.org/wiki/Breadth-first_search#Pseudocode"
+  },
+  {
+    "id": "algorithms-056",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which of the following correctly describes how Selection Sort works?",
+    "options": [
+      "It finds the minimum value in the unsorted portion and swaps it with the current position at each step",
+      "It compares and swaps adjacent elements",
+      "It recursively divides the array in half to sort",
+      "It separates values smaller and larger than a pivot"
+    ],
+    "correctIndex": 0,
+    "explanation": "Selection Sort works by finding the minimum (or maximum) value in the unsorted region at each iteration and swapping it with the element at the current position. While the number of comparisons is always O(n²), the number of swaps is at most O(n). Swapping adjacent elements is Bubble Sort, dividing in half is Merge Sort, and pivot-based partitioning is Quick Sort.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Selection_sort"
+  },
+  {
+    "id": "algorithms-057",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function isValidBST(node, min = -Infinity, max = Infinity) {\n  if (node == null) return true;\n  if (node.val <= min || node.val >= max) return false;\n  return isValidBST(node.left, min, node.val) && isValidBST(node.right, node.val, max);\n}\nconst tree = {\n  val: 5,\n  left: { val: 3, left: { val: 1, left: null, right: null }, right: { val: 7, left: null, right: null } },\n  right: { val: 8, left: null, right: null }\n};\nconsole.log(isValidBST(tree));",
+    "options": [
+      "true",
+      "undefined",
+      "false",
+      "null"
+    ],
+    "correctIndex": 2,
+    "explanation": "This function recursively validates whether a tree is a valid Binary Search Tree (BST). Node 7 in the left subtree of root (5) is greater than its parent (3), but it also exceeds the root (5), violating BST rules. isValidBST checks that each node falls within an allowed range (min, max), so node 7 violates the max=5 constraint and returns false.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Binary_search_tree#Verification"
+  },
+  {
+    "id": "algorithms-058",
+    "topic": "algorithms",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the bug in the following merge sort implementation?",
+    "code": "function mergeSort(arr) {\n  if (arr.length <= 1) return arr;\n  const mid = Math.floor(arr.length / 2);\n  const left = mergeSort(arr.slice(0, mid));\n  const right = mergeSort(arr.slice(mid));\n  return merge(left, right);\n}\n\nfunction merge(a, b) {\n  const result = [];\n  let i = 0, j = 0;\n  while (i < a.length && j < b.length) {\n    if (a[i] < b[j]) result.push(a[i++]);\n    else result.push(b[j++]);\n  }\n  return result;\n}",
+    "options": [
+      "arr.slice(mid) should be arr.slice(mid + 1)",
+      "The merge function does not append remaining elements from the unfinished array, causing elements to be lost",
+      "The base condition should be arr.length < 1",
+      "a[i] <= b[j] should be used instead of a[i] < b[j] for stable sorting"
+    ],
+    "correctIndex": 1,
+    "explanation": "The while loop in the merge function terminates when one array is exhausted. However, there is no code to append the remaining elements of the other array to the result (e.g., return [...result, ...a.slice(i), ...b.slice(j)]). This causes trailing elements from the longer array to be lost, resulting in a sorted array with missing values.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Merge_sort#Top-down_implementation"
+  },
+  {
+    "id": "algorithms-059",
+    "topic": "algorithms",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "In binary tree traversals — Preorder, Inorder, and Postorder — when is the root node visited?",
+    "options": [
+      "Preorder: between left and right, Inorder: first, Postorder: last",
+      "Preorder: last, Inorder: first, Postorder: between left and right",
+      "Preorder: between left and right, Inorder: last, Postorder: first",
+      "Preorder: first, Inorder: between left and right, Postorder: last"
+    ],
+    "correctIndex": 3,
+    "explanation": "In tree traversals, 'pre/in/post' refers to when the root node is visited. Preorder visits Root→Left→Right, Inorder visits Left→Root→Right, and Postorder visits Left→Right→Root. Inorder traversal yields sorted order in a BST, postorder is commonly used for tree deletion, and preorder is used for tree copying.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Tree_traversal#Pre-order,_NLR"
+  },
+  {
+    "id": "algorithms-060",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function shortestPath(graph, start, end) {\n  const queue = [[start, 0]];\n  const visited = new Set([start]);\n  while (queue.length > 0) {\n    const [node, dist] = queue.shift();\n    if (node === end) return dist;\n    for (const neighbor of graph[node]) {\n      if (!visited.has(neighbor)) {\n        visited.add(neighbor);\n        queue.push([neighbor, dist + 1]);\n      }\n    }\n  }\n  return -1;\n}\nconst g = {\n  A: ['B', 'C'],\n  B: ['A', 'D'],\n  C: ['A', 'D', 'E'],\n  D: ['B', 'C', 'E'],\n  E: ['C', 'D']\n};\nconsole.log(shortestPath(g, 'A', 'E'));",
+    "options": [
+      "2",
+      "3",
+      "1",
+      "4"
+    ],
+    "correctIndex": 0,
+    "explanation": "BFS guarantees the shortest path in an unweighted graph. Starting from A, it visits A at distance 0, then B and C at distance 1. Among C's neighbors, E is discovered at distance 2, so it returns 2. The path is A→C→E. BFS guarantees the shortest path because it explores nodes level by level, visiting closer nodes first.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Breadth-first_search#Applications"
   }
 ]

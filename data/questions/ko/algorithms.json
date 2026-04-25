@@ -907,5 +907,88 @@
     "correctIndex": 3,
     "explanation": "BFS에서 각 레벨을 구분하는 표준 기법은 반복마다 큐의 현재 크기(levelSize)를 저장하고, 그만큼만 노드를 꺼내 처리하는 것입니다. levelSize만큼 처리한 후 큐에 남은 노드는 다음 레벨의 노드입니다. 이 방법은 추가 자료구조 없이 레벨을 정확히 구분할 수 있어, 이진 트리의 레벨별 평균 계산이나 지그재그 순회 등에 널리 사용됩니다.",
     "sourceUrl": "https://en.wikipedia.org/wiki/Breadth-first_search#Pseudocode"
+  },
+  {
+    "id": "algorithms-056",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "선택 정렬(Selection Sort)의 동작 방식으로 올바른 것은 무엇인가요?",
+    "options": [
+      "매 단계에서 정렬되지 않은 부분에서 최솟값을 찾아 현재 위치와 교환한다",
+      "인접한 두 요소를 비교하여 교환한다",
+      "배열을 반으로 나누어 재귀적으로 정렬한다",
+      "피벗을 기준으로 작은 값과 큰 값을 분리한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "선택 정렬은 매 반복에서 정렬되지 않은 영역에서 최솟값(또는 최댓값)을 찾아 현재 위치의 요소와 교환하는 방식으로 동작합니다. 비교 횟수는 항상 O(n²)이지만, 교환 횟수는 최대 O(n)으로 적습니다. 인접 요소 교환은 버블 정렬, 분할은 병합 정렬, 피벗 분리는 퀵 정렬의 특징입니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Selection_sort"
+  },
+  {
+    "id": "algorithms-057",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function isValidBST(node, min = -Infinity, max = Infinity) {\n  if (node == null) return true;\n  if (node.val <= min || node.val >= max) return false;\n  return isValidBST(node.left, min, node.val) && isValidBST(node.right, node.val, max);\n}\nconst tree = {\n  val: 5,\n  left: { val: 3, left: { val: 1, left: null, right: null }, right: { val: 7, left: null, right: null } },\n  right: { val: 8, left: null, right: null }\n};\nconsole.log(isValidBST(tree));",
+    "options": [
+      "true",
+      "undefined",
+      "false",
+      "null"
+    ],
+    "correctIndex": 2,
+    "explanation": "이 함수는 이진 탐색 트리(BST)의 유효성을 재귀적으로 검증합니다. 루트(5)의 왼쪽 서브트리에 있는 노드 7은 부모(3)보다 크지만, 루트(5)보다도 커서 BST 규칙을 위반합니다. isValidBST는 각 노드가 허용 범위(min, max) 내에 있는지 확인하므로, 노드 7이 max=5 조건을 위반하여 false를 반환합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Binary_search_tree#Verification"
+  },
+  {
+    "id": "algorithms-058",
+    "topic": "algorithms",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 병합 정렬 구현의 버그는 무엇인가요?",
+    "code": "function mergeSort(arr) {\n  if (arr.length <= 1) return arr;\n  const mid = Math.floor(arr.length / 2);\n  const left = mergeSort(arr.slice(0, mid));\n  const right = mergeSort(arr.slice(mid));\n  return merge(left, right);\n}\n\nfunction merge(a, b) {\n  const result = [];\n  let i = 0, j = 0;\n  while (i < a.length && j < b.length) {\n    if (a[i] < b[j]) result.push(a[i++]);\n    else result.push(b[j++]);\n  }\n  return result;\n}",
+    "options": [
+      "arr.slice(mid) 대신 arr.slice(mid + 1)을 사용해야 한다",
+      "merge 함수가 한쪽 배열의 나머지 요소를 결과에 추가하지 않아 요소가 누락된다",
+      "기저 조건이 arr.length < 1이어야 한다",
+      "a[i] < b[j] 대신 a[i] <= b[j]를 사용해야 안정 정렬이 된다"
+    ],
+    "correctIndex": 1,
+    "explanation": "merge 함수의 while 루프는 두 배열 중 하나가 소진되면 종료됩니다. 그러나 나머지 배열에 남은 요소를 result에 추가하는 코드(예: return [...result, ...a.slice(i), ...b.slice(j)])가 없습니다. 이로 인해 더 긴 배열의 뒷부분 요소들이 결과에서 누락되어 정렬된 배열의 일부 값이 사라집니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Merge_sort#Top-down_implementation"
+  },
+  {
+    "id": "algorithms-059",
+    "topic": "algorithms",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "이진 트리의 전위(Preorder), 중위(Inorder), 후위(Postorder) 순회에서 루트 노드를 방문하는 시점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "전위: 왼쪽과 오른쪽 사이, 중위: 가장 먼저, 후위: 가장 나중에",
+      "전위: 가장 나중에, 중위: 가장 먼저, 후위: 왼쪽과 오른쪽 사이",
+      "전위: 왼쪽과 오른쪽 사이, 중위: 가장 나중에, 후위: 가장 먼저",
+      "전위: 가장 먼저, 중위: 왼쪽과 오른쪽 사이, 후위: 가장 나중에"
+    ],
+    "correctIndex": 3,
+    "explanation": "트리 순회에서 '전위/중위/후위'는 루트 노드를 방문하는 시점을 의미합니다. 전위(Preorder)는 루트→왼쪽→오른쪽, 중위(Inorder)는 왼쪽→루트→오른쪽, 후위(Postorder)는 왼쪽→오른쪽→루트 순서입니다. 중위 순회는 BST에서 정렬된 순서를, 후위 순회는 트리 삭제에, 전위 순회는 트리 복사에 주로 사용됩니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Tree_traversal#Pre-order,_NLR"
+  },
+  {
+    "id": "algorithms-060",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function shortestPath(graph, start, end) {\n  const queue = [[start, 0]];\n  const visited = new Set([start]);\n  while (queue.length > 0) {\n    const [node, dist] = queue.shift();\n    if (node === end) return dist;\n    for (const neighbor of graph[node]) {\n      if (!visited.has(neighbor)) {\n        visited.add(neighbor);\n        queue.push([neighbor, dist + 1]);\n      }\n    }\n  }\n  return -1;\n}\nconst g = {\n  A: ['B', 'C'],\n  B: ['A', 'D'],\n  C: ['A', 'D', 'E'],\n  D: ['B', 'C', 'E'],\n  E: ['C', 'D']\n};\nconsole.log(shortestPath(g, 'A', 'E'));",
+    "options": [
+      "2",
+      "3",
+      "1",
+      "4"
+    ],
+    "correctIndex": 0,
+    "explanation": "BFS는 가중치 없는 그래프에서 최단 경로를 보장합니다. A에서 시작하면 거리 0에서 A, 거리 1에서 B와 C를 방문합니다. C의 이웃 중 E를 거리 2에서 발견하므로 2를 반환합니다. 경로는 A→C→E입니다. BFS가 최단 경로를 보장하는 이유는 가까운 노드부터 레벨 단위로 탐색하기 때문입니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Breadth-first_search#Applications"
   }
 ]
