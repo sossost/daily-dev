@@ -913,5 +913,90 @@
     "correctIndex": 2,
     "explanation": "new Function() 생성자로 만든 함수는 렉시컬 스코프가 아닌 전역 스코프에서 실행됩니다. 따라서 makeFunc 내부의 var x = 'local'에 접근할 수 없고, 전역의 var x = 'global'을 참조합니다. 이는 일반 함수 선언/표현식이 정의된 위치의 스코프 체인을 따르는 렉시컬 스코프 규칙과 대비되는 특수한 동작입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Function"
+  },
+  {
+    "id": "scope-056",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const obj = { a: 1, b: 2, c: 3 };\nfor (var key in obj) {}\nconsole.log(key);",
+    "options": [
+      "undefined",
+      "ReferenceError",
+      "a",
+      "c"
+    ],
+    "correctIndex": 3,
+    "explanation": "for...in 루프에서 var로 선언된 변수는 함수 스코프(또는 전역 스코프)를 가집니다. 루프가 완료된 후에도 key는 마지막으로 열거된 속성 이름인 'c'를 유지합니다. let을 사용했다면 key는 루프 블록 내에서만 유효하며, 외부에서 접근 시 ReferenceError가 발생합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/for...in"
+  },
+  {
+    "id": "scope-057",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "블록 내에서 구조 분해 할당으로 let 또는 const 변수를 선언하면 어떻게 되나요?",
+    "code": "{\n  const { x, y } = { x: 10, y: 20 };\n  console.log(x, y); // 10 20\n}\nconsole.log(x);",
+    "options": [
+      "구조 분해가 전역 변수를 생성하므로 x와 y는 어디서든 접근 가능하다",
+      "const는 블록 스코프이므로 블록 외부에서 x에 접근하면 ReferenceError가 발생한다",
+      "구조 분해가 블록 스코프를 우회하므로 블록 외부에서도 x는 10이다",
+      "구조 분해에는 const를 사용할 수 없으므로 SyntaxError가 발생한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "구조 분해 할당으로 const(또는 let)와 함께 생성된 변수는 일반 const/let 선언과 동일한 블록 스코프 규칙을 따릅니다. 구조 분해된 변수 x와 y는 선언된 블록 내에서만 유효합니다. 블록 외부에서 접근하면 일반 블록 스코프 변수와 마찬가지로 ReferenceError가 발생합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment"
+  },
+  {
+    "id": "scope-058",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log(typeof a);\nvar a = 3;\nfunction a() {}",
+    "options": [
+      "function",
+      "undefined",
+      "number",
+      "SyntaxError"
+    ],
+    "correctIndex": 0,
+    "explanation": "호이스팅 과정에서 var 선언과 함수 선언이 모두 처리됩니다. 함수 선언은 본문 전체와 함께 호이스팅되며, var 선언(할당이 아닌 선언만)보다 우선합니다. 스코프 최상단에서 'a'는 함수입니다. var a = 3의 할당은 런타임에 나중에 실행되기 때문입니다. 따라서 console.log 시점에서 typeof a는 'function'입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Functions#function_hoisting"
+  },
+  {
+    "id": "scope-059",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "개발자는 'done'이 출력되길 기대했지만 ReferenceError가 발생합니다. 원인은 무엇인가요?",
+    "code": "block: {\n  let status = 'done';\n  break block;\n}\nconsole.log(status);",
+    "options": [
+      "let status가 레이블 블록에 블록 스코프되어 있어 외부에서 접근할 수 없기 때문",
+      "레이블 블록 내에서 break를 사용할 수 없기 때문",
+      "레이블 블록은 변수 선언을 지원하지 않기 때문",
+      "break 문이 status 변수를 삭제하기 때문"
+    ],
+    "correctIndex": 0,
+    "explanation": "레이블 블록은 let과 const 선언에 대해 일반 블록 스코프를 생성합니다. status 변수는 let으로 레이블 블록 내부에서 선언되었으므로 해당 블록 내에서만 존재합니다. break block으로 블록을 빠져나가면 status는 더 이상 접근할 수 없습니다. 외부의 console.log는 status가 외부 스코프에 정의되지 않았으므로 ReferenceError를 발생시킵니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/label"
+  },
+  {
+    "id": "scope-060",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "let x = 'outer';\nasync function foo() {\n  let x = 'inner';\n  return x;\n}\nfoo().then(val => console.log(val, x));",
+    "options": [
+      "outer outer",
+      "inner outer",
+      "inner inner",
+      "outer inner"
+    ],
+    "correctIndex": 1,
+    "explanation": "비동기 함수도 일반 함수와 동일한 렉시컬 스코프 규칙을 따릅니다. foo 내부의 let x = 'inner'는 외부의 x를 섀도잉하므로 반환값은 'inner'입니다. .then 콜백에서 val은 프로미스가 resolve한 'inner'를 받습니다. 콜백 자체는 외부 스코프에서 정의되었으므로 x는 외부의 let x = 'outer'를 참조합니다. 결과는 'inner outer'입니다. async/await는 JavaScript의 스코프 동작을 변경하지 않습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function"
   }
 ]

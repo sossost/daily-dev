@@ -100,7 +100,7 @@ describe('session topic filter', () => {
     it('returns fewer questions when filtered topic has limited questions', () => {
       const srsRecords: Record<string, SRSRecord> = {}
       // Mark all scope questions as attempted and not due
-      for (let i = 1; i <= 55; i++) {
+      for (let i = 1; i <= 60; i++) {
         const id = `scope-${String(i).padStart(3, '0')}`
         srsRecords[id] = {
           questionId: id,

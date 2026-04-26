@@ -913,5 +913,90 @@
     "correctIndex": 2,
     "explanation": "Functions created with the new Function() constructor do not follow lexical scoping — they execute in the global scope instead. So the function cannot access var x = 'local' inside makeFunc, and instead references var x = 'global' from the global scope. This contrasts with regular function declarations/expressions, which follow lexical scope rules and capture variables from where they are defined.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function#difference_between_function_constructor_and_function_declaration"
+  },
+  {
+    "id": "scope-056",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const obj = { a: 1, b: 2, c: 3 };\nfor (var key in obj) {}\nconsole.log(key);",
+    "options": [
+      "undefined",
+      "ReferenceError",
+      "a",
+      "c"
+    ],
+    "correctIndex": 3,
+    "explanation": "When var is used in a for...in loop, the loop variable has function scope (or global scope if not inside a function). After the loop completes, key retains the last enumerated property name, which is 'c'. If let were used instead, key would be block-scoped to the loop body, and accessing it outside would throw a ReferenceError.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in"
+  },
+  {
+    "id": "scope-057",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What happens when destructuring assignment uses let or const inside a block?",
+    "code": "{\n  const { x, y } = { x: 10, y: 20 };\n  console.log(x, y); // 10 20\n}\nconsole.log(x);",
+    "options": [
+      "x and y are accessible everywhere because destructuring creates global variables",
+      "ReferenceError when accessing x outside the block, because const is block-scoped",
+      "x is 10 outside the block because destructuring bypasses block scope",
+      "SyntaxError because destructuring cannot be used with const"
+    ],
+    "correctIndex": 1,
+    "explanation": "Variables created through destructuring assignment with const (or let) follow the same block-scoping rules as regular const/let declarations. The destructured variables x and y are confined to the block in which they are declared. Accessing them outside that block throws a ReferenceError, just like any other block-scoped variable.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment"
+  },
+  {
+    "id": "scope-058",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "console.log(typeof a);\nvar a = 3;\nfunction a() {}",
+    "options": [
+      "function",
+      "undefined",
+      "number",
+      "SyntaxError"
+    ],
+    "correctIndex": 0,
+    "explanation": "During hoisting, both the var declaration and the function declaration for 'a' are processed. Function declarations are hoisted with their full body and take precedence over var declarations (but not var assignments). At the top of the scope, 'a' is the function because function hoisting overrides the initial var a = undefined. The var a = 3 assignment happens later at runtime. So at the point of console.log, typeof a is 'function'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions#function_hoisting"
+  },
+  {
+    "id": "scope-059",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "A developer expected 'done' to be logged, but a ReferenceError occurs instead. What is the cause?",
+    "code": "block: {\n  let status = 'done';\n  break block;\n}\nconsole.log(status);",
+    "options": [
+      "let status is block-scoped to the labeled block, so it cannot be accessed outside",
+      "break cannot be used inside a labeled block",
+      "Labeled blocks do not support variable declarations",
+      "The break statement deletes the status variable"
+    ],
+    "correctIndex": 0,
+    "explanation": "Labeled blocks create a normal block scope for let and const declarations. The variable status is declared with let inside the labeled block, so it only exists within that block. When the code exits the block (via break block), status is no longer accessible. The console.log outside the block triggers a ReferenceError because status is not defined in the outer scope. This is the same block-scoping behavior as any other {} block.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/label"
+  },
+  {
+    "id": "scope-060",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "let x = 'outer';\nasync function foo() {\n  let x = 'inner';\n  return x;\n}\nfoo().then(val => console.log(val, x));",
+    "options": [
+      "outer outer",
+      "inner outer",
+      "inner inner",
+      "outer inner"
+    ],
+    "correctIndex": 1,
+    "explanation": "Async functions follow the same lexical scoping rules as regular functions. Inside foo, let x = 'inner' shadows the outer x, so the return value is 'inner'. In the .then callback, val receives 'inner' from the resolved promise. The callback itself is defined in the outer scope, so x refers to the outer let x = 'outer'. The result is 'inner outer'. Async/await does not change how JavaScript scoping works — closures and shadowing behave identically.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
   }
 ]

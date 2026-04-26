@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-04-26
+
+### Features
+
+- **content**: add 5 algorithms questions (056-060) (`fa1b58e`)
+
 ## 2026-04-25
 
 ### Features

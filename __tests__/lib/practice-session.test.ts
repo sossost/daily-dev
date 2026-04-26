@@ -36,7 +36,7 @@ describe('filterQuestions', () => {
       srsRecords: {},
     })
 
-    expect(result.length).toBe(55)
+    expect(result.length).toBe(60)
     expect(result.every((q) => q.topic === 'scope')).toBe(true)
   })
 
