@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-04-27
+
+### Features
+
+- **content**: add 5 scope questions (056-060) (`3046163`)
+
 ## 2026-04-26
 
 ### Features

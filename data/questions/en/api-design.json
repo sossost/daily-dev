@@ -892,5 +892,86 @@
     "correctIndex": 2,
     "explanation": "URLSearchParams.append() adds a new key-value pair without removing existing ones, so both 'tag=js' and 'tag=api' are kept — getAll('tag') returns an array of length 2. The set() method for 'q' creates a single entry. URLSearchParams encodes spaces as '+' (application/x-www-form-urlencoded format), not '%20'. The resulting search string is '?q=hello+world&tag=js&tag=api'.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams"
+  },
+  {
+    "id": "api-design-056",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of the HTTP request header Accept?",
+    "options": [
+      "It specifies the format of the request body being sent to the server",
+      "It informs the server about the encoding methods the client supports",
+      "It sets the response time limit for the server",
+      "It informs the server about the media types the client can accept in the response"
+    ],
+    "correctIndex": 3,
+    "explanation": "The Accept header is a content negotiation mechanism that tells the server which response media types (e.g., application/json, text/html) the client can process. The server uses this to return a response in the appropriate format. Content-Type specifies the request body format, and Accept-Encoding specifies encoding methods — these are separate headers.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept"
+  },
+  {
+    "id": "api-design-057",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "Why are cookies not sent in the following cross-origin request?",
+    "code": "fetch('https://api.other-domain.com/user', {\n  method: 'GET',\n  headers: { 'Content-Type': 'application/json' }\n})\n  .then(res => res.json())\n  .then(data => console.log(data));",
+    "options": [
+      "Because the credentials option is not set to 'include'",
+      "Because cookies cannot be sent with GET requests",
+      "Because the Content-Type header blocks cookie transmission",
+      "Because cookies can never be sent in cross-origin requests"
+    ],
+    "correctIndex": 0,
+    "explanation": "The fetch API defaults the credentials option to 'same-origin', meaning cookies are only sent for same-origin requests. To include cookies in cross-origin requests, you must explicitly set credentials: 'include', and the server must also respond with the Access-Control-Allow-Credentials: true header.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#sending_a_request_with_credentials_included"
+  },
+  {
+    "id": "api-design-058",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between Query and Mutation in GraphQL?",
+    "options": [
+      "Query only uses HTTP GET and Mutation only uses HTTP POST",
+      "Query cannot be cached but Mutation can be cached",
+      "Query is for reading data, and Mutation is for creating, updating, or deleting data",
+      "Query can only request a single field while Mutation can request multiple fields"
+    ],
+    "correctIndex": 2,
+    "explanation": "In GraphQL, Query is used for read-only data fetching operations, while Mutation is used for operations that change server-side data (create, update, delete). This is similar to the distinction between GET and POST/PUT/DELETE in REST. An important difference is that multiple Queries can execute in parallel, but multiple Mutations execute sequentially to ensure data consistency.",
+    "sourceUrl": "https://graphql.org/learn/queries/#mutations"
+  },
+  {
+    "id": "api-design-059",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the problem with the following exponential backoff retry implementation?\n\nasync function fetchWithBackoff(url, retries = 5) {\n  for (let i = 0; i < retries; i++) {\n    try {\n      return await fetch(url);\n    } catch (e) {\n      const delay = Math.pow(2, i) * 1000;\n      await new Promise(r => setTimeout(r, delay));\n    }\n  }\n  throw new Error('All retries failed');\n}",
+    "options": [
+      "Math.pow() will cause integer overflow",
+      "Without random jitter in the delay, multiple clients retrying simultaneously will concentrate requests on the server, causing a Thundering Herd problem",
+      "setTimeout cannot be used inside async functions",
+      "A recursive approach should be used instead of a for loop"
+    ],
+    "correctIndex": 1,
+    "explanation": "Without adding random jitter to exponential backoff, multiple clients that fail at the same time will retry after identical delay periods, concentrating load on the server simultaneously. This is known as the Thundering Herd problem. Adding jitter (e.g., Math.random() * 1000 to the delay) distributes retry times and reduces server load spikes.",
+    "sourceUrl": "https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/"
+  },
+  {
+    "id": "api-design-060",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "When should HTTP status code 409 Conflict be used?",
+    "options": [
+      "When the client sends a malformed request",
+      "When the server is temporarily overloaded",
+      "When the authentication token has expired",
+      "When the request conflicts with the current state of the resource"
+    ],
+    "correctIndex": 3,
+    "explanation": "409 Conflict is returned when the request conflicts with the current state of the target resource. Common scenarios include optimistic locking where another user has already modified the resource, or attempting to create a resource with an identifier that already exists. The client can resolve the conflict by fetching the latest state of the resource and retrying the request.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/409"
   }
 ]

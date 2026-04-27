@@ -892,5 +892,86 @@
     "correctIndex": 2,
     "explanation": "URLSearchParams.append()는 기존 값을 제거하지 않고 새 키-값 쌍을 추가하므로, 'tag=js'와 'tag=api' 모두 유지됩니다. getAll('tag')는 길이 2인 배열을 반환합니다. 'q'에 대한 set()은 단일 항목을 생성합니다. URLSearchParams는 공백을 '%20'이 아닌 '+'로 인코딩합니다(application/x-www-form-urlencoded 형식). 결과 검색 문자열은 '?q=hello+world&tag=js&tag=api'입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/URLSearchParams"
+  },
+  {
+    "id": "api-design-056",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "HTTP 요청 헤더 Accept의 역할은 무엇인가요?",
+    "options": [
+      "서버에 전송하는 요청 본문의 형식을 지정한다",
+      "클라이언트가 지원하는 인코딩 방식을 알린다",
+      "서버의 응답 시간 제한을 설정한다",
+      "클라이언트가 응답으로 받을 수 있는 미디어 타입을 서버에 알린다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Accept 헤더는 클라이언트가 서버에게 자신이 처리할 수 있는 응답 미디어 타입(예: application/json, text/html)을 알리는 콘텐츠 협상 메커니즘입니다. 서버는 이를 기반으로 적절한 형식의 응답을 반환합니다. Content-Type은 요청 본문의 형식을, Accept-Encoding은 인코딩 방식을 지정하는 별도의 헤더입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Accept"
+  },
+  {
+    "id": "api-design-057",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 크로스 오리진 요청 시 쿠키가 전송되지 않는 이유는 무엇인가요?",
+    "code": "fetch('https://api.other-domain.com/user', {\n  method: 'GET',\n  headers: { 'Content-Type': 'application/json' }\n})\n  .then(res => res.json())\n  .then(data => console.log(data));",
+    "options": [
+      "credentials 옵션을 'include'로 설정하지 않았기 때문이다",
+      "GET 요청에서는 쿠키를 보낼 수 없기 때문이다",
+      "Content-Type 헤더가 쿠키 전송을 차단하기 때문이다",
+      "크로스 오리진 요청에서는 어떤 경우에도 쿠키를 보낼 수 없기 때문이다"
+    ],
+    "correctIndex": 0,
+    "explanation": "fetch API는 기본적으로 credentials 옵션이 'same-origin'으로 설정되어 있어, 동일 출처 요청에서만 쿠키를 전송합니다. 크로스 오리진 요청에서 쿠키를 포함하려면 credentials: 'include'를 명시적으로 설정해야 하며, 서버도 Access-Control-Allow-Credentials: true 헤더를 반환해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Fetch_API/Using_Fetch#credentials_%EC%9A%94%EC%B2%AD%EC%97%90_%EC%BF%A0%ED%82%A4_%ED%8F%AC%ED%95%A8%ED%95%98%EA%B8%B0"
+  },
+  {
+    "id": "api-design-058",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "GraphQL에서 Query와 Mutation의 차이점으로 올바른 것은 무엇인가요?",
+    "options": [
+      "Query는 HTTP GET만 사용하고 Mutation은 HTTP POST만 사용한다",
+      "Query는 캐시가 불가능하지만 Mutation은 캐시할 수 있다",
+      "Query는 데이터를 읽는 작업이고, Mutation은 데이터를 생성·수정·삭제하는 작업이다",
+      "Query는 단일 필드만 요청할 수 있고 Mutation은 여러 필드를 요청할 수 있다"
+    ],
+    "correctIndex": 2,
+    "explanation": "GraphQL에서 Query는 데이터를 읽기 전용으로 조회하는 작업이며, Mutation은 서버의 데이터를 변경(생성, 수정, 삭제)하는 작업입니다. 이는 REST의 GET과 POST/PUT/DELETE의 구분과 유사합니다. 중요한 차이로, 여러 Query는 병렬로 실행될 수 있지만 여러 Mutation은 순차적으로 실행되어 데이터 일관성을 보장합니다.",
+    "sourceUrl": "https://graphql.org/learn/queries/#mutations"
+  },
+  {
+    "id": "api-design-059",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 지수 백오프(Exponential Backoff) 재시도 구현에서 문제점은 무엇인가요?\n\nasync function fetchWithBackoff(url, retries = 5) {\n  for (let i = 0; i < retries; i++) {\n    try {\n      return await fetch(url);\n    } catch (e) {\n      const delay = Math.pow(2, i) * 1000;\n      await new Promise(r => setTimeout(r, delay));\n    }\n  }\n  throw new Error('All retries failed');\n}",
+    "options": [
+      "Math.pow()가 정수 오버플로우를 일으킨다",
+      "지연 시간에 랜덤 지터(jitter)가 없어 여러 클라이언트가 동시에 재시도하면 서버에 요청이 집중되는 Thundering Herd 문제가 발생한다",
+      "setTimeout은 async 함수 내에서 사용할 수 없다",
+      "for 루프 대신 재귀를 사용해야 한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "지수 백오프에 랜덤 지터를 추가하지 않으면, 같은 시점에 실패한 여러 클라이언트가 동일한 지연 시간 후 동시에 재시도하여 서버에 부하가 집중됩니다. 이를 Thundering Herd(쇄도 효과) 문제라 합니다. delay에 Math.random() * 1000을 더하는 등의 지터를 추가하면 재시도 시점이 분산되어 서버 부하를 줄일 수 있습니다.",
+    "sourceUrl": "https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/"
+  },
+  {
+    "id": "api-design-060",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "HTTP 상태 코드 409 Conflict는 어떤 상황에서 사용하나요?",
+    "options": [
+      "클라이언트가 잘못된 형식의 요청을 보냈을 때",
+      "서버가 일시적으로 과부하 상태일 때",
+      "인증 토큰이 만료되었을 때",
+      "요청이 리소스의 현재 상태와 충돌할 때"
+    ],
+    "correctIndex": 3,
+    "explanation": "409 Conflict는 요청이 대상 리소스의 현재 상태와 충돌할 때 반환됩니다. 대표적인 사례로 낙관적 잠금(Optimistic Locking)에서 다른 사용자가 먼저 리소스를 수정한 경우, 이미 존재하는 리소스를 동일한 식별자로 생성하려는 경우 등이 있습니다. 클라이언트는 리소스의 최신 상태를 다시 가져온 후 충돌을 해결하고 요청을 재시도할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Status/409"
   }
 ]
