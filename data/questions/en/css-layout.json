@@ -895,5 +895,87 @@
     "correctIndex": 2,
     "explanation": "The :has() pseudo-class selects elements based on their descendants. .card:has(> img) specifically targets .card elements that contain a direct child (>) img element. This enables layout-dependent styling — for example, applying a different grid layout only when a card contains an image. Without :has(), achieving this required JavaScript or additional CSS classes. The > combinator ensures only direct children are matched, not deeply nested images.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/:has"
+  },
+  {
+    "id": "css-layout-056",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What happens when display: contents is applied to an element?",
+    "options": [
+      "The element's box is removed from rendering, and its children participate in the layout as if they were direct children of the parent",
+      "The element and all its children are completely hidden from the screen",
+      "The element changes to inline and is placed without line breaks",
+      "The element's content is converted to plain text for display"
+    ],
+    "correctIndex": 0,
+    "explanation": "display: contents removes the element's own box from rendering — the element itself generates no box. However, its children remain and participate in the parent container's layout as if the element were not there. This is useful in Grid or Flex layouts to make an intermediate wrapper 'transparent', allowing grandchildren to become direct grid or flex items.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/display#display_contents"
+  },
+  {
+    "id": "css-layout-057",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the main benefit of using CSS @layer (cascade layers)?",
+    "options": [
+      "It allows controlling style priority through layer order, regardless of selector specificity",
+      "It reduces stylesheet file size to improve loading performance",
+      "It replaces media queries for implementing responsive design",
+      "It scopes CSS variables per layer"
+    ],
+    "correctIndex": 0,
+    "explanation": "@layer defines CSS cascade layers that manage style priority at a level above selector specificity. Styles in later-declared layers take precedence over earlier-declared layers. By organizing layers in order — such as reset → base → components → utilities — low-specificity selectors in the utilities layer always override high-specificity selectors in the components layer.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/@layer"
+  },
+  {
+    "id": "css-layout-058",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the resize behavior of the textarea with the following CSS?",
+    "code": "textarea {\n  resize: horizontal;\n  width: 300px;\n  height: 200px;\n}",
+    "options": [
+      "The user can resize both horizontally and vertically",
+      "The user can only resize horizontally",
+      "Resizing is completely disabled",
+      "The browser automatically resizes based on content"
+    ],
+    "correctIndex": 1,
+    "explanation": "resize: horizontal allows the user to drag-resize the element's width only. The resize property accepts values: none (no resizing), both (horizontal + vertical), horizontal (width only), and vertical (height only). By default, textarea elements have resize: both applied, and the property only works on elements whose overflow is not visible.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/resize"
+  },
+  {
+    "id": "css-layout-059",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "After using grid-auto-flow: dense in a CSS Grid, items appear visually out of order. What is the cause?",
+    "options": [
+      "dense has a browser bug that places items randomly",
+      "grid-auto-flow: dense itself changes the DOM order of items",
+      "The dense packing algorithm rearranges items out of DOM order to fill empty cells",
+      "dense only works correctly when used together with grid-template-areas"
+    ],
+    "correctIndex": 2,
+    "explanation": "grid-auto-flow: dense uses a dense packing algorithm that minimizes gaps (holes) in the grid by placing later, smaller items into earlier empty cells. This causes the visual order to differ from the DOM order. While the DOM order is not actually changed, screen readers follow DOM order, so the mismatch between visual and reading order can impact accessibility.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/grid-auto-flow"
+  },
+  {
+    "id": "css-layout-060",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What are the left and right margins of the .box element with the following CSS?",
+    "code": ".box {\n  margin-inline: 20px 40px;\n  direction: rtl;\n}",
+    "options": [
+      "Left 20px, right 40px",
+      "Left 40px, right 20px",
+      "Both sides 20px",
+      "Both sides 40px"
+    ],
+    "correctIndex": 1,
+    "explanation": "margin-inline is a logical property that sets the start and end margins in the inline direction. In margin-inline: 20px 40px, the first value (20px) applies to inline-start and the second value (40px) applies to inline-end. With direction: rtl, inline-start maps to the right side and inline-end maps to the left side, so the result is left 40px and right 20px.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/margin-inline"
   }
 ]
