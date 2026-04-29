@@ -908,5 +908,88 @@
     "correctIndex": 1,
     "explanation": "Each time the Symbol.iterator method is called, a new iterator object is created with the closure variable n initialized to 0. Therefore, spreading the same iterable multiple times produces the same result [10, 20, 30] each time. This is the key difference between an iterator (consumed once) and an iterable (can be iterated repeatedly).",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_iterable_protocol"
+  },
+  {
+    "id": "data-structures-056",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const nums = [1, 2, 3, 4, 5];\nconst allPositive = nums.every(n => n > 0);\nconst hasEven = nums.some(n => n % 2 === 0);\nconsole.log(allPositive, hasEven);",
+    "options": [
+      "false true",
+      "true true",
+      "true false",
+      "false false"
+    ],
+    "correctIndex": 1,
+    "explanation": "every() returns true if all elements satisfy the condition. Since all elements in [1, 2, 3, 4, 5] are greater than 0, allPositive is true. some() returns true if at least one element satisfies the condition. Since 2 and 4 are even, hasEven is true. Both methods perform short-circuit evaluation, stopping iteration once the result is determined.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every"
+  },
+  {
+    "id": "data-structures-057",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the advantage of using a WeakMap to associate private data with objects?",
+    "options": [
+      "WeakMap has faster lookups than a regular Map",
+      "Data stored in a WeakMap is automatically encrypted",
+      "WeakMap keys are converted to strings, preventing key collisions",
+      "Data cannot be accessed without the key object, and when the object is garbage collected, the associated data is also reclaimed"
+    ],
+    "correctIndex": 3,
+    "explanation": "WeakMap holds weak references to its keys and does not allow access to stored values without the key object. This makes it ideal for associating truly private data with objects. When the key object is garbage collected, the associated value is also automatically released, preventing memory leaks. This pattern was widely used before the introduction of class private fields (#).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap#emulating_private_members"
+  },
+  {
+    "id": "data-structures-058",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const map = new Map();\nmap.set(NaN, 'first');\nmap.set(NaN, 'second');\nmap.set(0, 'zero');\nmap.set(-0, 'negative zero');\nconsole.log(map.size, map.get(NaN), map.get(-0));",
+    "options": [
+      "2 'second' 'negative zero'",
+      "4 'first' 'zero'",
+      "3 'second' 'zero'",
+      "3 'first' 'negative zero'"
+    ],
+    "correctIndex": 0,
+    "explanation": "Map uses the SameValueZero algorithm for key comparison, which treats NaN as equal to itself (unlike ===, where NaN !== NaN). So the second set(NaN, 'second') overwrites the first. Additionally, 0 and -0 are treated as the same key, so set(-0, 'negative zero') overwrites the value for 0. The result is size 2, NaN maps to 'second', and -0 (=== 0) maps to 'negative zero'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#key_equality"
+  },
+  {
+    "id": "data-structures-059",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which of the following correctly describes the difference between Object.seal() and Object.freeze()?",
+    "options": [
+      "Object.seal() seals nested objects as well, but Object.freeze() only freezes the top level",
+      "Object.freeze() only prevents property deletion, while Object.seal() also prevents value changes",
+      "Object.seal() allows changing existing property values, but Object.freeze() also forbids value changes",
+      "Both methods behave identically and only differ in name"
+    ],
+    "correctIndex": 2,
+    "explanation": "Object.seal() prevents adding new properties and deleting existing ones, but allows changing existing property values. Object.freeze() includes all of seal()'s restrictions plus forbids modifying existing property values. In other words, freeze() provides stricter immutability than seal(). Both methods operate at a shallow level only.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/seal"
+  },
+  {
+    "id": "data-structures-060",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the Array transformation behave differently across these three approaches?",
+    "code": "const result = Array.from({ length: 3 }, (_, i) => i * 2);\nconst buggy = Array.from({ length: 3 }).map((_, i) => i * 2);\nconst broken = Array(3).map((_, i) => i * 2);\nconsole.log(result, buggy, broken);",
+    "options": [
+      "All three lines produce the same result [0, 2, 4]",
+      "result and buggy produce [0, 2, 4], but broken produces [empty × 3] because map skips empty slots",
+      "Array.from's second argument acts as a filter, so result is an empty array",
+      "buggy throws an error"
+    ],
+    "correctIndex": 1,
+    "explanation": "Array.from({ length: 3 }, mapFn) applies the mapping function immediately, producing [0, 2, 4]. Array.from({ length: 3 }) creates [undefined, undefined, undefined], so .map() works normally and also produces [0, 2, 4]. However, Array(3) creates a sparse array with 3 empty slots, and map() skips empty slots entirely, so the callback never executes and the empty slots remain unchanged.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from"
   }
 ]
