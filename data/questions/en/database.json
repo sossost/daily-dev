@@ -903,5 +903,88 @@
     "correctIndex": 0,
     "explanation": "The BETWEEN operator is inclusive of both boundary values. That is, it is equivalent to value >= 20 AND value <= 80. Three rows with values 25, 50, and 75 fall within this range. 10 is less than 20 and 100 is greater than 80, so they are excluded.",
     "sourceUrl": "https://www.w3schools.com/sql/sql_between.asp"
+  },
+  {
+    "id": "database-056",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the role of the ROLLBACK command in SQL?",
+    "options": [
+      "It permanently saves the results of a transaction",
+      "It reverts the table structure to a previous state",
+      "It resets the database to its initial creation state",
+      "It cancels all changes made during the current transaction and restores the state to before the transaction began"
+    ],
+    "correctIndex": 3,
+    "explanation": "ROLLBACK cancels all data changes (INSERT, UPDATE, DELETE) performed in the current transaction and restores the database to the state before the transaction started. It is a critical mechanism for protecting data integrity when errors occur or unintended changes are made, and is the opposite of COMMIT.",
+    "sourceUrl": "https://www.postgresql.org/docs/current/sql-rollback.html"
+  },
+  {
+    "id": "database-057",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the result of the following SQL query?\n\nSELECT 10 + NULL, 10 * NULL, 10 = NULL;",
+    "code": "SELECT 10 + NULL, 10 * NULL, 10 = NULL;",
+    "options": [
+      "10, 0, FALSE",
+      "NULL, NULL, NULL",
+      "NULL, NULL, FALSE",
+      "0, 0, NULL"
+    ],
+    "correctIndex": 1,
+    "explanation": "In SQL, NULL represents an 'unknown value', and any arithmetic operation (+, -, *, /) or comparison operation (=, <, >) with NULL results in NULL. 10 + NULL = NULL, 10 * NULL = NULL, and 10 = NULL returns NULL (UNKNOWN), not TRUE or FALSE. This behavior is called NULL propagation.",
+    "sourceUrl": "https://www.postgresql.org/docs/current/functions-comparison.html"
+  },
+  {
+    "id": "database-058",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about Normalization and Denormalization is correct?",
+    "options": [
+      "Normalization reduces redundancy to improve data integrity but increases joins, while denormalization intentionally allows redundancy to improve read performance at the cost of harder consistency management",
+      "Denormalization is always superior to normalization, so only denormalization should be used in production environments",
+      "Normalization and denormalization serve the same purpose and produce the same results",
+      "Denormalization is the process of splitting tables into more tables"
+    ],
+    "correctIndex": 0,
+    "explanation": "Normalization eliminates data redundancy to prevent insertion, update, and deletion anomalies, but may degrade read performance due to increased joins across multiple tables. Denormalization intentionally adds redundant data to normalized tables to reduce joins and speed up reads. It is commonly used in read-heavy analytics systems or high-traffic environments.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Denormalization"
+  },
+  {
+    "id": "database-059",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "The following SQL query throws an error. What is the cause?\n\nSELECT * FROM orders WHERE user_id = (SELECT id FROM users WHERE status = 'active');",
+    "code": "SELECT * FROM orders\nWHERE user_id = (\n  SELECT id FROM users\n  WHERE status = 'active'\n);",
+    "options": [
+      "Subqueries cannot be used in a WHERE clause",
+      "The orders and users tables cannot be referenced simultaneously",
+      "The = operator requires the subquery to return exactly one row, and an error occurs if multiple rows are returned",
+      "Subqueries must always include a LIMIT clause"
+    ],
+    "correctIndex": 2,
+    "explanation": "When comparing with a subquery using the = operator, the subquery must return exactly one scalar value. If there are multiple users with 'active' status, the subquery returns multiple rows, causing an error. In this case, using the IN operator instead of = allows comparison with multiple rows.",
+    "sourceUrl": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
+  },
+  {
+    "id": "database-060",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the result of the following SQL query?\n\nitems table: id(1,2,3,4,5), name('A','B','C','D','E')\n\nSELECT name FROM items ORDER BY id LIMIT 3 OFFSET 2;",
+    "code": "SELECT name FROM items\nORDER BY id\nLIMIT 3 OFFSET 2;",
+    "options": [
+      "A, B, C",
+      "D, E",
+      "C, D, E",
+      "B, C, D"
+    ],
+    "correctIndex": 2,
+    "explanation": "OFFSET 2 skips the first 2 rows, and LIMIT 3 returns up to 3 rows after that. When sorted by id, the order is A, B, C, D, E. Skipping 2 and taking 3 gives C, D, E. OFFSET is commonly used for implementing pagination.",
+    "sourceUrl": "https://www.postgresql.org/docs/current/queries-limit.html"
   }
 ]
