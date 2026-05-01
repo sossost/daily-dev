@@ -905,5 +905,88 @@
     "correctIndex": 1,
     "explanation": "insertBefore(newNode, referenceNode) inserts newNode before the referenceNode within the parent. After appendChild(p), div contains '<p>first</p>'. Then insertBefore(p2, p) inserts p2 ('second') before p ('first'). The result is '<p>second</p><p>first</p>'. insertBefore does not replace the reference node — it positions the new node directly before it in the child list.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Node/insertBefore"
+  },
+  {
+    "id": "dom-manipulation-056",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the following code fail to correctly read the data attribute value?",
+    "code": "const el = document.querySelector('[data-user-id]');\nconsole.log(el.dataset.user-id);",
+    "options": [
+      "Data attributes cannot be selected with querySelector",
+      "The dataset property is read-only and cannot be accessed",
+      "Kebab-case data attributes (data-user-id) are converted to camelCase (userId) in dataset, so it should be accessed as el.dataset.userId",
+      "The dataset object only returns numbers, not strings"
+    ],
+    "correctIndex": 2,
+    "explanation": "HTML data-* attributes are automatically converted from kebab-case to camelCase when accessed through the JavaScript dataset API. data-user-id becomes dataset.userId. Writing el.dataset.user-id causes JavaScript to interpret it as el.dataset.user minus id, resulting in NaN. The hyphen is parsed as the subtraction operator, not as part of the property name.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset"
+  },
+  {
+    "id": "dom-manipulation-057",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const div = document.createElement('div');\ndiv.classList.add('a', 'b');\nconsole.log(div.classList.toggle('a'));\nconsole.log(div.classList.toggle('c'));\nconsole.log([...div.classList].join(','));",
+    "options": [
+      "true, true, 'a,b,c'",
+      "false, true, 'b,c'",
+      "true, false, 'a,b'",
+      "false, false, 'b'"
+    ],
+    "correctIndex": 1,
+    "explanation": "classList.toggle() removes the class and returns false if it already exists, or adds the class and returns true if it doesn't exist. 'a' already exists, so it is removed and false is logged. 'c' doesn't exist, so it is added and true is logged. The final classList contains 'b' and 'c', so 'b,c' is logged.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList/toggle"
+  },
+  {
+    "id": "dom-manipulation-058",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between replaceWith() and replaceChild()?",
+    "options": [
+      "replaceWith() is called on the parent node, while replaceChild() is called on the target node",
+      "replaceChild() can replace multiple nodes simultaneously",
+      "Both methods have identical functionality with different names",
+      "replaceWith() is called on the target node itself and can replace with multiple nodes or strings, while replaceChild() is called on the parent node and accepts only a single node"
+    ],
+    "correctIndex": 3,
+    "explanation": "replaceWith() is an Element method called on the target element itself (el.replaceWith(newEl)). It can accept multiple nodes or strings as arguments. replaceChild() is a Node method called on the parent node (parent.replaceChild(newChild, oldChild)) and accepts only a single node argument. replaceWith() is the more modern and flexible API.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/replaceWith"
+  },
+  {
+    "id": "dom-manipulation-059",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the focus not work as intended in the following code?",
+    "code": "const input = document.createElement('input');\ninput.type = 'text';\ninput.focus();\ndocument.body.appendChild(input);",
+    "options": [
+      "focus() was called before the element was added to the DOM, so focus is not applied",
+      "focus() cannot be called after setting the type attribute",
+      "The input element does not have a focus() method",
+      "Elements created with createElement cannot receive focus"
+    ],
+    "correctIndex": 0,
+    "explanation": "The focus() method requires the element to be connected to the document's DOM tree. In this code, input.focus() is called before document.body.appendChild(input), so the element is not yet part of the document. Elements that are not connected to the DOM cannot receive focus. The fix is to call focus() after appendChild.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus"
+  },
+  {
+    "id": "dom-manipulation-060",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct distinction between element.hasAttribute() and element.getAttribute()?",
+    "options": [
+      "hasAttribute() returns a boolean indicating whether the attribute exists, while getAttribute() returns the attribute value as a string",
+      "hasAttribute() returns the attribute value, while getAttribute() returns whether it exists",
+      "Both methods return the attribute value as a string",
+      "getAttribute() throws an error if the attribute doesn't exist"
+    ],
+    "correctIndex": 0,
+    "explanation": "hasAttribute(name) returns true or false indicating whether the named attribute exists on the element. getAttribute(name) returns the attribute's value as a string, or null if the attribute doesn't exist. Use hasAttribute() when checking for boolean attributes (disabled, checked, etc.) where only existence matters, and getAttribute() when you need the actual attribute value.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/hasAttribute"
   }
 ]
