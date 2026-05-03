@@ -899,5 +899,87 @@
     "correctIndex": 3,
     "explanation": "Input validation checks incoming data against allowed formats (email, numbers, etc.) and rejects invalid data at the system boundary. Output encoding escapes special characters when inserting data into specific contexts like HTML, JavaScript, or URLs. These two defense strategies are complementary and should be used together. Input validation alone cannot prevent all XSS — output encoding is the primary defense against XSS, ensuring that user data is never interpreted as code regardless of its content.",
     "sourceUrl": "https://owasp.org/www-community/xss-filter-evasion-cheatsheet"
+  },
+  {
+    "id": "web-security-056",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the security vulnerability in the following code?",
+    "code": "app.get('/redirect', (req, res) => {\n  const url = req.query.url;\n  res.redirect(url);\n});",
+    "options": [
+      "The redirect causes an infinite loop",
+      "This is an open redirect vulnerability — an attacker can craft a URL like /redirect?url=https://evil.com to redirect users to a malicious site",
+      "The code is vulnerable to SQL injection",
+      "res.redirect does not work with query parameters"
+    ],
+    "correctIndex": 1,
+    "explanation": "Open redirect occurs when an application redirects to a user-supplied URL without validation. Attackers use it in phishing: the link appears to come from a trusted domain but redirects to a malicious site. The fix is to validate the redirect URL against an allowlist of trusted domains, or to only allow relative paths (e.g., checking that the URL starts with '/' and not '//').",
+    "sourceUrl": "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/11-Client-side_Testing/04-Testing_for_Client-side_URL_Redirect"
+  },
+  {
+    "id": "web-security-057",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of the Strict-Transport-Security (HSTS) header?",
+    "options": [
+      "It restricts which JavaScript APIs the page can use",
+      "It tells browsers to only access the site over HTTPS and to automatically upgrade any HTTP requests to HTTPS",
+      "It enforces strict mode in JavaScript execution",
+      "It prevents the server from accepting requests from unauthorized IP addresses"
+    ],
+    "correctIndex": 1,
+    "explanation": "The HSTS header (e.g., Strict-Transport-Security: max-age=31536000; includeSubDomains) instructs browsers to only communicate with the site over HTTPS for the specified duration. Even if a user types http://, the browser automatically upgrades to HTTPS without making the insecure request. This prevents SSL stripping attacks where an attacker intercepts the initial HTTP connection and prevents the upgrade to HTTPS.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security"
+  },
+  {
+    "id": "web-security-058",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What happens when the following Content-Security-Policy header is set?",
+    "code": "Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.example.com; style-src 'self' 'unsafe-inline'",
+    "options": [
+      "All resources including scripts can be loaded from any origin",
+      "Scripts can only load from the same origin and cdn.example.com, inline styles are allowed, and all other resources can only load from the same origin",
+      "Only stylesheets can be loaded, all scripts are blocked",
+      "The CSP header is invalid and the browser ignores it"
+    ],
+    "correctIndex": 1,
+    "explanation": "This CSP sets default-src to 'self' (all resource types default to same-origin only), overrides script-src to allow scripts from the same origin and https://cdn.example.com, and overrides style-src to allow same-origin stylesheets plus inline styles ('unsafe-inline'). Inline scripts are NOT allowed because script-src does not include 'unsafe-inline'. This demonstrates CSP's granular control over resource loading.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP"
+  },
+  {
+    "id": "web-security-059",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between CSRF tokens and SameSite cookies as defenses against CSRF attacks?",
+    "options": [
+      "CSRF tokens are the only valid defense; SameSite cookies have no effect on CSRF",
+      "SameSite cookies prevent the browser from sending cookies on cross-site requests at the browser level, while CSRF tokens require server-side validation of a unique per-session token embedded in forms or headers",
+      "Both mechanisms work identically and implementing one makes the other redundant",
+      "SameSite cookies are only effective in Chrome, while CSRF tokens work in all browsers"
+    ],
+    "correctIndex": 1,
+    "explanation": "SameSite=Strict/Lax prevents the browser from including cookies in cross-site requests, blocking CSRF at the transport level without application code changes. CSRF tokens are unique values embedded in forms and validated by the server on each state-changing request. SameSite cookies are simpler to implement but may break legitimate cross-site flows (like following links from emails). Using both provides defense-in-depth.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value"
+  },
+  {
+    "id": "web-security-060",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of setting the HttpOnly flag on a cookie?",
+    "options": [
+      "It makes the cookie accessible only over HTTP, not HTTPS",
+      "It prevents JavaScript from accessing the cookie via document.cookie, mitigating XSS-based cookie theft",
+      "It restricts the cookie to be sent only with GET requests",
+      "It automatically encrypts the cookie value"
+    ],
+    "correctIndex": 1,
+    "explanation": "The HttpOnly flag tells the browser that the cookie should not be accessible through client-side JavaScript (document.cookie, fetch headers, etc.). This is a critical defense against XSS attacks — even if an attacker injects a malicious script, they cannot steal session cookies marked as HttpOnly. Session cookies and authentication tokens should always be set with HttpOnly. Note that HttpOnly does not prevent the cookie from being sent with requests; it only blocks JavaScript access.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies"
   }
 ]

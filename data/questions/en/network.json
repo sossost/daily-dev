@@ -892,5 +892,86 @@
     "correctIndex": 0,
     "explanation": "A forward proxy sits in front of clients, hiding client IPs and performing access control or caching (e.g., corporate network proxy servers). A reverse proxy sits in front of servers, handling load balancing, SSL termination, caching, and DDoS protection (e.g., Nginx, Cloudflare). Clients are unaware of the reverse proxy's existence, and the actual server's IP is not exposed externally.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Proxy_server"
+  },
+  {
+    "id": "network-056",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the purpose of the HTTP 103 Early Hints status code?",
+    "options": [
+      "It indicates the server is still processing the request and the client should wait",
+      "It allows the server to send preliminary headers (like preload hints) before the final response is ready",
+      "It signals the client to retry the request with different credentials",
+      "It tells the client the resource has been permanently moved"
+    ],
+    "correctIndex": 1,
+    "explanation": "HTTP 103 Early Hints lets the server send Link headers (such as preload or preconnect hints) to the browser before the final response is prepared. This allows the browser to start loading critical resources like stylesheets and scripts while the server is still generating the main response, reducing overall page load time.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/103"
+  },
+  {
+    "id": "network-057",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "A developer's fetch request includes credentials: 'include', but cookies are not being sent. The server responds with Access-Control-Allow-Origin: '*'. What is the issue?",
+    "options": [
+      "The cookies have expired and need to be refreshed",
+      "credentials: 'include' only works with XMLHttpRequest, not fetch",
+      "When credentials are included, Access-Control-Allow-Origin cannot be a wildcard '*' — it must specify the exact origin",
+      "The SameSite attribute on the cookies is preventing them from being sent"
+    ],
+    "correctIndex": 2,
+    "explanation": "The CORS specification mandates that when a request includes credentials (cookies, HTTP auth), the Access-Control-Allow-Origin header must echo the exact requesting origin rather than using the wildcard '*'. Additionally, Access-Control-Allow-Credentials: true must be present. Browsers enforce this by blocking the response if these conditions are not met.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#credentialed_requests"
+  },
+  {
+    "id": "network-058",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What value does response.status hold after the following code executes?\n\nconst response = await fetch('/api/data', {\n  method: 'POST',\n  body: JSON.stringify({ name: 'test' })\n});\n// Server responds with 201 Created",
+    "code": "const response = await fetch('/api/data', {\n  method: 'POST',\n  body: JSON.stringify({ name: 'test' })\n});\nconsole.log(response.status);\nconsole.log(response.ok);",
+    "options": [
+      "200, true",
+      "201, true",
+      "201, false",
+      "200, false"
+    ],
+    "correctIndex": 1,
+    "explanation": "The response.status property reflects the actual HTTP status code returned by the server, which is 201 in this case. The response.ok property is true for any status in the range 200-299 (inclusive). Since 201 falls within this range, response.ok is true. This is why checking response.ok is preferred over checking response.status === 200.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Response/ok"
+  },
+  {
+    "id": "network-059",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between the HTTP PUT and PATCH methods?",
+    "options": [
+      "PUT creates a new resource, PATCH deletes a resource",
+      "PUT replaces the entire resource, PATCH applies a partial modification to the resource",
+      "PUT is idempotent but PATCH never is",
+      "PUT only works with JSON, PATCH only works with form data"
+    ],
+    "correctIndex": 1,
+    "explanation": "PUT is designed to replace the entire resource at the target URL with the request payload. If any fields are omitted, they are removed or set to defaults. PATCH applies a partial update, modifying only the fields included in the request body while leaving the rest unchanged. Both can be idempotent depending on implementation, but PUT is required to be idempotent by the HTTP specification.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PATCH"
+  },
+  {
+    "id": "network-060",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is HTTP/2 Server Push, and why has it been largely deprecated in practice?",
+    "options": [
+      "It allows the server to send WebSocket messages over HTTP/2 and was deprecated due to security concerns",
+      "It lets servers proactively send resources to the client before they are requested, but was deprecated because it often wasted bandwidth by pushing already-cached resources",
+      "It is a mechanism to push server logs to the client and was deprecated because it exposed sensitive data",
+      "It allows servers to redirect clients to a different URL and was deprecated in favor of 301 redirects"
+    ],
+    "correctIndex": 1,
+    "explanation": "HTTP/2 Server Push allows a server to anticipate resources the client will need (CSS, JS) and send them proactively alongside the initial response. However, it was largely deprecated because servers cannot reliably know what the client has cached, leading to wasted bandwidth. The 103 Early Hints status code is now the preferred alternative, as it lets the browser decide whether to fetch hinted resources.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages"
   }
 ]

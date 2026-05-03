@@ -891,5 +891,86 @@
     "correctIndex": 1,
     "explanation": "git rev-parse는 Git 참조를 해당하는 SHA-1 해시로 변환합니다. git rev-parse HEAD는 현재 HEAD가 가리키는 커밋의 전체 40자 SHA-1 해시를 출력합니다. 스크립트에서 현재 커밋 해시를 변수에 저장할 때 자주 사용되며, --short 옵션으로 축약 해시를 얻을 수도 있습니다.",
     "sourceUrl": "https://git-scm.com/docs/git-rev-parse"
+  },
+  {
+    "id": "git-advanced-056",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "git replace 명령어의 용도는 무엇인가요?",
+    "options": [
+      "Git이 추적하는 파일의 이름을 변경한다",
+      "Git이 특정 객체를 읽을 때 투명하게 대체할 대체 객체를 생성한다",
+      "한 브랜치를 다른 브랜치로 교체한다",
+      "원격 저장소를 로컬 변경사항으로 덮어쓴다"
+    ],
+    "correctIndex": 1,
+    "explanation": "git replace는 대체 참조를 생성하여, Git이 특정 객체(커밋, 트리, 블롭)를 읽을 때 투명하게 대체 객체를 사용하도록 합니다. 히스토리를 다시 쓰지 않고도 히스토리를 접목하거나 오래된 커밋을 수정하는 데 유용합니다. 원본 객체는 그대로 유지되며 대체 참조는 refs/replace/에 저장됩니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-replace"
+  },
+  {
+    "id": "git-advanced-057",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "개발자가 git pull을 실행했더니 'fatal: refusing to merge unrelated histories' 에러가 발생했습니다. 가장 적절한 해결 방법은 무엇인가요?",
+    "options": [
+      "로컬 저장소를 삭제하고 다시 클론한다",
+      "git push --force로 원격을 덮어쓴다",
+      "git pull --allow-unrelated-histories를 사용하여 두 개의 독립된 히스토리 병합을 명시적으로 허용한다",
+      "git reset --hard origin/main으로 로컬 커밋을 버린다"
+    ],
+    "correctIndex": 2,
+    "explanation": "이 에러는 두 저장소가 공통 조상 커밋이 없을 때 발생합니다. 예를 들어 로컬 저장소가 원격과 독립적으로 초기화된 경우입니다. --allow-unrelated-histories 플래그는 공유 기반 커밋이 없어도 병합을 진행하도록 Git에 지시합니다. Git은 두 개의 별도 히스토리를 합치는 병합 커밋을 생성합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-pull"
+  },
+  {
+    "id": "git-advanced-058",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "git diff HEAD~1과 git diff HEAD~1..HEAD의 차이점은 무엇인가요?",
+    "options": [
+      "동일한 출력을 생성한다; 둘 다 이전 커밋과 현재 커밋 사이의 변경사항을 보여준다",
+      "git diff HEAD~1은 작업 트리와 이전 커밋을 비교하고, git diff HEAD~1..HEAD는 두 커밋을 직접 비교한다",
+      "git diff HEAD~1은 스테이징된 변경사항만 보여주고, git diff HEAD~1..HEAD는 모든 변경사항을 보여준다",
+      "git diff HEAD~1..HEAD는 추적되지 않는 파일을 포함하고, git diff HEAD~1은 포함하지 않는다"
+    ],
+    "correctIndex": 1,
+    "explanation": "git diff HEAD~1(단일 인자)은 작업 트리를 지정된 커밋과 비교하므로 작업 디렉토리의 커밋되지 않은 변경사항도 포함합니다. git diff HEAD~1..HEAD(두 점 범위)는 두 커밋을 직접 비교하여, 현재 작업 트리 상태와 관계없이 두 스냅샷 간의 변경사항만 보여줍니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-diff"
+  },
+  {
+    "id": "git-advanced-059",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 명령어는 무엇을 출력하나요?\n\ngit shortlog -sn --no-merges",
+    "code": "git shortlog -sn --no-merges",
+    "options": [
+      "모든 병합 커밋과 메시지 목록",
+      "저장소의 총 파일 수",
+      "병합 커밋을 제외한 커밋 수 기준 작성자 순위 목록",
+      "마지막 활동 날짜별로 정렬된 브랜치 요약"
+    ],
+    "correctIndex": 2,
+    "explanation": "git shortlog -s는 커밋 수만 표시하고(메시지 생략), -n은 수가 많은 순으로 정렬하며, --no-merges는 병합 커밋을 제외합니다. 결과는 각 작성자가 몇 개의 비병합 커밋을 했는지 보여주는 순위 목록으로, 기여 활동을 평가하는 데 자주 사용됩니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-shortlog"
+  },
+  {
+    "id": "git-advanced-060",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "git sparse-checkout 명령어의 용도는 무엇인가요?",
+    "options": [
+      "현재 커밋에 경량 태그를 생성한다",
+      "저장소에서 일부 파일만 체크아웃하여 작업 디렉토리 크기를 줄일 수 있다",
+      "선택한 헝크만 부분적으로 커밋한다",
+      "pre-checkout 훅을 건너뛰고 파일을 체크아웃한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "git sparse-checkout은 작업 트리에 어떤 디렉토리나 파일을 채울지 정의할 수 있으며, 나머지는 Git 객체 저장소에만 남습니다. 개발자가 코드베이스의 일부만 필요한 모노레포에서 특히 유용하며, 디스크 사용량과 체크아웃 시간을 크게 줄여줍니다. cone 모드(디렉토리 기반 패턴)와 non-cone 모드(gitignore 스타일 패턴) 모두 지원합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-sparse-checkout"
   }
 ]

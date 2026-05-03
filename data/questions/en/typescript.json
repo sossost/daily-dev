@@ -921,5 +921,88 @@
     "correctIndex": 1,
     "explanation": "In ApiResponse<T = unknown>, T defaults to unknown. When the parameter type is ApiResponse (type argument omitted), T is bound to the default unknown, making res.data of type unknown. Since unknown doesn't allow property access without narrowing, res.data.name causes an error. Solutions: 1) Specify the type argument like ApiResponse<{ name: string }>, or 2) use type guards like typeof/instanceof to narrow data's type. If the default were any instead, no error would occur but type safety wouldn't be guaranteed.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/generics.html#generic-parameter-defaults"
+  },
+  {
+    "id": "typescript-056",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the resulting type of `Result` in the following code?",
+    "code": "type IsString<T> = T extends string ? 'yes' : 'no';\n\ntype Result = IsString<string | number>;",
+    "options": [
+      "'yes'",
+      "'no'",
+      "'yes' | 'no'",
+      "never"
+    ],
+    "correctIndex": 2,
+    "explanation": "When a conditional type receives a union type as the checked type parameter, TypeScript distributes the condition over each member of the union separately. IsString<string | number> becomes IsString<string> | IsString<number>, which evaluates to 'yes' | 'no'. This is called a distributive conditional type and only applies when the checked type is a naked type parameter. Wrapping T in a tuple like [T] prevents distribution.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types"
+  },
+  {
+    "id": "typescript-057",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of the 'satisfies' operator in TypeScript?",
+    "options": [
+      "It converts a value to a different type at runtime",
+      "It validates that a value conforms to a type while preserving the narrower inferred type instead of widening it",
+      "It checks if a class satisfies an interface at runtime",
+      "It is used to mark optional properties as required"
+    ],
+    "correctIndex": 1,
+    "explanation": "The satisfies operator (introduced in TypeScript 4.9) lets you validate that an expression matches a type without changing the inferred type. Unlike type annotations (const x: Type = ...) which widen the type to Type, satisfies preserves the specific literal types inferred from the value. This gives you both type checking against the constraint and the narrower inferred type for autocomplete and type safety.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html#the-satisfies-operator"
+  },
+  {
+    "id": "typescript-058",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the following code produce a compile error?",
+    "code": "function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {\n  return obj[key];\n}\n\nconst user = { name: 'Alice', age: 30 };\nconst value = getProperty(user, 'email');",
+    "options": [
+      "The function signature is invalid because T[K] is not a valid return type",
+      "TypeScript cannot infer generic types from function arguments",
+      "'email' is not assignable to keyof typeof user ('name' | 'age') because it does not exist as a property on the user object",
+      "The obj parameter must be typed as Record<string, unknown>"
+    ],
+    "correctIndex": 2,
+    "explanation": "The constraint K extends keyof T means K must be one of the known keys of T. TypeScript infers T as { name: string; age: number }, so keyof T is 'name' | 'age'. Since 'email' is not in this union, it cannot be assigned to K. This pattern provides type-safe property access — the return type T[K] also narrows correctly (e.g., string for 'name', number for 'age').",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/generics.html#using-type-parameters-in-generic-constraints"
+  },
+  {
+    "id": "typescript-059",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between 'type' and 'interface' for defining object shapes in TypeScript?",
+    "options": [
+      "They are completely identical with no differences",
+      "Interfaces support declaration merging and can be extended with extends, while types use intersections (&) for composition and can represent unions, tuples, and mapped types",
+      "Types can only represent primitive types, not objects",
+      "Interfaces are deprecated in favor of types"
+    ],
+    "correctIndex": 1,
+    "explanation": "Interfaces support declaration merging (multiple declarations with the same name are automatically merged) and use extends for inheritance. Types use intersections (&) for combining types and can additionally represent unions (A | B), tuples ([string, number]), mapped types, and conditional types. For simple object shapes, both work similarly. Interfaces are generally preferred for public API definitions because of their extensibility.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#differences-between-type-aliases-and-interfaces"
+  },
+  {
+    "id": "typescript-060",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What type does TypeScript infer for the variable 'result'?",
+    "code": "const values = [1, 'hello', true] as const;\nconst result = values[1];",
+    "options": [
+      "string | number | boolean",
+      "string",
+      "'hello'",
+      "unknown"
+    ],
+    "correctIndex": 2,
+    "explanation": "The 'as const' assertion creates a readonly tuple with literal types: readonly [1, 'hello', true]. Accessing index 1 returns the specific literal type 'hello', not the widened type string. Without 'as const', values would be inferred as (string | number | boolean)[] and values[1] would be string | number | boolean.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#literal-types"
   }
 ]

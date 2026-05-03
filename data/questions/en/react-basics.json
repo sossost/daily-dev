@@ -902,5 +902,88 @@
     "correctIndex": 3,
     "explanation": "During concurrent rendering, React may pause and resume rendering. If an external store's value changes between these interruptions, different parts of the same render may read different values — a phenomenon called 'tearing'. useSyncExternalStore reads external store values synchronously to prevent this inconsistency. State management libraries like Redux and Zustand use this hook internally.",
     "sourceUrl": "https://react.dev/reference/react/useSyncExternalStore"
+  },
+  {
+    "id": "react-basics-056",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is logged when the button is clicked in the following code?",
+    "code": "function App() {\n  const [items, setItems] = useState([1, 2, 3]);\n\n  function handleClick() {\n    items.push(4);\n    setItems(items);\n    console.log(items.length);\n  }\n\n  return <button onClick={handleClick}>Add</button>;\n}",
+    "options": [
+      "4, and the component re-renders with the new item",
+      "4, but the component does NOT re-render because React detects the same reference",
+      "3, because push does not work on state arrays",
+      "An error is thrown because state is immutable"
+    ],
+    "correctIndex": 1,
+    "explanation": "items.push(4) mutates the existing array and console.log shows 4. However, setItems(items) passes the same array reference. React uses Object.is() to compare the previous and next state — since the reference is identical, React skips the re-render. The correct approach is to create a new array: setItems([...items, 4]).",
+    "sourceUrl": "https://react.dev/learn/updating-arrays-in-state"
+  },
+  {
+    "id": "react-basics-057",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the bug in the following code?",
+    "code": "function SearchResults({ query }) {\n  const [results, setResults] = useState([]);\n\n  useEffect(() => {\n    fetch(`/api/search?q=${query}`)\n      .then(res => res.json())\n      .then(data => setResults(data));\n  }, [query]);\n\n  return <ul>{results.map(r => <li key={r.id}>{r.name}</li>)}</ul>;\n}",
+    "options": [
+      "The fetch URL is not properly encoded",
+      "useState should be initialized with null instead of an empty array",
+      "There is a race condition: if query changes rapidly, an older response may arrive after a newer one and overwrite the correct results",
+      "useEffect cannot contain async operations"
+    ],
+    "correctIndex": 2,
+    "explanation": "When query changes quickly, multiple fetch requests fire in sequence. Since network responses can arrive out of order, an earlier request's response may resolve after a later one, overwriting the correct results. The fix is to use an AbortController in the useEffect cleanup function to cancel stale requests, or to use a boolean flag (ignore) to discard outdated responses.",
+    "sourceUrl": "https://react.dev/reference/react/useEffect#fetching-data-with-effects"
+  },
+  {
+    "id": "react-basics-058",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of React.StrictMode?",
+    "options": [
+      "It enforces TypeScript strict mode in React components",
+      "It activates additional development-only checks such as detecting unsafe lifecycles, double-invoking render functions, and warning about deprecated APIs",
+      "It prevents any runtime errors from crashing the application",
+      "It enables server-side rendering for all wrapped components"
+    ],
+    "correctIndex": 1,
+    "explanation": "React.StrictMode is a development-only tool that wraps part of your component tree to enable extra safety checks. It intentionally double-invokes functions like render, constructors, and effects to help detect side effects. It also warns about deprecated lifecycle methods and legacy APIs. It has no effect in production builds.",
+    "sourceUrl": "https://react.dev/reference/react/StrictMode"
+  },
+  {
+    "id": "react-basics-059",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between controlled and uncontrolled components in React?",
+    "options": [
+      "Controlled components use class syntax, uncontrolled components use function syntax",
+      "Controlled components store form data in React state and update via onChange handlers, while uncontrolled components store form data in the DOM and access it via refs",
+      "Uncontrolled components are faster because they bypass the virtual DOM",
+      "Controlled components cannot be used with TypeScript"
+    ],
+    "correctIndex": 1,
+    "explanation": "In a controlled component, the form element's value is driven by React state (value={state}) and updated through onChange handlers, giving React full control over the input. In an uncontrolled component, the DOM itself manages the value, and you read it using a ref when needed. Controlled components are preferred in most cases because they make form validation and conditional logic easier to implement.",
+    "sourceUrl": "https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components"
+  },
+  {
+    "id": "react-basics-060",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the order of console output when the component mounts?",
+    "code": "function Parent() {\n  useEffect(() => {\n    console.log('Parent effect');\n    return () => console.log('Parent cleanup');\n  }, []);\n  console.log('Parent render');\n  return <Child />;\n}\n\nfunction Child() {\n  useEffect(() => {\n    console.log('Child effect');\n    return () => console.log('Child cleanup');\n  }, []);\n  console.log('Child render');\n  return <div>Hello</div>;\n}",
+    "options": [
+      "Parent render -> Parent effect -> Child render -> Child effect",
+      "Parent render -> Child render -> Parent effect -> Child effect",
+      "Parent render -> Child render -> Child effect -> Parent effect",
+      "Child render -> Parent render -> Child effect -> Parent effect"
+    ],
+    "correctIndex": 2,
+    "explanation": "During rendering, React traverses the component tree top-down, so 'Parent render' logs first, then 'Child render'. However, useEffect callbacks fire after the DOM is committed, and they execute bottom-up (children before parents). So 'Child effect' runs before 'Parent effect'. This bottom-up order ensures that parent effects can rely on child DOM being fully set up.",
+    "sourceUrl": "https://react.dev/learn/lifecycle-of-reactive-effects"
   }
 ]

@@ -896,5 +896,87 @@
     "correctIndex": 3,
     "explanation": "loading=\"lazy\" is a native attribute that tells the browser to defer loading the image until it reaches near the viewport. This reduces network requests for off-screen images during initial page load, saving bandwidth and loading time. However, loading=\"lazy\" should never be used on hero images visible in the first viewport — it can worsen LCP. Instead, use fetchpriority=\"high\" to prioritize loading for above-the-fold images.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#loading"
+  },
+  {
+    "id": "web-performance-056",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of the will-change CSS property?",
+    "options": [
+      "It delays rendering of an element until it is visible",
+      "It hints to the browser which properties will change, allowing it to set up optimizations like compositing layers in advance",
+      "It forces the browser to skip layout calculations for the element",
+      "It automatically applies hardware acceleration to all CSS transitions"
+    ],
+    "correctIndex": 1,
+    "explanation": "The will-change property informs the browser about expected changes to an element, such as will-change: transform or will-change: opacity. The browser can then promote the element to its own compositing layer and prepare GPU resources before the change occurs. However, overusing will-change wastes memory by creating unnecessary layers. It should be applied shortly before the change and removed afterward, not set permanently on many elements.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/will-change"
+  },
+  {
+    "id": "web-performance-057",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the following code cause layout thrashing?",
+    "code": "const items = document.querySelectorAll('.item');\nfor (const item of items) {\n  const height = item.offsetHeight;\n  item.style.height = height * 2 + 'px';\n}",
+    "options": [
+      "querySelectorAll returns a static NodeList that cannot be iterated",
+      "offsetHeight is not a valid DOM property",
+      "Each iteration reads offsetHeight (forcing layout) then writes style.height (invalidating layout), causing the browser to recalculate layout on every read",
+      "Setting height in pixels instead of percentages is inefficient"
+    ],
+    "correctIndex": 2,
+    "explanation": "Layout thrashing occurs when code alternates between reading layout properties (offsetHeight, getBoundingClientRect) and writing style changes in a loop. Each write invalidates the current layout, forcing the browser to synchronously recalculate layout on the next read. The fix is to batch all reads first, then batch all writes — or use requestAnimationFrame to defer writes to the next frame.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetHeight"
+  },
+  {
+    "id": "web-performance-058",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between the content-visibility CSS property and display: none?",
+    "options": [
+      "They behave identically — both hide the element and skip rendering",
+      "content-visibility: auto skips rendering of off-screen content while preserving its layout space, while display: none removes the element from layout entirely",
+      "display: none is faster because it removes the element from the DOM",
+      "content-visibility only works on inline elements"
+    ],
+    "correctIndex": 1,
+    "explanation": "content-visibility: auto tells the browser to skip rendering the content of off-screen elements while still reserving their layout space (using contain-intrinsic-size to estimate dimensions). When the element scrolls into view, the browser renders it on demand. display: none completely removes the element from the layout and rendering tree. content-visibility is ideal for long pages with many sections, as it dramatically reduces initial rendering work.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/content-visibility"
+  },
+  {
+    "id": "web-performance-059",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is Interaction to Next Paint (INP) and why did it replace First Input Delay (FID)?",
+    "options": [
+      "INP measures the time from the first user interaction to the first paint, replacing FID because FID was too slow to measure",
+      "INP measures the worst-case responsiveness across all interactions during the page's lifecycle, replacing FID which only measured the delay of the first interaction",
+      "INP and FID measure the same thing but INP uses a different unit of measurement",
+      "INP measures server response time while FID measured client-side delay"
+    ],
+    "correctIndex": 1,
+    "explanation": "FID only measured the input delay (time between user interaction and when the browser could start processing the event handler) of the first interaction. INP measures the full latency (input delay + processing + presentation) of all interactions and reports a value near the worst case (98th percentile). This provides a more comprehensive picture of page responsiveness throughout the user's entire session, not just the first click.",
+    "sourceUrl": "https://web.dev/articles/inp"
+  },
+  {
+    "id": "web-performance-060",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the effect of adding the 'defer' attribute to a script tag?",
+    "code": "<script defer src=\"app.js\"></script>",
+    "options": [
+      "The script is downloaded and executed immediately, blocking HTML parsing",
+      "The script is downloaded in parallel with HTML parsing and executed after the document is fully parsed, before DOMContentLoaded",
+      "The script is never executed and only preloaded",
+      "The script is downloaded and executed only when the user scrolls to it"
+    ],
+    "correctIndex": 1,
+    "explanation": "The defer attribute instructs the browser to download the script in parallel with HTML parsing (non-blocking) and execute it after the HTML document is fully parsed but before the DOMContentLoaded event fires. Multiple deferred scripts execute in the order they appear in the document. This differs from async, where scripts execute as soon as they're downloaded, regardless of document parsing state or script order.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#defer"
   }
 ]

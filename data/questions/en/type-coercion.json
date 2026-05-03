@@ -912,5 +912,88 @@
     "correctIndex": 1,
     "explanation": "JavaScript object property keys must be strings or Symbols. When a non-string, non-Symbol value is used as a key, it is implicitly converted to a string via toString(). Both b.toString() and c.toString() return '[object Object]' — the default Object.prototype.toString() result. So a[b] = 100 sets a['[object Object]'] = 100, then a[c] = 200 overwrites the same key. Therefore a[b] returns 200. To use objects as unique keys, use a Map instead.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors"
+  },
+  {
+    "id": "type-coercion-056",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "console.log(Number(''));\nconsole.log(Number(' '));\nconsole.log(Number('\\n'));",
+    "options": [
+      "NaN, NaN, NaN",
+      "0, NaN, NaN",
+      "0, 0, 0",
+      "NaN, 0, 0"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Number() function trims whitespace (including spaces, tabs, and newlines) from both ends of the string before converting. An empty string or a string containing only whitespace converts to 0, not NaN. This is because the ECMAScript specification defines StringNumericLiteral to allow leading/trailing whitespace and treats an empty numeric literal as 0. This is a common source of bugs when validating numeric input.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_coercion"
+  },
+  {
+    "id": "type-coercion-057",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the following condition evaluate to true unexpectedly?",
+    "code": "const value = [0];\nif (value) {\n  console.log('truthy!');\n}\nif (value == false) {\n  console.log('also false!');\n}",
+    "options": [
+      "Arrays are always truthy, and the == comparison is comparing by reference",
+      "The array is coerced to a boolean true in the if check, but == coerces [0] to '0' then to 0, and false to 0, so 0 == 0 is true",
+      "JavaScript has a bug where arrays are both truthy and falsy",
+      "The if statement uses strict equality internally"
+    ],
+    "correctIndex": 1,
+    "explanation": "All objects (including arrays) are truthy in a boolean context, so if (value) is true. However, the == operator follows a different algorithm: when comparing an object to a boolean, the boolean is first converted to a number (false -> 0), then the object is converted to a primitive via ToPrimitive ([0].toString() -> '0'), then '0' is converted to 0. Since 0 == 0, the result is true. This demonstrates why == can produce counterintuitive results.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-058",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What does the unary + operator do when applied to a non-numeric value?",
+    "options": [
+      "It concatenates the value with an empty string",
+      "It converts the value to a number, equivalent to calling Number(value)",
+      "It returns the absolute value of the number",
+      "It increments the value by 1"
+    ],
+    "correctIndex": 1,
+    "explanation": "The unary + operator attempts to convert its operand to a number using the same rules as the Number() function. For example, +true is 1, +false is 0, +null is 0, +undefined is NaN, and +'42' is 42. It is a concise shorthand for numeric conversion commonly used in JavaScript, but can reduce readability compared to explicit Number() calls.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Unary_plus"
+  },
+  {
+    "id": "type-coercion-059",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between parseInt() and Number() when converting strings?",
+    "options": [
+      "parseInt() and Number() produce identical results for all inputs",
+      "parseInt() parses from left to right and stops at the first non-numeric character, while Number() requires the entire string to be a valid number or it returns NaN",
+      "Number() can handle hexadecimal but parseInt() cannot",
+      "parseInt() always returns a float, while Number() always returns an integer"
+    ],
+    "correctIndex": 1,
+    "explanation": "parseInt('123abc') returns 123 because it parses characters from left to right until it encounters a non-numeric character. Number('123abc') returns NaN because the entire string is not a valid number. Additionally, parseInt ignores leading whitespace and can parse different radixes (parseInt('0xFF', 16) = 255), while Number() handles decimals and scientific notation (Number('1.5e2') = 150). parseInt always returns an integer by discarding the fractional part.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt"
+  },
+  {
+    "id": "type-coercion-060",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "console.log(null == undefined);\nconsole.log(null == 0);\nconsole.log(null >= 0);",
+    "options": [
+      "true, true, true",
+      "true, false, true",
+      "false, false, false",
+      "true, false, false"
+    ],
+    "correctIndex": 1,
+    "explanation": "The == operator treats null and undefined as equal to each other and nothing else — so null == undefined is true and null == 0 is false. However, relational operators (>=, >, <, <=) use a different algorithm: they convert null to 0 via ToNumber. So null >= 0 becomes 0 >= 0, which is true. This inconsistency between == and >= is one of the most confusing aspects of JavaScript type coercion.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality"
   }
 ]

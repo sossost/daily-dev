@@ -904,5 +904,87 @@
     "correctIndex": 2,
     "explanation": "diagnostics_channel is a publish/subscribe mechanism for exchanging diagnostic data between modules. Library authors publish diagnostic events to named channels, and APM tools or logging systems subscribe to those channels to collect data. Node.js core and major libraries use it for HTTP request tracing, database query monitoring, and more.",
     "sourceUrl": "https://nodejs.org/api/diagnostics_channel.html"
+  },
+  {
+    "id": "nodejs-056",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Node.js code?",
+    "code": "const { EventEmitter } = require('events');\nconst emitter = new EventEmitter();\n\nemitter.on('data', () => console.log('A'));\nemitter.prependListener('data', () => console.log('B'));\nemitter.on('data', () => console.log('C'));\n\nemitter.emit('data');",
+    "options": [
+      "A -> B -> C",
+      "B -> A -> C",
+      "C -> B -> A",
+      "A -> C -> B"
+    ],
+    "correctIndex": 1,
+    "explanation": "EventEmitter executes listeners in the order they were registered. However, prependListener adds the listener to the beginning of the internal listener array instead of the end. So the registration order becomes B (prepended), A, C, resulting in the output B -> A -> C.",
+    "sourceUrl": "https://nodejs.org/api/events.html#emitterprependlistenereventname-listener"
+  },
+  {
+    "id": "nodejs-057",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between process.nextTick() and queueMicrotask() in Node.js?",
+    "options": [
+      "They are identical and can be used interchangeably",
+      "process.nextTick() runs before queueMicrotask() because the next tick queue is drained before the microtask queue in each phase of the event loop",
+      "queueMicrotask() runs before process.nextTick() because microtasks always have the highest priority",
+      "process.nextTick() runs in the current event loop phase, while queueMicrotask() runs in the next event loop phase"
+    ],
+    "correctIndex": 1,
+    "explanation": "In Node.js, the next tick queue has higher priority than the microtask queue. Between each phase of the event loop, Node.js first drains the entire next tick queue, then drains the microtask queue. This means callbacks scheduled with process.nextTick() always execute before those scheduled with queueMicrotask() or Promise.then().",
+    "sourceUrl": "https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick"
+  },
+  {
+    "id": "nodejs-058",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does the following code fail to parse the request body correctly?",
+    "code": "const http = require('http');\n\nhttp.createServer((req, res) => {\n  const body = req.read();\n  const data = JSON.parse(body);\n  res.end(`Received: ${data.name}`);\n}).listen(3000);",
+    "options": [
+      "req.read() returns a Buffer, not a string",
+      "The request body must be collected from the 'data' events on the stream, as req.read() returns null when data has not yet been buffered",
+      "JSON.parse cannot handle HTTP request bodies",
+      "The server must call req.resume() before reading"
+    ],
+    "correctIndex": 1,
+    "explanation": "In Node.js, the request object is a readable stream. Data arrives in chunks and must be collected by listening to 'data' events and concatenated, or by using an async iterator (for await...of). Calling req.read() synchronously at the start returns null because no data has been buffered yet. The correct approach is to collect chunks and parse them in the 'end' event.",
+    "sourceUrl": "https://nodejs.org/api/http.html#class-httpincomingmessage"
+  },
+  {
+    "id": "nodejs-059",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What does the NODE_ENV environment variable conventionally control?",
+    "options": [
+      "The Node.js version to use for running the application",
+      "The application's runtime mode, commonly 'development', 'production', or 'test', affecting behavior like logging and optimizations",
+      "The maximum memory allocation for the V8 engine",
+      "The network port the application listens on"
+    ],
+    "correctIndex": 1,
+    "explanation": "NODE_ENV is a convention (not a built-in Node.js feature) used to indicate the runtime environment. Frameworks like Express use it to enable or disable features: in 'production' mode, Express caches view templates and reduces verbose error output. Setting NODE_ENV to 'production' also signals npm to skip devDependencies during installation.",
+    "sourceUrl": "https://nodejs.org/en/learn/getting-started/nodejs-the-difference-between-development-and-production"
+  },
+  {
+    "id": "nodejs-060",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between worker_threads and child_process in Node.js?",
+    "options": [
+      "worker_threads share memory within the same process via SharedArrayBuffer, while child_process spawns an independent OS process with separate memory",
+      "child_process shares memory while worker_threads uses separate processes",
+      "worker_threads can only run JavaScript, while child_process can only run shell commands",
+      "They are identical implementations with different names for backward compatibility"
+    ],
+    "correctIndex": 0,
+    "explanation": "worker_threads creates threads within the same Node.js process, enabling shared memory via SharedArrayBuffer and efficient data transfer via MessagePort. child_process spawns a completely separate OS process with its own memory space, communicating through IPC or stdio streams. Workers are lighter-weight and better for CPU-intensive JavaScript tasks, while child processes are needed for running external programs or complete isolation.",
+    "sourceUrl": "https://nodejs.org/api/worker_threads.html"
   }
 ]

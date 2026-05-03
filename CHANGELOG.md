@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-05-02
+
+### Features
+
+- **content**: add 5 dom-manipulation questions (056-060) (`067f1a2`)
+
 ## 2026-05-01
 
 ### Features

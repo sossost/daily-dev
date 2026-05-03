@@ -891,5 +891,86 @@
     "correctIndex": 1,
     "explanation": "git rev-parse translates Git references into their corresponding SHA-1 hashes. git rev-parse HEAD outputs the full 40-character SHA-1 hash of the commit that HEAD currently points to. It is frequently used in scripts to store the current commit hash in a variable. The --short option can be used to get an abbreviated hash.",
     "sourceUrl": "https://git-scm.com/docs/git-rev-parse"
+  },
+  {
+    "id": "git-advanced-056",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the purpose of the git replace command?",
+    "options": [
+      "It renames files tracked by Git",
+      "It creates an alternate object that Git transparently substitutes for another object during reads",
+      "It replaces a branch with another branch",
+      "It overwrites the remote repository with local changes"
+    ],
+    "correctIndex": 1,
+    "explanation": "git replace creates a replacement reference so that whenever Git reads a specific object (commit, tree, or blob), it transparently substitutes the replacement object instead. This is useful for grafting histories together or correcting old commits without rewriting history, since the original objects remain unchanged and the replacements are stored in refs/replace/.",
+    "sourceUrl": "https://git-scm.com/docs/git-replace"
+  },
+  {
+    "id": "git-advanced-057",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "A developer runs git pull and gets 'fatal: refusing to merge unrelated histories'. What is the most appropriate solution?",
+    "options": [
+      "Delete the local repository and clone again",
+      "Run git push --force to overwrite the remote",
+      "Use git pull --allow-unrelated-histories to explicitly permit merging two independent histories",
+      "Run git reset --hard origin/main to discard local commits"
+    ],
+    "correctIndex": 2,
+    "explanation": "This error occurs when two repositories have no common ancestor commit, such as when a local repo was initialized independently from the remote. The --allow-unrelated-histories flag tells Git to proceed with the merge despite lacking a shared base commit. Git will create a merge commit joining the two separate histories together.",
+    "sourceUrl": "https://git-scm.com/docs/git-pull"
+  },
+  {
+    "id": "git-advanced-058",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between git diff HEAD~1 and git diff HEAD~1..HEAD?",
+    "options": [
+      "They produce identical output; both show changes between the previous commit and the current commit",
+      "git diff HEAD~1 compares the working tree to the previous commit, while git diff HEAD~1..HEAD compares the two commits directly",
+      "git diff HEAD~1 shows only staged changes, while git diff HEAD~1..HEAD shows all changes",
+      "git diff HEAD~1..HEAD includes untracked files, while git diff HEAD~1 does not"
+    ],
+    "correctIndex": 1,
+    "explanation": "git diff HEAD~1 (single argument) compares the working tree against the specified commit, so it includes any uncommitted changes in the working directory. git diff HEAD~1..HEAD (two-dot range) compares the two commits directly, showing only the changes between those two snapshots regardless of the current working tree state.",
+    "sourceUrl": "https://git-scm.com/docs/git-diff"
+  },
+  {
+    "id": "git-advanced-059",
+    "topic": "git-advanced",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What does the following command output?\n\ngit shortlog -sn --no-merges",
+    "code": "git shortlog -sn --no-merges",
+    "options": [
+      "A list of all merge commits with their messages",
+      "The total number of files in the repository",
+      "A ranked list of authors by number of non-merge commits",
+      "A summary of branches sorted by last activity date"
+    ],
+    "correctIndex": 2,
+    "explanation": "git shortlog -s shows only commit counts (suppressing messages), -n sorts by count in descending order, and --no-merges excludes merge commits. The result is a ranked list of contributors showing how many non-merge commits each author has made, which is commonly used to assess contribution activity.",
+    "sourceUrl": "https://git-scm.com/docs/git-shortlog"
+  },
+  {
+    "id": "git-advanced-060",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the purpose of the git sparse-checkout command?",
+    "options": [
+      "It creates a lightweight tag for the current commit",
+      "It allows checking out only a subset of files from a repository, reducing working directory size",
+      "It performs a partial commit of selected hunks",
+      "It checks out files while skipping the pre-checkout hook"
+    ],
+    "correctIndex": 1,
+    "explanation": "git sparse-checkout lets you define which directories or files should be populated in the working tree, while the rest remain only in the Git object store. This is especially useful for monorepos where a developer only needs a small portion of the codebase, significantly reducing disk usage and checkout time. It works with both cone mode (directory-based patterns) and non-cone mode (gitignore-style patterns).",
+    "sourceUrl": "https://git-scm.com/docs/git-sparse-checkout"
   }
 ]

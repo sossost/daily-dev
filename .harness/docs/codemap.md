@@ -192,18 +192,18 @@
 - design-patterns.json — 60 questions
 - dom-manipulation.json — 60 questions
 - event-loop.json — 60 questions
-- git-advanced.json — 55 questions
-- network.json — 55 questions
-- nodejs.json — 55 questions
+- git-advanced.json — 60 questions
+- network.json — 60 questions
+- nodejs.json — 60 questions
 - promise.json — 60 questions
 - prototype.json — 60 questions
-- react-basics.json — 55 questions
+- react-basics.json — 60 questions
 - scope.json — 60 questions
 - this.json — 60 questions
-- type-coercion.json — 55 questions
-- typescript.json — 55 questions
-- web-performance.json — 55 questions
-- web-security.json — 55 questions
+- type-coercion.json — 60 questions
+- typescript.json — 60 questions
+- web-performance.json — 60 questions
+- web-security.json — 60 questions
 - algorithms.json — 60 questions
 - api-design.json — 60 questions
 - async.json — 60 questions
@@ -215,18 +215,18 @@
 - design-patterns.json — 60 questions
 - dom-manipulation.json — 60 questions
 - event-loop.json — 60 questions
-- git-advanced.json — 55 questions
-- network.json — 55 questions
-- nodejs.json — 55 questions
+- git-advanced.json — 60 questions
+- network.json — 60 questions
+- nodejs.json — 60 questions
 - promise.json — 60 questions
 - prototype.json — 60 questions
-- react-basics.json — 55 questions
+- react-basics.json — 60 questions
 - scope.json — 60 questions
 - this.json — 60 questions
-- type-coercion.json — 55 questions
-- typescript.json — 55 questions
-- web-performance.json — 55 questions
-- web-security.json — 55 questions
+- type-coercion.json — 60 questions
+- typescript.json — 60 questions
+- web-performance.json — 60 questions
+- web-security.json — 60 questions
 
 ## Modules
 

@@ -892,5 +892,86 @@
     "correctIndex": 0,
     "explanation": "포워드 프록시는 클라이언트 앞에 위치하여 클라이언트의 IP를 숨기고 접근 제어나 캐싱을 수행합니다(예: 기업 네트워크의 프록시 서버). 리버스 프록시는 서버 앞에 위치하여 로드 밸런싱, SSL 종료, 캐싱, DDoS 방어 등을 담당합니다(예: Nginx, Cloudflare). 클라이언트는 리버스 프록시의 존재를 알 수 없으며, 실제 서버의 IP가 외부에 노출되지 않습니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Glossary/Proxy_server"
+  },
+  {
+    "id": "network-056",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "HTTP 103 Early Hints 상태 코드의 목적은 무엇인가요?",
+    "options": [
+      "서버가 요청을 아직 처리 중이며 클라이언트가 기다려야 한다는 것을 나타낸다",
+      "최종 응답이 준비되기 전에 예비 헤더(프리로드 힌트 등)를 먼저 보낼 수 있게 한다",
+      "클라이언트에게 다른 자격 증명으로 요청을 재시도하라고 신호를 보낸다",
+      "클라이언트에게 리소스가 영구적으로 이동되었음을 알린다"
+    ],
+    "correctIndex": 1,
+    "explanation": "HTTP 103 Early Hints는 서버가 최종 응답을 준비하는 동안 Link 헤더(preload, preconnect 힌트 등)를 브라우저에 미리 보낼 수 있게 합니다. 이를 통해 브라우저는 서버가 메인 응답을 생성하는 동안 스타일시트나 스크립트 같은 중요 리소스를 미리 로딩할 수 있어 전체 페이지 로드 시간을 단축합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/103"
+  },
+  {
+    "id": "network-057",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "개발자의 fetch 요청에 credentials: 'include'를 포함했지만 쿠키가 전송되지 않습니다. 서버는 Access-Control-Allow-Origin: '*'로 응답합니다. 문제가 무엇인가요?",
+    "options": [
+      "쿠키가 만료되어 갱신이 필요하다",
+      "credentials: 'include'는 XMLHttpRequest에서만 동작하고 fetch에서는 동작하지 않는다",
+      "자격 증명이 포함된 요청에서 Access-Control-Allow-Origin은 와일드카드 '*'가 될 수 없으며 정확한 출처를 지정해야 한다",
+      "쿠키의 SameSite 속성이 전송을 막고 있다"
+    ],
+    "correctIndex": 2,
+    "explanation": "CORS 명세에 따르면 자격 증명(쿠키, HTTP 인증)이 포함된 요청에서 Access-Control-Allow-Origin 헤더는 와일드카드 '*' 대신 정확한 요청 출처를 반환해야 합니다. 또한 Access-Control-Allow-Credentials: true도 있어야 합니다. 이 조건이 충족되지 않으면 브라우저가 응답을 차단합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/CORS#credentialed_requests"
+  },
+  {
+    "id": "network-058",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드 실행 후 response.status의 값은 무엇인가요?\n\nconst response = await fetch('/api/data', {\n  method: 'POST',\n  body: JSON.stringify({ name: 'test' })\n});\n// 서버가 201 Created로 응답",
+    "code": "const response = await fetch('/api/data', {\n  method: 'POST',\n  body: JSON.stringify({ name: 'test' })\n});\nconsole.log(response.status);\nconsole.log(response.ok);",
+    "options": [
+      "200, true",
+      "201, true",
+      "201, false",
+      "200, false"
+    ],
+    "correctIndex": 1,
+    "explanation": "response.status 속성은 서버가 반환한 실제 HTTP 상태 코드를 반영하며, 이 경우 201입니다. response.ok 속성은 상태 코드가 200-299 범위(포함) 내일 때 true입니다. 201은 이 범위 내이므로 response.ok는 true입니다. 이것이 response.status === 200 대신 response.ok를 확인하는 것이 권장되는 이유입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Response/ok"
+  },
+  {
+    "id": "network-059",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "HTTP PUT과 PATCH 메서드의 차이점은 무엇인가요?",
+    "options": [
+      "PUT은 새 리소스를 생성하고, PATCH는 리소스를 삭제한다",
+      "PUT은 전체 리소스를 교체하고, PATCH는 리소스에 부분적인 수정을 적용한다",
+      "PUT은 멱등성이 있지만 PATCH는 절대로 멱등성이 없다",
+      "PUT은 JSON에서만 동작하고, PATCH는 폼 데이터에서만 동작한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "PUT은 대상 URL의 전체 리소스를 요청 페이로드로 교체하도록 설계되었습니다. 누락된 필드는 제거되거나 기본값으로 설정됩니다. PATCH는 부분 업데이트를 적용하여, 요청 본문에 포함된 필드만 수정하고 나머지는 그대로 둡니다. 둘 다 구현에 따라 멱등성을 가질 수 있지만, PUT은 HTTP 명세에 의해 멱등성이 요구됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Methods/PATCH"
+  },
+  {
+    "id": "network-060",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "HTTP/2 Server Push란 무엇이며, 왜 실제로는 대부분 폐기되었나요?",
+    "options": [
+      "HTTP/2를 통해 WebSocket 메시지를 보낼 수 있는 기능으로, 보안 문제로 폐기되었다",
+      "서버가 클라이언트 요청 전에 리소스를 선제적으로 보낼 수 있지만, 이미 캐시된 리소스를 푸시하여 대역폭을 낭비하는 경우가 많아 폐기되었다",
+      "서버 로그를 클라이언트에 푸시하는 메커니즘으로, 민감한 데이터 노출로 폐기되었다",
+      "서버가 클라이언트를 다른 URL로 리디렉션하는 기능으로, 301 리디렉트로 대체되어 폐기되었다"
+    ],
+    "correctIndex": 1,
+    "explanation": "HTTP/2 Server Push는 서버가 클라이언트에 필요할 리소스(CSS, JS)를 예측하여 초기 응답과 함께 선제적으로 보낼 수 있게 합니다. 그러나 서버가 클라이언트의 캐시 상태를 정확히 알 수 없어 대역폭 낭비로 이어지는 경우가 많아 대부분 폐기되었습니다. 현재는 103 Early Hints 상태 코드가 선호되는 대안으로, 브라우저가 힌트된 리소스를 가져올지 결정할 수 있게 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Messages"
   }
 ]

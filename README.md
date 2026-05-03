@@ -37,20 +37,20 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Design Patterns | 60 |
 | DOM Manipulation | 60 |
 | Event Loop | 60 |
-| Git Advanced | 55 |
-| Network | 55 |
-| Node.js | 55 |
+| Git Advanced | 60 |
+| Network | 60 |
+| Node.js | 60 |
 | Promise | 60 |
 | Prototype | 60 |
-| React Basics | 55 |
+| React Basics | 60 |
 | Scope | 60 |
 | this Keyword | 60 |
-| Type Coercion | 55 |
-| TypeScript | 55 |
-| Web Performance | 55 |
-| Web Security | 55 |
+| Type Coercion | 60 |
+| TypeScript | 60 |
+| Web Performance | 60 |
+| Web Security | 60 |
 
-**Total: 1340 questions across 23 topics**
+**Total: 1380 questions across 23 topics**
 
 ## Getting Started
 

@@ -904,5 +904,87 @@
     "correctIndex": 2,
     "explanation": "diagnostics_channel은 모듈 간에 진단 데이터를 교환하기 위한 발행/구독 메커니즘입니다. 라이브러리 작성자가 명명된 채널에 진단 이벤트를 발행하면, APM 도구나 로깅 시스템이 해당 채널을 구독하여 데이터를 수집할 수 있습니다. HTTP 요청 추적, DB 쿼리 모니터링 등에 Node.js 코어와 주요 라이브러리가 활용하고 있습니다.",
     "sourceUrl": "https://nodejs.org/api/diagnostics_channel.html"
+  },
+  {
+    "id": "nodejs-056",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 Node.js 코드의 출력은 무엇인가요?",
+    "code": "const { EventEmitter } = require('events');\nconst emitter = new EventEmitter();\n\nemitter.on('data', () => console.log('A'));\nemitter.prependListener('data', () => console.log('B'));\nemitter.on('data', () => console.log('C'));\n\nemitter.emit('data');",
+    "options": [
+      "A -> B -> C",
+      "B -> A -> C",
+      "C -> B -> A",
+      "A -> C -> B"
+    ],
+    "correctIndex": 1,
+    "explanation": "EventEmitter는 리스너를 등록된 순서대로 실행합니다. 그러나 prependListener는 내부 리스너 배열의 끝이 아닌 처음에 리스너를 추가합니다. 따라서 등록 순서가 B(앞에 추가), A, C가 되어 출력은 B -> A -> C가 됩니다.",
+    "sourceUrl": "https://nodejs.org/api/events.html#emitterprependlistenereventname-listener"
+  },
+  {
+    "id": "nodejs-057",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Node.js에서 process.nextTick()과 queueMicrotask()의 차이점은 무엇인가요?",
+    "options": [
+      "동일하며 서로 교환하여 사용할 수 있다",
+      "process.nextTick()이 queueMicrotask()보다 먼저 실행된다. 이벤트 루프의 각 단계에서 next tick 큐가 마이크로태스크 큐보다 먼저 비워지기 때문이다",
+      "queueMicrotask()가 process.nextTick()보다 먼저 실행된다. 마이크로태스크가 항상 최우선 순위이기 때문이다",
+      "process.nextTick()은 현재 이벤트 루프 단계에서 실행되고, queueMicrotask()는 다음 이벤트 루프 단계에서 실행된다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Node.js에서 next tick 큐는 마이크로태스크 큐보다 높은 우선순위를 가집니다. 이벤트 루프의 각 단계 사이에서 Node.js는 먼저 next tick 큐 전체를 비우고, 그다음 마이크로태스크 큐를 비웁니다. 따라서 process.nextTick()으로 예약된 콜백은 항상 queueMicrotask()나 Promise.then()으로 예약된 콜백보다 먼저 실행됩니다.",
+    "sourceUrl": "https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick"
+  },
+  {
+    "id": "nodejs-058",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드가 요청 본문을 올바르게 파싱하지 못하는 이유는 무엇인가요?",
+    "code": "const http = require('http');\n\nhttp.createServer((req, res) => {\n  const body = req.read();\n  const data = JSON.parse(body);\n  res.end(`Received: ${data.name}`);\n}).listen(3000);",
+    "options": [
+      "req.read()는 문자열이 아닌 Buffer를 반환한다",
+      "요청 본문은 스트림의 'data' 이벤트에서 수집해야 하며, req.read()는 데이터가 아직 버퍼링되지 않았을 때 null을 반환한다",
+      "JSON.parse는 HTTP 요청 본문을 처리할 수 없다",
+      "서버가 읽기 전에 req.resume()을 호출해야 한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Node.js에서 요청 객체는 읽기 가능한 스트림입니다. 데이터는 청크 단위로 도착하며 'data' 이벤트를 수신하여 수집하거나, async iterator(for await...of)를 사용해야 합니다. 시작 시점에서 req.read()를 동기적으로 호출하면 아직 버퍼링된 데이터가 없으므로 null을 반환합니다. 올바른 방법은 청크를 수집하고 'end' 이벤트에서 파싱하는 것입니다.",
+    "sourceUrl": "https://nodejs.org/api/http.html#class-httpincomingmessage"
+  },
+  {
+    "id": "nodejs-059",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "NODE_ENV 환경 변수는 관례적으로 무엇을 제어하나요?",
+    "options": [
+      "애플리케이션 실행에 사용할 Node.js 버전",
+      "애플리케이션의 실행 모드로, 일반적으로 'development', 'production', 'test' 값을 사용하여 로깅이나 최적화 등의 동작에 영향을 준다",
+      "V8 엔진의 최대 메모리 할당량",
+      "애플리케이션이 수신하는 네트워크 포트"
+    ],
+    "correctIndex": 1,
+    "explanation": "NODE_ENV는 런타임 환경을 나타내기 위해 사용되는 관례(Node.js 내장 기능 아님)입니다. Express 같은 프레임워크는 이를 사용하여 기능을 활성화하거나 비활성화합니다. 'production' 모드에서 Express는 뷰 템플릿을 캐시하고 상세 에러 출력을 줄입니다. NODE_ENV를 'production'으로 설정하면 npm이 설치 시 devDependencies를 건너뛰기도 합니다.",
+    "sourceUrl": "https://nodejs.org/en/learn/getting-started/nodejs-the-difference-between-development-and-production"
+  },
+  {
+    "id": "nodejs-060",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Node.js에서 worker_threads와 child_process의 차이점은 무엇인가요?",
+    "options": [
+      "worker_threads는 같은 프로세스 내에서 SharedArrayBuffer를 통해 메모리를 공유하고, child_process는 별도의 메모리를 가진 독립 OS 프로세스를 생성한다",
+      "child_process가 메모리를 공유하고, worker_threads가 별도의 프로세스를 사용한다",
+      "worker_threads는 JavaScript만 실행할 수 있고, child_process는 셸 명령만 실행할 수 있다",
+      "하위 호환성을 위해 다른 이름을 가진 동일한 구현이다"
+    ],
+    "correctIndex": 0,
+    "explanation": "worker_threads는 같은 Node.js 프로세스 내에서 스레드를 생성하여 SharedArrayBuffer를 통한 메모리 공유와 MessagePort를 통한 효율적인 데이터 전송이 가능합니다. child_process는 완전히 별도의 OS 프로세스를 생성하며, IPC나 stdio 스트림을 통해 통신합니다. Worker는 가벼워 CPU 집약적인 JavaScript 작업에 적합하고, child process는 외부 프로그램 실행이나 완전한 격리가 필요할 때 사용됩니다.",
+    "sourceUrl": "https://nodejs.org/api/worker_threads.html"
   }
 ]

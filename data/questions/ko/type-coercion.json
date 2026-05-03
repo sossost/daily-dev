@@ -912,5 +912,88 @@
     "correctIndex": 1,
     "explanation": "JavaScript 객체의 속성 키는 문자열 또는 Symbol이어야 합니다. 문자열이나 Symbol이 아닌 값을 키로 사용하면 toString()을 통해 암묵적으로 문자열로 변환됩니다. b.toString()과 c.toString() 모두 '[object Object]'를 반환합니다(기본 Object.prototype.toString() 결과). 따라서 a[b] = 100은 a['[object Object]'] = 100을 설정하고, a[c] = 200은 같은 키를 덮어씁니다. 그래서 a[b]는 200을 반환합니다. 객체를 고유한 키로 사용하려면 Map을 사용해야 합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Property_accessors"
+  },
+  {
+    "id": "type-coercion-056",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "console.log(Number(''));\nconsole.log(Number(' '));\nconsole.log(Number('\\n'));",
+    "options": [
+      "NaN, NaN, NaN",
+      "0, NaN, NaN",
+      "0, 0, 0",
+      "NaN, 0, 0"
+    ],
+    "correctIndex": 2,
+    "explanation": "Number() 함수는 변환 전에 문자열 양쪽의 공백(스페이스, 탭, 줄바꿈 포함)을 제거합니다. 빈 문자열이나 공백만 있는 문자열은 NaN이 아닌 0으로 변환됩니다. ECMAScript 명세가 StringNumericLiteral에서 앞뒤 공백을 허용하고 빈 숫자 리터럴을 0으로 처리하기 때문입니다. 이는 숫자 입력을 검증할 때 흔한 버그의 원인이 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Number#number_coercion"
+  },
+  {
+    "id": "type-coercion-057",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 조건이 예상과 달리 true로 평가되는 이유는 무엇인가요?",
+    "code": "const value = [0];\nif (value) {\n  console.log('truthy!');\n}\nif (value == false) {\n  console.log('also false!');\n}",
+    "options": [
+      "배열은 항상 truthy이고, == 비교는 참조로 비교한다",
+      "if 검사에서 배열은 boolean true로 변환되지만, ==에서는 [0]이 '0'으로 변환된 후 0으로 변환되고, false도 0으로 변환되어 0 == 0이 true가 된다",
+      "JavaScript에 배열이 truthy이면서 동시에 falsy인 버그가 있다",
+      "if 문은 내부적으로 엄격 동등 비교를 사용한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "모든 객체(배열 포함)는 boolean 컨텍스트에서 truthy이므로 if (value)는 true입니다. 그러나 == 연산자는 다른 알고리즘을 따릅니다: 객체를 boolean과 비교할 때 boolean이 먼저 숫자로 변환되고(false -> 0), 객체는 ToPrimitive를 통해 원시값으로 변환됩니다([0].toString() -> '0'), 그런 다음 '0'이 0으로 변환됩니다. 0 == 0이므로 결과는 true입니다. 이것이 ==가 직관에 어긋나는 결과를 만드는 이유입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-058",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "단항 + 연산자를 숫자가 아닌 값에 적용하면 어떻게 되나요?",
+    "options": [
+      "값을 빈 문자열과 연결한다",
+      "Number(value)를 호출하는 것과 동일하게 값을 숫자로 변환한다",
+      "숫자의 절댓값을 반환한다",
+      "값을 1 증가시킨다"
+    ],
+    "correctIndex": 1,
+    "explanation": "단항 + 연산자는 Number() 함수와 동일한 규칙을 사용하여 피연산자를 숫자로 변환합니다. 예를 들어, +true는 1, +false는 0, +null은 0, +undefined는 NaN, +'42'는 42입니다. JavaScript에서 숫자 변환의 간결한 축약형으로 자주 사용되지만, 명시적인 Number() 호출에 비해 가독성이 떨어질 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Unary_plus"
+  },
+  {
+    "id": "type-coercion-059",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "문자열을 변환할 때 parseInt()와 Number()의 차이점은 무엇인가요?",
+    "options": [
+      "parseInt()와 Number()는 모든 입력에 대해 동일한 결과를 생성한다",
+      "parseInt()는 왼쪽부터 파싱하여 숫자가 아닌 첫 문자에서 멈추고, Number()는 전체 문자열이 유효한 숫자여야 하며 그렇지 않으면 NaN을 반환한다",
+      "Number()는 16진수를 처리할 수 있지만 parseInt()는 처리할 수 없다",
+      "parseInt()는 항상 실수를 반환하고, Number()는 항상 정수를 반환한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "parseInt('123abc')는 왼쪽부터 문자를 파싱하여 숫자가 아닌 문자를 만나면 멈추므로 123을 반환합니다. Number('123abc')는 전체 문자열이 유효한 숫자가 아니므로 NaN을 반환합니다. 또한 parseInt는 앞의 공백을 무시하고 다른 기수도 파싱할 수 있으며(parseInt('0xFF', 16) = 255), Number()는 소수점과 과학적 표기법을 처리합니다(Number('1.5e2') = 150). parseInt는 소수 부분을 버리고 항상 정수를 반환합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/parseInt"
+  },
+  {
+    "id": "type-coercion-060",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "console.log(null == undefined);\nconsole.log(null == 0);\nconsole.log(null >= 0);",
+    "options": [
+      "true, true, true",
+      "true, false, true",
+      "false, false, false",
+      "true, false, false"
+    ],
+    "correctIndex": 1,
+    "explanation": "== 연산자는 null과 undefined를 서로 동등하게 취급하고 다른 값과는 동등하지 않습니다. 따라서 null == undefined는 true이고 null == 0은 false입니다. 그러나 관계 연산자(>=, >, <, <=)는 다른 알고리즘을 사용합니다: ToNumber를 통해 null을 0으로 변환합니다. 따라서 null >= 0은 0 >= 0이 되어 true입니다. ==와 >= 사이의 이 불일치는 JavaScript 타입 강제 변환의 가장 혼란스러운 측면 중 하나입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Equality"
   }
 ]
