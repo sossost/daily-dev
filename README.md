@@ -45,12 +45,12 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | React Basics | 60 |
 | Scope | 60 |
 | this Keyword | 60 |
-| Type Coercion | 60 |
+| Type Coercion | 65 |
 | TypeScript | 60 |
 | Web Performance | 60 |
 | Web Security | 60 |
 
-**Total: 1380 questions across 23 topics**
+**Total: 1385 questions across 23 topics**
 
 ## Getting Started
 

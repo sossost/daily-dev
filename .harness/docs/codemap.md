@@ -200,7 +200,7 @@
 - react-basics.json — 60 questions
 - scope.json — 60 questions
 - this.json — 60 questions
-- type-coercion.json — 60 questions
+- type-coercion.json — 65 questions
 - typescript.json — 60 questions
 - web-performance.json — 60 questions
 - web-security.json — 60 questions
@@ -223,7 +223,7 @@
 - react-basics.json — 60 questions
 - scope.json — 60 questions
 - this.json — 60 questions
-- type-coercion.json — 60 questions
+- type-coercion.json — 65 questions
 - typescript.json — 60 questions
 - web-performance.json — 60 questions
 - web-security.json — 60 questions

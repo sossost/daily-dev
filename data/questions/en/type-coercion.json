@@ -995,5 +995,88 @@
     "correctIndex": 1,
     "explanation": "The == operator treats null and undefined as equal to each other and nothing else — so null == undefined is true and null == 0 is false. However, relational operators (>=, >, <, <=) use a different algorithm: they convert null to 0 via ToNumber. So null >= 0 becomes 0 >= 0, which is true. This inconsistency between == and >= is one of the most confusing aspects of JavaScript type coercion.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-061",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const obj = { name: 'Alice' };\nconsole.log(`Hello, ${obj}`);\nconsole.log(`Value: ${[1, 2, 3]}`);",
+    "options": [
+      "Hello, [object Object] / Value: 1,2,3",
+      "Hello, {name: 'Alice'} / Value: [1, 2, 3]",
+      "Hello, undefined / Value: undefined",
+      "TypeError: Cannot convert object to string"
+    ],
+    "correctIndex": 0,
+    "explanation": "Template literals call toString() on embedded expressions. For plain objects, Object.prototype.toString() returns '[object Object]'. For arrays, Array.prototype.toString() joins elements with commas, so [1, 2, 3].toString() returns '1,2,3'. This implicit toString() call is a common source of unexpected output when objects are interpolated into template literals without explicit formatting.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals"
+  },
+  {
+    "id": "type-coercion-062",
+    "topic": "type-coercion",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "When JavaScript uses the relational operator < to compare two strings, which coercion rule applies?",
+    "options": [
+      "Both strings are converted to numbers via Number(), then compared numerically",
+      "The first characters are compared using == and the rest is ignored",
+      "No numeric coercion occurs — strings are compared lexicographically by Unicode code point values character by character",
+      "The shorter string is always considered less than the longer string"
+    ],
+    "correctIndex": 2,
+    "explanation": "When both operands of a relational operator (<, >, <=, >=) are strings, JavaScript does NOT convert them to numbers. Instead, it compares them lexicographically using Unicode code point values. Characters are compared one by one from left to right. For example, '9' > '80' is true because the code point of '9' (57) is greater than '8' (56). This is why sorting string numbers without a comparator gives unexpected results: ['9','80','700'].sort() yields ['700','80','9'].",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than#string_to_string_comparison"
+  },
+  {
+    "id": "type-coercion-063",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "console.log([] + []);\nconsole.log([] + {});\nconsole.log({} + []);",
+    "options": [
+      "0 / NaN / NaN",
+      "'' / '[object Object]' / 0",
+      "[] / [object Object] / [object Object]",
+      "'' / '[object Object]' / '[object Object]'"
+    ],
+    "correctIndex": 3,
+    "explanation": "The + operator with objects triggers ToPrimitive conversion. Arrays convert to strings via join(): [].toString() is ''. So [] + [] is '' + '' = ''. For [] + {}, the array becomes '' and the object becomes '[object Object]', resulting in '[object Object]'. For {} + [], when this expression is evaluated as an expression (not a block statement), {} converts to '[object Object]' and [] converts to '', giving '[object Object]'. Note: in a console, {} + [] might be parsed as an empty block + [], yielding 0, but as an expression it produces '[object Object]'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Addition#description"
+  },
+  {
+    "id": "type-coercion-064",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "The developer expects this code to filter out all falsy values, but one element unexpectedly remains. What is the cause?",
+    "code": "const values = [0, '', null, undefined, NaN, '0', false];\nconst filtered = values.filter(Boolean);\nconsole.log(filtered); // ['0']",
+    "options": [
+      "Boolean() cannot handle string arguments",
+      "filter() skips string values entirely",
+      "The string '0' is truthy because only the empty string '' is falsy among strings — any non-empty string including '0' evaluates to true",
+      "NaN is not properly recognized as falsy by Boolean()"
+    ],
+    "correctIndex": 2,
+    "explanation": "In JavaScript, the only falsy string is the empty string ''. Any non-empty string is truthy, including '0', 'false', 'null', and 'undefined'. When filter(Boolean) is used, it calls Boolean() on each element. Boolean('0') returns true because '0' has length > 0. This is a common mistake when developers assume string representations of falsy values are themselves falsy. Only these values are falsy: false, 0, -0, 0n, '', null, undefined, and NaN.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Falsy"
+  },
+  {
+    "id": "type-coercion-065",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "When an object is coerced to a primitive value by the + operator, which method takes priority?",
+    "options": [
+      "toString() is always called first regardless of context",
+      "constructor() determines the conversion behavior",
+      "The engine randomly selects between valueOf() and toString()",
+      "Symbol.toPrimitive with hint 'default' is checked first; if absent, valueOf() is tried before toString()"
+    ],
+    "correctIndex": 3,
+    "explanation": "When the + operator triggers ToPrimitive on an object, the conversion follows a strict priority order. First, if Symbol.toPrimitive exists, it is called with the hint 'default' (since + doesn't have a clear numeric or string preference). If Symbol.toPrimitive is not defined, the OrdinaryToPrimitive algorithm runs with hint 'number': it calls valueOf() first, and if that doesn't return a primitive, calls toString(). This is why ({valueOf(){ return 42 }}) + 1 gives 43 — valueOf() takes priority over toString() for the + operator.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive"
   }
 ]
