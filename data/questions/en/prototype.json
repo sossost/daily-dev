@@ -993,5 +993,88 @@
     "correctIndex": 2,
     "explanation": "Object.create(parent) does not copy parent's properties — it sets parent as child's [[Prototype]]. When child.items is accessed, JavaScript does not find an own 'items' property on child, so it walks up the prototype chain and returns parent.items. Since push() mutates the array in place (rather than creating a new value), it modifies the same array referenced by parent.items. To avoid this, assign a new array to child: child.items = [...parent.items] before pushing, which creates an own property that shadows the inherited one.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create"
+  },
+  {
+    "id": "prototype-061",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "When copying an object with the spread operator ({...obj}), what happens to properties inherited from its prototype?",
+    "options": [
+      "Inherited properties are also copied",
+      "Only inherited properties are copied; own properties are ignored",
+      "A TypeError is thrown if the object has inherited properties",
+      "Inherited properties are not copied; only own enumerable properties are copied"
+    ],
+    "correctIndex": 3,
+    "explanation": "The spread operator ({...obj}) copies only the object's own enumerable string-keyed properties, just like Object.assign. It does not traverse the prototype chain, so inherited properties are not included in the resulting object. Additionally, the result's [[Prototype]] is Object.prototype, not the original's prototype. This is a shallow copy; to preserve the prototype relationship, you need to combine Object.create with Object.assign.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax"
+  },
+  {
+    "id": "prototype-062",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "class Person {\n  #name;\n  constructor(name) { this.#name = name; }\n  getName() { return this.#name; }\n}\nconst p = new Person('Kim');\nconsole.log('getName' in p);\nconsole.log(p.hasOwnProperty('getName'));\nconsole.log(p.hasOwnProperty('#name'));",
+    "options": [
+      "true, false, false",
+      "true, true, true",
+      "false, false, true",
+      "true, false, true"
+    ],
+    "correctIndex": 0,
+    "explanation": "Regular class methods (getName) are defined on the prototype (Person.prototype), so the in operator — which searches the prototype chain — returns true, but hasOwnProperty returns false since it only checks own properties. Private fields (#name) are implemented as internal slots in the ECMAScript specification, separate from the regular property namespace. Therefore hasOwnProperty('#name') returns false because there is no string-keyed property called '#name'. Private fields are not accessible via in, for...in, Object.keys, or any reflection API.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_properties"
+  },
+  {
+    "id": "prototype-063",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function Foo() {}\nconsole.log(typeof Foo.prototype);\nconsole.log(typeof Object.getPrototypeOf(Foo));\nconsole.log(Object.getPrototypeOf(Foo) === Function.prototype);",
+    "options": [
+      "object, object, false",
+      "function, object, true",
+      "object, function, true",
+      "object, function, false"
+    ],
+    "correctIndex": 2,
+    "explanation": "Foo.prototype is a plain object that will become the prototype of instances created by Foo, so typeof returns 'object'. On the other hand, Object.getPrototypeOf(Foo) returns Foo's own [[Prototype]]. Since functions are objects with their own prototype chain, every function's [[Prototype]] is Function.prototype. Function.prototype is a callable function object that provides methods like call, apply, and bind, so typeof returns 'function'. This demonstrates that Foo.prototype (for instances) and Object.getPrototypeOf(Foo) (Foo's own parent) are entirely different objects.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/prototype"
+  },
+  {
+    "id": "prototype-064",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, Object.assign was used to copy an object, but the getter was converted to a plain value. What is the cause?",
+    "code": "const source = {\n  get fullName() { return 'Kim Lee'; }\n};\nconst copy = Object.assign({}, source);\nconsole.log(Object.getOwnPropertyDescriptor(copy, 'fullName'));\n// { value: 'Kim Lee', writable: true, enumerable: true, configurable: true }",
+    "options": [
+      "Object.assign invokes the getter and copies the return value as a plain data property",
+      "Getters can only exist on prototypes, not as own properties to be copied",
+      "Object.assign only preserves getters for non-enumerable properties",
+      "The spread operator should be used instead to preserve getters"
+    ],
+    "correctIndex": 0,
+    "explanation": "Object.assign() reads property values from the source and assigns them to the target using simple assignment. When it reads a getter-defined property, the getter is invoked and its return value is set as a regular data property on the target. To copy getter/setter descriptors themselves, use Object.getOwnPropertyDescriptors() with Object.defineProperties(): Object.defineProperties({}, Object.getOwnPropertyDescriptors(source)).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptors"
+  },
+  {
+    "id": "prototype-065",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between Reflect.getPrototypeOf() and Object.getPrototypeOf()?",
+    "options": [
+      "Reflect.getPrototypeOf throws TypeError for non-object arguments, while Object.getPrototypeOf coerces the argument to an object",
+      "Object.getPrototypeOf throws TypeError for non-object arguments, while Reflect.getPrototypeOf coerces the argument to an object",
+      "Both behave identically with no differences",
+      "Reflect.getPrototypeOf bypasses the Proxy getPrototypeOf trap"
+    ],
+    "correctIndex": 0,
+    "explanation": "Both methods return an object's [[Prototype]], but they differ in how they handle non-object arguments. Reflect.getPrototypeOf() throws a TypeError immediately if the argument is not an object. Object.getPrototypeOf(), since ES2015, coerces the argument to an object via ToObject() before returning its prototype. For example, Object.getPrototypeOf('hello') returns String.prototype, but Reflect.getPrototypeOf('hello') throws a TypeError. The Reflect version is designed to work consistently with Proxy's getPrototypeOf trap.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect/getPrototypeOf"
   }
 ]

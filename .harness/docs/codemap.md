@@ -196,7 +196,7 @@
 - network.json — 60 questions
 - nodejs.json — 60 questions
 - promise.json — 60 questions
-- prototype.json — 60 questions
+- prototype.json — 65 questions
 - react-basics.json — 60 questions
 - scope.json — 60 questions
 - this.json — 60 questions
@@ -219,7 +219,7 @@
 - network.json — 60 questions
 - nodejs.json — 60 questions
 - promise.json — 60 questions
-- prototype.json — 60 questions
+- prototype.json — 65 questions
 - react-basics.json — 60 questions
 - scope.json — 60 questions
 - this.json — 60 questions

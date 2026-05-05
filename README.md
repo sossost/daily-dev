@@ -41,7 +41,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Network | 60 |
 | Node.js | 60 |
 | Promise | 60 |
-| Prototype | 60 |
+| Prototype | 65 |
 | React Basics | 60 |
 | Scope | 60 |
 | this Keyword | 60 |
@@ -50,7 +50,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Web Performance | 60 |
 | Web Security | 60 |
 
-**Total: 1385 questions across 23 topics**
+**Total: 1390 questions across 23 topics**
 
 ## Getting Started
 
