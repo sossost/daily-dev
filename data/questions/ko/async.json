@@ -992,5 +992,88 @@
     "correctIndex": 1,
     "explanation": "Promise.resolve()에 네이티브 Promise 객체를 전달하면 새 Promise를 생성하지 않고 동일한 객체를 반환합니다. 따라서 p === Promise.resolve(p)는 true입니다. 하지만 Promise.resolve('done')은 매번 새로운 Promise 객체를 생성하므로 p === Promise.resolve('done')은 false입니다. 이 동작은 ECMAScript 명세에 정의되어 있으며, 불필요한 Promise 래핑을 방지하는 최적화입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "async-061",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 this.data가 undefined인 이유는 무엇인가요?",
+    "code": "class ApiClient {\n  data = [];\n  async fetchItems() {\n    const res = await fetch('/api/items');\n    this.data = await res.json();\n  }\n}\n\nconst client = new ApiClient();\nconst fn = client.fetchItems;\nawait fn();",
+    "options": [
+      "fetch()가 동기적으로 실행되기 때문",
+      "async 메서드는 클래스 내부에서만 호출할 수 있기 때문",
+      "await가 this 바인딩을 자동으로 제거하기 때문",
+      "메서드를 변수에 할당하면 this 바인딩이 사라져 this가 undefined가 되기 때문"
+    ],
+    "correctIndex": 3,
+    "explanation": "client.fetchItems를 변수 fn에 할당하면 메서드가 객체 컨텍스트에서 분리됩니다. fn()으로 호출하면 strict mode에서 this가 undefined가 되어 this.data 접근 시 TypeError가 발생합니다. 이는 async/await와 무관한 JavaScript의 기본적인 this 바인딩 규칙입니다. 해결책은 화살표 함수로 정의하거나(fetchItems = async () => { ... }), 호출 시 client.fetchItems()로 직접 호출하거나, fn.bind(client)로 바인딩하는 것입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/this"
+  },
+  {
+    "id": "async-062",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const thenable = {\n  then(resolve) {\n    console.log('A');\n    resolve('B');\n  }\n};\n\nconst p = Promise.resolve(thenable);\nconsole.log('C');\np.then(v => console.log(v));",
+    "options": [
+      "C, A, B",
+      "A, C, B",
+      "A, B, C",
+      "C, B, A"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise.resolve()에 thenable 객체(then 메서드를 가진 객체)를 전달하면, then 메서드 호출은 마이크로태스크로 예약됩니다. 따라서 console.log('C')가 먼저 동기적으로 실행됩니다. 이후 마이크로태스크에서 thenable의 then이 호출되어 'A'가 출력되고 resolve('B')가 실행됩니다. resolve된 값 'B'는 다시 마이크로태스크로 p.then 콜백에 전달되어 'B'가 출력됩니다. thenable 해석이 비동기적으로 이루어진다는 점이 핵심입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "async-063",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "AbortSignal.timeout()과 수동으로 setTimeout + AbortController를 사용하는 방식의 차이로 올바른 것은?",
+    "options": [
+      "AbortSignal.timeout()은 Node.js에서만 사용할 수 있다",
+      "수동 방식은 타이머 ID를 반환하지만 AbortSignal.timeout()은 반환하지 않는다",
+      "AbortSignal.timeout()은 취소 시 일반 Error를 throw한다",
+      "AbortSignal.timeout()은 타이머 정리를 자동 처리하고 TimeoutError를 발생시켜 일반 AbortError와 구분할 수 있다"
+    ],
+    "correctIndex": 3,
+    "explanation": "AbortSignal.timeout(ms)은 지정 시간 후 자동으로 abort 시그널을 발생시키는 정적 메서드입니다. 수동으로 AbortController + setTimeout을 조합하면 타이머 정리(clearTimeout)를 직접 해야 하고 AbortError가 발생합니다. 반면 AbortSignal.timeout()은 타이머 정리를 자동으로 처리하고, TimeoutError(DOMException name='TimeoutError')를 발생시켜 사용자가 직접 취소한 것(AbortError)과 시간 초과를 구분할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/AbortSignal/timeout_static"
+  },
+  {
+    "id": "async-064",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const results = await Promise.allSettled([\n  Promise.resolve(1),\n  Promise.reject('err'),\n  Promise.resolve(3)\n]);\nconsole.log(results.map(r => r.status));",
+    "options": [
+      "['resolved', 'rejected', 'resolved']",
+      "['fulfilled', 'rejected', 'pending']",
+      "['fulfilled', 'rejected', 'fulfilled']",
+      "에러 발생 (Promise.reject에 의해)"
+    ],
+    "correctIndex": 2,
+    "explanation": "Promise.allSettled()는 모든 Promise가 settled(이행 또는 거부)될 때까지 기다리며, reject된 Promise가 있어도 전체가 거부되지 않습니다. 각 결과 객체의 status 속성은 이행된 경우 'fulfilled', 거부된 경우 'rejected'입니다. 'resolved'나 'pending'이 아닌 점에 주의하세요. fulfilled인 경우 value 속성을, rejected인 경우 reason 속성을 가집니다. Promise.all()과 달리 항상 모든 결과를 얻을 수 있어 독립적인 작업의 결과를 모아야 할 때 유용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled"
+  },
+  {
+    "id": "async-065",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "async 함수 내에서 throw한 에러는 어떻게 처리되나요?",
+    "options": [
+      "반환된 Promise가 해당 에러로 reject되어 .catch()나 try-catch로 처리할 수 있다",
+      "동기 코드처럼 즉시 호출 스택을 타고 올라간다",
+      "자동으로 무시되어 아무 일도 일어나지 않는다",
+      "window.onerror에서만 잡을 수 있다"
+    ],
+    "correctIndex": 0,
+    "explanation": "async 함수 내에서 throw된 에러는 함수가 반환하는 Promise를 reject 상태로 만듭니다. 이 rejected Promise는 .catch() 메서드나 await를 감싼 try-catch 블록으로 처리할 수 있습니다. 동기 함수의 throw와 달리 즉시 호출 스택을 타고 올라가지 않으며, Promise rejection으로 변환되어 비동기적으로 전파됩니다. 처리되지 않으면 unhandledrejection 이벤트가 발생합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function"
   }
 ]

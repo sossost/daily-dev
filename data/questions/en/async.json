@@ -992,5 +992,88 @@
     "correctIndex": 1,
     "explanation": "When a native Promise object is passed to Promise.resolve(), it returns the same object without creating a new one. So p === Promise.resolve(p) is true. However, Promise.resolve('done') creates a new Promise object each time it is called with a non-Promise value, so p === Promise.resolve('done') is false. This behavior is defined in the ECMAScript specification as an optimization to avoid unnecessary Promise wrapping.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "async-061",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why is this.data undefined in the following code?",
+    "code": "class ApiClient {\n  data = [];\n  async fetchItems() {\n    const res = await fetch('/api/items');\n    this.data = await res.json();\n  }\n}\n\nconst client = new ApiClient();\nconst fn = client.fetchItems;\nawait fn();",
+    "options": [
+      "fetch() executes synchronously",
+      "Async methods can only be called inside the class",
+      "await automatically removes the this binding",
+      "Assigning a method to a variable loses the this binding, making this undefined"
+    ],
+    "correctIndex": 3,
+    "explanation": "When client.fetchItems is assigned to the variable fn, the method is detached from its object context. Calling fn() in strict mode sets this to undefined, causing a TypeError when accessing this.data. This is a fundamental JavaScript this-binding rule unrelated to async/await. Solutions include defining the method as an arrow function (fetchItems = async () => { ... }), calling it directly as client.fetchItems(), or using fn.bind(client).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this"
+  },
+  {
+    "id": "async-062",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const thenable = {\n  then(resolve) {\n    console.log('A');\n    resolve('B');\n  }\n};\n\nconst p = Promise.resolve(thenable);\nconsole.log('C');\np.then(v => console.log(v));",
+    "options": [
+      "C, A, B",
+      "A, C, B",
+      "A, B, C",
+      "C, B, A"
+    ],
+    "correctIndex": 0,
+    "explanation": "When a thenable object (an object with a then method) is passed to Promise.resolve(), the then method invocation is scheduled as a microtask. Therefore, console.log('C') executes synchronously first. Then, in the microtask, the thenable's then method is called, logging 'A' and calling resolve('B'). The resolved value 'B' is then delivered to p.then's callback in another microtask, logging 'B'. The key insight is that thenable resolution happens asynchronously.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "async-063",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between AbortSignal.timeout() and manually using setTimeout with AbortController?",
+    "options": [
+      "AbortSignal.timeout() is only available in Node.js",
+      "The manual approach returns a timer ID while AbortSignal.timeout() does not",
+      "AbortSignal.timeout() throws a regular Error on cancellation",
+      "AbortSignal.timeout() handles timer cleanup automatically and throws a TimeoutError distinguishable from a regular AbortError"
+    ],
+    "correctIndex": 3,
+    "explanation": "AbortSignal.timeout(ms) is a static method that automatically triggers an abort signal after the specified time. When manually combining AbortController with setTimeout, you must handle timer cleanup (clearTimeout) yourself, and it produces an AbortError. In contrast, AbortSignal.timeout() manages timer cleanup automatically and throws a TimeoutError (DOMException with name='TimeoutError'), allowing you to distinguish between user-initiated cancellation (AbortError) and timeout.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/timeout_static"
+  },
+  {
+    "id": "async-064",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const results = await Promise.allSettled([\n  Promise.resolve(1),\n  Promise.reject('err'),\n  Promise.resolve(3)\n]);\nconsole.log(results.map(r => r.status));",
+    "options": [
+      "['resolved', 'rejected', 'resolved']",
+      "['fulfilled', 'rejected', 'pending']",
+      "['fulfilled', 'rejected', 'fulfilled']",
+      "Error thrown (due to Promise.reject)"
+    ],
+    "correctIndex": 2,
+    "explanation": "Promise.allSettled() waits for all Promises to settle (fulfill or reject) and never rejects the overall Promise, even if some input Promises reject. Each result object has a status property: 'fulfilled' for resolved Promises and 'rejected' for rejected ones. Note it is 'fulfilled', not 'resolved' or 'pending'. Fulfilled results have a value property while rejected results have a reason property. Unlike Promise.all(), it always returns all results, making it ideal for collecting outcomes of independent operations.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled"
+  },
+  {
+    "id": "async-065",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "How are errors thrown inside an async function handled?",
+    "options": [
+      "The returned Promise is rejected with the error, which can be handled via .catch() or try-catch",
+      "The error propagates up the call stack immediately like synchronous code",
+      "The error is silently ignored and nothing happens",
+      "It can only be caught by window.onerror"
+    ],
+    "correctIndex": 0,
+    "explanation": "When an error is thrown inside an async function, it causes the returned Promise to enter the rejected state. This rejected Promise can be handled using the .catch() method or a try-catch block around an await expression. Unlike throw in synchronous functions, the error does not immediately propagate up the call stack — it is converted to a Promise rejection and propagated asynchronously. If left unhandled, an unhandledrejection event is fired.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
   }
 ]
