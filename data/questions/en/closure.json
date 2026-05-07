@@ -995,5 +995,88 @@
     "correctIndex": 1,
     "explanation": "createTag returns a tagged template function that captures the tag parameter via closure. bold captures tag='b'. A tagged template function receives the string parts (strings) and interpolated values (values) as arguments. For bold`Hello ${name}!`, strings=['Hello ', '!'] and values=['World']. The reduce combines each string part with its corresponding value wrapped in the captured tag, producing 'Hello <b>World</b>!'. This pattern combines closures with tagged templates to create reusable string transformers — an advanced technique for building DSLs or sanitizers.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals"
+  },
+  {
+    "id": "closure-061",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "function makeCounter(start) {\n  let count = start;\n  return {\n    next() { return count++; },\n    peek() { return count; }\n  };\n}\nconst c = makeCounter(10);\nconsole.log(c.next());\nconsole.log(c.next());\nconsole.log(c.peek());",
+    "options": [
+      "10, 11, 11",
+      "11, 12, 12",
+      "10, 11, 12",
+      "10, 10, 10"
+    ],
+    "correctIndex": 2,
+    "explanation": "count++ is the postfix increment operator — it returns the current value and then increments count by 1. The first next() returns 10 and sets count to 11. The second next() returns 11 and sets count to 12. peek() returns the current value of count (12) without modifying it. Both next and peek share the same count binding through the closure, so the side effect of the postfix increment is visible in peek. This demonstrates that closures capture variable bindings, not values.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Increment"
+  },
+  {
+    "id": "closure-062",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about eval() and closure optimization is correct?",
+    "options": [
+      "eval() always operates the same regardless of closures",
+      "eval() inside a function prevents closure formation entirely",
+      "eval() cannot dynamically modify scope, so it has no impact on optimization",
+      "When eval() is present, the engine cannot statically determine which variables will be referenced, so the closure retains all variables from the outer environment, disabling optimization"
+    ],
+    "correctIndex": 3,
+    "explanation": "Modern JavaScript engines like V8 optimize closures to capture only the variables actually referenced by the inner function. However, when a direct eval() call exists inside a function, the string passed to eval could reference any variable at runtime, making static analysis impossible. This forces the engine to retain all variables from the outer function's scope in the closure, increasing memory usage. Indirect eval (e.g., (0, eval)('code')) executes in the global scope and does not cause this issue.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval"
+  },
+  {
+    "id": "closure-063",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "In the following code, why does the counter not start from 0 after restore?",
+    "code": "function createCounter() {\n  let count = 0;\n  return {\n    increment() { count++; },\n    getCount() { return count; },\n    serialize() { return JSON.stringify({ count }); },\n    restore(json) { ({ count } = JSON.parse(json)); }\n  };\n}\nconst c1 = createCounter();\nc1.increment();\nc1.increment();\nconst saved = c1.serialize();\nconst c2 = createCounter();\nc2.restore(saved);\nconsole.log(c2.getCount()); // 2",
+    "options": [
+      "restore reassigns the closure's count variable to the deserialized value (2), so c2's getCount() returns 2",
+      "JSON.parse fails and a default value is used",
+      "serialize() modifies the count value",
+      "c1 and c2 share the same count variable"
+    ],
+    "correctIndex": 0,
+    "explanation": "The restore method uses destructuring assignment ({ count } = JSON.parse(json)) to assign a new value to the count variable captured by the closure. Since closures capture variable bindings, assigning to count inside restore changes the same binding that other methods (getCount, increment) in the same closure scope reference. This pattern enables serialization/deserialization of closure state, but note that closures themselves (functions) cannot be serialized — only the data can be saved, and the function structure must be recreated in code.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment"
+  },
+  {
+    "id": "closure-064",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the difference between Function.prototype.bind and closure-based partial application is correct?",
+    "options": [
+      "bind is always faster than closures",
+      "Only closures can do partial application; bind cannot",
+      "bind is a built-in method that fixes this and arguments in a new function, while closure-based partial application captures outer variables to flexibly implement partial application with arbitrary logic",
+      "They are identical mechanisms with no differences"
+    ],
+    "correctIndex": 2,
+    "explanation": "bind returns a new bound function with a fixed this value and initial arguments. For example, add.bind(null, 5) creates a function with the first argument fixed to 5. Closure-based partial application uses patterns like (x) => (y) => x + y to capture outer variables. The closure approach is more flexible because it can include conditional branching, transformations, and validation using captured variables. bind is concise but limited to fixing argument order, and internally it operates via a mechanism similar to closures.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind"
+  },
+  {
+    "id": "closure-065",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function createRange(start, end) {\n  return {\n    [Symbol.iterator]() {\n      let current = start;\n      return {\n        next() {\n          if (current <= end) {\n            return { value: current++, done: false };\n          }\n          return { value: undefined, done: true };\n        }\n      };\n    }\n  };\n}\nconst range = createRange(1, 3);\nconsole.log([...range]);\nconsole.log([...range]);",
+    "options": [
+      "[1, 2, 3] / []",
+      "[1, 2, 3] / [1, 2, 3]",
+      "[1] / [1]",
+      "[1, 2, 3] / [4, 5, 6]"
+    ],
+    "correctIndex": 1,
+    "explanation": "Each call to [Symbol.iterator]() creates a new lexical environment with an independent current variable. The first [...range] calls Symbol.iterator(), creating an iterator starting at current=1, and produces [1,2,3]. The second [...range] calls Symbol.iterator() again, creating a new iterator with current reset to 1, so it also produces [1,2,3]. The start and end values are captured from createRange's closure, allowing the same range to be iterated multiple times. If current had been declared in the createRange scope instead, the iterator state would persist across iterations and the second spread would yield an empty array.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols"
   }
 ]
