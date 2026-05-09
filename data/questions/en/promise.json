@@ -991,5 +991,87 @@
     "correctIndex": 3,
     "explanation": "Dynamic import() returns a Promise, unlike static import declarations. This Promise resolves to the requested module's namespace object, which includes both the default export and all named exports. This allows loading modules asynchronously using then() or await, enabling code splitting and conditional module loading. If the module fails to load, the Promise rejects.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import"
+  },
+  {
+    "id": "promise-061",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between queueMicrotask(fn) and Promise.resolve().then(fn)?",
+    "options": [
+      "queueMicrotask directly enqueues a microtask without creating a Promise object, avoiding unnecessary Promise allocation",
+      "Promise.resolve().then(fn) always executes before queueMicrotask",
+      "queueMicrotask enqueues to the macrotask queue, while Promise.then enqueues to the microtask queue",
+      "Both methods are completely identical with no differences"
+    ],
+    "correctIndex": 0,
+    "explanation": "queueMicrotask(fn) directly enqueues a callback to the microtask queue without creating a Promise object. Promise.resolve().then(fn) also enqueues a microtask but creates an unnecessary fulfilled Promise object as overhead. Both use the same microtask queue so execution timing is identical, but queueMicrotask is more explicit in intent and more efficient when the sole purpose is scheduling a microtask.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/queueMicrotask"
+  },
+  {
+    "id": "promise-062",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const p1 = Promise.resolve(42);\nconst p2 = Promise.resolve(p1);\n\nconsole.log(p1 === p2);\np2.then(v => console.log(v));",
+    "options": [
+      "false, Promise { 42 }",
+      "true, Promise { 42 }",
+      "false, 42",
+      "true, 42"
+    ],
+    "correctIndex": 3,
+    "explanation": "When Promise.resolve() receives a native Promise, it returns that Promise as-is rather than creating a new one. Therefore p1 === p2 is true. This is an optimization where Promise.resolve() checks the constructor of the argument and returns it directly if it's a Promise of the same kind. This behavior does not apply when passing thenables or plain values, which always create a new Promise.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "promise-063",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The following code intends to limit concurrent requests, but does it actually start all requests simultaneously?",
+    "code": "async function fetchWithLimit(urls, limit) {\n  const results = [];\n  for (let i = 0; i < urls.length; i += limit) {\n    const batch = urls.slice(i, i + limit);\n    const batchResults = await Promise.all(\n      batch.map(url => fetch(url))\n    );\n    results.push(...batchResults);\n  }\n  return results;\n}",
+    "options": [
+      "Promise.all ignores array size and runs all Promises concurrently",
+      "The for loop runs asynchronously, causing all iterations to execute simultaneously",
+      "slice mutates the original array, causing index misalignment",
+      "The code actually works as intended — each batch runs sequentially, with only requests within a batch running in parallel"
+    ],
+    "correctIndex": 3,
+    "explanation": "This code actually works as intended. Since await is used inside the for loop, each batch's Promise.all completes before the next batch starts. Only fetch requests within a single batch run in parallel, while batches are processed sequentially. This is a simple pattern for limiting concurrency to avoid overloading the server. However, if one request in a batch is slow, the entire batch is delayed.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+  },
+  {
+    "id": "promise-064",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What happens when you throw an error inside a Promise.prototype.finally() callback?",
+    "options": [
+      "The error from finally overrides the previous Promise's fulfillment value or rejection reason, and the chain rejects with that error",
+      "A TypeError is thrown — throw cannot be used inside finally",
+      "The error is silently ignored and the previous Promise's value passes through",
+      "finally executes twice — once for the original behavior and once for error handling"
+    ],
+    "correctIndex": 0,
+    "explanation": "A finally() callback normally passes through the previous Promise's value without modification. However, if the callback throws an error or returns a rejected Promise, the previous Promise's fulfillment value or rejection reason is replaced by that error. This mirrors try/catch/finally behavior where throwing in a finally block overrides the original return value or error. Therefore, you should be careful not to throw errors inside finally handlers.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally"
+  },
+  {
+    "id": "promise-065",
+    "topic": "promise",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the correct description of 'top-level await' used at the top level of a module?",
+    "options": [
+      "Top-level await can be used in both regular scripts (<script>) and ES modules (<script type=\"module\">)",
+      "Using top-level await causes all dependent modules to automatically wait",
+      "Top-level await is only supported in browsers and cannot be used in Node.js",
+      "Top-level await is only available in ES modules, and modules importing it wait until its async dependency is resolved"
+    ],
+    "correctIndex": 3,
+    "explanation": "Top-level await was standardized in ES2022 and allows using await at the top-level scope of ES modules (type=\"module\"). It cannot be used in regular scripts. When a module using top-level await is imported, the importing module's execution is paused until the async operation completes. This is useful for modules that need async initialization such as database connections or configuration loading.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#top_level_await"
   }
 ]
