@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-05-10
+
+### Features
+
+- **content**: fix — Korean promise-063 misleading question ... (`fafea59`)
+
 ## 2026-05-08
 
 ### Features

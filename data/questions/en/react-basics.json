@@ -985,5 +985,88 @@
     "correctIndex": 2,
     "explanation": "During rendering, React traverses the component tree top-down, so 'Parent render' logs first, then 'Child render'. However, useEffect callbacks fire after the DOM is committed, and they execute bottom-up (children before parents). So 'Child effect' runs before 'Parent effect'. This bottom-up order ensures that parent effects can rely on child DOM being fully set up.",
     "sourceUrl": "https://react.dev/learn/lifecycle-of-reactive-effects"
+  },
+  {
+    "id": "react-basics-061",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What count value is displayed on screen after clicking the button in the following code?",
+    "code": "function Counter() {\n  const [state, dispatch] = useReducer((state, action) => {\n    switch (action.type) {\n      case 'increment':\n        return { count: state.count + action.step };\n      case 'reset':\n        return { count: 0 };\n      default:\n        return state;\n    }\n  }, { count: 10 });\n\n  function handleClick() {\n    dispatch({ type: 'increment', step: 5 });\n    dispatch({ type: 'increment', step: 3 });\n  }\n\n  return <button onClick={handleClick}>{state.count}</button>;\n}",
+    "options": [
+      "15",
+      "13",
+      "18",
+      "10"
+    ],
+    "correctIndex": 2,
+    "explanation": "useReducer's dispatch queues updates just like useState's setState. The first dispatch changes count from 10 to 10 + 5 = 15, and the second dispatch changes it from 15 to 15 + 3 = 18. Since both dispatches occur in the same event handler, React batches them into a single re-render.",
+    "sourceUrl": "https://react.dev/reference/react/useReducer"
+  },
+  {
+    "id": "react-basics-062",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why does changing the key reset the Chat component's state in the following code?",
+    "code": "function App() {\n  const [userId, setUserId] = useState('alice');\n\n  return (\n    <div>\n      <button onClick={() => setUserId(id => id === 'alice' ? 'bob' : 'alice')}>\n        Switch User\n      </button>\n      <Chat key={userId} userId={userId} />\n    </div>\n  );\n}\n\nfunction Chat({ userId }) {\n  const [message, setMessage] = useState('');\n  return <input value={message} onChange={e => setMessage(e.target.value)} />;\n}",
+    "options": [
+      "When the key changes, React unmounts the component and mounts a new instance, resetting all internal state",
+      "useState detects the key prop change and automatically resets the state",
+      "React runs the useEffect cleanup function based on the key",
+      "The key prop only has meaning in lists and has no effect on a single component"
+    ],
+    "correctIndex": 0,
+    "explanation": "In React, the key determines a component's 'identity'. Even if the same type of component is at the same position, a different key causes React to completely destroy (unmount) the old instance and create (mount) a new one. This applies not only to lists but also to single components, and is a commonly used pattern to force state resets.",
+    "sourceUrl": "https://react.dev/learn/preserving-and-resetting-state#resetting-state-with-a-key"
+  },
+  {
+    "id": "react-basics-063",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "When is useReducer more appropriate than useState?",
+    "options": [
+      "When the state is a single boolean value",
+      "When there is complex state logic involving multiple sub-values, or when the next state depends on the previous state",
+      "When the component needs to reduce the number of re-renders",
+      "When state needs to be managed only during server-side rendering"
+    ],
+    "correctIndex": 1,
+    "explanation": "useReducer is suitable when state update logic is complex or when multiple sub-values are interrelated. Centralizing all state transition logic in a reducer function improves readability and testability. For simple state (toggles, counters, etc.), useState is more concise. Both hooks behave identically in terms of re-rendering.",
+    "sourceUrl": "https://react.dev/learn/extracting-state-logic-into-a-reducer"
+  },
+  {
+    "id": "react-basics-064",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the order of console output when the button is clicked in the following code?",
+    "code": "function App() {\n  const [count, setCount] = useState(0);\n\n  useEffect(() => {\n    console.log('effect:', count);\n    return () => console.log('cleanup:', count);\n  });\n\n  console.log('render:', count);\n\n  return <button onClick={() => setCount(1)}>Click</button>;\n}",
+    "options": [
+      "render: 1 -> effect: 1",
+      "cleanup: 0 -> render: 1 -> effect: 1",
+      "render: 1 -> cleanup: 0 -> effect: 1",
+      "effect: 1 -> cleanup: 0 -> render: 1"
+    ],
+    "correctIndex": 2,
+    "explanation": "When the button is clicked, React first re-renders the component, logging 'render: 1'. After the DOM commit, the previous effect's cleanup runs, logging 'cleanup: 0' (the closure captures count=0 from the previous render). Finally, the new effect runs, logging 'effect: 1'. The cleanup always runs before the new effect executes.",
+    "sourceUrl": "https://react.dev/learn/synchronizing-with-effects#each-render-has-its-own-effects"
+  },
+  {
+    "id": "react-basics-065",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Under what condition does a React.memo-wrapped component skip re-rendering?",
+    "options": [
+      "It always re-renders when the parent re-renders",
+      "When the component's internal state hasn't changed",
+      "When a shallow comparison of previous and next props shows they are equal",
+      "When the component doesn't use useEffect"
+    ],
+    "correctIndex": 2,
+    "explanation": "React.memo is a higher-order component that performs a shallow comparison (Object.is) of previous and next props, skipping re-render if they haven't changed. However, if the component's own state or consumed context changes, it will still re-render even with unchanged props. When passing objects or functions as props, new references are created each render which invalidates memoization — so useMemo or useCallback should be used alongside for effectiveness.",
+    "sourceUrl": "https://react.dev/reference/react/memo"
   }
 ]

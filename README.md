@@ -42,7 +42,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Node.js | 60 |
 | Promise | 65 |
 | Prototype | 65 |
-| React Basics | 60 |
+| React Basics | 65 |
 | Scope | 60 |
 | this Keyword | 60 |
 | Type Coercion | 65 |
@@ -50,7 +50,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Web Performance | 60 |
 | Web Security | 60 |
 
-**Total: 1405 questions across 23 topics**
+**Total: 1410 questions across 23 topics**
 
 ## Getting Started
 
