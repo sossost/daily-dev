@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-05-11
+
+### Features
+
+- **content**: add 5 react-basics questions (061-065) (`bf4670a`)
+
 ## 2026-05-10
 
 ### Features

@@ -998,5 +998,89 @@
     "correctIndex": 1,
     "explanation": "비동기 함수도 일반 함수와 동일한 렉시컬 스코프 규칙을 따릅니다. foo 내부의 let x = 'inner'는 외부의 x를 섀도잉하므로 반환값은 'inner'입니다. .then 콜백에서 val은 프로미스가 resolve한 'inner'를 받습니다. 콜백 자체는 외부 스코프에서 정의되었으므로 x는 외부의 let x = 'outer'를 참조합니다. 결과는 'inner outer'입니다. async/await는 JavaScript의 스코프 동작을 변경하지 않습니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "scope-061",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "let x = 1;\nfunction foo(a = x, b = a + 1) {\n  let x = 10;\n  console.log(a, b);\n}\nfoo();",
+    "options": [
+      "10, 11",
+      "1, 2",
+      "undefined, NaN",
+      "ReferenceError"
+    ],
+    "correctIndex": 1,
+    "explanation": "기본 매개변수 표현식은 함수 본문의 스코프가 아닌 자체적인 중간 스코프에서 평가됩니다. a = x에서 x는 함수 내부의 let x = 10이 아니라 외부 스코프의 let x = 1을 참조합니다. b = a + 1에서 a는 이미 평가된 매개변수 1을 참조하므로 b는 2가 됩니다. 기본 매개변수는 왼쪽에서 오른쪽 순서로 평가되며, 이전 매개변수를 참조할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/Default_parameters"
+  },
+  {
+    "id": "scope-062",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "다음 두 코드의 출력 차이로 올바른 것은?\n\nA: for (let i = 0; i < 3; i++) { setTimeout(() => console.log(i), 0); }\nB: for (var i = 0; i < 3; i++) { setTimeout(() => console.log(i), 0); }",
+    "options": [
+      "A: 0, 0, 0 / B: 3, 3, 3",
+      "A: 3, 3, 3 / B: 0, 1, 2",
+      "A: 0, 1, 2 / B: 3, 3, 3",
+      "둘 다 0, 1, 2를 출력한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "let은 for 루프에서 각 반복마다 새로운 블록 스코프 바인딩을 생성합니다. 따라서 각 setTimeout 콜백은 자신의 반복에서 생성된 고유한 i(0, 1, 2)를 캡처합니다. 반면 var는 함수 스코프이므로 하나의 i를 공유하며, 루프 종료 후 i는 3이 됩니다. 모든 setTimeout 콜백이 이벤트 루프에서 실행될 때 같은 i(3)를 참조합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/let#반복문에서의_let"
+  },
+  {
+    "id": "scope-063",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "다음 코드에서 기본 매개변수와 함수 본문의 스코프 관계로 올바른 것은?",
+    "code": "function test(a = () => b, b = 2) {\n  var b = 3;\n  console.log(a());\n}",
+    "options": [
+      "함수 본문의 var b = 3이 매개변수를 덮어써서 3이 출력된다",
+      "매개변수 b가 아직 선언되지 않아 ReferenceError가 발생한다",
+      "undefined가 출력된다",
+      "기본 매개변수와 함수 본문은 별도의 스코프를 가지므로, a()는 매개변수 스코프의 b인 2를 반환한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "ES6에서 기본 매개변수가 있는 함수는 매개변수 스코프와 함수 본문 스코프가 분리됩니다. 매개변수 a의 기본값인 화살표 함수 () => b는 매개변수 스코프에서 정의되므로, 함수 본문의 var b = 3이 아닌 매개변수 b = 2를 클로저로 캡처합니다. 이 동작은 매개변수에 기본값이 있는 경우에만 발생하며, 함수 본문의 var 선언이 매개변수를 섀도잉합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/Default_parameters#매개변수_기본값의_스코프"
+  },
+  {
+    "id": "scope-064",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "var x = 'global';\n{\n  var x = 'block';\n}\nconsole.log(x);",
+    "options": [
+      "block",
+      "global",
+      "undefined",
+      "ReferenceError"
+    ],
+    "correctIndex": 0,
+    "explanation": "var는 블록 스코프를 가지지 않고 함수 스코프(또는 전역 스코프)를 가집니다. 블록({}) 내부의 var x = 'block'은 새로운 변수를 생성하는 것이 아니라 기존의 전역 변수 x를 재할당합니다. 따라서 블록을 빠져나온 후에도 x는 'block'입니다. let이나 const를 사용했다면 블록 내부에서 별도의 변수가 생성되었을 것입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/var#var의_스코프"
+  },
+  {
+    "id": "scope-065",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "개발자는 콜백이 외부 변수 message의 최신 값을 참조하길 기대했지만, 항상 초기값 'hello'만 출력됩니다. 원인은 무엇인가요?",
+    "code": "function setup() {\n  let message = 'hello';\n  const callback = () => console.log(message);\n  message = 'world';\n  return { callback, update: (m) => { message = m; } };\n}\nconst obj = setup();\nobj.update('goodbye');\nobj.callback();",
+    "options": [
+      "화살표 함수가 정의 시점의 값을 복사하기 때문",
+      "let 변수는 클로저에서 재할당을 반영하지 않기 때문",
+      "실제로는 'goodbye'가 출력되며, 클로저는 변수의 참조를 캡처하므로 최신 값이 반영된다",
+      "const로 선언된 callback은 재할당이 불가능하여 원본 message와의 연결이 끊어지기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "이 코드는 실제로 'goodbye'를 출력합니다. 클로저는 변수의 값이 아닌 변수 자체(바인딩)에 대한 참조를 캡처합니다. callback과 update 함수 모두 setup의 동일한 message 변수를 참조하는 클로저입니다. update('goodbye')로 message를 변경하면, callback()은 변경된 최신 값 'goodbye'를 출력합니다. 이는 클로저가 값의 스냅샷이 아닌 살아있는 참조임을 보여줍니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
   }
 ]

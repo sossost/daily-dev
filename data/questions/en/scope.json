@@ -998,5 +998,89 @@
     "correctIndex": 1,
     "explanation": "Async functions follow the same lexical scoping rules as regular functions. Inside foo, let x = 'inner' shadows the outer x, so the return value is 'inner'. In the .then callback, val receives 'inner' from the resolved promise. The callback itself is defined in the outer scope, so x refers to the outer let x = 'outer'. The result is 'inner outer'. Async/await does not change how JavaScript scoping works — closures and shadowing behave identically.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "scope-061",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "let x = 1;\nfunction foo(a = x, b = a + 1) {\n  let x = 10;\n  console.log(a, b);\n}\nfoo();",
+    "options": [
+      "10, 11",
+      "1, 2",
+      "undefined, NaN",
+      "ReferenceError"
+    ],
+    "correctIndex": 1,
+    "explanation": "Default parameter expressions are evaluated in their own intermediate scope, not the function body's scope. In a = x, x refers to the outer let x = 1, not the function body's let x = 10. In b = a + 1, a references the already-evaluated parameter value 1, so b becomes 2. Default parameters are evaluated left to right and can reference earlier parameters.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters"
+  },
+  {
+    "id": "scope-062",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference in output between these two code snippets?\n\nA: for (let i = 0; i < 3; i++) { setTimeout(() => console.log(i), 0); }\nB: for (var i = 0; i < 3; i++) { setTimeout(() => console.log(i), 0); }",
+    "options": [
+      "A: 0, 0, 0 / B: 3, 3, 3",
+      "A: 3, 3, 3 / B: 0, 1, 2",
+      "A: 0, 1, 2 / B: 3, 3, 3",
+      "Both output 0, 1, 2"
+    ],
+    "correctIndex": 2,
+    "explanation": "let creates a new block-scoped binding for each iteration of the for loop. Each setTimeout callback captures its own unique i (0, 1, 2). In contrast, var has function scope and shares a single i variable. After the loop finishes, i is 3. When all the setTimeout callbacks execute from the event loop, they all reference the same i (3).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let#let_in_loops"
+  },
+  {
+    "id": "scope-063",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the correct description of the scope relationship between default parameters and the function body in the following code?",
+    "code": "function test(a = () => b, b = 2) {\n  var b = 3;\n  console.log(a());\n}",
+    "options": [
+      "The function body's var b = 3 overwrites the parameter, so 3 is logged",
+      "Parameter b is not yet declared when a's default is evaluated, causing a ReferenceError",
+      "undefined is logged",
+      "Default parameters and the function body have separate scopes, so a() returns the parameter scope's b, which is 2"
+    ],
+    "correctIndex": 3,
+    "explanation": "In ES6, when a function has default parameters, the parameter scope and function body scope are separated. The default value arrow function () => b is defined in the parameter scope, so it captures the parameter b = 2 via closure, not the function body's var b = 3. This behavior only occurs when default parameters are present — the var declaration in the body shadows the parameter within the body scope.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters#scope_effects"
+  },
+  {
+    "id": "scope-064",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "var x = 'global';\n{\n  var x = 'block';\n}\nconsole.log(x);",
+    "options": [
+      "block",
+      "global",
+      "undefined",
+      "ReferenceError"
+    ],
+    "correctIndex": 0,
+    "explanation": "var does not have block scope — it has function scope (or global scope when not inside a function). The var x = 'block' inside the block does not create a new variable; instead, it reassigns the existing global variable x. So after exiting the block, x remains 'block'. If let or const had been used, a separate block-scoped variable would have been created instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/var#description"
+  },
+  {
+    "id": "scope-065",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "A developer expects the callback to always reference the latest value of the outer variable message, but believes it only logs the initial value 'hello'. What is actually happening?",
+    "code": "function setup() {\n  let message = 'hello';\n  const callback = () => console.log(message);\n  message = 'world';\n  return { callback, update: (m) => { message = m; } };\n}\nconst obj = setup();\nobj.update('goodbye');\nobj.callback();",
+    "options": [
+      "Arrow functions copy the value at the time they are defined",
+      "let variables do not reflect reassignments inside closures",
+      "It actually logs 'goodbye' — closures capture a reference to the variable, so the latest value is always reflected",
+      "Since callback is declared with const, it loses its connection to the original message variable"
+    ],
+    "correctIndex": 2,
+    "explanation": "This code actually logs 'goodbye'. Closures capture a reference to the variable (the binding itself), not its value at the time the function was created. Both callback and update are closures over the same message variable in setup's scope. When update('goodbye') changes message, callback() reflects the updated value. This demonstrates that closures are live references, not snapshots of values.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
   }
 ]
