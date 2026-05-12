@@ -992,5 +992,88 @@
     "correctIndex": 2,
     "explanation": "The Scheduler API (scheduler.postTask()) provides priority-based task scheduling that setTimeout cannot offer. It accepts a priority option with three levels: 'user-blocking' (highest, for tasks critical to user interaction), 'user-visible' (default, for tasks the user will notice), and 'background' (lowest, for non-urgent work). This gives the browser better information to schedule tasks without blocking important user interactions. setTimeout only allows specifying a minimum delay, with no way to express priority. scheduler.postTask() also returns a Promise and supports AbortController for cancellation.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Scheduler/postTask"
+  },
+  {
+    "id": "event-loop-061",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output order of the following code?",
+    "code": "async function foo() {\n  console.log('A');\n  await Promise.resolve();\n  console.log('B');\n}\n\nconsole.log('C');\nfoo();\nconsole.log('D');",
+    "options": [
+      "C, A, B, D",
+      "A, C, D, B",
+      "C, D, A, B",
+      "C, A, D, B"
+    ],
+    "correctIndex": 3,
+    "explanation": "When foo() is called, it runs synchronously until the first await. 'C' is logged first, then foo() starts and logs 'A'. The await Promise.resolve() pauses foo and schedules the continuation (everything after await) as a microtask. Control returns to the caller, and 'D' is logged. After the synchronous code completes, the microtask queue is drained, and 'B' is logged. This demonstrates how await splits an async function into synchronous and microtask-scheduled parts.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "event-loop-062",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output order of the following code?",
+    "code": "Promise.resolve('X')\n  .then(v => { console.log(v); return 'Y'; })\n  .finally(() => console.log('Z'))\n  .then(v => console.log(v));\n\nPromise.resolve().then(() => console.log('W'));",
+    "options": [
+      "X, W, Z, Y",
+      "X, Z, Y, W",
+      "X, Z, W, Y",
+      "X, Y, Z, W"
+    ],
+    "correctIndex": 0,
+    "explanation": "Two microtasks are initially queued: the first chain's .then (for 'X') and the second chain's .then (for 'W'). The first microtask runs, logging 'X' and resolving the next promise with 'Y', which queues the .finally handler. Then 'W' runs from the second chain. Next, the .finally handler runs, logging 'Z'. Since .finally internally wraps its callback with Promise.resolve(), an additional microtask tick is needed before the final .then receives the passed-through value 'Y'. This extra tick means 'Y' is logged last. The order is X, W, Z, Y.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally"
+  },
+  {
+    "id": "event-loop-063",
+    "topic": "event-loop",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "A developer wraps a setTimeout call in try/catch but the error inside the callback is never caught. What is the cause?",
+    "code": "try {\n  setTimeout(() => {\n    throw new Error('oops');\n  }, 100);\n} catch (e) {\n  console.log('Caught:', e.message);\n}",
+    "options": [
+      "setTimeout ignores all errors thrown inside callbacks",
+      "throw does not work inside arrow functions",
+      "The error is caught but console.log is not called due to a timing issue",
+      "The try/catch only covers the synchronous setTimeout registration; the callback runs in a later task with its own call stack"
+    ],
+    "correctIndex": 3,
+    "explanation": "The try/catch block executes synchronously and only wraps the call to setTimeout(), which registers the callback and returns immediately without error. When the callback later executes as a separate macrotask, it runs in an entirely new call stack — the original try/catch is long gone. To handle errors in asynchronous callbacks, you must place the try/catch inside the callback itself, or use Promises with .catch(). This is a fundamental consequence of the event loop's task-based execution model.",
+    "sourceUrl": "https://javascript.info/settimeout-setinterval"
+  },
+  {
+    "id": "event-loop-064",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What correctly describes when the browser performs layout and paint operations relative to the event loop?",
+    "options": [
+      "Layout and paint happen inside the microtask queue",
+      "Layout and paint occur between macrotasks, after the microtask queue is fully drained",
+      "Layout and paint run on a separate thread and are completely independent of the event loop",
+      "Layout and paint only happen when requestAnimationFrame is explicitly called"
+    ],
+    "correctIndex": 1,
+    "explanation": "In the browser's event loop model, rendering updates (style calculation, layout, and paint) occur between macrotask executions. After a macrotask completes and all microtasks in the queue have been drained, the browser may perform a rendering step if needed. This is why long-running synchronous code or an endlessly growing microtask queue can block visual updates — the browser never gets the opportunity to render. requestAnimationFrame callbacks run just before this rendering step, making them ideal for visual updates.",
+    "sourceUrl": "https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model"
+  },
+  {
+    "id": "event-loop-065",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the key difference between how dispatchEvent() and click() trigger event handlers in terms of the event loop?",
+    "options": [
+      "dispatchEvent() queues handlers as microtasks while click() queues them as macrotasks",
+      "click() triggers handlers asynchronously via the event loop while dispatchEvent() invokes handlers synchronously in the current call stack",
+      "dispatchEvent() runs handlers synchronously, and click() also runs handlers synchronously — there is no difference",
+      "Both dispatchEvent() and click() always queue handlers as macrotasks"
+    ],
+    "correctIndex": 2,
+    "explanation": "Both dispatchEvent() and programmatic element.click() invoke event handlers synchronously within the current call stack. The handlers execute immediately as part of the dispatchEvent/click call — they are not queued in the task queue. This means code after the dispatch/click call will not run until all handlers have completed. The key distinction is with real user interactions (physical clicks): the browser queues these as tasks in the macrotask queue. This is why button.click() in tests may behave differently from actual user clicks in terms of timing and event loop scheduling.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent"
   }
 ]

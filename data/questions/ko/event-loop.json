@@ -992,5 +992,88 @@
     "correctIndex": 2,
     "explanation": "Scheduler API(scheduler.postTask())는 setTimeout이 제공할 수 없는 우선순위 기반 태스크 스케줄링을 제공합니다. 세 가지 우선순위 옵션을 허용합니다: 'user-blocking'(최고, 사용자 상호작용에 중요한 태스크), 'user-visible'(기본값, 사용자가 인지할 태스크), 'background'(최저, 긴급하지 않은 작업). 이를 통해 브라우저가 중요한 사용자 상호작용을 차단하지 않고 태스크를 스케줄링할 수 있는 더 나은 정보를 제공합니다. setTimeout은 최소 지연만 지정할 수 있으며 우선순위를 표현할 방법이 없습니다. scheduler.postTask()는 Promise를 반환하고 취소를 위한 AbortController도 지원합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Scheduler/postTask"
+  },
+  {
+    "id": "event-loop-061",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 순서는 무엇인가요?",
+    "code": "async function foo() {\n  console.log('A');\n  await Promise.resolve();\n  console.log('B');\n}\n\nconsole.log('C');\nfoo();\nconsole.log('D');",
+    "options": [
+      "C, A, B, D",
+      "A, C, D, B",
+      "C, D, A, B",
+      "C, A, D, B"
+    ],
+    "correctIndex": 3,
+    "explanation": "foo()가 호출되면 첫 번째 await까지 동기적으로 실행됩니다. 먼저 'C'가 출력되고, foo()가 시작되어 'A'를 출력합니다. await Promise.resolve()는 foo를 일시 중지하고 await 이후의 코드를 마이크로태스크로 예약합니다. 제어가 호출자에게 반환되어 'D'가 출력됩니다. 동기 코드가 완료된 후 마이크로태스크 큐가 처리되어 'B'가 출력됩니다. 이는 await가 async 함수를 동기 실행 부분과 마이크로태스크 예약 부분으로 분할하는 방식을 보여줍니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "event-loop-062",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 순서는 무엇인가요?",
+    "code": "Promise.resolve('X')\n  .then(v => { console.log(v); return 'Y'; })\n  .finally(() => console.log('Z'))\n  .then(v => console.log(v));\n\nPromise.resolve().then(() => console.log('W'));",
+    "options": [
+      "X, W, Z, Y",
+      "X, Z, Y, W",
+      "X, Z, W, Y",
+      "X, Y, Z, W"
+    ],
+    "correctIndex": 0,
+    "explanation": "처음에 두 개의 마이크로태스크가 큐에 추가됩니다: 첫 번째 체인의 .then('X'용)과 두 번째 체인의 .then('W'용). 첫 번째 마이크로태스크가 실행되어 'X'를 출력하고 다음 프로미스를 'Y'로 resolve하여 .finally 핸들러를 큐에 추가합니다. 그 다음 'W'가 두 번째 체인에서 실행됩니다. 다음으로 .finally 핸들러가 실행되어 'Z'를 출력합니다. .finally는 내부적으로 콜백을 Promise.resolve()로 래핑하기 때문에 최종 .then이 전달된 값 'Y'를 받기까지 추가 마이크로태스크 틱이 필요합니다. 이 추가 틱으로 인해 'Y'가 마지막에 출력됩니다. 순서는 X, W, Z, Y입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally"
+  },
+  {
+    "id": "event-loop-063",
+    "topic": "event-loop",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "개발자가 setTimeout 호출을 try/catch로 감쌌지만 콜백 내부의 에러가 잡히지 않습니다. 원인은 무엇인가요?",
+    "code": "try {\n  setTimeout(() => {\n    throw new Error('oops');\n  }, 100);\n} catch (e) {\n  console.log('Caught:', e.message);\n}",
+    "options": [
+      "setTimeout은 콜백 내부에서 throw된 모든 에러를 무시한다",
+      "throw는 화살표 함수 내부에서 동작하지 않는다",
+      "에러는 잡히지만 타이밍 문제로 console.log가 호출되지 않는다",
+      "try/catch는 동기적인 setTimeout 등록만 커버하며, 콜백은 새로운 콜 스택을 가진 별도의 태스크에서 실행된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "try/catch 블록은 동기적으로 실행되며 setTimeout() 호출만 래핑합니다. setTimeout()은 콜백을 등록하고 에러 없이 즉시 반환됩니다. 콜백이 나중에 별도의 매크로태스크로 실행될 때, 완전히 새로운 콜 스택에서 실행되므로 원래의 try/catch는 이미 사라진 상태입니다. 비동기 콜백의 에러를 처리하려면 콜백 내부에 try/catch를 배치하거나 Promise와 .catch()를 사용해야 합니다. 이는 이벤트 루프의 태스크 기반 실행 모델의 근본적인 결과입니다.",
+    "sourceUrl": "https://ko.javascript.info/settimeout-setinterval"
+  },
+  {
+    "id": "event-loop-064",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "브라우저가 이벤트 루프와 관련하여 레이아웃과 페인트 작업을 수행하는 시점으로 올바른 것은?",
+    "options": [
+      "레이아웃과 페인트는 마이크로태스크 큐 내부에서 발생한다",
+      "레이아웃과 페인트는 매크로태스크 사이, 마이크로태스크 큐가 완전히 비워진 후에 발생한다",
+      "레이아웃과 페인트는 별도의 스레드에서 실행되며 이벤트 루프와 완전히 독립적이다",
+      "레이아웃과 페인트는 requestAnimationFrame이 명시적으로 호출될 때만 발생한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "브라우저의 이벤트 루프 모델에서 렌더링 업데이트(스타일 계산, 레이아웃, 페인트)는 매크로태스크 실행 사이에 발생합니다. 매크로태스크가 완료되고 큐에 있는 모든 마이크로태스크가 처리된 후, 브라우저는 필요한 경우 렌더링 단계를 수행할 수 있습니다. 이것이 오래 실행되는 동기 코드나 끝없이 증가하는 마이크로태스크 큐가 시각적 업데이트를 차단할 수 있는 이유입니다 — 브라우저가 렌더링할 기회를 얻지 못합니다. requestAnimationFrame 콜백은 이 렌더링 단계 직전에 실행되므로 시각적 업데이트에 이상적입니다.",
+    "sourceUrl": "https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model"
+  },
+  {
+    "id": "event-loop-065",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "dispatchEvent()와 click()이 이벤트 핸들러를 트리거하는 방식의 이벤트 루프 관점에서 핵심 차이점은 무엇인가요?",
+    "options": [
+      "dispatchEvent()는 핸들러를 마이크로태스크로 큐에 추가하고 click()은 매크로태스크로 큐에 추가한다",
+      "click()은 이벤트 루프를 통해 핸들러를 비동기적으로 트리거하고 dispatchEvent()는 현재 콜 스택에서 동기적으로 호출한다",
+      "dispatchEvent()와 click() 모두 현재 콜 스택에서 핸들러를 동기적으로 실행한다 — 차이가 없다",
+      "dispatchEvent()와 click() 모두 항상 핸들러를 매크로태스크로 큐에 추가한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "dispatchEvent()와 프로그래밍 방식의 element.click() 모두 현재 콜 스택 내에서 이벤트 핸들러를 동기적으로 호출합니다. 핸들러는 dispatchEvent/click 호출의 일부로 즉시 실행되며 태스크 큐에 추가되지 않습니다. 이는 dispatch/click 호출 이후의 코드가 모든 핸들러가 완료될 때까지 실행되지 않음을 의미합니다. 핵심적인 구분은 실제 사용자 상호작용(물리적 클릭)에 있습니다: 브라우저는 이를 매크로태스크 큐의 태스크로 큐에 추가합니다. 이것이 테스트에서 button.click()이 실제 사용자 클릭과 타이밍 및 이벤트 루프 스케줄링 측면에서 다르게 동작할 수 있는 이유입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/EventTarget/dispatchEvent"
   }
 ]
