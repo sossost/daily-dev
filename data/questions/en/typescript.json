@@ -1004,5 +1004,88 @@
     "correctIndex": 2,
     "explanation": "The 'as const' assertion creates a readonly tuple with literal types: readonly [1, 'hello', true]. Accessing index 1 returns the specific literal type 'hello', not the widened type string. Without 'as const', values would be inferred as (string | number | boolean)[] and values[1] would be string | number | boolean.",
     "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#literal-types"
+  },
+  {
+    "id": "typescript-061",
+    "topic": "typescript",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about TypeScript's `Record<K, V>` utility type is correct?",
+    "options": [
+      "It creates a type that maps values of type K to keys of type V",
+      "It transforms each element of an array to type V",
+      "It creates an object type with keys of type K and values of type V",
+      "It returns a union type of K and V"
+    ],
+    "correctIndex": 2,
+    "explanation": "Record<K, V> creates an object type with keys of type K and values of type V. For example, Record<string, number> is equivalent to { [key: string]: number }. When using a literal union as the key (e.g., Record<'a' | 'b', boolean>), all specified keys become required. Unlike index signatures, Record can restrict keys to a specific set, enabling safer type definitions.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+  },
+  {
+    "id": "typescript-062",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the `Result` type in the following code?",
+    "code": "function createUser(name: string, age: number) {\n  return { name, age, createdAt: new Date() };\n}\n\ntype Result = ReturnType<typeof createUser>;",
+    "options": [
+      "{ name: string; age: number; createdAt: Date }",
+      "{ name: string; age: number }",
+      "typeof createUser",
+      "unknown"
+    ],
+    "correctIndex": 0,
+    "explanation": "ReturnType<T> is a utility type that extracts the return type of a function type T. typeof createUser gets the function's type, and ReturnType extracts its return type. Since createUser returns an object with name, age, and createdAt properties, Result is { name: string; age: number; createdAt: Date }. This pattern is useful for reusing a function's return type without defining it separately.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/utility-types.html#returntypetype"
+  },
+  {
+    "id": "typescript-063",
+    "topic": "typescript",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the most appropriate way to fix the compile error in the `handleShape` function?",
+    "code": "type Circle = { radius: number };\ntype Rect = { width: number; height: number };\ntype Shape = Circle | Rect;\n\nfunction handleShape(s: Shape) {\n  return s.radius * Math.PI;\n}",
+    "options": [
+      "Add radius as an optional property to the Shape type",
+      "Use a type assertion to cast s to any",
+      "Change the function signature's return type to number | undefined",
+      "Use 'radius' in s check to narrow the type before accessing it"
+    ],
+    "correctIndex": 3,
+    "explanation": "Since Shape is a Circle | Rect union, radius only exists on Circle and not on Rect, so directly accessing it causes a compile error. Using the 'radius' in s check allows TypeScript's control flow analysis to narrow s to Circle within that block. The in operator is a key technique for narrowing union types that lack a discriminant property, alongside typeof and instanceof as one of TypeScript's primary type guards.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html#the-in-operator-narrowing"
+  },
+  {
+    "id": "typescript-064",
+    "topic": "typescript",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "Does a compile error occur when trying to modify `nested.b` in the following code?",
+    "code": "const obj = { a: 1, nested: { b: 2 } };\nconst frozen: Readonly<typeof obj> = obj;\nfrozen.nested.b = 99;",
+    "options": [
+      "Error — nested object properties also become readonly",
+      "Error — frozen is declared with const so all modifications are prevented",
+      "No error — Readonly<T> only makes top-level properties readonly, so nested.b can be modified",
+      "No error — Readonly only applies at runtime so the compiler does not check it"
+    ],
+    "correctIndex": 2,
+    "explanation": "Readonly<T> only provides shallow immutability. The top-level properties a and nested become readonly and cannot be reassigned, but the internal properties of the object that nested points to (like b) can still be modified. For deep immutability, you need to define a recursive DeepReadonly type or use the as const assertion. This mirrors how JavaScript's Object.freeze() only performs shallow freezing.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/utility-types.html#readonlytype"
+  },
+  {
+    "id": "typescript-065",
+    "topic": "typescript",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between an index signature (`{ [key: string]: V }`) and `Record<string, V>`?",
+    "options": [
+      "Index signatures can be combined with additional explicit properties, but Record cannot",
+      "Record validates keys at runtime, but index signatures do not",
+      "They are completely identical in every way",
+      "Record is erased at compile time, but index signatures are preserved at runtime"
+    ],
+    "correctIndex": 0,
+    "explanation": "Index signatures and Record<string, V> behave similarly when representing objects with dynamic keys, but there is a key difference. Index signatures can be used alongside additional explicit properties within an interface or type, allowing definitions like { [key: string]: number; total: number } to provide more specific types for certain keys. Record<string, V> is a standalone utility type, and when used with literal union keys (Record<'a'|'b', V>), all keys become required, enabling compile-time detection of missing keys.",
+    "sourceUrl": "https://www.typescriptlang.org/docs/handbook/2/objects.html#index-signatures"
   }
 ]

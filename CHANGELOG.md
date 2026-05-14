@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-05-13
+
+### Features
+
+- **content**: add 5 event-loop questions (061-065) (`6cea75a`)
+
 ## 2026-05-12
 
 ### Features
