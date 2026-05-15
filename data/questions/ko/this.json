@@ -994,5 +994,88 @@
     "correctIndex": 0,
     "explanation": "return this는 메서드가 호출된 인스턴스 자체를 반환하여 obj.a().b().c() 형태의 체이닝을 가능하게 합니다. 반면 return () => this는 함수를 반환하며, 이 화살표 함수는 선언 시점의 this(메서드 호출 시 인스턴스)를 클로저로 캡처합니다. 반환된 함수를 호출하면 인스턴스가 반환되지만, 직접 체이닝할 수는 없습니다(obj.a()는 함수이지 인스턴스가 아니므로). 이 차이를 이해하면 빌더 패턴이나 지연 평가 패턴을 올바르게 구현할 수 있습니다.",
     "sourceUrl": "https://javascript.info/object-methods#method-chaining"
+  },
+  {
+    "id": "this-061",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Function 생성자(new Function)로 만든 함수 내부의 this와 클로저에 대한 설명으로 올바른 것은?",
+    "options": [
+      "new Function으로 만든 함수는 항상 strict mode에서 실행되어 this가 undefined이다",
+      "new Function으로 만든 함수는 생성된 위치의 지역 변수에 접근할 수 있다",
+      "new Function으로 만든 함수는 화살표 함수와 동일한 this 바인딩을 가진다",
+      "new Function으로 만든 함수는 항상 전역 스코프에서 생성되어 지역 변수에 접근할 수 없고, this는 호출 방식에 따라 결정된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "new Function('return this')로 생성된 함수는 항상 전역 스코프에서 생성됩니다. 따라서 생성 위치의 지역 변수(클로저)에 접근할 수 없고, 전역 변수만 참조할 수 있습니다. this 바인딩은 일반 함수와 동일한 규칙을 따릅니다: 메서드로 호출하면 해당 객체, 단독 호출하면 전역(비엄격) 또는 undefined(엄격)가 됩니다. 이 특성은 eval과 대비되며, CSP(Content Security Policy) 관련 보안 이슈에서 중요합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Function/Function"
+  },
+  {
+    "id": "this-062",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const obj = {\n  value: 'A',\n  getValue() { return this.value; }\n};\nconst obj2 = { value: 'B', getValue: obj.getValue };\nconsole.log((0, obj.getValue)());\nconsole.log(obj2.getValue());",
+    "options": [
+      "undefined, B",
+      "A, B",
+      "A, A",
+      "undefined, A"
+    ],
+    "correctIndex": 0,
+    "explanation": "쉼표 연산자(comma operator)는 마지막 피연산자의 값을 반환하지만, 메서드의 this 바인딩을 분리합니다. (0, obj.getValue)는 함수 참조만 추출하여 단독 호출과 동일한 효과를 냅니다. 비엄격 모드에서 this는 전역 객체가 되어 this.value는 undefined입니다. 반면 obj2.getValue()는 정상적인 메서드 호출이므로 this가 obj2에 바인딩되어 'B'를 반환합니다. 이 패턴은 번들러의 모듈 변환 코드에서 자주 볼 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Comma_operator"
+  },
+  {
+    "id": "this-063",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 Array.from의 mapFn 콜백 내부의 this.multiplier가 undefined입니다. 원인은 무엇인가요?",
+    "code": "const config = {\n  multiplier: 3,\n  generate() {\n    return Array.from([1, 2, 3], function(n) {\n      return n * this.multiplier;\n    });\n  }\n};\nconsole.log(config.generate()); // [NaN, NaN, NaN]",
+    "options": [
+      "Array.from은 mapFn 콜백을 받을 수 없기 때문",
+      "multiplier가 숫자가 아니라 문자열이기 때문",
+      "Array.from의 mapFn은 별도로 호출되어 this가 config가 아닌 전역(또는 undefined)으로 바인딩되기 때문",
+      "Array.from은 배열만 입력으로 받을 수 있기 때문"
+    ],
+    "correctIndex": 2,
+    "explanation": "Array.from(arrayLike, mapFn, thisArg)에서 mapFn은 일반 함수로 전달되면 단독 호출됩니다. this가 config가 아닌 전역(또는 strict mode에서 undefined)이 되어 this.multiplier는 undefined가 됩니다. undefined * 숫자는 NaN이므로 [NaN, NaN, NaN]이 출력됩니다. 해결 방법: 1) 화살표 함수 사용: Array.from([1,2,3], n => n * this.multiplier), 2) 세 번째 인자로 thisArg 전달: Array.from([1,2,3], function(n) { ... }, this).",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/from"
+  },
+  {
+    "id": "this-064",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "class Base {\n  value = 'base';\n  print() {\n    console.log(this.value);\n  }\n}\nclass Derived extends Base {\n  value = 'derived';\n  printAll() {\n    super.print();\n    this.print();\n  }\n}\nconst d = new Derived();\nd.printAll();",
+    "options": [
+      "base, base",
+      "derived, derived",
+      "base, derived",
+      "TypeError"
+    ],
+    "correctIndex": 1,
+    "explanation": "super.print()는 프로토타입 체인에서 Base.prototype.print를 찾아 호출하지만, this는 여전히 현재 인스턴스(d)에 바인딩됩니다. super는 메서드를 어디서 가져올지만 결정하고, this를 Base 인스턴스로 변경하지 않습니다. d.value는 'derived'이므로(Derived의 클래스 필드가 Base의 것을 덮어씀), super.print()와 this.print() 모두 'derived'를 출력합니다. super의 this 전달 방식은 [[HomeObject]] 내부 슬롯을 통해 구현됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/super"
+  },
+  {
+    "id": "this-065",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "메서드를 직접 할당하는 것과 Object.defineProperty로 정의하는 것의 this 동작 차이로 올바른 것은?",
+    "options": [
+      "Object.defineProperty로 정의된 메서드는 this가 항상 undefined이다",
+      "직접 할당은 열거 가능하고 defineProperty 기본값은 열거 불가능하지만, 두 방식 모두 this 바인딩 규칙은 동일하다",
+      "직접 할당은 프로토타입에 추가되고 defineProperty는 인스턴스에 추가된다",
+      "두 방식 모두 this 바인딩 규칙이 동일하며, 프로퍼티 디스크립터(enumerable, configurable 등)도 동일하다"
+    ],
+    "correctIndex": 1,
+    "explanation": "obj.method = function() {}으로 직접 할당하면 프로퍼티는 기본적으로 enumerable: true, configurable: true, writable: true입니다. Object.defineProperty(obj, 'method', { value: fn })으로 정의하면 기본값은 enumerable: false, configurable: false, writable: false입니다. 그러나 this 바인딩은 두 방식 모두 동일한 규칙을 따릅니다: obj.method()로 호출하면 this는 obj에, 변수에 저장 후 단독 호출하면 전역(또는 undefined)에 바인딩됩니다. defineProperty는 프로퍼티의 메타 속성을 세밀하게 제어할 때 사용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty"
   }
 ]

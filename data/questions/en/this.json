@@ -993,5 +993,88 @@
     "correctIndex": 0,
     "explanation": "return this returns the instance itself, enabling chaining like obj.a().b().c(). In contrast, return () => this returns a function — the arrow function captures this (the instance) via closure at the time the method is called. Invoking the returned function produces the instance, but you cannot directly chain on it (obj.a() is a function, not the instance). Understanding this distinction is key for correctly implementing builder patterns and lazy evaluation patterns.",
     "sourceUrl": "https://javascript.info/object-methods#method-chaining"
+  },
+  {
+    "id": "this-061",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "Which statement about this and closures in functions created with the Function constructor (new Function) is correct?",
+    "options": [
+      "Functions created with new Function always run in strict mode, so this is undefined",
+      "Functions created with new Function can access local variables from the creation site",
+      "Functions created with new Function have the same this binding as arrow functions",
+      "Functions created with new Function are always created in the global scope, cannot access local variables, and their this is determined by the call pattern"
+    ],
+    "correctIndex": 3,
+    "explanation": "A function created via new Function('return this') is always scoped to the global environment. It cannot access local variables (closures) at the creation site — only global variables are reachable. Its this binding follows the same rules as regular functions: the calling object for method calls, global (non-strict) or undefined (strict) for standalone calls. This characteristic contrasts with eval and is important for CSP (Content Security Policy) security considerations.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function"
+  },
+  {
+    "id": "this-062",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  value: 'A',\n  getValue() { return this.value; }\n};\nconst obj2 = { value: 'B', getValue: obj.getValue };\nconsole.log((0, obj.getValue)());\nconsole.log(obj2.getValue());",
+    "options": [
+      "undefined, B",
+      "A, B",
+      "A, A",
+      "undefined, A"
+    ],
+    "correctIndex": 0,
+    "explanation": "The comma operator evaluates all operands and returns the last value, but it strips the method's this binding. (0, obj.getValue) extracts a plain function reference — equivalent to a standalone call. In non-strict mode, this becomes the global object, so this.value is undefined. Meanwhile, obj2.getValue() is a normal method call, so this is bound to obj2 and returns 'B'. This pattern is commonly seen in bundler-generated module transformation code.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comma_operator"
+  },
+  {
+    "id": "this-063",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "In the following code, this.multiplier inside the Array.from mapFn callback is undefined. What is the cause?",
+    "code": "const config = {\n  multiplier: 3,\n  generate() {\n    return Array.from([1, 2, 3], function(n) {\n      return n * this.multiplier;\n    });\n  }\n};\nconsole.log(config.generate()); // [NaN, NaN, NaN]",
+    "options": [
+      "Array.from cannot accept a mapFn callback",
+      "multiplier is a string rather than a number",
+      "The mapFn in Array.from is called standalone, so this is bound to the global object (or undefined) instead of config",
+      "Array.from only accepts arrays as input"
+    ],
+    "correctIndex": 2,
+    "explanation": "In Array.from(arrayLike, mapFn, thisArg), the mapFn is called as a standalone function when passed as a regular function. this becomes the global object (or undefined in strict mode) instead of config, so this.multiplier is undefined. Since undefined * number is NaN, the result is [NaN, NaN, NaN]. Solutions: 1) Use an arrow function: Array.from([1,2,3], n => n * this.multiplier), 2) Pass thisArg as the third argument: Array.from([1,2,3], function(n) { ... }, this).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from"
+  },
+  {
+    "id": "this-064",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "class Base {\n  value = 'base';\n  print() {\n    console.log(this.value);\n  }\n}\nclass Derived extends Base {\n  value = 'derived';\n  printAll() {\n    super.print();\n    this.print();\n  }\n}\nconst d = new Derived();\nd.printAll();",
+    "options": [
+      "base, base",
+      "derived, derived",
+      "base, derived",
+      "TypeError"
+    ],
+    "correctIndex": 1,
+    "explanation": "super.print() looks up Base.prototype.print via the prototype chain and calls it, but this is still bound to the current instance (d). super only determines where to find the method — it does not change this to a Base instance. Since d.value is 'derived' (the Derived class field overwrites the Base one), both super.print() and this.print() output 'derived'. The this forwarding mechanism of super is implemented through the [[HomeObject]] internal slot.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/super"
+  },
+  {
+    "id": "this-065",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference in this behavior between assigning a method directly and defining it with Object.defineProperty?",
+    "options": [
+      "Methods defined with Object.defineProperty always have this as undefined",
+      "Direct assignment makes the property enumerable while defineProperty defaults to non-enumerable, but both follow the same this binding rules",
+      "Direct assignment adds to the prototype while defineProperty adds to the instance",
+      "Both approaches follow the same this binding rules and produce identical property descriptors"
+    ],
+    "correctIndex": 1,
+    "explanation": "When you assign via obj.method = function() {}, the property defaults to enumerable: true, configurable: true, writable: true. With Object.defineProperty(obj, 'method', { value: fn }), the defaults are enumerable: false, configurable: false, writable: false. However, this binding is identical for both: calling obj.method() binds this to obj, while extracting the reference and calling standalone binds this to the global object (or undefined in strict mode). defineProperty is used when you need fine-grained control over property metadata.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty"
   }
 ]
