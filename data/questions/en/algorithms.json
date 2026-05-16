@@ -990,5 +990,86 @@
     "correctIndex": 0,
     "explanation": "BFS guarantees the shortest path in an unweighted graph. Starting from A, it visits A at distance 0, then B and C at distance 1. Among C's neighbors, E is discovered at distance 2, so it returns 2. The path is A→C→E. BFS guarantees the shortest path because it explores nodes level by level, visiting closer nodes first.",
     "sourceUrl": "https://en.wikipedia.org/wiki/Breadth-first_search#Applications"
+  },
+  {
+    "id": "algorithms-061",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the core principle of a Backtracking algorithm?",
+    "options": [
+      "It always finds the globally optimal solution by making locally optimal choices",
+      "It builds solutions incrementally and abandons a path as soon as it determines the path cannot lead to a valid solution",
+      "It divides the problem into subproblems and combines their solutions",
+      "It uses a priority queue to always expand the most promising node first"
+    ],
+    "correctIndex": 1,
+    "explanation": "Backtracking explores solutions by building them one step at a time. When it detects that the current partial solution cannot possibly be extended to a valid complete solution (a constraint is violated), it 'backtracks' by undoing the last step and trying the next alternative. This pruning of the search space makes it more efficient than brute-force enumeration.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Backtracking"
+  },
+  {
+    "id": "algorithms-062",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is a key limitation of Dijkstra's algorithm?",
+    "options": [
+      "It cannot find shortest paths in directed graphs",
+      "It does not work correctly with negative edge weights",
+      "It requires the graph to be a tree",
+      "It always has O(n²) time complexity regardless of implementation"
+    ],
+    "correctIndex": 1,
+    "explanation": "Dijkstra's algorithm assumes that once a node is marked as visited with a certain distance, no shorter path to it exists. Negative edge weights violate this assumption because a longer path with a negative edge could yield a shorter total distance. For graphs with negative weights, the Bellman-Ford algorithm should be used instead.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm#Description"
+  },
+  {
+    "id": "algorithms-063",
+    "topic": "algorithms",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What distinguishes Counting Sort from comparison-based sorting algorithms like Merge Sort?",
+    "options": [
+      "Counting Sort is always faster regardless of input size",
+      "Counting Sort works by counting occurrences of each value rather than comparing elements, achieving O(n + k) time where k is the value range",
+      "Counting Sort uses less memory than Merge Sort in all cases",
+      "Counting Sort is a comparison-based sort that uses counting to optimize comparisons"
+    ],
+    "correctIndex": 1,
+    "explanation": "Counting Sort is a non-comparison-based algorithm that counts how many times each distinct value appears, then uses arithmetic to place each element in its correct position. Its time complexity is O(n + k) where k is the range of input values. This beats the O(n log n) lower bound for comparison sorts, but only when k is not significantly larger than n.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Counting_sort"
+  },
+  {
+    "id": "algorithms-064",
+    "topic": "algorithms",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between memoization (top-down) and tabulation (bottom-up) in Dynamic Programming?",
+    "options": [
+      "Memoization uses iteration while tabulation uses recursion",
+      "Tabulation always uses less memory than memoization",
+      "Memoization solves subproblems on demand using recursion and caching, while tabulation iteratively fills a table starting from the smallest subproblems",
+      "Memoization cannot handle overlapping subproblems"
+    ],
+    "correctIndex": 2,
+    "explanation": "Memoization (top-down) starts from the original problem and recursively solves subproblems, caching results to avoid recomputation. Tabulation (bottom-up) solves all subproblems iteratively from smallest to largest, filling a table. Memoization only computes needed subproblems but has recursion overhead; tabulation avoids stack overflow but may compute unnecessary subproblems.",
+    "sourceUrl": "https://javascript.info/task/fibonacci-numbers"
+  },
+  {
+    "id": "algorithms-065",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function maxSubarraySum(arr) {\n  let maxSum = arr[0];\n  let currentSum = arr[0];\n  for (let i = 1; i < arr.length; i++) {\n    currentSum = Math.max(arr[i], currentSum + arr[i]);\n    maxSum = Math.max(maxSum, currentSum);\n  }\n  return maxSum;\n}\nconsole.log(maxSubarraySum([-2, 1, -3, 4, -1, 2, 1, -5, 4]));",
+    "options": [
+      "4",
+      "7",
+      "6",
+      "10"
+    ],
+    "correctIndex": 2,
+    "explanation": "This is Kadane's algorithm for the maximum subarray problem. It tracks the maximum sum ending at each position. Walking through: the subarray [4, -1, 2, 1] gives the maximum sum of 6. At each step, it decides whether to extend the current subarray or start fresh, keeping track of the overall maximum encountered.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Maximum_subarray_problem#Kadane's_algorithm"
   }
 ]
