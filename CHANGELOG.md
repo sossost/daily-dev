@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-05-17
+
+### Features
+
+- **content**: add 5 algorithms questions (061-065) (`87196c6`)
+
 ## 2026-05-16
 
 ### Features

@@ -981,5 +981,87 @@
     "correctIndex": 1,
     "explanation": "HttpOnly 플래그는 브라우저에 해당 쿠키를 클라이언트 측 JavaScript(document.cookie, fetch 헤더 등)를 통해 접근할 수 없도록 지시합니다. 이는 XSS 공격에 대한 핵심 방어입니다 — 공격자가 악성 스크립트를 주입하더라도 HttpOnly로 표시된 세션 쿠키를 탈취할 수 없습니다. 세션 쿠키와 인증 토큰은 항상 HttpOnly로 설정해야 합니다. HttpOnly는 쿠키가 요청과 함께 전송되는 것을 방지하지는 않으며, JavaScript 접근만 차단합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Cookies#restrict_access_to_cookies"
+  },
+  {
+    "id": "web-security-061",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "서브도메인 탈취(Subdomain Takeover) 공격이 가능한 조건은 무엇인가요?",
+    "options": [
+      "DNS에 CNAME 레코드가 존재하지만, 해당 레코드가 가리키는 외부 서비스(예: S3, Heroku)의 리소스가 해제되어 공격자가 동일한 서비스에서 해당 호스트명을 등록할 수 있는 경우",
+      "메인 도메인의 SSL 인증서가 만료된 경우",
+      "서브도메인에 CORS 헤더가 설정되지 않은 경우",
+      "DNS 서버가 DNSSEC를 지원하지 않는 경우"
+    ],
+    "correctIndex": 0,
+    "explanation": "서브도메인 탈취는 DNS CNAME 레코드가 외부 서비스(예: GitHub Pages, S3 버킷, Heroku 앱)를 가리키지만, 해당 서비스에서 리소스가 삭제되거나 해제된 상태일 때 발생합니다. 공격자는 동일한 외부 서비스에서 같은 호스트명을 등록하여 해당 서브도메인의 콘텐츠를 제어할 수 있습니다. 이를 통해 쿠키 탈취, 피싱, 또는 부모 도메인의 신뢰를 악용할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/Security/Subdomain_takeovers"
+  },
+  {
+    "id": "web-security-062",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "HTTP Request Smuggling 공격의 핵심 원리는 무엇인가요?",
+    "options": [
+      "서버의 TLS 인증서를 위조하여 중간자 공격을 수행하는 것",
+      "HTTP/2 프로토콜의 멀티플렉싱 취약점을 악용하는 것",
+      "프론트엔드(프록시/로드밸런서)와 백엔드 서버가 HTTP 요청의 경계(Content-Length vs Transfer-Encoding)를 서로 다르게 해석하는 차이를 악용하여 요청을 밀반입하는 것",
+      "DNS 캐시 포이즈닝을 통해 요청을 악성 서버로 리디렉션하는 것"
+    ],
+    "correctIndex": 2,
+    "explanation": "HTTP Request Smuggling은 프론트엔드 서버(CDN, 리버스 프록시)와 백엔드 서버가 HTTP 요청 본문의 길이를 결정하는 방식(Content-Length 헤더 vs Transfer-Encoding: chunked)이 다를 때 발생합니다. 공격자는 이 불일치를 이용해 하나의 HTTP 연결에 숨겨진 두 번째 요청을 삽입하여, 다른 사용자의 요청을 가로채거나 캐시 포이즈닝, 접근 제어 우회 등을 수행할 수 있습니다.",
+    "sourceUrl": "https://portswigger.net/web-security/request-smuggling"
+  },
+  {
+    "id": "web-security-063",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 보안 문제점은 무엇인가요?\n\nconst userInput = 'alert(document.cookie)';\neval(userInput);",
+    "code": "const userInput = 'alert(document.cookie)';\neval(userInput);",
+    "options": [
+      "eval()은 deprecated 함수이므로 실행되지 않는다",
+      "ReferenceError가 발생한다",
+      "사용자 입력을 eval()에 전달하면 임의의 JavaScript 코드가 실행되어 XSS와 동일한 위험을 초래한다",
+      "eval()은 문자열을 JSON으로만 파싱하므로 보안 위험이 없다"
+    ],
+    "correctIndex": 2,
+    "explanation": "eval()은 문자열을 JavaScript 코드로 실행합니다. 사용자 입력을 eval()에 전달하면 공격자가 임의의 코드를 실행할 수 있어, XSS 공격과 동일한 위험(쿠키 탈취, DOM 조작, 데이터 유출)을 초래합니다. eval()은 현재 스코프의 변수에도 접근할 수 있어 더욱 위험합니다. 대안으로 JSON.parse(), Function 생성자(제한적), 또는 구조화된 데이터 처리를 사용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/eval#never_use_eval!"
+  },
+  {
+    "id": "web-security-064",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "CSP의 'strict-dynamic' 키워드에 대한 설명으로 올바른 것은 무엇인가요?",
+    "options": [
+      "'strict-dynamic'은 모든 인라인 스크립트의 실행을 무조건 허용한다",
+      "'strict-dynamic'은 'self'와 동일하게 동작하며 같은 출처의 스크립트만 허용한다",
+      "'strict-dynamic'은 nonce나 hash로 신뢰된 스크립트가 동적으로 생성한 스크립트도 자동으로 신뢰하도록 하여, allowlist 없이도 서드파티 라이브러리 체인을 허용한다",
+      "'strict-dynamic'은 HTTP에서만 동작하며 HTTPS 환경에서는 무시된다"
+    ],
+    "correctIndex": 2,
+    "explanation": "CSP의 'strict-dynamic'은 nonce 또는 hash로 명시적으로 신뢰된 스크립트가 document.createElement('script')로 동적으로 삽입하는 스크립트도 자동으로 신뢰하도록 합니다. 이를 통해 도메인 기반 allowlist 없이도 복잡한 서드파티 스크립트 체인(예: Google Analytics가 추가 스크립트를 로드)을 안전하게 허용할 수 있습니다. 'strict-dynamic' 사용 시 'self'와 'unsafe-inline' 같은 소스 표현식은 무시됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src#strict-dynamic"
+  },
+  {
+    "id": "web-security-065",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 Node.js 코드의 보안 취약점은 무엇인가요?\n\napp.get('/api/file', (req, res) => {\n  const filename = req.query.name;\n  const filepath = path.join('/uploads', filename);\n  res.sendFile(filepath);\n});",
+    "code": "app.get('/api/file', (req, res) => {\n  const filename = req.query.name;\n  const filepath = path.join('/uploads', filename);\n  res.sendFile(filepath);\n});",
+    "options": [
+      "sendFile()은 비동기 함수이므로 await를 사용해야 한다",
+      "Content-Type 헤더가 설정되지 않아 MIME 스니핑 공격에 취약하다",
+      "path.join()은 '../'와 같은 경로 순회(Path Traversal) 입력을 방지하지 않으므로, 공격자가 '/uploads' 디렉토리 외부의 파일(예: /etc/passwd)에 접근할 수 있다",
+      "req.query.name이 undefined일 때만 에러가 발생하며, 다른 보안 문제는 없다"
+    ],
+    "correctIndex": 2,
+    "explanation": "path.join('/uploads', '../etc/passwd')는 '/etc/passwd'로 해석됩니다. path.join()은 경로를 정규화하지만 기준 디렉토리 밖으로의 이동을 차단하지 않습니다. 공격자는 ?name=../../etc/passwd 같은 입력으로 서버의 임의 파일을 읽을 수 있습니다. 이를 방지하려면 path.resolve() 후 결과 경로가 허용된 디렉토리 내에 있는지 startsWith() 검사를 수행하거나, path.basename()으로 디렉토리 이동 문자를 제거해야 합니다.",
+    "sourceUrl": "https://owasp.org/www-community/attacks/Path_Traversal"
   }
 ]

@@ -981,5 +981,87 @@
     "correctIndex": 1,
     "explanation": "The HttpOnly flag tells the browser that the cookie should not be accessible through client-side JavaScript (document.cookie, fetch headers, etc.). This is a critical defense against XSS attacks — even if an attacker injects a malicious script, they cannot steal session cookies marked as HttpOnly. Session cookies and authentication tokens should always be set with HttpOnly. Note that HttpOnly does not prevent the cookie from being sent with requests; it only blocks JavaScript access.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies"
+  },
+  {
+    "id": "web-security-061",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What condition makes a Subdomain Takeover attack possible?",
+    "options": [
+      "A DNS CNAME record exists pointing to an external service (e.g., S3, Heroku), but the resource on that service has been deprovisioned, allowing an attacker to register the same hostname on that service",
+      "The main domain's SSL certificate has expired",
+      "The subdomain does not have CORS headers configured",
+      "The DNS server does not support DNSSEC"
+    ],
+    "correctIndex": 0,
+    "explanation": "Subdomain takeover occurs when a DNS CNAME record points to an external service (e.g., GitHub Pages, S3 bucket, Heroku app) but the resource on that service has been deleted or deprovisioned. An attacker can register the same hostname on the external service and gain control of the subdomain's content. This can be leveraged for cookie theft, phishing, or abusing the parent domain's trust.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/Security/Subdomain_takeovers"
+  },
+  {
+    "id": "web-security-062",
+    "topic": "web-security",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the core principle behind HTTP Request Smuggling attacks?",
+    "options": [
+      "Forging the server's TLS certificate to perform a man-in-the-middle attack",
+      "Exploiting HTTP/2 multiplexing vulnerabilities",
+      "Exploiting differences in how the front-end (proxy/load balancer) and back-end server interpret HTTP request boundaries (Content-Length vs Transfer-Encoding) to smuggle requests",
+      "Redirecting requests to a malicious server through DNS cache poisoning"
+    ],
+    "correctIndex": 2,
+    "explanation": "HTTP Request Smuggling occurs when the front-end server (CDN, reverse proxy) and the back-end server disagree on how to determine the length of an HTTP request body (Content-Length header vs Transfer-Encoding: chunked). An attacker exploits this discrepancy to inject a hidden second request within a single HTTP connection, enabling request hijacking, cache poisoning, or access control bypass.",
+    "sourceUrl": "https://portswigger.net/web-security/request-smuggling"
+  },
+  {
+    "id": "web-security-063",
+    "topic": "web-security",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the security issue with the following code?\n\nconst userInput = 'alert(document.cookie)';\neval(userInput);",
+    "code": "const userInput = 'alert(document.cookie)';\neval(userInput);",
+    "options": [
+      "eval() is a deprecated function and will not execute",
+      "A ReferenceError is thrown",
+      "Passing user input to eval() allows arbitrary JavaScript code execution, posing the same risks as XSS",
+      "eval() only parses strings as JSON, so there is no security risk"
+    ],
+    "correctIndex": 2,
+    "explanation": "eval() executes a string as JavaScript code. Passing user input to eval() allows an attacker to execute arbitrary code, posing the same risks as XSS (cookie theft, DOM manipulation, data exfiltration). eval() can also access variables in the current scope, making it even more dangerous. Alternatives include JSON.parse(), the Function constructor (with limitations), or structured data processing.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#never_use_eval!"
+  },
+  {
+    "id": "web-security-064",
+    "topic": "web-security",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement correctly describes the CSP 'strict-dynamic' keyword?",
+    "options": [
+      "'strict-dynamic' unconditionally allows all inline scripts to execute",
+      "'strict-dynamic' works the same as 'self' and only allows same-origin scripts",
+      "'strict-dynamic' allows scripts dynamically created by a nonce/hash-trusted script to also be trusted automatically, enabling third-party library chains without an allowlist",
+      "'strict-dynamic' only works over HTTP and is ignored in HTTPS environments"
+    ],
+    "correctIndex": 2,
+    "explanation": "CSP's 'strict-dynamic' allows scripts that are explicitly trusted via nonce or hash to propagate trust to scripts they dynamically insert via document.createElement('script'). This enables complex third-party script chains (e.g., Google Analytics loading additional scripts) without domain-based allowlists. When 'strict-dynamic' is used, source expressions like 'self' and 'unsafe-inline' are ignored.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src#strict-dynamic"
+  },
+  {
+    "id": "web-security-065",
+    "topic": "web-security",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the security vulnerability in the following Node.js code?\n\napp.get('/api/file', (req, res) => {\n  const filename = req.query.name;\n  const filepath = path.join('/uploads', filename);\n  res.sendFile(filepath);\n});",
+    "code": "app.get('/api/file', (req, res) => {\n  const filename = req.query.name;\n  const filepath = path.join('/uploads', filename);\n  res.sendFile(filepath);\n});",
+    "options": [
+      "sendFile() is an async function and must be used with await",
+      "The Content-Type header is not set, making it vulnerable to MIME sniffing attacks",
+      "path.join() does not prevent path traversal input like '../', allowing an attacker to access files outside the '/uploads' directory (e.g., /etc/passwd)",
+      "The only issue is that req.query.name could be undefined; there are no other security concerns"
+    ],
+    "correctIndex": 2,
+    "explanation": "path.join('/uploads', '../etc/passwd') resolves to '/etc/passwd'. path.join() normalizes paths but does not prevent traversal outside the base directory. An attacker can use input like ?name=../../etc/passwd to read arbitrary files on the server. To prevent this, use path.resolve() and verify the resulting path starts with the allowed directory using startsWith(), or use path.basename() to strip directory traversal characters.",
+    "sourceUrl": "https://owasp.org/www-community/attacks/Path_Traversal"
   }
 ]
