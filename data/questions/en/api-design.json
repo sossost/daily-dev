@@ -973,5 +973,87 @@
     "correctIndex": 3,
     "explanation": "409 Conflict is returned when the request conflicts with the current state of the target resource. Common scenarios include optimistic locking where another user has already modified the resource, or attempting to create a resource with an identifier that already exists. The client can resolve the conflict by fetching the latest state of the resource and retrying the request.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/409"
+  },
+  {
+    "id": "api-design-061",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the purpose of the If-None-Match header in a conditional GET request?",
+    "options": [
+      "It sends the previously received ETag so the server can return 304 Not Modified if the resource hasn't changed",
+      "It prevents the browser from caching the response",
+      "It tells the server to ignore any query parameters in the request",
+      "It ensures the request is only processed if the server is not under heavy load"
+    ],
+    "correctIndex": 0,
+    "explanation": "The If-None-Match header contains an ETag value from a previous response. The server compares it to the current resource's ETag and returns 304 Not Modified with no body if they match, saving bandwidth. This conditional request mechanism is essential for efficient API caching — the client can reuse its cached copy without re-downloading unchanged data.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-None-Match"
+  },
+  {
+    "id": "api-design-062",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is logged to the console in the following code?\n\nconst headers = new Headers();\nheaders.append('Accept', 'application/json');\nheaders.append('Accept', 'text/html');\nconsole.log(headers.get('Accept'));",
+    "code": "const headers = new Headers();\nheaders.append('Accept', 'application/json');\nheaders.append('Accept', 'text/html');\nconsole.log(headers.get('Accept'));",
+    "options": [
+      "application/json",
+      "text/html",
+      "application/json, text/html",
+      "null"
+    ],
+    "correctIndex": 2,
+    "explanation": "The Headers.append() method adds a new value to an existing header, rather than replacing it. When the same header is appended multiple times, the values are combined into a comma-separated string per the HTTP specification. So headers.get('Accept') returns 'application/json, text/html'. This differs from Headers.set(), which would replace the existing value entirely.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Headers/append"
+  },
+  {
+    "id": "api-design-063",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the problem with the following API versioning approach?\n\napp.get('/api/users', (req, res) => {\n  const version = req.headers['x-api-version'] || '1';\n  if (version === '1') {\n    return res.json(usersV1);\n  } else if (version === '2') {\n    return res.json(usersV2);\n  }\n  res.json(usersV1);\n});",
+    "options": [
+      "Header-based versioning prevents URL-based caching since caches key on URL by default and ignore custom headers",
+      "The x-api-version header is reserved and cannot be used",
+      "HTTP headers cannot contain numeric values",
+      "Custom headers must always start with X-Custom- prefix"
+    ],
+    "correctIndex": 0,
+    "explanation": "HTTP caches (CDNs, browser caches, proxies) typically use the URL as the cache key. When different API versions are served from the same URL based on a custom header, caches may return stale responses from a different version. To fix this, you must include a Vary: X-Api-Version response header so caches distinguish responses by version, or use URL-based versioning (e.g., /api/v1/users).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary"
+  },
+  {
+    "id": "api-design-064",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between HTTP status codes 400 Bad Request and 422 Unprocessable Entity?",
+    "options": [
+      "400 is for server errors and 422 is for client errors",
+      "400 indicates the request is malformed and cannot be parsed, while 422 indicates the request is syntactically valid but semantically incorrect",
+      "400 is used only for GET requests and 422 is used only for POST requests",
+      "There is no practical difference; they can be used interchangeably"
+    ],
+    "correctIndex": 1,
+    "explanation": "400 Bad Request means the server cannot process the request because it is malformed — for example, invalid JSON syntax or a missing required header. 422 Unprocessable Entity means the request is well-formed and the server understands it, but the contained data fails validation — for example, an email field with an invalid format. This distinction helps API consumers understand whether they need to fix the request structure or the data content.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422"
+  },
+  {
+    "id": "api-design-065",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the final value of retryAfter in the following code?\n\nconst response = {\n  status: 429,\n  headers: new Map([\n    ['Retry-After', '120'],\n    ['X-RateLimit-Remaining', '0'],\n    ['X-RateLimit-Reset', '1700000000']\n  ])\n};\n\nlet retryAfter = 1;\nif (response.status === 429) {\n  const header = response.headers.get('Retry-After');\n  retryAfter = header != null ? Number(header) : 60;\n}\nconsole.log(retryAfter);",
+    "code": "const response = {\n  status: 429,\n  headers: new Map([\n    ['Retry-After', '120'],\n    ['X-RateLimit-Remaining', '0'],\n    ['X-RateLimit-Reset', '1700000000']\n  ])\n};\n\nlet retryAfter = 1;\nif (response.status === 429) {\n  const header = response.headers.get('Retry-After');\n  retryAfter = header != null ? Number(header) : 60;\n}\nconsole.log(retryAfter);",
+    "options": [
+      "1",
+      "60",
+      "1700000000",
+      "120"
+    ],
+    "correctIndex": 3,
+    "explanation": "The status is 429, so the if-block executes. headers.get('Retry-After') returns the string '120' (not null), so Number('120') evaluates to 120. The Retry-After header tells the client how many seconds to wait before retrying. Understanding rate limit headers (Retry-After, X-RateLimit-Remaining, X-RateLimit-Reset) is essential for building resilient API clients that respect server capacity.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After"
   }
 ]

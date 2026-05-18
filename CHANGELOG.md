@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-05-18
+
+### Features
+
+- **content**: add 5 web-security questions (061-065) (`dd1d083`)
+
 ## 2026-05-17
 
 ### Features
