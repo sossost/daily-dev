@@ -985,5 +985,87 @@
     "correctIndex": 0,
     "explanation": "canvas.toDataURL() synchronously returns the canvas contents as a base64-encoded data: URI string. While simple to use, base64 encoding produces a string roughly 33% larger than the original binary data, making it memory-inefficient. canvas.toBlob() asynchronously delivers a Blob object via a callback, avoiding main thread blocking and working with binary data directly. This makes toBlob() more suitable for server uploads or processing large images.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob"
+  },
+  {
+    "id": "browser-api-061",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const encoder = new TextEncoder();\nconst encoded = encoder.encode('AB');\nconsole.log(encoded.length, encoded[0]);",
+    "options": [
+      "2, 'A'",
+      "4, 0",
+      "2, 0x0041",
+      "2, 65"
+    ],
+    "correctIndex": 3,
+    "explanation": "TextEncoder encodes a string into a UTF-8 byte array (Uint8Array). The ASCII character 'A' is represented as a single byte with value 65 in UTF-8, and 'B' is 66. So the resulting array has length 2 and the first element is 65. Unlike JavaScript's charCodeAt(), TextEncoder always uses UTF-8 encoding, where multibyte characters like Korean or emoji occupy more bytes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder"
+  },
+  {
+    "id": "browser-api-062",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about the Fullscreen API's requestFullscreen() method is correct?",
+    "options": [
+      "It can only be called on the document object",
+      "It automatically hides all browser UI elements (address bar, tabs, etc.)",
+      "It can be called programmatically at any time without user interaction",
+      "It transitions a specific DOM element to fullscreen and must be called within a user gesture context (e.g., click)"
+    ],
+    "correctIndex": 3,
+    "explanation": "Element.requestFullscreen() transitions a specific DOM element into fullscreen mode. For security reasons, it can only be called within a user gesture event handler (click, keyboard input, etc.), known as transient activation. It is called on individual elements, not the document, and is commonly used for video players and games. Use document.exitFullscreen() to leave fullscreen mode.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/requestFullscreen"
+  },
+  {
+    "id": "browser-api-063",
+    "topic": "browser-api",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which correctly describes the difference between EventSource (Server-Sent Events) and WebSocket?",
+    "options": [
+      "EventSource is unidirectional (server to client only), while WebSocket is bidirectional",
+      "EventSource can transmit binary data, but WebSocket can only transmit text",
+      "WebSocket uses HTTP, but EventSource uses its own proprietary protocol",
+      "EventSource does not support automatic reconnection, but WebSocket does"
+    ],
+    "correctIndex": 0,
+    "explanation": "EventSource (SSE) is an HTTP-based unidirectional streaming protocol from server to client. The server pushes events in text/event-stream format, and the connection automatically reconnects if dropped. WebSocket uses the ws:// protocol for bidirectional communication, allowing both client and server to send data. SSE is a simpler alternative to WebSocket when only server push is needed, such as news feeds or real-time notifications.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/EventSource"
+  },
+  {
+    "id": "browser-api-064",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The following code implements a fetch request with a 5-second timeout. What is the issue?",
+    "code": "async function fetchWithTimeout(url) {\n  const response = await fetch(url, {\n    signal: AbortSignal.timeout(5000)\n  });\n  const data = await response.json();\n  return data;\n}",
+    "options": [
+      "AbortSignal.timeout() is not a valid method",
+      "The signal option cannot be passed in fetch's second argument",
+      "The timeout value should be in seconds, so 5 should be passed instead",
+      "The code works correctly, but a TimeoutError is thrown on timeout, so errors must be handled with try-catch"
+    ],
+    "correctIndex": 3,
+    "explanation": "AbortSignal.timeout() is a static method that automatically sends an abort signal after the specified milliseconds, and the code is syntactically correct. However, when a timeout occurs, a TimeoutError (not an AbortError) is thrown, so production code must handle it with try-catch. AbortSignal.timeout() is a concise replacement for the pattern of manually creating an AbortController and calling abort() via setTimeout.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/timeout_static"
+  },
+  {
+    "id": "browser-api-065",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What does the Storage Manager API's navigator.storage.persist() method do?",
+    "options": [
+      "It automatically backs up localStorage data to the server",
+      "It allows arbitrarily increasing the browser's storage quota",
+      "It encrypts stored data for enhanced security",
+      "It requests that browser-stored data (IndexedDB, Cache API, etc.) not be automatically deleted when storage space is low"
+    ],
+    "correctIndex": 3,
+    "explanation": "navigator.storage.persist() requests the browser to permanently retain the site's stored data. By default, browsers can automatically delete (evict) data from older sites when storage space runs low. Once persist() is granted, data is retained unless the user explicitly deletes it. You can also use navigator.storage.estimate() to check current usage and quota.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist"
   }
 ]

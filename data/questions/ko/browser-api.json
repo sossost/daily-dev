@@ -985,5 +985,87 @@
     "correctIndex": 0,
     "explanation": "canvas.toDataURL()은 캔버스 내용을 base64 인코딩된 data: URI 문자열로 동기적으로 반환합니다. 간단하지만, base64 인코딩으로 인해 원본보다 약 33% 더 큰 문자열이 생성되어 메모리 사용이 비효율적입니다. canvas.toBlob()은 콜백 함수를 통해 Blob 객체를 비동기적으로 전달하며, 메인 스레드를 차단하지 않고 바이너리 데이터를 직접 다룰 수 있어 서버 업로드나 대용량 이미지 처리에 더 적합합니다.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob"
+  },
+  {
+    "id": "browser-api-061",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const encoder = new TextEncoder();\nconst encoded = encoder.encode('AB');\nconsole.log(encoded.length, encoded[0]);",
+    "options": [
+      "2, 'A'",
+      "4, 0",
+      "2, 0x0041",
+      "2, 65"
+    ],
+    "correctIndex": 3,
+    "explanation": "TextEncoder는 문자열을 UTF-8 바이트 배열(Uint8Array)로 인코딩합니다. ASCII 문자 'A'는 UTF-8에서 1바이트(65)로 표현되고 'B'는 66이므로, 결과 배열의 길이는 2이고 첫 번째 요소는 65입니다. JavaScript의 charCodeAt()과 달리 TextEncoder는 항상 UTF-8 인코딩을 사용하며, 한글이나 이모지 같은 멀티바이트 문자는 더 많은 바이트를 차지합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder"
+  },
+  {
+    "id": "browser-api-062",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Fullscreen API의 requestFullscreen() 메서드에 대한 설명으로 올바른 것은?",
+    "options": [
+      "document 객체에서만 호출할 수 있다",
+      "자동으로 브라우저의 모든 UI 요소(주소창, 탭 등)를 숨긴다",
+      "사용자의 상호작용(클릭 등) 없이도 프로그래밍적으로 자유롭게 호출할 수 있다",
+      "특정 DOM 요소를 전체 화면으로 전환하며, 사용자 제스처(클릭 등) 컨텍스트 내에서 호출해야 한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Element.requestFullscreen()은 특정 DOM 요소를 전체 화면 모드로 전환합니다. 보안상의 이유로 사용자 제스처(클릭, 키보드 입력 등) 이벤트 핸들러 내에서만 호출할 수 있으며, 이를 일시적 활성화(transient activation)라고 합니다. document가 아닌 개별 요소에서 호출하며, 비디오 플레이어나 게임 등에서 주로 사용됩니다. document.exitFullscreen()으로 전체 화면을 해제합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/requestFullscreen"
+  },
+  {
+    "id": "browser-api-063",
+    "topic": "browser-api",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "EventSource(Server-Sent Events)와 WebSocket의 차이점으로 올바른 것은?",
+    "options": [
+      "EventSource는 서버에서 클라이언트로의 단방향 통신이고, WebSocket은 양방향 통신이다",
+      "EventSource는 바이너리 데이터를 전송할 수 있지만, WebSocket은 텍스트만 전송할 수 있다",
+      "WebSocket은 HTTP를 사용하지만, EventSource는 독자적인 프로토콜을 사용한다",
+      "EventSource는 자동 재연결을 지원하지 않지만, WebSocket은 자동 재연결을 지원한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "EventSource(SSE)는 HTTP 기반의 서버→클라이언트 단방향 스트리밍 프로토콜입니다. 서버가 text/event-stream 형식으로 이벤트를 푸시하며, 연결이 끊어지면 자동으로 재연결합니다. WebSocket은 ws:// 프로토콜을 사용하는 양방향 통신으로, 클라이언트도 서버에 데이터를 보낼 수 있습니다. SSE는 뉴스 피드나 실시간 알림처럼 서버 푸시만 필요한 경우에 WebSocket보다 간단한 대안입니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/EventSource"
+  },
+  {
+    "id": "browser-api-064",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 5초 타임아웃이 있는 fetch 요청을 구현하려 합니다. 문제점은 무엇인가요?",
+    "code": "async function fetchWithTimeout(url) {\n  const response = await fetch(url, {\n    signal: AbortSignal.timeout(5000)\n  });\n  const data = await response.json();\n  return data;\n}",
+    "options": [
+      "AbortSignal.timeout()은 존재하지 않는 메서드이다",
+      "signal 옵션은 fetch의 두 번째 인자에 전달할 수 없다",
+      "타임아웃 값은 초 단위여야 하므로 5를 전달해야 한다",
+      "코드 자체는 정상 작동하지만, 타임아웃 시 TimeoutError가 발생하므로 try-catch로 에러를 처리해야 한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "AbortSignal.timeout()은 지정된 밀리초 후에 자동으로 중단 신호를 보내는 정적 메서드로, 코드 자체는 문법적으로 올바릅니다. 그러나 타임아웃 발생 시 TimeoutError(AbortError가 아닌)가 throw되므로, 프로덕션 코드에서는 반드시 try-catch로 에러를 처리해야 합니다. AbortSignal.timeout()은 AbortController를 직접 생성하고 setTimeout으로 abort()를 호출하는 패턴을 간결하게 대체합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/timeout_static"
+  },
+  {
+    "id": "browser-api-065",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Storage Manager API (navigator.storage)의 persist() 메서드가 하는 일은 무엇인가요?",
+    "options": [
+      "localStorage의 데이터를 서버에 자동으로 백업한다",
+      "브라우저의 저장 공간 크기를 임의로 늘릴 수 있다",
+      "저장된 데이터를 암호화하여 보안을 강화한다",
+      "브라우저에 저장된 데이터(IndexedDB, Cache API 등)가 저장 공간 부족 시 자동 삭제되지 않도록 영구 저장을 요청한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "navigator.storage.persist()는 브라우저에게 사이트의 저장 데이터를 영구적으로 유지해 달라고 요청합니다. 기본적으로 브라우저는 저장 공간이 부족하면 오래된 사이트의 데이터를 자동으로 삭제(eviction)할 수 있습니다. persist()가 승인되면 사용자가 직접 삭제하지 않는 한 데이터가 유지됩니다. navigator.storage.estimate()로 현재 사용량과 할당량을 확인할 수도 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist"
   }
 ]
