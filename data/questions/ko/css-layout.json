@@ -977,5 +977,86 @@
     "correctIndex": 1,
     "explanation": "margin-inline은 인라인 방향의 시작(start)과 끝(end) 마진을 설정하는 논리적 속성입니다. margin-inline: 20px 40px에서 첫 번째 값(20px)은 inline-start, 두 번째 값(40px)은 inline-end에 해당합니다. direction: rtl에서는 inline-start가 오른쪽, inline-end가 왼쪽이 되므로, 결과적으로 왼쪽 40px, 오른쪽 20px이 적용됩니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/margin-inline"
+  },
+  {
+    "id": "css-layout-061",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "모바일 브라우저에서 모달 내부를 스크롤할 때 모달 뒤의 페이지도 함께 스크롤됩니다. 이를 방지하는 CSS 속성은?",
+    "options": [
+      "scroll-behavior: smooth",
+      "overflow: clip",
+      "overscroll-behavior: contain",
+      "touch-action: none"
+    ],
+    "correctIndex": 2,
+    "explanation": "overscroll-behavior: contain은 스크롤이 요소의 경계에 도달했을 때 부모 요소로 스크롤이 전파(scroll chaining)되는 것을 방지합니다. 모달 내부 스크롤이 끝에 도달해도 배경 페이지는 스크롤되지 않습니다. touch-action: none은 터치 이벤트 자체를 비활성화하므로 과도한 제한이 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/overscroll-behavior"
+  },
+  {
+    "id": "css-layout-062",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Flexbox에서 align-items와 align-content의 차이점으로 올바른 것은?",
+    "options": [
+      "align-content는 flex-wrap이 설정된 다중 줄에서 줄 간의 간격을 제어하고, align-items는 각 줄 내에서 아이템의 교차축 정렬을 제어한다",
+      "align-items는 다중 줄 정렬, align-content는 단일 아이템 정렬에 사용된다",
+      "둘 다 동일하며 flex-wrap 여부에 따라 이름만 다르게 사용된다",
+      "align-content는 주축 정렬, align-items는 교차축 정렬을 담당한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "align-items는 각 플렉스 줄(line) 내에서 개별 아이템의 교차축 위치를 제어합니다. align-content는 flex-wrap으로 여러 줄이 생겼을 때 줄 사이의 공간 분배를 제어합니다. 단일 줄 플렉스 컨테이너(nowrap)에서는 align-content가 효과가 없으며, align-items만 동작합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/align-content"
+  },
+  {
+    "id": "css-layout-063",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 CSS Grid에서 .special 아이템의 정렬 위치는?",
+    "code": ".container {\n  display: grid;\n  grid-template-columns: repeat(3, 200px);\n  grid-template-rows: 200px;\n  align-items: start;\n  justify-items: start;\n}\n.special {\n  place-self: end center;\n}",
+    "options": [
+      "셀의 왼쪽 상단에 배치된다",
+      "셀의 오른쪽 하단에 배치된다",
+      "셀의 하단 중앙에 배치된다",
+      "셀의 상단 중앙에 배치된다"
+    ],
+    "correctIndex": 2,
+    "explanation": "place-self는 align-self와 justify-self의 단축 속성으로, 첫 번째 값이 align-self(블록 축, 세로), 두 번째 값이 justify-self(인라인 축, 가로)입니다. place-self: end center는 세로로는 셀 하단(end), 가로로는 셀 중앙(center)에 배치합니다. 컨테이너의 align-items와 justify-items를 개별 아이템 수준에서 덮어씁니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/place-self"
+  },
+  {
+    "id": "css-layout-064",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "will-change 속성을 남용할 때 발생할 수 있는 문제로 올바른 것은?",
+    "options": [
+      "CSS 애니메이션이 완전히 비활성화된다",
+      "요소의 z-index가 자동으로 최대값으로 설정된다",
+      "각 요소가 별도의 합성 레이어를 생성하여 GPU 메모리 소비가 급증하고 오히려 성능이 저하될 수 있다",
+      "브라우저가 해당 요소의 렌더링을 건너뛴다"
+    ],
+    "correctIndex": 2,
+    "explanation": "will-change는 브라우저에게 특정 속성이 곧 변경될 것임을 미리 알려 최적화를 준비하게 합니다. 그러나 will-change: transform 등을 많은 요소에 적용하면 각각 별도의 합성 레이어(compositing layer)를 생성합니다. 이는 GPU 메모리를 대량으로 소비하여 특히 모바일 기기에서 성능이 오히려 크게 저하될 수 있습니다. 실제로 변경이 필요한 요소에만 적용해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/will-change"
+  },
+  {
+    "id": "css-layout-065",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "모바일 브라우저에서 height: 100vh로 전체 화면 레이아웃을 만들었는데 주소 표시줄에 의해 콘텐츠가 잘립니다. 가장 적절한 해결 방법은?",
+    "options": [
+      "height: 100%를 대신 사용한다",
+      "overflow: hidden을 body에 적용한다",
+      "height: 100dvh를 사용하여 동적 뷰포트 높이를 적용한다",
+      "JavaScript로 window.innerHeight를 계산한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "모바일 브라우저에서 100vh는 주소 표시줄을 포함한 최대 뷰포트 크기를 사용하므로 실제 보이는 영역보다 클 수 있습니다. 100dvh(dynamic viewport height)는 주소 표시줄의 표시/숨김 상태에 따라 동적으로 변하는 실제 뷰포트 높이를 반영합니다. 100svh(small)와 100lvh(large)는 각각 최소/최대 뷰포트 높이를 나타냅니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/length#viewport_units"
   }
 ]

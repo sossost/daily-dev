@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-05-20
+
+### Features
+
+- **content**: add 5 browser-api questions (061-065) (`6ffaf6f`)
+
 ## 2026-05-19
 
 ### Features

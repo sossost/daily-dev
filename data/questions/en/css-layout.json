@@ -977,5 +977,86 @@
     "correctIndex": 1,
     "explanation": "margin-inline is a logical property that sets the start and end margins in the inline direction. In margin-inline: 20px 40px, the first value (20px) applies to inline-start and the second value (40px) applies to inline-end. With direction: rtl, inline-start maps to the right side and inline-end maps to the left side, so the result is left 40px and right 20px.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/margin-inline"
+  },
+  {
+    "id": "css-layout-061",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "On mobile browsers, when scrolling inside a modal, the page behind the modal also scrolls. Which CSS property prevents this?",
+    "options": [
+      "scroll-behavior: smooth",
+      "overflow: clip",
+      "overscroll-behavior: contain",
+      "touch-action: none"
+    ],
+    "correctIndex": 2,
+    "explanation": "overscroll-behavior: contain prevents scroll chaining — when scrolling reaches the boundary of an element, it stops the scroll from propagating to the parent. This means when the user reaches the end of the modal's scrollable content, the background page won't scroll. touch-action: none disables touch events entirely, which is an overly aggressive restriction.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/overscroll-behavior"
+  },
+  {
+    "id": "css-layout-062",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between align-items and align-content in Flexbox?",
+    "options": [
+      "align-content controls spacing between lines in a multi-line flex container (with flex-wrap), while align-items controls cross-axis alignment of items within each line",
+      "align-items is for multi-line alignment and align-content is for single item alignment",
+      "Both are identical and are just named differently based on whether flex-wrap is used",
+      "align-content handles main axis alignment and align-items handles cross axis alignment"
+    ],
+    "correctIndex": 0,
+    "explanation": "align-items controls the cross-axis position of individual items within each flex line. align-content controls the distribution of space between flex lines when there are multiple lines (created by flex-wrap). In a single-line flex container (nowrap), align-content has no effect — only align-items applies.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/align-content"
+  },
+  {
+    "id": "css-layout-063",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "Where is the .special item positioned in the following CSS Grid?",
+    "code": ".container {\n  display: grid;\n  grid-template-columns: repeat(3, 200px);\n  grid-template-rows: 200px;\n  align-items: start;\n  justify-items: start;\n}\n.special {\n  place-self: end center;\n}",
+    "options": [
+      "Top-left of its cell",
+      "Bottom-right of its cell",
+      "Bottom-center of its cell",
+      "Top-center of its cell"
+    ],
+    "correctIndex": 2,
+    "explanation": "place-self is a shorthand for align-self and justify-self. The first value sets align-self (block axis, vertical) and the second sets justify-self (inline axis, horizontal). place-self: end center places the item at the bottom (end) vertically and centered horizontally within its cell. This overrides the container's align-items and justify-items for this specific item.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/place-self"
+  },
+  {
+    "id": "css-layout-064",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What problem can occur when the will-change property is overused?",
+    "options": [
+      "CSS animations become completely disabled",
+      "The element's z-index is automatically set to the maximum value",
+      "Each element creates a separate compositing layer, causing GPU memory consumption to spike and performance to degrade",
+      "The browser skips rendering those elements entirely"
+    ],
+    "correctIndex": 2,
+    "explanation": "will-change hints to the browser that a specific property will change soon, allowing it to prepare optimizations. However, applying will-change: transform to many elements causes each to create a separate compositing layer. This consumes large amounts of GPU memory and can significantly degrade performance, especially on mobile devices. It should only be applied to elements that actually need it.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/will-change"
+  },
+  {
+    "id": "css-layout-065",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "On mobile browsers, a full-screen layout using height: 100vh gets cut off by the address bar. What is the best fix?",
+    "options": [
+      "Use height: 100% instead",
+      "Apply overflow: hidden to the body",
+      "Use height: 100dvh for the dynamic viewport height",
+      "Calculate window.innerHeight with JavaScript"
+    ],
+    "correctIndex": 2,
+    "explanation": "On mobile browsers, 100vh uses the maximum viewport size including the address bar, which can be larger than the actually visible area. 100dvh (dynamic viewport height) dynamically reflects the actual viewport height as the address bar shows or hides. 100svh (small) and 100lvh (large) represent the minimum and maximum viewport heights respectively.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/length#viewport_units"
   }
 ]
