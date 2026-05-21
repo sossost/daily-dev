@@ -991,5 +991,88 @@
     "correctIndex": 1,
     "explanation": "Array.from({ length: 3 }, mapFn) applies the mapping function immediately, producing [0, 2, 4]. Array.from({ length: 3 }) creates [undefined, undefined, undefined], so .map() works normally and also produces [0, 2, 4]. However, Array(3) creates a sparse array with 3 empty slots, and map() skips empty slots entirely, so the callback never executes and the empty slots remain unchanged.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from"
+  },
+  {
+    "id": "data-structures-061",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the biggest advantage of the Array.prototype.at() method?",
+    "options": [
+      "It performs automatic type conversion when accessing array elements",
+      "It is faster than bracket notation for element access",
+      "It can delete elements without changing the array length",
+      "It allows convenient access to elements from the end of the array using negative indices"
+    ],
+    "correctIndex": 3,
+    "explanation": "The at() method supports negative indices, so arr.at(-1) conveniently accesses the last element. Previously, you had to calculate arr[arr.length - 1] manually. With at(-1), you can concisely retrieve the last element. For positive indices, it behaves identically to bracket notation.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at"
+  },
+  {
+    "id": "data-structures-062",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {};\nconst key1 = { name: 'a' };\nconst key2 = { name: 'b' };\nobj[key1] = 'value1';\nobj[key2] = 'value2';\nconsole.log(Object.keys(obj).length, obj[key1]);",
+    "options": [
+      "1 'value2'",
+      "2 'value1'",
+      "2 'value2'",
+      "1 'value1'"
+    ],
+    "correctIndex": 0,
+    "explanation": "Plain object keys must be strings or Symbols. When an object is used as a key, toString() is automatically called, converting it to the string '[object Object]'. Since both key1 and key2 produce the same string key, the second assignment overwrites the first. To use objects as keys, use a Map instead.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object#description"
+  },
+  {
+    "id": "data-structures-063",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "Why doesn't the following code correctly remove duplicate objects using Set?",
+    "code": "const users = [\n  { id: 1, name: 'Alice' },\n  { id: 1, name: 'Alice' },\n  { id: 2, name: 'Bob' }\n];\nconst unique = [...new Set(users)];\nconsole.log(unique.length);",
+    "options": [
+      "Set cannot accept an array as an argument, so it throws an error",
+      "Set internally uses JSON.stringify() for comparison",
+      "Set can only deduplicate primitive values",
+      "Set compares by reference equality, so objects with identical contents but different references are not considered duplicates"
+    ],
+    "correctIndex": 3,
+    "explanation": "Set uses the SameValueZero algorithm to compare elements. For objects, it only checks whether the references (memory addresses) are the same, not the property values. The two { id: 1, name: 'Alice' } objects have identical contents but are separate references, so Set treats them as distinct elements. Therefore unique.length is 3. To deduplicate objects, you need id-based Map filtering or custom comparison logic.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set#value_equality"
+  },
+  {
+    "id": "data-structures-064",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What makes Array.prototype.reduce() special compared to other array higher-order functions (map, filter, find, etc.)?",
+    "options": [
+      "reduce() always executes faster than other higher-order functions",
+      "reduce() natively supports asynchronous callbacks",
+      "reduce() always throws a TypeError when called without an initial value",
+      "reduce() can collapse an array into any type of single value, making it capable of implementing most array operations like map, filter, and groupBy"
+    ],
+    "correctIndex": 3,
+    "explanation": "reduce() is a general-purpose folding operation that takes an accumulator and current element, returning a new accumulator. Since there is no restriction on the return type, it can express nearly any array operation: numeric sums, object grouping, array transformations, string concatenation, and more. Theoretically, both map() and filter() can be implemented using reduce(). However, for readability, it is recommended to use purpose-specific methods when available.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce"
+  },
+  {
+    "id": "data-structures-065",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const [first, ...rest] = [10, 20, 30, 40];\nconsole.log(first, rest);",
+    "options": [
+      "10 [20, 30, 40]",
+      "[10] [20, 30, 40]",
+      "10 20",
+      "10 [20, 30]"
+    ],
+    "correctIndex": 0,
+    "explanation": "In array destructuring, the rest element pattern (...rest) collects all remaining elements that were not assigned to preceding variables into a new array. first gets 10, and rest gets [20, 30, 40] as an array. The rest element pattern can only appear at the end of a destructuring pattern, and if no elements remain, it becomes an empty array.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#assigning_the_rest_of_an_array_to_a_variable"
   }
 ]
