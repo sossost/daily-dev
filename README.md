@@ -33,7 +33,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Closure | 65 |
 | CSS Layout | 65 |
 | Data Structures | 65 |
-| Database | 60 |
+| Database | 65 |
 | Design Patterns | 60 |
 | DOM Manipulation | 60 |
 | Event Loop | 65 |
@@ -50,7 +50,7 @@ A daily learning platform where every developer levels up in just 5 minutes a da
 | Web Performance | 60 |
 | Web Security | 65 |
 
-**Total: 1460 questions across 23 topics**
+**Total: 1465 questions across 23 topics**
 
 ## Getting Started
 

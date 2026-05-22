@@ -986,5 +986,88 @@
     "correctIndex": 2,
     "explanation": "OFFSET 2 skips the first 2 rows, and LIMIT 3 returns up to 3 rows after that. When sorted by id, the order is A, B, C, D, E. Skipping 2 and taking 3 gives C, D, E. OFFSET is commonly used for implementing pagination.",
     "sourceUrl": "https://www.postgresql.org/docs/current/queries-limit.html"
+  },
+  {
+    "id": "database-061",
+    "topic": "database",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between ROW_NUMBER(), RANK(), and DENSE_RANK() in SQL window functions?\n\nExample: If the scores table has values 100, 100, 90, what happens when ranking by ORDER BY value DESC?",
+    "code": "SELECT value,\n  ROW_NUMBER() OVER (ORDER BY value DESC) as rn,\n  RANK() OVER (ORDER BY value DESC) as rnk,\n  DENSE_RANK() OVER (ORDER BY value DESC) as drnk\nFROM scores;\n-- scores: value(100, 100, 90)",
+    "options": [
+      "All three functions return the same result (1, 2, 3)",
+      "ROW_NUMBER returns 1,2,3 / RANK returns 1,1,3 / DENSE_RANK returns 1,1,2",
+      "ROW_NUMBER returns 1,1,2 / RANK returns 1,2,3 / DENSE_RANK returns 1,1,3",
+      "RANK and DENSE_RANK are identical, only ROW_NUMBER is different"
+    ],
+    "correctIndex": 1,
+    "explanation": "ROW_NUMBER() assigns sequential unique numbers (1,2,3) regardless of ties. RANK() assigns the same rank to ties but skips subsequent ranks (1,1,3). DENSE_RANK() assigns the same rank to ties without skipping (1,1,2). ROW_NUMBER is suitable for pagination, while RANK or DENSE_RANK are better for leaderboards.",
+    "sourceUrl": "https://www.postgresql.org/docs/current/functions-window.html"
+  },
+  {
+    "id": "database-062",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the main purpose of EXPLAIN (execution plan) in SQL?",
+    "options": [
+      "A command that automatically corrects query syntax errors",
+      "It shows the execution plan chosen by the query optimizer, allowing analysis of index usage, join methods, and estimated costs",
+      "A command that formats query results into a human-readable form",
+      "A command that returns the number of rows changed after query execution"
+    ],
+    "correctIndex": 1,
+    "explanation": "EXPLAIN shows the execution plan chosen by the optimizer without actually executing the query. It reveals table scan methods (Seq Scan, Index Scan, etc.), join strategies (Nested Loop, Hash Join, etc.), and estimated costs and row counts. This makes it an essential tool for identifying bottlenecks in slow queries and deciding optimization strategies such as adding indexes.",
+    "sourceUrl": "https://www.postgresql.org/docs/current/sql-explain.html"
+  },
+  {
+    "id": "database-063",
+    "topic": "database",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is a 'Phantom Read' in database transaction isolation levels?",
+    "options": [
+      "Reading uncommitted changes made by another transaction",
+      "Reading the same row twice and getting different values",
+      "When the same range query executed twice within a transaction returns a different number of rows due to another transaction's INSERT or DELETE",
+      "When changes are not reflected even after a transaction is committed"
+    ],
+    "correctIndex": 2,
+    "explanation": "A phantom read occurs when the same range query is executed twice within a transaction, but between the two executions, another transaction inserts or deletes rows that match the query condition, causing the result set size to change. It can occur even at the Repeatable Read isolation level and is only fully prevented at the Serializable level. It differs from Dirty Read (reading uncommitted data) and Non-Repeatable Read (value changes).",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Isolation_(database_systems)#Phantom_reads"
+  },
+  {
+    "id": "database-064",
+    "topic": "database",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The following query executes quickly using the email column index, but requires an additional table access to retrieve the columns in the SELECT clause. How can this be optimized?\n\nSELECT name, email FROM users WHERE email = 'test@example.com';",
+    "code": "-- Single index exists on email column\nSELECT name, email\nFROM users\nWHERE email = 'test@example.com';",
+    "options": [
+      "Removing the WHERE clause will reduce table access",
+      "Changing to SELECT * will make the optimizer choose a more efficient plan",
+      "Dropping the index and using a full table scan is faster",
+      "Creating a covering index that includes (email, name) allows the query to be served entirely from the index, eliminating table access"
+    ],
+    "correctIndex": 3,
+    "explanation": "A covering index includes all columns needed by a query, allowing it to be fully processed using only the index. With a single email index, the WHERE condition is fast but a table (heap) access is needed to fetch the name value. Creating an (email, name) index eliminates this additional access (bookmark lookup), significantly reducing I/O.",
+    "sourceUrl": "https://use-the-index-luke.com/sql/clustering/index-only-scan-covering-index"
+  },
+  {
+    "id": "database-065",
+    "topic": "database",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "In the following SQL, 3 rows are inserted without specifying a value for the AUTO_INCREMENT column. What will the id values be?\n\nCREATE TABLE items (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50));\nINSERT INTO items (name) VALUES ('A'), ('B'), ('C');",
+    "code": "CREATE TABLE items (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  name VARCHAR(50)\n);\nINSERT INTO items (name)\nVALUES ('A'), ('B'), ('C');\n\nSELECT id, name FROM items;",
+    "options": [
+      "id: 1, 2, 3",
+      "id: 0, 1, 2",
+      "id: NULL, NULL, NULL",
+      "Error — id value must be specified"
+    ],
+    "correctIndex": 0,
+    "explanation": "AUTO_INCREMENT (MySQL) or SERIAL (PostgreSQL) automatically generates unique sequential numbers when rows are inserted. By default, it starts at 1 and increments by 1, so inserting 3 rows produces id values of 1, 2, 3. No explicit id value is needed, and it is commonly used for primary keys.",
+    "sourceUrl": "https://dev.mysql.com/doc/refman/8.0/en/example-auto-increment.html"
   }
 ]

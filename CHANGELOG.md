@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-05-22
+
+### Features
+
+- **content**: add 5 data-structures questions (061-065) (`341beb0`)
+
 ## 2026-05-21
 
 ### Features
