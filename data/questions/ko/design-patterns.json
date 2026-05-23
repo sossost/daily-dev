@@ -989,5 +989,88 @@
     "correctIndex": 3,
     "explanation": "이벤트 소싱과 CQRS 패턴에서 상태는 이벤트를 순서대로 재생하여 구축합니다. reduce로 이벤트를 순회하면: 1) ADD 5 → total=5, 2) MULTIPLY 3 → total=15, 3) ADD 2 → total=17. 최종 결과는 17입니다. 이 패턴에서 상태는 저장하지 않고 이벤트 로그에서 파생되므로, 어떤 시점의 상태든 이벤트를 재생하여 복원할 수 있습니다.",
     "sourceUrl": "https://www.martinfowler.com/bliki/CQRS.html"
+  },
+  {
+    "id": "design-patterns-061",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "code": "const handler = {\n  get(target, prop, receiver) {\n    const value = Reflect.get(target, prop, receiver);\n    return typeof value === 'function'\n      ? (...args) => { console.log(`call: ${prop}`); return value.apply(target, args); }\n      : value;\n  }\n};\nconst obj = { greet(name) { return `hi ${name}`; }, x: 10 };\nconst p = new Proxy(obj, handler);\nconsole.log(p.x);\nconsole.log(p.greet('Alice'));",
+    "question": "다음 Reflect 기반 프록시 코드의 출력 결과는 무엇인가요?",
+    "options": [
+      "10\ncall: greet\nhi Alice",
+      "call: x\n10\ncall: greet\nhi Alice",
+      "10\nhi Alice",
+      "call: x\n10\nhi Alice"
+    ],
+    "correctIndex": 0,
+    "explanation": "get 트랩에서 Reflect.get으로 속성 값을 가져온 뒤, typeof 검사로 함수인 경우에만 래핑합니다. p.x 접근 시 value는 숫자 10이므로 그대로 반환됩니다. p.greet 접근 시 value는 함수이므로 래핑된 함수가 반환되고, 호출 시 'call: greet'이 출력된 후 'hi Alice'가 반환됩니다. Reflect API는 Proxy 트랩과 1:1로 대응하여 기본 동작을 안전하게 위임할 수 있게 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect"
+  },
+  {
+    "id": "design-patterns-062",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "플루언트 인터페이스(Fluent Interface)와 빌더(Builder) 패턴의 핵심 차이점은 무엇인가요?",
+    "options": [
+      "플루언트 인터페이스는 메서드 체이닝을 사용하고 빌더 패턴은 사용하지 않는다",
+      "빌더 패턴은 JavaScript에서 구현할 수 없다",
+      "플루언트 인터페이스는 읽기 쉬운 API 표현이 목적이고, 빌더 패턴은 복잡한 객체의 단계적 구성이 목적이다",
+      "두 패턴은 동일하며 이름만 다르다"
+    ],
+    "correctIndex": 2,
+    "explanation": "플루언트 인터페이스는 메서드 체이닝을 통해 읽기 쉽고 자연어에 가까운 API를 제공하는 것이 주된 목적입니다 (예: jQuery의 $().css().show()). 빌더 패턴은 복잡한 객체를 여러 단계에 걸쳐 구성하고, 최종적으로 build() 메서드로 완성된 객체를 반환하는 것이 목적입니다. 빌더가 플루언트 인터페이스를 채택할 수 있지만, 플루언트 인터페이스가 반드시 빌더인 것은 아닙니다.",
+    "sourceUrl": "https://www.martinfowler.com/bliki/FluentInterface.html"
+  },
+  {
+    "id": "design-patterns-063",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 WeakRef 기반 옵저버 구현에서 콜백이 호출되지 않는 이유는 무엇인가요?",
+    "code": "class JsonSubject {\n  #observers = [];\n  subscribe(observer) {\n    this.#observers.push(new WeakRef(observer));\n  }\n  notify(data) {\n    this.#observers = this.#observers.filter(ref => {\n      const obs = ref.deref();\n      if (obs) { obs.update(data); return true; }\n      return false;\n    });\n  }\n}\nconst subject = new JsonSubject();\nsubject.subscribe({ update: (d) => console.log(d) });\nsubject.notify('hello');",
+    "options": [
+      "WeakRef 생성자가 객체 리터럴을 받지 못하기 때문",
+      "subscribe에 전달된 객체 리터럴이 어디에도 참조되지 않아 GC에 의해 수거될 수 있기 때문",
+      "notify 메서드의 filter가 원본 배열을 변경하지 않기 때문",
+      "#observers가 private이므로 외부에서 접근할 수 없기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "WeakRef는 대상 객체에 대한 약한 참조를 유지합니다. subscribe에 전달된 { update: ... } 객체 리터럴은 호출 코드에서 변수에 저장되지 않아 강한 참조가 없습니다. 따라서 가비지 컬렉터가 이 객체를 수거할 수 있으며, notify 시점에 deref()가 undefined를 반환할 수 있습니다. 안정적으로 동작하려면 구독자 객체를 변수에 유지해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakRef"
+  },
+  {
+    "id": "design-patterns-064",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "멀티톤(Multiton) 패턴이 싱글톤(Singleton) 패턴과 다른 점은 무엇인가요?",
+    "options": [
+      "멀티톤은 인스턴스 생성을 완전히 금지한다",
+      "멀티톤은 비동기 초기화만 지원한다",
+      "멀티톤은 프로토타입 체인을 사용하여 인스턴스를 공유한다",
+      "멀티톤은 키별로 하나의 인스턴스를 관리하여 여러 명명된 인스턴스를 허용한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "싱글톤 패턴은 클래스의 인스턴스가 전체에서 딱 하나만 존재하도록 보장합니다. 반면 멀티톤 패턴은 키(key)를 기준으로 각 키마다 하나의 인스턴스를 유지합니다. 예를 들어 데이터베이스 연결 풀에서 'read'와 'write' 키로 각각 하나의 연결 인스턴스를 관리할 수 있습니다. JavaScript에서는 Map을 사용하여 키-인스턴스 매핑을 구현합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Multiton_pattern"
+  },
+  {
+    "id": "design-patterns-065",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "code": "const _key = Symbol('secret');\nclass Vault {\n  constructor(value) { this[_key] = value; }\n  reveal() { return this[_key]; }\n}\nconst v = new Vault(42);\nconsole.log(v.secret, v[_key], v.reveal());",
+    "question": "다음 Symbol 기반 프라이빗 속성 패턴 코드의 출력 결과는 무엇인가요?",
+    "options": [
+      "42 42 42",
+      "undefined undefined 42",
+      "undefined 42 42",
+      "secret 42 42"
+    ],
+    "correctIndex": 2,
+    "explanation": "Symbol은 고유한 식별자를 생성하며, 문자열 키와 충돌하지 않습니다. v.secret은 일반 문자열 'secret' 속성을 찾으므로 undefined입니다. v[_key]는 Symbol 키로 직접 접근하므로 42가 반환됩니다. v.reveal()도 내부에서 this[_key]로 접근하여 42를 반환합니다. Symbol을 모듈 스코프에 두면 외부에서 키를 알 수 없어 유사 프라이빗 속성으로 활용할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol"
   }
 ]

@@ -989,5 +989,88 @@
     "correctIndex": 3,
     "explanation": "In Event Sourcing and CQRS patterns, state is built by replaying events in order. Iterating through events with reduce: 1) ADD 5 → total=5, 2) MULTIPLY 3 → total=15, 3) ADD 2 → total=17. The final result is 17. In this pattern, state is not stored directly but derived from the event log, so the state at any point can be reconstructed by replaying events.",
     "sourceUrl": "https://www.martinfowler.com/bliki/CQRS.html"
+  },
+  {
+    "id": "design-patterns-061",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "code": "const handler = {\n  get(target, prop, receiver) {\n    const value = Reflect.get(target, prop, receiver);\n    return typeof value === 'function'\n      ? (...args) => { console.log(`call: ${prop}`); return value.apply(target, args); }\n      : value;\n  }\n};\nconst obj = { greet(name) { return `hi ${name}`; }, x: 10 };\nconst p = new Proxy(obj, handler);\nconsole.log(p.x);\nconsole.log(p.greet('Alice'));",
+    "question": "What is the output of the following Reflect-based Proxy code?",
+    "options": [
+      "10\ncall: greet\nhi Alice",
+      "call: x\n10\ncall: greet\nhi Alice",
+      "10\nhi Alice",
+      "call: x\n10\nhi Alice"
+    ],
+    "correctIndex": 0,
+    "explanation": "The get trap retrieves the property value via Reflect.get, then checks if it's a function using typeof. When accessing p.x, value is the number 10, so it's returned as-is. When accessing p.greet, value is a function, so a wrapped version is returned. Calling it logs 'call: greet' then returns 'hi Alice'. The Reflect API maps 1:1 with Proxy traps, allowing safe delegation of default behavior.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect"
+  },
+  {
+    "id": "design-patterns-062",
+    "topic": "design-patterns",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the key difference between the Fluent Interface and the Builder pattern?",
+    "options": [
+      "Fluent Interface uses method chaining while the Builder pattern does not",
+      "The Builder pattern cannot be implemented in JavaScript",
+      "Fluent Interface aims to provide readable, natural-language-like API expression, while Builder aims to construct complex objects step by step",
+      "Both patterns are identical and only differ in name"
+    ],
+    "correctIndex": 2,
+    "explanation": "A Fluent Interface focuses on providing a readable, natural-language-like API through method chaining (e.g., jQuery's $().css().show()). The Builder pattern focuses on constructing complex objects through multiple steps, finally returning the completed object via a build() method. A Builder may adopt a Fluent Interface, but a Fluent Interface is not necessarily a Builder.",
+    "sourceUrl": "https://www.martinfowler.com/bliki/FluentInterface.html"
+  },
+  {
+    "id": "design-patterns-063",
+    "topic": "design-patterns",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why might the callback not be invoked in the following WeakRef-based Observer implementation?",
+    "code": "class JsonSubject {\n  #observers = [];\n  subscribe(observer) {\n    this.#observers.push(new WeakRef(observer));\n  }\n  notify(data) {\n    this.#observers = this.#observers.filter(ref => {\n      const obs = ref.deref();\n      if (obs) { obs.update(data); return true; }\n      return false;\n    });\n  }\n}\nconst subject = new JsonSubject();\nsubject.subscribe({ update: (d) => console.log(d) });\nsubject.notify('hello');",
+    "options": [
+      "Because the WeakRef constructor cannot accept object literals",
+      "Because the object literal passed to subscribe has no strong reference elsewhere and may be garbage collected",
+      "Because the filter in notify does not modify the original array",
+      "Because #observers is private and cannot be accessed externally"
+    ],
+    "correctIndex": 1,
+    "explanation": "WeakRef maintains a weak reference to the target object. The { update: ... } object literal passed to subscribe is not stored in any variable in the calling code, so there is no strong reference. The garbage collector may collect this object, causing deref() to return undefined when notify is called. To work reliably, the subscriber object must be kept in a variable to maintain a strong reference.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakRef"
+  },
+  {
+    "id": "design-patterns-064",
+    "topic": "design-patterns",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "How does the Multiton pattern differ from the Singleton pattern?",
+    "options": [
+      "Multiton completely prevents instance creation",
+      "Multiton only supports asynchronous initialization",
+      "Multiton shares instances through the prototype chain",
+      "Multiton manages one instance per key, allowing multiple named instances"
+    ],
+    "correctIndex": 3,
+    "explanation": "The Singleton pattern ensures only one instance of a class exists globally. The Multiton pattern maintains one instance per key, allowing multiple named instances. For example, a database connection pool might manage separate connection instances for 'read' and 'write' keys. In JavaScript, this is typically implemented using a Map for key-instance mapping.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Multiton_pattern"
+  },
+  {
+    "id": "design-patterns-065",
+    "topic": "design-patterns",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "code": "const _key = Symbol('secret');\nclass Vault {\n  constructor(value) { this[_key] = value; }\n  reveal() { return this[_key]; }\n}\nconst v = new Vault(42);\nconsole.log(v.secret, v[_key], v.reveal());",
+    "question": "What is the output of the following Symbol-based private property pattern code?",
+    "options": [
+      "42 42 42",
+      "undefined undefined 42",
+      "undefined 42 42",
+      "secret 42 42"
+    ],
+    "correctIndex": 2,
+    "explanation": "Symbol creates a unique identifier that does not collide with string keys. v.secret looks for a regular string property 'secret', which doesn't exist, so it returns undefined. v[_key] accesses the property using the Symbol key directly, returning 42. v.reveal() also accesses this[_key] internally, returning 42. By keeping the Symbol in module scope, external code cannot access the key, making it a pseudo-private property.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol"
   }
 ]
