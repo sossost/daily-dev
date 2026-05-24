@@ -988,5 +988,88 @@
     "correctIndex": 0,
     "explanation": "hasAttribute(name)는 해당 이름의 속성이 요소에 존재하는지 true 또는 false로 반환합니다. getAttribute(name)는 속성의 값을 문자열로 반환하며, 속성이 없으면 null을 반환합니다. 불리언 속성(disabled, checked 등)의 존재 여부만 확인할 때는 hasAttribute()가 적합하고, 속성의 실제 값이 필요할 때는 getAttribute()를 사용합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/hasAttribute"
+  },
+  {
+    "id": "dom-manipulation-061",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "const list = document.querySelectorAll('p');\nconst collection = document.getElementsByTagName('p');\nconsole.log(list.constructor.name);\nconsole.log(collection.constructor.name);\ndocument.body.appendChild(document.createElement('p'));\nconsole.log(list.length === collection.length);",
+    "options": [
+      "NodeList, HTMLCollection, true",
+      "HTMLCollection, NodeList, false",
+      "NodeList, HTMLCollection, false",
+      "NodeList, NodeList, true"
+    ],
+    "correctIndex": 2,
+    "explanation": "querySelectorAll()은 정적(static) NodeList를 반환하여 호출 시점의 스냅샷을 유지합니다. getElementsByTagName()은 라이브(live) HTMLCollection을 반환하여 DOM 변경 사항이 실시간으로 반영됩니다. 새 <p> 요소를 추가하면 collection.length는 증가하지만 list.length는 변하지 않으므로 false가 출력됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Document/querySelectorAll"
+  },
+  {
+    "id": "dom-manipulation-062",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "const btn = document.createElement('button');\nbtn.addEventListener('myEvent', (e) => {\n  console.log(e.detail.message);\n});\nconst event = new CustomEvent('myEvent', {\n  detail: { message: 'hello' }\n});\nbtn.dispatchEvent(event);\nconsole.log(event.type);",
+    "options": [
+      "hello, myEvent",
+      "undefined, myEvent",
+      "에러 발생: CustomEvent is not defined",
+      "hello만 출력된다"
+    ],
+    "correctIndex": 0,
+    "explanation": "CustomEvent 생성자는 사용자 정의 이벤트를 만들 수 있으며, detail 속성을 통해 이벤트에 데이터를 전달합니다. dispatchEvent()로 이벤트를 발생시키면 등록된 리스너가 동기적으로 호출됩니다. 따라서 e.detail.message인 'hello'가 먼저 출력되고, 그 다음 event.type인 'myEvent'가 출력됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/CustomEvent/CustomEvent"
+  },
+  {
+    "id": "dom-manipulation-063",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "element.before()와 element.after() 메서드에 대한 설명으로 올바른 것은?",
+    "options": [
+      "before()는 요소 내부의 첫 번째 위치에, after()는 마지막 위치에 삽입한다",
+      "before()는 부모 노드에서 호출해야 하며, after()는 자식 노드에서 호출한다",
+      "두 메서드 모두 단일 노드만 인자로 받을 수 있다",
+      "before()는 대상 요소 바로 앞에, after()는 바로 뒤에 형제로 노드나 문자열을 삽입한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "before()와 after()는 대상 요소 자체에서 호출하여 해당 요소의 형제(sibling) 위치에 콘텐츠를 삽입합니다. 내부(자식)가 아닌 같은 레벨에 삽입하는 것이 특징입니다. 여러 노드와 문자열을 동시에 인자로 전달할 수 있으며, insertBefore()와 달리 부모 노드 참조 없이 사용할 수 있어 코드가 간결해집니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/before"
+  },
+  {
+    "id": "dom-manipulation-064",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 activeElement 확인이 의도대로 동작하지 않는 이유는?",
+    "code": "const input = document.createElement('input');\ndocument.body.appendChild(input);\ninput.focus();\nsetTimeout(() => {\n  console.log(document.activeElement === input);\n}, 0);\ninput.blur();",
+    "options": [
+      "focus()를 호출하기 전에 appendChild를 해야 한다",
+      "setTimeout 콜백이 실행될 때 input.blur()가 이미 호출되어 activeElement가 body로 변경되었기 때문이다",
+      "createElement로 만든 input에는 focus() 메서드가 없다",
+      "document.activeElement는 항상 null을 반환한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "setTimeout(..., 0)의 콜백은 현재 실행 중인 동기 코드가 모두 완료된 뒤에 실행됩니다. input.focus() 직후에 input.blur()가 동기적으로 호출되어 포커스가 해제되고, activeElement가 document.body로 변경됩니다. 이후 setTimeout 콜백에서 document.activeElement === input을 비교하면 이미 blur 된 상태이므로 false가 출력됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Document/activeElement"
+  },
+  {
+    "id": "dom-manipulation-065",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "element.prepend()와 parentNode.insertBefore()의 차이점으로 올바른 것은?",
+    "options": [
+      "prepend()는 여러 노드와 문자열을 동시에 삽입할 수 있고 대상 요소에서 직접 호출하지만, insertBefore()는 부모 노드에서 호출하며 단일 노드만 삽입할 수 있다",
+      "insertBefore()는 문자열도 삽입할 수 있지만, prepend()는 노드만 삽입할 수 있다",
+      "prepend()는 요소를 부모의 마지막 자식으로 삽입한다",
+      "두 메서드는 동일한 기능을 하며 이름만 다르다"
+    ],
+    "correctIndex": 0,
+    "explanation": "prepend()는 ParentNode 인터페이스의 메서드로, 호출한 요소의 첫 번째 자식 앞에 여러 노드나 문자열을 한 번에 삽입할 수 있습니다. insertBefore(newNode, referenceNode)는 Node 인터페이스의 메서드로, 부모 노드에서 호출하며 참조 노드 앞에 단일 노드만 삽입합니다. prepend()가 더 현대적인 API이며, 문자열을 자동으로 텍스트 노드로 변환하는 편의 기능도 제공합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/prepend"
   }
 ]

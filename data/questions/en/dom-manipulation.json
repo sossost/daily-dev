@@ -988,5 +988,88 @@
     "correctIndex": 0,
     "explanation": "hasAttribute(name) returns true or false indicating whether the named attribute exists on the element. getAttribute(name) returns the attribute's value as a string, or null if the attribute doesn't exist. Use hasAttribute() when checking for boolean attributes (disabled, checked, etc.) where only existence matters, and getAttribute() when you need the actual attribute value.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/hasAttribute"
+  },
+  {
+    "id": "dom-manipulation-061",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const list = document.querySelectorAll('p');\nconst collection = document.getElementsByTagName('p');\nconsole.log(list.constructor.name);\nconsole.log(collection.constructor.name);\ndocument.body.appendChild(document.createElement('p'));\nconsole.log(list.length === collection.length);",
+    "options": [
+      "NodeList, HTMLCollection, true",
+      "HTMLCollection, NodeList, false",
+      "NodeList, HTMLCollection, false",
+      "NodeList, NodeList, true"
+    ],
+    "correctIndex": 2,
+    "explanation": "querySelectorAll() returns a static NodeList that is a snapshot taken at the time of the call. getElementsByTagName() returns a live HTMLCollection that automatically reflects DOM changes in real time. When a new <p> element is added, collection.length increases but list.length remains unchanged, so the comparison outputs false.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll"
+  },
+  {
+    "id": "dom-manipulation-062",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const btn = document.createElement('button');\nbtn.addEventListener('myEvent', (e) => {\n  console.log(e.detail.message);\n});\nconst event = new CustomEvent('myEvent', {\n  detail: { message: 'hello' }\n});\nbtn.dispatchEvent(event);\nconsole.log(event.type);",
+    "options": [
+      "hello, myEvent",
+      "undefined, myEvent",
+      "Error: CustomEvent is not defined",
+      "Only hello is printed"
+    ],
+    "correctIndex": 0,
+    "explanation": "The CustomEvent constructor creates user-defined events, and the detail property allows passing data with the event. dispatchEvent() fires the event synchronously, calling registered listeners immediately. Therefore, e.detail.message ('hello') is logged first, followed by event.type ('myEvent').",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent"
+  },
+  {
+    "id": "dom-manipulation-063",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about element.before() and element.after() is correct?",
+    "options": [
+      "before() inserts at the first position inside the element, and after() inserts at the last position inside",
+      "before() must be called on the parent node, and after() must be called on the child node",
+      "Both methods can only accept a single node as an argument",
+      "before() inserts nodes or strings as siblings immediately before the target element, and after() inserts immediately after"
+    ],
+    "correctIndex": 3,
+    "explanation": "before() and after() are called on the target element itself and insert content at sibling positions relative to that element — not inside it as children. They accept multiple nodes and strings as arguments simultaneously. Unlike insertBefore(), they don't require a reference to the parent node, making the code more concise.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/before"
+  },
+  {
+    "id": "dom-manipulation-064",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the activeElement check not work as intended in the following code?",
+    "code": "const input = document.createElement('input');\ndocument.body.appendChild(input);\ninput.focus();\nsetTimeout(() => {\n  console.log(document.activeElement === input);\n}, 0);\ninput.blur();",
+    "options": [
+      "appendChild must be called before focus()",
+      "By the time the setTimeout callback runs, input.blur() has already been called, changing activeElement to body",
+      "Input elements created with createElement don't have a focus() method",
+      "document.activeElement always returns null"
+    ],
+    "correctIndex": 1,
+    "explanation": "The setTimeout(..., 0) callback executes after all currently running synchronous code completes. input.blur() is called synchronously right after input.focus(), removing focus and changing activeElement to document.body. When the setTimeout callback finally runs, document.activeElement === input evaluates to false because the input has already been blurred.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Document/activeElement"
+  },
+  {
+    "id": "dom-manipulation-065",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between element.prepend() and parentNode.insertBefore()?",
+    "options": [
+      "prepend() can insert multiple nodes and strings at once and is called on the target element, while insertBefore() is called on the parent node and can only insert a single node",
+      "insertBefore() can also insert strings, but prepend() can only insert nodes",
+      "prepend() inserts the element as the last child of the parent",
+      "Both methods have identical functionality and only differ in name"
+    ],
+    "correctIndex": 0,
+    "explanation": "prepend() is a method of the ParentNode interface that inserts one or more nodes or strings before the first child of the calling element. insertBefore(newNode, referenceNode) is a method of the Node interface that is called on the parent node and inserts a single node before the reference node. prepend() is a more modern API that also automatically converts strings to text nodes.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/prepend"
   }
 ]

@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-05-24
+
+### Features
+
+- **content**: fix — redistribute correctIndex for design-pa... (`c18cf77`)
+
 ## 2026-05-23
 
 ### Features
