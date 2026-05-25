@@ -972,5 +972,85 @@
     "correctIndex": 1,
     "explanation": "git sparse-checkout은 작업 트리에 어떤 디렉토리나 파일을 채울지 정의할 수 있으며, 나머지는 Git 객체 저장소에만 남습니다. 개발자가 코드베이스의 일부만 필요한 모노레포에서 특히 유용하며, 디스크 사용량과 체크아웃 시간을 크게 줄여줍니다. cone 모드(디렉토리 기반 패턴)와 non-cone 모드(gitignore 스타일 패턴) 모두 지원합니다.",
     "sourceUrl": "https://git-scm.com/docs/git-sparse-checkout"
+  },
+  {
+    "id": "git-advanced-061",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "git range-diff와 git diff의 차이점은 무엇인가요?",
+    "options": [
+      "range-diff는 두 커밋 범위(패치 시리즈)를 서로 비교하고, diff는 두 스냅샷 간의 파일 변경을 비교한다",
+      "range-diff는 바이너리 파일만 비교하고, diff는 텍스트 파일만 비교한다",
+      "range-diff는 원격 브랜치끼리만 비교할 수 있고, diff는 로컬 브랜치끼리만 비교할 수 있다",
+      "range-diff는 충돌을 자동 해결하고, diff는 충돌을 표시만 한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "git range-diff는 두 개의 커밋 범위(예: 리베이스 전후의 패치 시리즈)를 비교하여 각 커밋이 어떻게 변경되었는지 보여줍니다. 일반 diff는 단순히 두 상태 간의 파일 내용 차이를 보여주는 반면, range-diff는 커밋 단위로 대응 관계를 매칭하여 각 패치의 변경, 추가, 삭제를 추적합니다. 코드 리뷰에서 force-push 후 변경 내역을 확인할 때 유용합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-range-diff"
+  },
+  {
+    "id": "git-advanced-062",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "개발자가 저장소의 무결성에 의심이 생겨 손상된 객체를 찾고 싶습니다. 가장 적절한 명령어는 무엇인가요?",
+    "options": [
+      "git status --porcelain으로 변경된 파일을 확인한다",
+      "git log --verify를 사용하여 커밋 서명을 검증한다",
+      "git diff --check를 사용하여 공백 오류를 검사한다",
+      "git fsck를 실행하여 객체 데이터베이스의 연결성과 유효성을 검증한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "git fsck(file system check)는 Git 객체 데이터베이스의 무결성을 검사하는 명령어입니다. 모든 객체의 SHA-1 해시를 재계산하여 손상을 감지하고, 도달 불가능한(dangling) 객체나 누락된 객체를 보고합니다. 디스크 오류나 비정상 종료 후 저장소 상태를 진단하는 데 필수적인 도구입니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-fsck"
+  },
+  {
+    "id": "git-advanced-063",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "git maintenance run 명령어의 주요 목적은 무엇인가요?",
+    "options": [
+      "저장소 최적화 작업(gc, commit-graph 갱신, prefetch 등)을 자동으로 수행한다",
+      "오래된 브랜치를 자동으로 삭제한다",
+      "원격 저장소와의 연결 상태를 테스트한다",
+      "작업 디렉토리의 파일 권한을 복원한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "git maintenance는 저장소 성능을 유지하기 위한 최적화 작업을 관리하는 명령어입니다. gc(가비지 컬렉션), commit-graph 갱신, prefetch(원격 데이터 미리 가져오기), loose-objects 정리 등의 작업을 수행합니다. git maintenance start로 백그라운드 스케줄을 등록하면 정기적으로 자동 실행되어 대규모 저장소의 성능 저하를 방지합니다.",
+    "sourceUrl": "https://git-scm.com/docs/git-maintenance"
+  },
+  {
+    "id": "git-advanced-064",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "GPG 서명된 커밋(git commit -S)의 주요 목적은 무엇인가요?",
+    "options": [
+      "커밋 메시지를 암호화하여 다른 사용자가 읽지 못하게 한다",
+      "커밋의 파일 내용을 암호화하여 보안을 강화한다",
+      "푸시 시 자동으로 코드 리뷰를 통과시킨다",
+      "커밋이 특정 개인에 의해 작성되었음을 암호학적으로 증명한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "GPG 서명 커밋은 커밋 작성자의 신원을 암호학적으로 검증할 수 있게 합니다. git log --show-signature로 서명을 확인할 수 있으며, GitHub에서는 'Verified' 배지로 표시됩니다. 이는 커밋 내용을 암호화하는 것이 아니라, 해당 커밋이 특정 GPG 키 소유자에 의해 만들어졌다는 것을 증명하여 위변조를 방지합니다.",
+    "sourceUrl": "https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work"
+  },
+  {
+    "id": "git-advanced-065",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": ".mailmap 파일의 용도는 무엇인가요?",
+    "options": [
+      "여러 이메일 주소나 이름을 하나의 정규 이름으로 매핑하여 git shortlog 등의 출력을 통합한다",
+      "커밋 알림 이메일을 자동으로 발송할 수신자 목록을 정의한다",
+      "git send-email에서 사용할 SMTP 서버 설정을 저장한다",
+      "특정 이메일 주소의 사용자가 푸시하는 것을 차단하는 접근 제어 목록이다"
+    ],
+    "correctIndex": 0,
+    "explanation": ".mailmap 파일은 저장소 루트에 위치하며, 동일 인물이 여러 이메일이나 이름 변형을 사용한 경우 이를 하나의 정규 이름/이메일로 매핑합니다. git shortlog, git log --format, git blame 등에서 자동으로 적용되어 기여자 통계가 올바르게 통합됩니다. 형식은 'Proper Name <proper@email> Old Name <old@email>'입니다.",
+    "sourceUrl": "https://git-scm.com/docs/gitmailmap"
   }
 ]

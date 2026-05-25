@@ -192,7 +192,7 @@
 - design-patterns.json — 65 questions
 - dom-manipulation.json — 65 questions
 - event-loop.json — 65 questions
-- git-advanced.json — 60 questions
+- git-advanced.json — 65 questions
 - network.json — 60 questions
 - nodejs.json — 60 questions
 - promise.json — 65 questions
@@ -215,7 +215,7 @@
 - design-patterns.json — 65 questions
 - dom-manipulation.json — 65 questions
 - event-loop.json — 65 questions
-- git-advanced.json — 60 questions
+- git-advanced.json — 65 questions
 - network.json — 60 questions
 - nodejs.json — 60 questions
 - promise.json — 65 questions

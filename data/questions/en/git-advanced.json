@@ -972,5 +972,85 @@
     "correctIndex": 1,
     "explanation": "git sparse-checkout lets you define which directories or files should be populated in the working tree, while the rest remain only in the Git object store. This is especially useful for monorepos where a developer only needs a small portion of the codebase, significantly reducing disk usage and checkout time. It works with both cone mode (directory-based patterns) and non-cone mode (gitignore-style patterns).",
     "sourceUrl": "https://git-scm.com/docs/git-sparse-checkout"
+  },
+  {
+    "id": "git-advanced-061",
+    "topic": "git-advanced",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between git range-diff and git diff?",
+    "options": [
+      "range-diff compares two commit ranges (patch series) against each other, while diff compares file changes between two snapshots",
+      "range-diff only compares binary files, while diff only compares text files",
+      "range-diff can only compare remote branches, while diff can only compare local branches",
+      "range-diff automatically resolves conflicts, while diff only displays them"
+    ],
+    "correctIndex": 0,
+    "explanation": "git range-diff compares two commit ranges (e.g., a patch series before and after a rebase) and shows how each commit changed. Regular diff simply shows file content differences between two states, while range-diff matches commits by correspondence and tracks additions, modifications, and deletions of individual patches. This is invaluable for reviewing what changed after a force-push during code review.",
+    "sourceUrl": "https://git-scm.com/docs/git-range-diff"
+  },
+  {
+    "id": "git-advanced-062",
+    "topic": "git-advanced",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "A developer suspects repository corruption and wants to find damaged objects. What is the most appropriate command?",
+    "options": [
+      "Run git status --porcelain to check for changed files",
+      "Use git log --verify to verify commit signatures",
+      "Use git diff --check to detect whitespace errors",
+      "Run git fsck to verify the connectivity and validity of the object database"
+    ],
+    "correctIndex": 3,
+    "explanation": "git fsck (file system check) verifies the integrity of the Git object database. It recalculates SHA-1 hashes for all objects to detect corruption, and reports dangling (unreachable) or missing objects. It is an essential diagnostic tool after disk errors or abnormal termination to assess repository health.",
+    "sourceUrl": "https://git-scm.com/docs/git-fsck"
+  },
+  {
+    "id": "git-advanced-063",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the primary purpose of the git maintenance run command?",
+    "options": [
+      "It automatically performs repository optimization tasks such as gc, commit-graph updates, and prefetch",
+      "It automatically deletes stale branches",
+      "It tests the connection status to remote repositories",
+      "It restores file permissions in the working directory"
+    ],
+    "correctIndex": 0,
+    "explanation": "git maintenance manages optimization tasks to keep repository performance healthy. It performs garbage collection, commit-graph updates, prefetching remote data, and loose-objects cleanup. By running git maintenance start, you can register a background schedule that automatically executes these tasks periodically, preventing performance degradation in large repositories.",
+    "sourceUrl": "https://git-scm.com/docs/git-maintenance"
+  },
+  {
+    "id": "git-advanced-064",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the primary purpose of GPG-signed commits (git commit -S)?",
+    "options": [
+      "To encrypt the commit message so other users cannot read it",
+      "To encrypt file contents in the commit for enhanced security",
+      "To automatically pass code review when pushing",
+      "To cryptographically prove that a commit was authored by a specific individual"
+    ],
+    "correctIndex": 3,
+    "explanation": "GPG-signed commits allow cryptographic verification of the commit author's identity. Signatures can be verified with git log --show-signature, and GitHub displays them with a 'Verified' badge. This does not encrypt the commit content — it proves that the commit was created by the owner of a specific GPG key, preventing impersonation and tampering.",
+    "sourceUrl": "https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work"
+  },
+  {
+    "id": "git-advanced-065",
+    "topic": "git-advanced",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the purpose of the .mailmap file?",
+    "options": [
+      "It maps multiple email addresses or name variations to a single canonical name, unifying output in git shortlog and similar commands",
+      "It defines a recipient list for automatic commit notification emails",
+      "It stores SMTP server configuration for git send-email",
+      "It is an access control list that blocks users with specific email addresses from pushing"
+    ],
+    "correctIndex": 0,
+    "explanation": "The .mailmap file sits at the repository root and maps name/email variations used by the same person to a single canonical name and email. It is automatically applied by git shortlog, git log --format, git blame, and other commands, ensuring contributor statistics are correctly consolidated. The format is 'Proper Name <proper@email> Old Name <old@email>'.",
+    "sourceUrl": "https://git-scm.com/docs/gitmailmap"
   }
 ]

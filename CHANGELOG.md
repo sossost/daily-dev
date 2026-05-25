@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-05-25
+
+### Features
+
+- **content**: add 5 dom-manipulation questions (061-065) (`cbfdbb5`)
+
 ## 2026-05-24
 
 ### Features
