@@ -193,8 +193,8 @@
 - dom-manipulation.json — 65 questions
 - event-loop.json — 65 questions
 - git-advanced.json — 65 questions
-- network.json — 60 questions
-- nodejs.json — 60 questions
+- network.json — 65 questions
+- nodejs.json — 65 questions
 - promise.json — 65 questions
 - prototype.json — 65 questions
 - react-basics.json — 65 questions
@@ -202,7 +202,7 @@
 - this.json — 65 questions
 - type-coercion.json — 65 questions
 - typescript.json — 65 questions
-- web-performance.json — 60 questions
+- web-performance.json — 65 questions
 - web-security.json — 65 questions
 - algorithms.json — 65 questions
 - api-design.json — 65 questions
@@ -216,8 +216,8 @@
 - dom-manipulation.json — 65 questions
 - event-loop.json — 65 questions
 - git-advanced.json — 65 questions
-- network.json — 60 questions
-- nodejs.json — 60 questions
+- network.json — 65 questions
+- nodejs.json — 65 questions
 - promise.json — 65 questions
 - prototype.json — 65 questions
 - react-basics.json — 65 questions
@@ -225,7 +225,7 @@
 - this.json — 65 questions
 - type-coercion.json — 65 questions
 - typescript.json — 65 questions
-- web-performance.json — 60 questions
+- web-performance.json — 65 questions
 - web-security.json — 65 questions
 
 ## Modules

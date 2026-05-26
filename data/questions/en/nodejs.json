@@ -986,5 +986,87 @@
     "correctIndex": 0,
     "explanation": "worker_threads creates threads within the same Node.js process, enabling shared memory via SharedArrayBuffer and efficient data transfer via MessagePort. child_process spawns a completely separate OS process with its own memory space, communicating through IPC or stdio streams. Workers are lighter-weight and better for CPU-intensive JavaScript tasks, while child processes are needed for running external programs or complete isolation.",
     "sourceUrl": "https://nodejs.org/api/worker_threads.html"
+  },
+  {
+    "id": "nodejs-061",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "When starting a Node.js server, the error 'Error: listen EADDRINUSE :::3000' occurs. What causes this error?",
+    "options": [
+      "The Node.js version does not support port 3000",
+      "A firewall is blocking access to port 3000",
+      "DNS resolution for port 3000 failed",
+      "Another process is already using port 3000, so it cannot be bound"
+    ],
+    "correctIndex": 3,
+    "explanation": "EADDRINUSE (Address Already In Use) occurs when the specified port is already occupied by another process. A previously running server may not have shut down properly, or another application may be using that port. You can identify and terminate the process using lsof -i :3000 (macOS/Linux) or netstat commands.",
+    "sourceUrl": "https://nodejs.org/api/errors.html#common-system-errors"
+  },
+  {
+    "id": "nodejs-062",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following Node.js code?",
+    "code": "const EventEmitter = require('events');\nconst emitter = new EventEmitter();\n\nemitter.once('data', (val) => console.log('once:', val));\nemitter.on('data', (val) => console.log('on:', val));\n\nemitter.emit('data', 'A');\nemitter.emit('data', 'B');",
+    "options": [
+      "once: A\non: A\non: B",
+      "on: A\nonce: A\non: B\nonce: B",
+      "once: A\non: A\nonce: B\non: B",
+      "on: A\non: B"
+    ],
+    "correctIndex": 0,
+    "explanation": "A listener registered with once() executes only once when the event first fires and is then automatically removed. A listener registered with on() executes every time the event fires. On the first emit, both once and on listeners execute in registration order. On the second emit, the once listener has already been removed, so only the on listener executes.",
+    "sourceUrl": "https://nodejs.org/api/events.html#emitteronceeventname-listener"
+  },
+  {
+    "id": "nodejs-063",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the difference between createHash() and createHmac() in Node.js's built-in crypto module?",
+    "options": [
+      "createHash() uses a secret key, while createHmac() generates a hash without a key",
+      "createHash() is used for encryption, while createHmac() is used for decryption",
+      "Both have the same functionality but createHmac() is faster",
+      "createHash() generates a message digest without a key, while createHmac() uses a secret key to generate a message authentication code"
+    ],
+    "correctIndex": 3,
+    "explanation": "createHash() generates a fixed-length hash (digest) of input data using algorithms like SHA-256. Anyone can produce the same hash from the same input, making it useful for data integrity verification. createHmac() generates an HMAC (Hash-based Message Authentication Code) using a secret key, ensuring that only parties with the key can produce the same value, guaranteeing both integrity and authentication of the message.",
+    "sourceUrl": "https://nodejs.org/api/crypto.html#cryptocreatehmacalgorithm-key-options"
+  },
+  {
+    "id": "nodejs-064",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between fs.existsSync() and fs.accessSync() in Node.js?",
+    "options": [
+      "fs.existsSync() only checks file existence, while fs.accessSync() can also check read, write, and execute permissions",
+      "fs.existsSync() is asynchronous, while fs.accessSync() is synchronous",
+      "Both have the same functionality and fs.existsSync() is the deprecated version",
+      "fs.accessSync() only checks file existence, while fs.existsSync() checks permissions"
+    ],
+    "correctIndex": 0,
+    "explanation": "fs.existsSync() returns a boolean indicating whether a file or directory exists. fs.accessSync() can use fs.constants.R_OK, W_OK, and X_OK flags to check read, write, and execute permissions granularly, throwing an error if permission is denied. To avoid TOCTOU (Time of Check to Time of Use) race conditions when checking before opening a file, it's recommended to perform the file operation directly and handle errors instead.",
+    "sourceUrl": "https://nodejs.org/api/fs.html#fsaccesssyncpath-mode"
+  },
+  {
+    "id": "nodejs-065",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What causes the memory leak in the following code?",
+    "code": "const cache = new Map();\n\nfunction processRequest(userId) {\n  const data = fetchUserData(userId);\n  cache.set(userId, { data, timestamp: Date.now() });\n  return data;\n}\n\n// processRequest is called with many unique userIds",
+    "options": [
+      "Map objects are not automatically garbage collected",
+      "fetchUserData returns a Promise that takes up memory",
+      "Using Date.now() for timestamp is inefficient",
+      "Entries added to the Map are never deleted, causing the cache to grow indefinitely — a WeakMap or TTL-based eviction logic is needed"
+    ],
+    "correctIndex": 3,
+    "explanation": "Map maintains strong references to its keys, so even if the key is no longer referenced elsewhere, the Map entry will not be garbage collected. As unique userIds keep being added, the cache grows indefinitely until memory is exhausted. Solutions include using an LRU (Least Recently Used) cache strategy, TTL (Time to Live)-based automatic eviction, or WeakMap for automatic GC when keys are objects.",
+    "sourceUrl": "https://nodejs.org/en/learn/diagnostics/memory/using-heap-snapshot"
   }
 ]

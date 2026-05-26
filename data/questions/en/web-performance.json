@@ -978,5 +978,87 @@
     "correctIndex": 1,
     "explanation": "The defer attribute instructs the browser to download the script in parallel with HTML parsing (non-blocking) and execute it after the HTML document is fully parsed but before the DOMContentLoaded event fires. Multiple deferred scripts execute in the order they appear in the document. This differs from async, where scripts execute as soon as they're downloaded, regardless of document parsing state or script order.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#defer"
+  },
+  {
+    "id": "web-performance-061",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between the swap and block values of the CSS font-display property?",
+    "options": [
+      "swap does not use web fonts, while block only uses web fonts",
+      "Both behave identically and only differ in browser compatibility",
+      "block hides text until the font loads, while swap displays text before the font loads",
+      "swap immediately displays text with a fallback font and swaps it when the web font loads, while block hides text during a short blocking period and displays it once the font loads"
+    ],
+    "correctIndex": 3,
+    "explanation": "font-display: swap immediately renders text with a fallback font to prevent FOIT (Flash of Invisible Text), and swaps to the web font when loading completes (may cause FOUT). font-display: block hides text for approximately 3 seconds during a blocking period, displaying it if the font loads within that time. swap prioritizes content visibility, while block prioritizes visual consistency.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display"
+  },
+  {
+    "id": "web-performance-062",
+    "topic": "web-performance",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What causes the memory leak in the following code?",
+    "code": "function createComponent() {\n  const element = document.createElement('div');\n  const data = new Array(10000).fill('x');\n\n  element.addEventListener('click', () => {\n    console.log(data.length);\n  });\n\n  document.body.appendChild(element);\n  document.body.removeChild(element);\n}",
+    "options": [
+      "The removed element still has an event listener, and the closure references the large data array, preventing garbage collection",
+      "document.createElement does not release memory",
+      "Array.fill() uses excessive memory",
+      "removeChild does not execute synchronously"
+    ],
+    "correctIndex": 0,
+    "explanation": "Even after removing an element with removeChild, if an event listener holds a reference to the element and the data array through a closure, they cannot be garbage collected. This is known as a Detached DOM node memory leak. You should remove event listeners with removeEventListener before removeChild, or use AbortController to clean up listeners in bulk.",
+    "sourceUrl": "https://developer.chrome.com/docs/devtools/memory-problems"
+  },
+  {
+    "id": "web-performance-063",
+    "topic": "web-performance",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "How does the Long Animation Frames (LoAF) API improve upon the Long Tasks API?",
+    "options": [
+      "LoAF can detect tasks under 50ms",
+      "LoAF can also measure network request latency",
+      "LoAF is identical to the Long Tasks API with just a different name",
+      "LoAF measures including rendering time and provides attribution to the scripts causing slow frames, including their source URLs"
+    ],
+    "correctIndex": 3,
+    "explanation": "The Long Tasks API detects tasks that block the main thread for 50ms or more but provides limited information about which script is responsible. The Long Animation Frames API measures the entire frame duration including rendering work (style, layout, paint) and provides detailed attribution including individual script URLs, execution times, and invocation types (event handlers, Promises, etc.), making it valuable for INP optimization.",
+    "sourceUrl": "https://developer.chrome.com/docs/web-platform/long-animation-frames"
+  },
+  {
+    "id": "web-performance-064",
+    "topic": "web-performance",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What impact does the decoding=\"async\" attribute have on image rendering in the following HTML?",
+    "code": "<img src=\"large-photo.jpg\" decoding=\"async\" alt=\"Large photo\">",
+    "options": [
+      "The image cannot load without JavaScript",
+      "The image resolution is automatically reduced",
+      "The image is lazy-loaded and only loads when it enters the viewport",
+      "Image decoding is performed asynchronously so it does not block the main thread, preventing delays in rendering other content"
+    ],
+    "correctIndex": 3,
+    "explanation": "The decoding='async' attribute hints to the browser to perform image decoding asynchronously. Decoding large images can block the main thread, but with async, the browser renders other content first without waiting for decoding to complete. This is different from loading='lazy' (which loads when entering the viewport) — it only affects the decoding method.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/decoding"
+  },
+  {
+    "id": "web-performance-065",
+    "topic": "web-performance",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between Code Splitting and Tree Shaking in bundlers?",
+    "options": [
+      "Code Splitting divides the bundle into multiple chunks loaded on demand, while Tree Shaking removes unused code to reduce bundle size",
+      "Tree Shaking splits code into multiple files, while Code Splitting removes unused code",
+      "Both are the same optimization with different names depending on the bundler",
+      "Code Splitting is applied only at build time, while Tree Shaking is applied at runtime"
+    ],
+    "correctIndex": 0,
+    "explanation": "Code Splitting divides a single large bundle into multiple chunks, loading only the code needed for the initial render first and dynamically loading the rest on demand (via dynamic import). Tree Shaking uses static analysis of ES Modules to completely remove code that is not actually imported (dead code) from the bundle. The two techniques are complementary — using both reduces both initial loading size and overall bundle size.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking"
   }
 ]

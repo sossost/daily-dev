@@ -973,5 +973,86 @@
     "correctIndex": 1,
     "explanation": "HTTP/2 Server Push allows a server to anticipate resources the client will need (CSS, JS) and send them proactively alongside the initial response. However, it was largely deprecated because servers cannot reliably know what the client has cached, leading to wasted bandwidth. The 103 Early Hints status code is now the preferred alternative, as it lets the browser decide whether to fetch hinted resources.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages"
+  },
+  {
+    "id": "network-061",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "When a WebSocket connection is terminated by the server and the close event's code is 1006, what does this indicate?",
+    "options": [
+      "The connection was closed abnormally and no close frame was received",
+      "The server closed the connection normally",
+      "The client's authentication token expired and the server rejected it",
+      "The message size exceeded the server's allowed limit"
+    ],
+    "correctIndex": 0,
+    "explanation": "WebSocket close code 1006 indicates Abnormal Closure. This code cannot be set by application code directly — it is automatically set by the browser when the connection is lost without a close frame, such as due to network disconnection or server crash. Normal closure is 1000, protocol error is 1002, and message size exceeded is 1009.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent/code"
+  },
+  {
+    "id": "network-062",
+    "topic": "network",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the security risk of the 0-RTT (Zero Round Trip Time) connection provided by HTTP/3's QUIC protocol?",
+    "options": [
+      "0-RTT does not use encryption, making it vulnerable to eavesdropping",
+      "0-RTT does not verify the server's certificate, making it vulnerable to man-in-the-middle attacks",
+      "0-RTT cannot prevent IP spoofing, making it vulnerable to DDoS attacks",
+      "0-RTT data is vulnerable to replay attacks, so servers should reject 0-RTT for non-idempotent requests"
+    ],
+    "correctIndex": 3,
+    "explanation": "QUIC's 0-RTT reuses keys from a previous connection to transmit data immediately without a handshake. However, an attacker can capture 0-RTT data and retransmit it to the server in a replay attack. Therefore, servers should only allow 0-RTT for idempotent requests like GET and reject it for state-changing requests like POST.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/425"
+  },
+  {
+    "id": "network-063",
+    "topic": "network",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the console output of the following code?\n\nconst url = new URL('https://example.com:8080/path?a=1&b=2#section');\nconsole.log(url.origin);\nconsole.log(url.searchParams.get('b'));",
+    "code": "const url = new URL('https://example.com:8080/path?a=1&b=2#section');\nconsole.log(url.origin);\nconsole.log(url.searchParams.get('b'));",
+    "options": [
+      "https://example.com:8080\n2",
+      "https://example.com\n2",
+      "https://example.com:8080/path\nb=2",
+      "https://example.com:8080\nb"
+    ],
+    "correctIndex": 0,
+    "explanation": "The URL object's origin property returns the combination of protocol, hostname, and port. Since port 8080 is explicitly specified (not the default 443 for HTTPS), the origin is 'https://example.com:8080'. searchParams.get('b') returns the value of query parameter 'b' as the string '2'.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/URL/origin"
+  },
+  {
+    "id": "network-064",
+    "topic": "network",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement correctly compares HTTP Long Polling, Server-Sent Events (SSE), and WebSocket?",
+    "options": [
+      "SSE supports bidirectional communication while WebSocket only supports unidirectional",
+      "Long Polling can receive multiple messages over a single connection, making it more efficient than SSE",
+      "All three use the same protocol (HTTP) with no performance differences",
+      "SSE is a server-to-client unidirectional stream with automatic reconnection, while WebSocket enables bidirectional communication but requires manual reconnection logic"
+    ],
+    "correctIndex": 3,
+    "explanation": "Long Polling creates a new HTTP request each time the server responds, resulting in significant overhead. SSE provides a server-to-client unidirectional stream over HTTP, with automatic reconnection and event ID-based resumption via the EventSource API. WebSocket enables full-duplex bidirectional communication after an HTTP upgrade, but features like reconnection and event IDs must be implemented manually.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events"
+  },
+  {
+    "id": "network-065",
+    "topic": "network",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "The browser blocks an image loaded via HTTP URL on an HTTPS page. What is the most appropriate way to fix this?",
+    "options": [
+      "Add 'unsafe-inline' to the Content-Security-Policy",
+      "Add the crossorigin attribute to the image tag",
+      "Disable the browser's security settings",
+      "Change the image URL to HTTPS or use a protocol-relative URL (//example.com/img.png)"
+    ],
+    "correctIndex": 3,
+    "explanation": "Mixed Content occurs when HTTP resources are loaded on an HTTPS page. Images are 'passive mixed content' that some browsers load with warnings, but modern browsers block them by default. The best solution is to serve all resources over HTTPS. Using protocol-relative URLs (starting with //) makes the resource follow the current page's protocol.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content"
   }
 ]

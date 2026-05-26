@@ -986,5 +986,87 @@
     "correctIndex": 0,
     "explanation": "worker_threads는 같은 Node.js 프로세스 내에서 스레드를 생성하여 SharedArrayBuffer를 통한 메모리 공유와 MessagePort를 통한 효율적인 데이터 전송이 가능합니다. child_process는 완전히 별도의 OS 프로세스를 생성하며, IPC나 stdio 스트림을 통해 통신합니다. Worker는 가벼워 CPU 집약적인 JavaScript 작업에 적합하고, child process는 외부 프로그램 실행이나 완전한 격리가 필요할 때 사용됩니다.",
     "sourceUrl": "https://nodejs.org/api/worker_threads.html"
+  },
+  {
+    "id": "nodejs-061",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Node.js 서버를 시작할 때 'Error: listen EADDRINUSE :::3000' 에러가 발생합니다. 이 에러의 원인은 무엇인가요?",
+    "options": [
+      "Node.js 버전이 포트 3000을 지원하지 않는다",
+      "방화벽이 포트 3000으로의 접근을 차단하고 있다",
+      "포트 3000에 대한 DNS 해석이 실패했다",
+      "이미 다른 프로세스가 포트 3000을 사용하고 있어 바인딩할 수 없다"
+    ],
+    "correctIndex": 3,
+    "explanation": "EADDRINUSE(Address Already In Use)는 지정한 포트가 이미 다른 프로세스에 의해 점유되어 있을 때 발생합니다. 이전에 실행한 서버가 제대로 종료되지 않았거나, 다른 애플리케이션이 해당 포트를 사용 중일 수 있습니다. lsof -i :3000 (macOS/Linux)이나 netstat 명령으로 해당 포트를 사용하는 프로세스를 확인하고 종료하면 해결됩니다.",
+    "sourceUrl": "https://nodejs.org/api/errors.html#common-system-errors"
+  },
+  {
+    "id": "nodejs-062",
+    "topic": "nodejs",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 Node.js 코드의 출력 결과는 무엇인가요?",
+    "code": "const EventEmitter = require('events');\nconst emitter = new EventEmitter();\n\nemitter.once('data', (val) => console.log('once:', val));\nemitter.on('data', (val) => console.log('on:', val));\n\nemitter.emit('data', 'A');\nemitter.emit('data', 'B');",
+    "options": [
+      "once: A\non: A\non: B",
+      "on: A\nonce: A\non: B\nonce: B",
+      "once: A\non: A\nonce: B\non: B",
+      "on: A\non: B"
+    ],
+    "correctIndex": 0,
+    "explanation": "once()로 등록한 리스너는 이벤트가 처음 발생할 때 한 번만 실행된 후 자동으로 제거됩니다. on()으로 등록한 리스너는 이벤트가 발생할 때마다 실행됩니다. 첫 번째 emit에서 once와 on 리스너가 등록 순서대로 모두 실행되고, 두 번째 emit에서는 once 리스너가 이미 제거되었으므로 on 리스너만 실행됩니다.",
+    "sourceUrl": "https://nodejs.org/api/events.html#emitteronceeventname-listener"
+  },
+  {
+    "id": "nodejs-063",
+    "topic": "nodejs",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Node.js의 내장 crypto 모듈에서 createHash()와 createHmac()의 차이점은 무엇인가요?",
+    "options": [
+      "createHash()는 비밀키를 사용하고, createHmac()은 키 없이 해시를 생성한다",
+      "createHash()는 암호화에 사용되고, createHmac()은 복호화에 사용된다",
+      "둘 다 동일한 기능이지만 createHmac()이 더 빠르다",
+      "createHash()는 키 없이 메시지 다이제스트를 생성하고, createHmac()은 비밀키를 사용하여 메시지 인증 코드를 생성한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "createHash()는 SHA-256 등의 알고리즘으로 입력 데이터의 고정 길이 해시(다이제스트)를 생성합니다. 누구나 동일한 입력으로 같은 해시를 만들 수 있어 데이터 무결성 검증에 사용됩니다. createHmac()은 비밀키와 함께 해시를 생성하는 HMAC(Hash-based Message Authentication Code)으로, 키를 아는 당사자만 동일한 값을 생성할 수 있어 메시지의 무결성과 인증을 동시에 보장합니다.",
+    "sourceUrl": "https://nodejs.org/api/crypto.html#cryptocreatehmacalgorithm-key-options"
+  },
+  {
+    "id": "nodejs-064",
+    "topic": "nodejs",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Node.js에서 fs.existsSync()와 fs.accessSync()의 차이점은 무엇인가요?",
+    "options": [
+      "fs.existsSync()는 파일 존재 여부만 확인하고, fs.accessSync()는 파일의 읽기·쓰기·실행 권한까지 확인할 수 있다",
+      "fs.existsSync()는 비동기이고, fs.accessSync()는 동기이다",
+      "둘 다 동일한 기능이며 fs.existsSync()가 deprecated된 버전이다",
+      "fs.accessSync()는 파일 존재만 확인하고, fs.existsSync()는 권한까지 확인한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "fs.existsSync()는 파일이나 디렉토리의 존재 여부를 boolean으로 반환합니다. fs.accessSync()는 fs.constants.R_OK, W_OK, X_OK 플래그를 사용하여 파일의 읽기, 쓰기, 실행 권한을 세밀하게 확인할 수 있으며, 권한이 없으면 에러를 던집니다. 파일을 열기 전에 접근 가능 여부를 확인하는 TOCTOU(Time of Check to Time of Use) 경합을 피하려면, 직접 파일 연산을 수행하고 에러를 처리하는 것이 권장됩니다.",
+    "sourceUrl": "https://nodejs.org/api/fs.html#fsaccesssyncpath-mode"
+  },
+  {
+    "id": "nodejs-065",
+    "topic": "nodejs",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 메모리 누수가 발생하는 원인은 무엇인가요?",
+    "code": "const cache = new Map();\n\nfunction processRequest(userId) {\n  const data = fetchUserData(userId);\n  cache.set(userId, { data, timestamp: Date.now() });\n  return data;\n}\n\n// processRequest가 많은 고유 userId로 호출됨",
+    "options": [
+      "Map 객체는 자동으로 가비지 컬렉션되지 않는다",
+      "fetchUserData가 Promise를 반환하여 메모리를 차지한다",
+      "timestamp에 Date.now()를 사용하는 것이 비효율적이다",
+      "Map에 추가된 항목이 삭제되지 않아 캐시가 무한히 증가하며, WeakMap을 사용하거나 TTL 기반 삭제 로직이 필요하다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Map은 키에 대한 강한 참조(strong reference)를 유지하므로, 외부에서 키를 더 이상 참조하지 않더라도 Map의 항목은 가비지 컬렉션되지 않습니다. 고유한 userId가 계속 추가되면 캐시가 무한히 커져 메모리가 고갈됩니다. 해결책으로는 LRU(Least Recently Used) 캐시 전략, TTL(Time to Live) 기반 자동 삭제, 또는 키가 객체인 경우 WeakMap을 사용하여 자동 GC를 활용할 수 있습니다.",
+    "sourceUrl": "https://nodejs.org/en/learn/diagnostics/memory/using-heap-snapshot"
   }
 ]
