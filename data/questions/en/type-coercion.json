@@ -1078,5 +1078,89 @@
     "correctIndex": 3,
     "explanation": "When the + operator triggers ToPrimitive on an object, the conversion follows a strict priority order. First, if Symbol.toPrimitive exists, it is called with the hint 'default' (since + doesn't have a clear numeric or string preference). If Symbol.toPrimitive is not defined, the OrdinaryToPrimitive algorithm runs with hint 'number': it calls valueOf() first, and if that doesn't return a primitive, calls toString(). This is why ({valueOf(){ return 42 }}) + 1 gives 43 — valueOf() takes priority over toString() for the + operator.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive"
+  },
+  {
+    "id": "type-coercion-066",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "code": "const flag = new Boolean(false);\nif (flag) {\n  console.log('truthy');\n} else {\n  console.log('falsy');\n}",
+    "question": "What is the output of the following code?",
+    "options": [
+      "falsy",
+      "TypeError: Boolean is not a constructor",
+      "undefined",
+      "truthy"
+    ],
+    "correctIndex": 3,
+    "explanation": "new Boolean(false) creates a Boolean wrapper object, not the primitive value false. In JavaScript, all objects are truthy in conditional contexts — even if the wrapped value is false. The object itself is truthy because it exists as an object reference. This is why using wrapper objects instead of primitives is dangerous. Use Boolean(false) (without new) when you need a primitive boolean.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean#boolean_objects_vs._boolean_primitives"
+  },
+  {
+    "id": "type-coercion-067",
+    "topic": "type-coercion",
+    "type": "debugging",
+    "difficulty": "medium",
+    "code": "const date1 = new Date('2024-03-15');\nconst date2 = new Date('2024-03-10');\n\nconsole.log(date1 - date2);\nconsole.log(date1 + date2);",
+    "question": "The developer wanted to get the difference between two dates in milliseconds, but the + operation gives an unexpected result. What is the cause?",
+    "options": [
+      "The - operator converts both Date objects to numbers (timestamps) via valueOf(), but the + operator triggers Date's special ToPrimitive behavior which calls toString(), resulting in string concatenation",
+      "Date objects don't support arithmetic operations, so both return NaN",
+      "Only the - operator can be used with Date objects; + throws a TypeError",
+      "Both operations correctly return numbers in milliseconds"
+    ],
+    "correctIndex": 0,
+    "explanation": "The - operator converts operands to numbers, so Date's valueOf() is called, returning millisecond timestamps. However, the + operator calls ToPrimitive with the 'default' hint, and Date objects uniquely treat the 'default' hint as 'string' (unlike other objects which treat it as 'number'). This causes toString() to be called, producing string concatenation of the two date strings. To get the millisecond difference, always use the - operator or getTime().",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/@@toPrimitive"
+  },
+  {
+    "id": "type-coercion-068",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "code": "console.log('' == 0);\nconsole.log(0 == '0');\nconsole.log('' == '0');",
+    "question": "What is the output of the following code?",
+    "options": [
+      "true, true, true",
+      "false, false, false",
+      "true, true, false",
+      "true, false, true"
+    ],
+    "correctIndex": 2,
+    "explanation": "This example demonstrates a violation of transitivity with the == operator. '' == 0 is true because the empty string is converted to the number 0. 0 == '0' is true because the string '0' is converted to the number 0. However, '' == '0' is false because both sides are strings, so no type conversion occurs — they are compared directly as strings, and '' is not equal to '0'. This shows that A == B and B == C does not guarantee A == C, which is a fundamental problem with the == operator.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality"
+  },
+  {
+    "id": "type-coercion-069",
+    "topic": "type-coercion",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "code": "const sym = Symbol('hello');\ntry {\n  console.log('Symbol: ' + sym);\n} catch (e) {\n  console.log(e.constructor.name);\n}\nconsole.log(`Symbol: ${String(sym)}`);",
+    "question": "What is the output of the following code?",
+    "options": [
+      "TypeError / Symbol: Symbol(hello)",
+      "Symbol: Symbol(hello) / Symbol: Symbol(hello)",
+      "TypeError / TypeError",
+      "Symbol: undefined / Symbol: Symbol(hello)"
+    ],
+    "correctIndex": 0,
+    "explanation": "Symbol is the only primitive type in JavaScript that prohibits implicit conversion to string or number. Using the + operator to concatenate a string with a Symbol throws a TypeError. This is by design to prevent Symbols from accidentally being converted to strings, which could cause property key collisions. However, explicit conversion via String(sym) or sym.toString() is allowed and returns 'Symbol(hello)'. Template literals also attempt implicit conversion, so you must wrap Symbols with String().",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol#symbol_type_conversions"
+  },
+  {
+    "id": "type-coercion-070",
+    "topic": "type-coercion",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about equality comparison between wrapper objects and primitives is correct?",
+    "options": [
+      "Both new Number(0) == 0 and new Number(0) === 0 are true",
+      "new Number(0) == 0 is false but new Number(0) === 0 is true",
+      "Both new Number(0) == 0 and new Number(0) === 0 are false",
+      "new Number(0) == 0 is true but new Number(0) === 0 is false"
+    ],
+    "correctIndex": 3,
+    "explanation": "The == operator converts objects to primitives via ToPrimitive when comparing with numbers. new Number(0).valueOf() returns 0, so the comparison becomes 0 == 0, which is true. The === operator performs no type conversion: new Number(0) is of type 'object' and 0 is of type 'number'. Since the types differ, === always returns false. This is one reason why wrapper objects should be avoided — typeof new Number(0) is 'object', leading to unexpected behavior in comparisons and type checks.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_coercion"
   }
 ]
