@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-05-28
+
+### Features
+
+- **content**: add 5 type-coercion questions (066-070) (`35d9b88`)
+
 ## 2026-05-27
 
 ### Features

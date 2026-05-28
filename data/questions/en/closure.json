@@ -1078,5 +1078,88 @@
     "correctIndex": 1,
     "explanation": "Each call to [Symbol.iterator]() creates a new lexical environment with an independent current variable. The first [...range] calls Symbol.iterator(), creating an iterator starting at current=1, and produces [1,2,3]. The second [...range] calls Symbol.iterator() again, creating a new iterator with current reset to 1, so it also produces [1,2,3]. The start and end values are captured from createRange's closure, allowing the same range to be iterated multiple times. If current had been declared in the createRange scope instead, the iterator state would persist across iterations and the second spread would yield an empty array.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols"
+  },
+  {
+    "id": "closure-066",
+    "topic": "closure",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "Which statement about the closure behavior difference between functions created with new Function() and regular function declarations is correct?",
+    "options": [
+      "Functions created with new Function() reference only the global scope rather than the lexical scope where they were created, so they do not form closures over local outer variables",
+      "new Function() always runs in strict mode, which is why it cannot form closures",
+      "Regular function declarations can also only reference the global scope",
+      "new Function() and regular function declarations have identical closure behavior"
+    ],
+    "correctIndex": 0,
+    "explanation": "A function created with new Function('return x') has its [[Environment]] set to the global scope, not the lexical environment where it was created. So in function outer() { let x = 10; return new Function('return x'); }, the returned function cannot access outer's x and will look for x in the global scope instead. This is an intentional design for security and optimization purposes — unlike eval(), dynamically created code via new Function() is prevented from capturing local variables.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function"
+  },
+  {
+    "id": "closure-067",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "function outer() {\n  let x = 'outer';\n  function middle() {\n    let x = 'middle';\n    function inner() {\n      return x;\n    }\n    x = 'modified';\n    return inner;\n  }\n  return middle();\n}\nconsole.log(outer());",
+    "options": [
+      "outer",
+      "middle",
+      "modified",
+      "undefined"
+    ],
+    "correctIndex": 2,
+    "explanation": "The inner function captures x from its nearest lexical scope, which is middle's x. Closures capture the variable binding (reference), not the value at the time of creation. During middle() execution, x = 'modified' runs after inner is created but before inner is returned. When the returned inner is called via outer(), middle's x has already been changed to 'modified', so 'modified' is output. The outer x is shadowed by middle's x and is never accessed by inner.",
+    "sourceUrl": "https://javascript.info/closure#lexical-environment"
+  },
+  {
+    "id": "closure-068",
+    "topic": "closure",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "Why does getName() return 'Alice' instead of 'Bob' in the following code?",
+    "code": "function createGreeter(user) {\n  const { name } = user;\n  return {\n    getName() { return name; }\n  };\n}\nconst user = { name: 'Alice' };\nconst greeter = createGreeter(user);\nuser.name = 'Bob';\nconsole.log(greeter.getName());",
+    "options": [
+      "const does not allow reassignment, so an error is thrown",
+      "The user object is frozen and cannot be modified",
+      "Destructuring copies the primitive value, so name becomes independent from the original object, and the closure captures this copied value",
+      "getName re-reads the user object every time it is called"
+    ],
+    "correctIndex": 2,
+    "explanation": "const { name } = user copies the value of user.name (the string 'Alice') into a new local variable name. Since strings are primitive types, the value is copied rather than referenced. Changing user.name = 'Bob' afterwards has no effect on the already-copied name variable. The getName closure captures the name variable from createGreeter's scope, which still holds 'Alice'. If the user object itself had been captured instead of destructuring, 'Bob' would have been returned.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment"
+  },
+  {
+    "id": "closure-069",
+    "topic": "closure",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about the shared closure scope among multiple inner functions returned from the same outer function is correct?",
+    "options": [
+      "Multiple inner functions returned from the same outer function call share the same lexical environment, so if one function modifies a variable, the other functions see the changed value",
+      "Each inner function always has its own independent lexical environment",
+      "Inner functions only share a copy of the initial variable values",
+      "The shared scope is immediately released when the outer function finishes executing"
+    ],
+    "correctIndex": 0,
+    "explanation": "Inner functions created within the same outer function call reference the same lexical environment object via their [[Environment]] slot. For example, in function createPair() { let shared = 0; return { inc() { shared++; }, get() { return shared; } }; }, inc() and get() share the same shared variable. Calling inc() will be reflected when get() is called. This characteristic is the core principle behind the Module Pattern, where multiple methods share private state.",
+    "sourceUrl": "https://javascript.info/closure#lexical-environment"
+  },
+  {
+    "id": "closure-070",
+    "topic": "closure",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function createMultiplier(factor = multiplier) {\n  var multiplier = 2;\n  return (n) => n * factor;\n}\ntry {\n  console.log(createMultiplier()(5));\n} catch (e) {\n  console.log(e.constructor.name);\n}",
+    "options": [
+      "10",
+      "NaN",
+      "undefined",
+      "ReferenceError"
+    ],
+    "correctIndex": 3,
+    "explanation": "Default parameters are evaluated in their own scope, separate from the function body. When evaluating factor = multiplier, the engine looks for multiplier in the parameter scope — the var multiplier in the function body is not accessible here. Since multiplier is not found in the parameter scope, the engine searches outer scopes and eventually the global scope. With no multiplier defined anywhere, a ReferenceError is thrown. This happens because default parameters form their own lexical scope, and var hoisting in the function body does not affect this scope.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters"
   }
 ]
