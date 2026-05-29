@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-05-29
+
+### Features
+
+- **content**: fix — closure-068 correctIndex 3→2 (`89a250e`)
+
 ## 2026-05-28
 
 ### Features

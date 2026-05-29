@@ -1076,5 +1076,88 @@
     "correctIndex": 0,
     "explanation": "Both methods return an object's [[Prototype]], but they differ in how they handle non-object arguments. Reflect.getPrototypeOf() throws a TypeError immediately if the argument is not an object. Object.getPrototypeOf(), since ES2015, coerces the argument to an object via ToObject() before returning its prototype. For example, Object.getPrototypeOf('hello') returns String.prototype, but Reflect.getPrototypeOf('hello') throws a TypeError. The Reflect version is designed to work consistently with Proxy's getPrototypeOf trap.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect/getPrototypeOf"
+  },
+  {
+    "id": "prototype-066",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function Foo() {}\nFoo.prototype.x = 10;\n\nconst a = new Foo();\na.x = 20;\n\ndelete a.x;\nconsole.log(a.x);\n\ndelete a.x;\nconsole.log(a.x);",
+    "options": [
+      "undefined, undefined",
+      "20, undefined",
+      "10, 10",
+      "20, 10"
+    ],
+    "correctIndex": 2,
+    "explanation": "The delete operator only removes own properties. After 'a.x = 20', 'a' has its own 'x' that shadows the prototype's 'x'. The first delete removes the own property, so 'a.x' falls back to the prototype chain and returns 10. The second delete has no effect because 'a' no longer has an own 'x' property — delete cannot remove inherited properties. So it still returns 10.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete"
+  },
+  {
+    "id": "prototype-067",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is the purpose of Object.getOwnPropertyDescriptors() in the context of prototype-based inheritance?",
+    "options": [
+      "It returns all properties including inherited ones from the prototype chain",
+      "It enables copying an object along with its getters and setters, unlike Object.assign which invokes them",
+      "It freezes the property descriptors so they cannot be reconfigured",
+      "It automatically sets up the prototype chain between two objects"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.getOwnPropertyDescriptors() returns all own property descriptors of an object, including getter/setter definitions. This is important for prototype copying because Object.assign() invokes getters during copying (getting the current value) and creates plain data properties. Using Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) preserves the actual getter/setter functions, making it essential for faithful prototype or mixin copying.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptors"
+  },
+  {
+    "id": "prototype-068",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of the following code?",
+    "code": "const parent = { a: 1, b: 2, c: 3 };\nconst child = Object.create(parent);\nchild.b = 20;\nchild.d = 40;\n\nconst own = Object.keys(child);\nconst all = [];\nfor (const k in child) all.push(k);\n\nconsole.log(own.length, all.length);",
+    "options": [
+      "2 4",
+      "4 4",
+      "2 5",
+      "0 4"
+    ],
+    "correctIndex": 0,
+    "explanation": "Object.keys() returns only an object's own enumerable properties, so it finds 'b' and 'd' (length 2). The for...in loop enumerates all enumerable properties in the prototype chain: child's own 'b' and 'd', plus parent's 'a' and 'c' (parent's 'b' is shadowed by child's 'b' so it appears only once). That gives 4 total keys: b, d, a, c.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in"
+  },
+  {
+    "id": "prototype-069",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "The following code expects child to have a working greet method after preventExtensions, but it throws a TypeError. What is the cause?",
+    "code": "const child = Object.create({ greet() { return 'hello'; } });\nObject.preventExtensions(child);\nchild.greet = function() { return 'hi'; };",
+    "options": [
+      "preventExtensions freezes the prototype chain entirely",
+      "preventExtensions prevents adding new own properties, and since 'greet' is inherited, assigning it would create a new own property which is blocked",
+      "preventExtensions makes all existing properties read-only",
+      "Arrow functions cannot be assigned to prevented objects"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.preventExtensions() prevents adding new own properties to an object, but does not affect the prototype chain or make existing properties read-only. Since 'greet' exists only on the prototype (not as child's own property), assigning child.greet would attempt to create a new own property on child. Because child is non-extensible, this creation is blocked — in strict mode it throws a TypeError, and in non-strict mode it silently fails. The key insight is that shadowing an inherited property counts as adding a new own property.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/preventExtensions"
+  },
+  {
+    "id": "prototype-070",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the key difference between constructor stealing (Parent.call(this)) and prototype chain inheritance (Child.prototype = Object.create(Parent.prototype))?",
+    "options": [
+      "Constructor stealing copies the parent's prototype methods; prototype chain inheritance does not",
+      "Prototype chain inheritance allows passing arguments to the parent constructor; constructor stealing does not",
+      "Constructor stealing creates own copies of instance properties from the parent; prototype chain inheritance shares parent prototype methods across all instances",
+      "There is no practical difference — both achieve the same result"
+    ],
+    "correctIndex": 2,
+    "explanation": "Constructor stealing (calling Parent.call(this) inside Child) executes the parent constructor in the context of the new child instance, creating own copies of any properties set by the parent constructor (e.g., this.name). This means each child gets independent copies. Prototype chain inheritance (Child.prototype = Object.create(Parent.prototype)) sets up delegation so child instances share methods defined on Parent.prototype. Classical inheritance in ES5 typically combines both: constructor stealing for instance properties and prototype chain for shared methods.",
+    "sourceUrl": "https://javascript.info/class-inheritance"
   }
 ]

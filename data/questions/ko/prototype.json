@@ -1076,5 +1076,88 @@
     "correctIndex": 0,
     "explanation": "두 메서드 모두 객체의 [[Prototype]]을 반환하지만 비객체 인수 처리가 다릅니다. Reflect.getPrototypeOf()는 인수가 객체가 아니면 즉시 TypeError를 던집니다. 반면 Object.getPrototypeOf()는 ES2015부터 인수를 ToObject()로 객체로 변환한 뒤 프로토타입을 반환합니다. 예를 들어 Object.getPrototypeOf('hello')는 String.prototype을 반환하지만, Reflect.getPrototypeOf('hello')는 TypeError를 던집니다. Reflect 버전은 Proxy의 getPrototypeOf 트랩과 일관되게 동작하도록 설계되었습니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Reflect/getPrototypeOf"
+  },
+  {
+    "id": "prototype-066",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "function Foo() {}\nFoo.prototype.x = 10;\n\nconst a = new Foo();\na.x = 20;\n\ndelete a.x;\nconsole.log(a.x);\n\ndelete a.x;\nconsole.log(a.x);",
+    "options": [
+      "undefined, undefined",
+      "20, undefined",
+      "10, 10",
+      "20, 10"
+    ],
+    "correctIndex": 2,
+    "explanation": "delete 연산자는 자신의 속성(own property)만 제거합니다. 'a.x = 20' 이후 'a'는 프로토타입의 'x'를 가리는 자체 'x'를 갖습니다. 첫 번째 delete는 자체 속성을 제거하므로 'a.x'는 프로토타입 체인을 따라 10을 반환합니다. 두 번째 delete는 'a'에 더 이상 자체 'x'가 없으므로 아무 효과가 없습니다. delete는 상속된 속성을 제거할 수 없으므로 여전히 10을 반환합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/delete"
+  },
+  {
+    "id": "prototype-067",
+    "topic": "prototype",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "프로토타입 기반 상속에서 Object.getOwnPropertyDescriptors()의 목적은 무엇인가?",
+    "options": [
+      "프로토타입 체인의 상속된 속성을 포함한 모든 속성을 반환한다",
+      "Object.assign이 getter/setter를 호출하는 것과 달리, getter/setter를 포함하여 객체를 온전히 복사할 수 있게 한다",
+      "속성 디스크립터를 동결하여 재설정할 수 없게 만든다",
+      "두 객체 간의 프로토타입 체인을 자동으로 설정한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.getOwnPropertyDescriptors()는 getter/setter 정의를 포함한 모든 자체 속성 디스크립터를 반환합니다. 프로토타입 복사에서 이것이 중요한 이유는 Object.assign()이 복사 중에 getter를 호출하여 현재 값을 가져와 일반 데이터 속성으로 만들기 때문입니다. Object.defineProperties(target, Object.getOwnPropertyDescriptors(source))를 사용하면 실제 getter/setter 함수가 보존되어 프로토타입이나 믹스인을 충실히 복사할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptors"
+  },
+  {
+    "id": "prototype-068",
+    "topic": "prototype",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "const parent = { a: 1, b: 2, c: 3 };\nconst child = Object.create(parent);\nchild.b = 20;\nchild.d = 40;\n\nconst own = Object.keys(child);\nconst all = [];\nfor (const k in child) all.push(k);\n\nconsole.log(own.length, all.length);",
+    "options": [
+      "2 4",
+      "4 4",
+      "2 5",
+      "0 4"
+    ],
+    "correctIndex": 0,
+    "explanation": "Object.keys()는 자체 열거 가능 속성만 반환하므로 'b'와 'd'를 찾아 길이 2를 반환합니다. for...in 루프는 프로토타입 체인의 모든 열거 가능 속성을 순회합니다: child의 자체 'b'와 'd', 그리고 parent의 'a'와 'c'(parent의 'b'는 child의 'b'에 의해 가려져 한 번만 나타남). 총 4개의 키: b, d, a, c가 됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/for...in"
+  },
+  {
+    "id": "prototype-069",
+    "topic": "prototype",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 preventExtensions 후 greet 메서드를 재정의하려 하지만 TypeError가 발생합니다. 원인은 무엇인가?",
+    "code": "const child = Object.create({ greet() { return 'hello'; } });\nObject.preventExtensions(child);\nchild.greet = function() { return 'hi'; };",
+    "options": [
+      "preventExtensions가 프로토타입 체인 전체를 동결한다",
+      "preventExtensions는 새로운 자체 속성 추가를 방지하며, 'greet'은 상속된 속성이므로 이를 할당하면 새 자체 속성이 생성되려 하지만 차단된다",
+      "preventExtensions가 기존의 모든 속성을 읽기 전용으로 만든다",
+      "화살표 함수는 확장 방지된 객체에 할당할 수 없다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Object.preventExtensions()는 객체에 새로운 자체 속성을 추가하는 것을 방지하지만, 프로토타입 체인에는 영향을 주지 않고 기존 속성을 읽기 전용으로 만들지도 않습니다. 'greet'은 child의 자체 속성이 아닌 프로토타입에만 존재하므로, child.greet를 할당하면 child에 새로운 자체 속성을 생성하려고 합니다. child가 확장 불가능하므로 이 생성이 차단됩니다. strict 모드에서는 TypeError가 발생하고, 비strict 모드에서는 조용히 실패합니다. 핵심은 상속된 속성을 가리는 것(shadowing)이 새 자체 속성 추가로 취급된다는 점입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/preventExtensions"
+  },
+  {
+    "id": "prototype-070",
+    "topic": "prototype",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "생성자 빌림(Parent.call(this))과 프로토타입 체인 상속(Child.prototype = Object.create(Parent.prototype))의 핵심 차이점은?",
+    "options": [
+      "생성자 빌림은 부모의 프로토타입 메서드를 복사하고, 프로토타입 체인 상속은 복사하지 않는다",
+      "프로토타입 체인 상속은 부모 생성자에 인수를 전달할 수 있고, 생성자 빌림은 전달할 수 없다",
+      "생성자 빌림은 부모의 인스턴스 속성의 자체 복사본을 생성하고, 프로토타입 체인 상속은 모든 인스턴스가 부모 프로토타입 메서드를 공유한다",
+      "실질적인 차이가 없으며 둘 다 동일한 결과를 달성한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "생성자 빌림(Child 내부에서 Parent.call(this) 호출)은 새 자식 인스턴스의 컨텍스트에서 부모 생성자를 실행하여, 부모 생성자가 설정하는 모든 속성(예: this.name)의 자체 복사본을 생성합니다. 따라서 각 자식이 독립적인 복사본을 갖습니다. 프로토타입 체인 상속(Child.prototype = Object.create(Parent.prototype))은 위임을 설정하여 자식 인스턴스들이 Parent.prototype에 정의된 메서드를 공유합니다. ES5의 고전적 상속은 일반적으로 둘을 결합합니다: 인스턴스 속성에는 생성자 빌림을, 공유 메서드에는 프로토타입 체인을 사용합니다.",
+    "sourceUrl": "https://javascript.info/class-inheritance"
   }
 ]
