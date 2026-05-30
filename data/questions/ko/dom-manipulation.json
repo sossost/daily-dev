@@ -1071,5 +1071,88 @@
     "correctIndex": 0,
     "explanation": "prepend()는 ParentNode 인터페이스의 메서드로, 호출한 요소의 첫 번째 자식 앞에 여러 노드나 문자열을 한 번에 삽입할 수 있습니다. insertBefore(newNode, referenceNode)는 Node 인터페이스의 메서드로, 부모 노드에서 호출하며 참조 노드 앞에 단일 노드만 삽입합니다. prepend()가 더 현대적인 API이며, 문자열을 자동으로 텍스트 노드로 변환하는 편의 기능도 제공합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/prepend"
+  },
+  {
+    "id": "dom-manipulation-066",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "querySelectorAll()이 반환하는 NodeList와 getElementsByClassName()이 반환하는 HTMLCollection의 차이점으로 올바른 것은?",
+    "options": [
+      "querySelectorAll()은 DOM 변경을 자동으로 반영하는 라이브 컬렉션을 반환하고, getElementsByClassName()은 정적 스냅샷을 반환한다",
+      "둘 다 DOM 변경을 실시간으로 반영하는 라이브 컬렉션을 반환한다",
+      "둘 다 생성 이후 변경되지 않는 정적 스냅샷을 반환한다",
+      "querySelectorAll()은 DOM 변경을 반영하지 않는 정적 NodeList를 반환하고, getElementsByClassName()은 DOM 변경을 자동으로 반영하는 라이브 HTMLCollection을 반환한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "querySelectorAll()은 호출 시점의 스냅샷인 정적 NodeList를 반환하여, 이후 DOM 변경이 반영되지 않습니다. 반면 getElementsByClassName()은 라이브 HTMLCollection을 반환하여 해당 클래스명과 일치하는 요소가 추가되거나 제거되면 자동으로 업데이트됩니다. 라이브 컬렉션을 순회하면서 DOM을 수정하면 예상치 못한 요소 건너뛰기나 무한 루프가 발생할 수 있어 주의가 필요합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Document/querySelectorAll"
+  },
+  {
+    "id": "dom-manipulation-067",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "element.isConnected 속성은 무엇을 나타내는가?",
+    "options": [
+      "요소에 이벤트 리스너가 연결되어 있는지 여부",
+      "요소가 자식 노드를 가지고 있는지 여부",
+      "요소가 현재 뷰포트에서 보이는지 여부",
+      "요소가 DOM 트리에 연결되어 있는지(문서에 부착되어 있는지) 여부"
+    ],
+    "correctIndex": 3,
+    "explanation": "isConnected 읽기 전용 속성은 요소가 DOM에 연결되어 있는지, 즉 문서 트리의 일부인지를 나타내는 불리언 값을 반환합니다. createElement()로 생성했지만 아직 추가하지 않은 요소는 isConnected가 false입니다. 문서에 직접 또는 연결된 부모를 통해 추가되면 true가 됩니다. DOM에 삽입되었는지 확인한 후 작업을 수행할 때 유용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Node/isConnected"
+  },
+  {
+    "id": "dom-manipulation-068",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는?",
+    "code": "const ul = document.createElement('ul');\nul.innerHTML = '<li>A</li><li>B</li><li>C</li>';\nul.replaceChildren(\n  document.createElement('li'),\n  document.createElement('li')\n);\nul.children[0].textContent = 'X';\nul.children[1].textContent = 'Y';\nconsole.log(ul.children.length, ul.textContent);",
+    "options": [
+      "3 ABC",
+      "0 (빈 문자열)",
+      "2 XY",
+      "5 ABCXY"
+    ],
+    "correctIndex": 2,
+    "explanation": "replaceChildren()는 기존의 모든 자식을 제거하고 전달된 노드로 한 번에 교체합니다. 원래 있던 세 개의 <li> 요소(A, B, C)가 제거되고 새로운 빈 <li> 두 개로 교체됩니다. textContent를 'X'와 'Y'로 설정하면 <ul>에는 2개의 자식이 있고 합쳐진 textContent는 'XY'가 됩니다. 이 메서드는 innerHTML을 비우고 따로 노드를 추가하는 것보다 효율적입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Element/replaceChildren"
+  },
+  {
+    "id": "dom-manipulation-069",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 예상과 다른 텍스트 노드 개수가 출력되는 이유는?",
+    "code": "const div = document.createElement('div');\ndiv.appendChild(document.createTextNode('Hello'));\ndiv.appendChild(document.createTextNode(' '));\ndiv.appendChild(document.createTextNode('World'));\nconsole.log(div.childNodes.length); // 3\ndiv.normalize();\nconsole.log(div.childNodes.length);",
+    "options": [
+      "normalize()는 모든 자식 노드를 제거하므로 개수가 0이 된다",
+      "normalize()는 요소 노드에만 작동하므로 개수가 3으로 유지된다",
+      "normalize()가 텍스트 노드를 더 분할하여 개수가 증가한다",
+      "normalize()가 인접한 텍스트 노드를 하나로 병합하여 개수가 1이 된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Node.normalize()는 요소 내의 인접한 모든 텍스트 노드를 연속 구간별로 하나의 텍스트 노드로 병합합니다. 이 예제에서 세 개의 연속 텍스트 노드('Hello', ' ', 'World')가 'Hello World'라는 내용의 단일 텍스트 노드로 합쳐집니다. 프로그래밍으로 DOM을 조작한 후 단편화된 텍스트 노드가 생길 수 있는데, 이는 텍스트 검색이나 DOM 순회에서 문제를 일으킬 수 있어 normalize()가 유용합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Node/normalize"
+  },
+  {
+    "id": "dom-manipulation-070",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 루프가 모든 항목을 예상대로 제거하지 못하는 이유는?",
+    "code": "const ul = document.querySelector('#list');\nconst items = ul.getElementsByTagName('li');\nfor (let i = 0; i < items.length; i++) {\n  ul.removeChild(items[i]);\n}",
+    "options": [
+      "removeChild()는 직접 자식에만 작동하며, 항목이 중첩되어 있을 수 있다",
+      "getElementsByTagName()은 일치하는 요소가 없으면 null을 반환한다",
+      "for 루프에서 i는 증가하지만 라이브 HTMLCollection은 제거할 때마다 줄어들어, 하나 걸러 하나씩 건너뛰게 된다",
+      "getElementsByTagName()은 수정할 수 없는 고정된 배열을 반환한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "getElementsByTagName()은 라이브 HTMLCollection을 반환합니다. items[0]을 제거하면 나머지 요소들이 앞으로 이동하여 원래 items[1]이었던 것이 items[0]이 됩니다. 하지만 i는 1로 증가하므로 새로운 items[0](원래 두 번째 요소)을 건너뛰게 됩니다. 이 패턴은 하나 걸러 하나만 제거합니다. 해결 방법은 역순으로 순회하거나(length-1부터 0까지), Array.from()으로 정적 배열로 변환하거나, 항상 items[0]을 제거하는 while 루프를 사용하는 것입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/HTMLCollection"
   }
 ]

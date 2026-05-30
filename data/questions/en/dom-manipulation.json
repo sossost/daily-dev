@@ -1071,5 +1071,88 @@
     "correctIndex": 0,
     "explanation": "prepend() is a method of the ParentNode interface that inserts one or more nodes or strings before the first child of the calling element. insertBefore(newNode, referenceNode) is a method of the Node interface that is called on the parent node and inserts a single node before the reference node. prepend() is a more modern API that also automatically converts strings to text nodes.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/prepend"
+  },
+  {
+    "id": "dom-manipulation-066",
+    "topic": "dom-manipulation",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between the NodeList returned by querySelectorAll() and the HTMLCollection returned by getElementsByClassName()?",
+    "options": [
+      "querySelectorAll() returns a live collection that updates automatically, while getElementsByClassName() returns a static snapshot",
+      "Both return live collections that reflect DOM changes in real time",
+      "Both return static snapshots that do not change after creation",
+      "querySelectorAll() returns a static NodeList that does not update when the DOM changes, while getElementsByClassName() returns a live HTMLCollection that reflects DOM changes automatically"
+    ],
+    "correctIndex": 3,
+    "explanation": "querySelectorAll() returns a static NodeList — a snapshot taken at call time that does not reflect subsequent DOM changes. In contrast, getElementsByClassName() returns a live HTMLCollection that automatically updates when elements matching the class name are added or removed from the DOM. This distinction matters when iterating: modifying the DOM during iteration over a live collection can cause unexpected skips or infinite loops.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll"
+  },
+  {
+    "id": "dom-manipulation-067",
+    "topic": "dom-manipulation",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What does the element.isConnected property indicate?",
+    "options": [
+      "Whether the element has any event listeners attached",
+      "Whether the element has child nodes",
+      "Whether the element is currently visible in the viewport",
+      "Whether the element is connected to the DOM tree (attached to the document)"
+    ],
+    "correctIndex": 3,
+    "explanation": "The isConnected read-only property returns a boolean indicating whether the element is connected to the DOM — meaning it is part of the document tree. An element created with createElement() but not yet appended has isConnected === false. Once appended to the document (directly or via a connected parent), it becomes true. This is useful for checking if an element has been inserted into the DOM before performing operations on it.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Node/isConnected"
+  },
+  {
+    "id": "dom-manipulation-068",
+    "topic": "dom-manipulation",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const ul = document.createElement('ul');\nul.innerHTML = '<li>A</li><li>B</li><li>C</li>';\nul.replaceChildren(\n  document.createElement('li'),\n  document.createElement('li')\n);\nul.children[0].textContent = 'X';\nul.children[1].textContent = 'Y';\nconsole.log(ul.children.length, ul.textContent);",
+    "options": [
+      "3 ABC",
+      "0 (empty string)",
+      "2 XY",
+      "5 ABCXY"
+    ],
+    "correctIndex": 2,
+    "explanation": "replaceChildren() removes all existing children and replaces them with the provided nodes in a single operation. The original three <li> elements (A, B, C) are removed and replaced by two new empty <li> elements. After setting their textContent to 'X' and 'Y', the <ul> has 2 children with combined textContent 'XY'. This method is more efficient than clearing innerHTML and appending nodes separately.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Element/replaceChildren"
+  },
+  {
+    "id": "dom-manipulation-069",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the following code produce an unexpected text node count?",
+    "code": "const div = document.createElement('div');\ndiv.appendChild(document.createTextNode('Hello'));\ndiv.appendChild(document.createTextNode(' '));\ndiv.appendChild(document.createTextNode('World'));\nconsole.log(div.childNodes.length); // 3\ndiv.normalize();\nconsole.log(div.childNodes.length);",
+    "options": [
+      "normalize() removes all child nodes, so the count is 0",
+      "normalize() only works on element nodes, so the count stays 3",
+      "normalize() splits text nodes further, so the count increases",
+      "normalize() merges adjacent text nodes into one, so the count becomes 1"
+    ],
+    "correctIndex": 3,
+    "explanation": "Node.normalize() merges all adjacent text nodes within an element into a single text node per contiguous sequence. In this example, three consecutive text nodes ('Hello', ' ', 'World') are combined into a single text node with the content 'Hello World'. This is useful after programmatic DOM manipulation that may create fragmented text nodes, which can cause issues with text searching and DOM traversal.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Node/normalize"
+  },
+  {
+    "id": "dom-manipulation-070",
+    "topic": "dom-manipulation",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the following loop not remove all items as expected?",
+    "code": "const ul = document.querySelector('#list');\nconst items = ul.getElementsByTagName('li');\nfor (let i = 0; i < items.length; i++) {\n  ul.removeChild(items[i]);\n}",
+    "options": [
+      "removeChild() only works with direct children, and the items may be nested",
+      "getElementsByTagName() returns null when no elements match",
+      "The for loop increments i but the live HTMLCollection shrinks on each removal, causing every other element to be skipped",
+      "getElementsByTagName() returns a frozen array that cannot be modified"
+    ],
+    "correctIndex": 2,
+    "explanation": "getElementsByTagName() returns a live HTMLCollection. When items[0] is removed, all remaining elements shift down — what was items[1] becomes items[0]. But i increments to 1, so the new items[0] (originally the second element) is skipped. This pattern removes only every other element. The fix is to iterate in reverse (from length-1 to 0), convert to a static array first with Array.from(), or use a while loop that always removes items[0].",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection"
   }
 ]
