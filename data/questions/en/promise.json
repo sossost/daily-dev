@@ -1073,5 +1073,89 @@
     "correctIndex": 3,
     "explanation": "Top-level await was standardized in ES2022 and allows using await at the top-level scope of ES modules (type=\"module\"). It cannot be used in regular scripts. When a module using top-level await is imported, the importing module's execution is paused until the async operation completes. This is useful for modules that need async initialization such as database connections or configuration loading.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#top_level_await"
+  },
+  {
+    "id": "promise-066",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of this code?",
+    "code": "Promise.reject('fail')\n  .catch(e => {\n    console.log('caught:', e);\n    return 'recovered';\n  })\n  .then(v => console.log('then:', v))\n  .catch(e => console.log('catch2:', e));",
+    "options": [
+      "caught: fail, then: recovered",
+      "caught: fail, catch2: fail",
+      "catch2: fail",
+      "caught: fail, then: undefined"
+    ],
+    "correctIndex": 0,
+    "explanation": "When a catch handler returns a value, it produces a new fulfilled Promise with that value. So returning 'recovered' from catch means the next then receives 'recovered' as its argument. This pattern is called error recovery — the catch \"swallows\" the error and resumes normal flow. The second catch never executes because there's no rejection after the first catch.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch"
+  },
+  {
+    "id": "promise-067",
+    "topic": "promise",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the problem with this code?",
+    "code": "async function getData() {\n  const userPromise = fetchUser();\n  const postsPromise = fetchPosts();\n\n  try {\n    const user = await userPromise;\n    const posts = await postsPromise;\n    return { user, posts };\n  } catch (err) {\n    console.log('Error:', err);\n  }\n}",
+    "options": [
+      "fetchUser and fetchPosts do not run concurrently",
+      "If postsPromise rejects, an unhandled rejection may occur while blocked on await userPromise",
+      "Using await twice in a try block causes the second await to be ignored",
+      "The catch block in an async function can only catch synchronous errors"
+    ],
+    "correctIndex": 1,
+    "explanation": "Both Promises start concurrently, but while awaiting userPromise, if postsPromise rejects, that rejection is not immediately handled. During this brief window, an unhandled rejection event can fire. The safe approach is to use Promise.all([userPromise, postsPromise]) so both Promises are awaited together. Promise.all propagates a rejection immediately when any input Promise rejects.",
+    "sourceUrl": "https://javascript.info/promise-api#promise-all"
+  },
+  {
+    "id": "promise-068",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output of this code?",
+    "code": "async function foo() {\n  try {\n    return 'hello';\n  } finally {\n    return 'world';\n  }\n}\n\nfoo().then(v => console.log(v));",
+    "options": [
+      "hello",
+      "undefined",
+      "An error is thrown",
+      "world"
+    ],
+    "correctIndex": 3,
+    "explanation": "The try block attempts to return 'hello', but the finally block always executes. When a return statement is used in finally, it overrides the try block's return value. This behavior is the same as in regular functions, and async functions follow the same rule. The Promise resolves with 'world' from the finally block. This is why using return in finally blocks is considered an anti-pattern.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch#the_finally_block"
+  },
+  {
+    "id": "promise-069",
+    "topic": "promise",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What happens when you pass an already rejected Promise to Promise.resolve(promise)?",
+    "options": [
+      "It returns the rejected Promise as-is — it does not wrap it in a new Promise",
+      "It returns a fulfilled Promise with the rejection reason as its value",
+      "A TypeError is thrown",
+      "It ignores the rejection reason and returns a Promise fulfilled with undefined"
+    ],
+    "correctIndex": 0,
+    "explanation": "When a native Promise instance is passed to Promise.resolve(), it returns that Promise as-is without wrapping it. This applies regardless of whether the Promise is fulfilled or rejected. So Promise.resolve(rejectedPromise) returns the original rejected Promise. This behavior is defined by the ECMAScript specification's 'If IsPromise(x) is true and x.[[PromiseConstructor]] === C' condition.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
+  },
+  {
+    "id": "promise-070",
+    "topic": "promise",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of this code?",
+    "code": "const p = Promise.resolve('A');\n\np.then(v => console.log(v));\np.then(v => console.log(v));\np.then(v => console.log(v));",
+    "options": [
+      "A (printed only once)",
+      "A, A, A",
+      "A, undefined, undefined",
+      "Error — then cannot be called multiple times"
+    ],
+    "correctIndex": 1,
+    "explanation": "Multiple then handlers can be registered on a single Promise, and when the Promise fulfills, all handlers execute in registration order. This differs from Promise chaining (p.then().then()) — chaining passes the previous then's return value to the next, but registering multiple then handlers on the same Promise gives each handler the original fulfillment value. This is known as Promise branching.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
   }
 ]
