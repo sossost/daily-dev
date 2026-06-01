@@ -1075,5 +1075,88 @@
     "correctIndex": 0,
     "explanation": "When an error is thrown inside an async function, it causes the returned Promise to enter the rejected state. This rejected Promise can be handled using the .catch() method or a try-catch block around an await expression. Unlike throw in synchronous functions, the error does not immediately propagate up the call stack — it is converted to a Promise rejection and propagated asynchronously. If left unhandled, an unhandledrejection event is fired.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "async-066",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "What is a 'thenable' in JavaScript, and how does the Promise system handle it?",
+    "options": [
+      "A thenable is any value that is an instance of Promise",
+      "A thenable is a function that returns a Promise",
+      "A thenable is any value with a .then property, but only Promises are actually used by await",
+      "A thenable is any object with a .then() method, and Promise.resolve() and await treat it like a Promise by calling its .then() method"
+    ],
+    "correctIndex": 3,
+    "explanation": "A thenable is any object (or function) that has a .then() method. The Promise resolution procedure in the spec checks for a .then method on the resolved value. If found, it calls .then() with resolve and reject callbacks, effectively 'assimilating' the thenable into the Promise chain. This means libraries that predate native Promises (like jQuery Deferred or Bluebird) can interoperate with native Promises and await seamlessly, as long as they expose a .then() method.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise#thenables"
+  },
+  {
+    "id": "async-067",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "console.log('A');\nnew Promise((resolve) => {\n  console.log('B');\n  resolve();\n});\nconsole.log('C');",
+    "options": [
+      "A, B, C",
+      "A, C, B",
+      "B, A, C",
+      "A, B, then C after a microtask"
+    ],
+    "correctIndex": 0,
+    "explanation": "The executor function passed to the Promise constructor runs synchronously — it is called immediately when the Promise is created, not deferred to a microtask. So 'A' is logged first, then the Promise constructor calls the executor which logs 'B', then execution continues to log 'C'. Only .then()/.catch()/.finally() callbacks are deferred as microtasks, not the executor itself.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
+  },
+  {
+    "id": "async-068",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "Promise.reject('fail')\n  .catch(err => {\n    console.log('caught:', err);\n    return 'recovered';\n  })\n  .then(val => console.log('then:', val));",
+    "options": [
+      "caught: fail (then callback is not called because the Promise was rejected)",
+      "caught: fail, then: fail",
+      "caught: fail, then: recovered",
+      "Error: Unhandled Promise rejection"
+    ],
+    "correctIndex": 2,
+    "explanation": "When .catch() handles a rejection and returns a value (without throwing), the resulting Promise is fulfilled with that returned value — not rejected. This is the Promise recovery pattern. The .catch() handler receives 'fail', logs it, and returns 'recovered'. Since .catch() returned normally, the next .then() in the chain receives 'recovered' as its input. This behavior allows error recovery at any point in a Promise chain.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch"
+  },
+  {
+    "id": "async-069",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "The for-await-of loop is expected to process all items, but it stops early. What is the cause?",
+    "code": "async function* generate() {\n  yield Promise.resolve(1);\n  yield Promise.reject('error');\n  yield Promise.resolve(3);\n}\n\nasync function process() {\n  for await (const val of generate()) {\n    console.log(val);\n  }\n}\nprocess();",
+    "options": [
+      "for-await-of skips rejected Promises and continues with the next one",
+      "The rejected Promise causes for-await-of to throw, stopping iteration before yielding 3",
+      "All three values are logged because for-await-of automatically catches rejections",
+      "The generator function syntax is invalid and throws a SyntaxError"
+    ],
+    "correctIndex": 1,
+    "explanation": "When for-await-of encounters a rejected Promise, it throws the rejection reason as an error inside the loop body. Since there is no try-catch around the loop, this unhandled error terminates the iteration immediately. The value 1 is logged, but when the second yield produces a rejected Promise, the loop throws 'error' and never reaches the third yield. To handle this, you would need to wrap the loop body or the entire loop in a try-catch block.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of"
+  },
+  {
+    "id": "async-070",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the difference between Promise.resolve(value) when value is a native Promise vs a thenable object?",
+    "options": [
+      "There is no difference — both return a new Promise that resolves to value",
+      "Native Promises are wrapped in a new Promise; thenables are returned as-is",
+      "Both are returned as-is without creating a new Promise",
+      "A native Promise is returned as-is (same object); a thenable is assimilated by calling its .then() method, creating a new Promise"
+    ],
+    "correctIndex": 3,
+    "explanation": "Promise.resolve() has special behavior: if the argument is a native Promise (created by the same constructor), it returns that exact same object without wrapping it. However, if the argument is a thenable (a non-Promise object with a .then() method), Promise.resolve() creates a new Promise and calls the thenable's .then() method to determine when and how the new Promise settles. This distinction matters for identity checks (Promise.resolve(p) === p is true only for native Promises) and for timing (thenable assimilation adds an extra microtask tick).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
   }
 ]

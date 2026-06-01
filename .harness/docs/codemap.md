@@ -183,7 +183,7 @@
 
 - algorithms.json — 65 questions
 - api-design.json — 65 questions
-- async.json — 65 questions
+- async.json — 70 questions
 - browser-api.json — 65 questions
 - closure.json — 70 questions
 - css-layout.json — 65 questions
@@ -206,7 +206,7 @@
 - web-security.json — 65 questions
 - algorithms.json — 65 questions
 - api-design.json — 65 questions
-- async.json — 65 questions
+- async.json — 70 questions
 - browser-api.json — 65 questions
 - closure.json — 70 questions
 - css-layout.json — 65 questions

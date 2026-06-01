@@ -1075,5 +1075,88 @@
     "correctIndex": 0,
     "explanation": "async 함수 내에서 throw된 에러는 함수가 반환하는 Promise를 reject 상태로 만듭니다. 이 rejected Promise는 .catch() 메서드나 await를 감싼 try-catch 블록으로 처리할 수 있습니다. 동기 함수의 throw와 달리 즉시 호출 스택을 타고 올라가지 않으며, Promise rejection으로 변환되어 비동기적으로 전파됩니다. 처리되지 않으면 unhandledrejection 이벤트가 발생합니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function"
+  },
+  {
+    "id": "async-066",
+    "topic": "async",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "JavaScript에서 'thenable'이란 무엇이며, Promise 시스템은 이를 어떻게 처리하나요?",
+    "options": [
+      "thenable은 Promise의 인스턴스인 모든 값이다",
+      "thenable은 Promise를 반환하는 함수이다",
+      "thenable은 .then 속성을 가진 모든 값이지만, await에서는 실제 Promise만 사용된다",
+      "thenable은 .then() 메서드를 가진 모든 객체이며, Promise.resolve()와 await는 .then() 메서드를 호출하여 이를 Promise처럼 취급한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "thenable은 .then() 메서드를 가진 모든 객체(또는 함수)입니다. 스펙의 Promise 해결 절차는 resolve된 값에서 .then 메서드를 확인합니다. 발견되면 resolve와 reject 콜백과 함께 .then()을 호출하여 thenable을 Promise 체인에 '동화(assimilate)'시킵니다. 이를 통해 네이티브 Promise 이전의 라이브러리(jQuery Deferred, Bluebird 등)가 .then() 메서드를 제공하는 한 네이티브 Promise 및 await와 원활하게 상호 운용할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise#thenable"
+  },
+  {
+    "id": "async-067",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "console.log('A');\nnew Promise((resolve) => {\n  console.log('B');\n  resolve();\n});\nconsole.log('C');",
+    "options": [
+      "A, B, C",
+      "A, C, B",
+      "B, A, C",
+      "A, B, 그리고 마이크로태스크 후 C"
+    ],
+    "correctIndex": 0,
+    "explanation": "Promise 생성자에 전달되는 executor 함수는 동기적으로 실행됩니다. Promise가 생성될 때 즉시 호출되며, 마이크로태스크로 지연되지 않습니다. 따라서 'A'가 먼저 출력되고, Promise 생성자가 executor를 호출하여 'B'가 출력된 후, 실행이 계속되어 'C'가 출력됩니다. .then()/.catch()/.finally() 콜백만 마이크로태스크로 지연되며, executor 자체는 그렇지 않습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
+  },
+  {
+    "id": "async-068",
+    "topic": "async",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "Promise.reject('fail')\n  .catch(err => {\n    console.log('caught:', err);\n    return 'recovered';\n  })\n  .then(val => console.log('then:', val));",
+    "options": [
+      "caught: fail (Promise가 거부되었으므로 then 콜백은 호출되지 않는다)",
+      "caught: fail, then: fail",
+      "caught: fail, then: recovered",
+      "Error: 처리되지 않은 Promise 거부"
+    ],
+    "correctIndex": 2,
+    "explanation": ".catch()가 거부를 처리하고 값을 반환하면(throw하지 않는 경우), 결과 Promise는 해당 반환 값으로 이행(fulfilled)됩니다 — 거부 상태가 아닙니다. 이것이 Promise 복구 패턴입니다. .catch() 핸들러가 'fail'을 받아 로그하고 'recovered'를 반환합니다. .catch()가 정상적으로 반환했으므로, 체인의 다음 .then()은 'recovered'를 입력으로 받습니다. 이 동작을 통해 Promise 체인의 어느 지점에서든 에러를 복구할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch"
+  },
+  {
+    "id": "async-069",
+    "topic": "async",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "for-await-of 루프가 모든 항목을 처리할 것으로 예상되지만 중간에 멈춥니다. 원인은 무엇인가요?",
+    "code": "async function* generate() {\n  yield Promise.resolve(1);\n  yield Promise.reject('error');\n  yield Promise.resolve(3);\n}\n\nasync function process() {\n  for await (const val of generate()) {\n    console.log(val);\n  }\n}\nprocess();",
+    "options": [
+      "for-await-of는 거부된 Promise를 건너뛰고 다음 항목으로 계속한다",
+      "거부된 Promise가 for-await-of에서 throw를 발생시켜, 3을 yield하기 전에 반복이 중단된다",
+      "for-await-of가 자동으로 거부를 catch하므로 세 값 모두 출력된다",
+      "제너레이터 함수 문법이 잘못되어 SyntaxError가 발생한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "for-await-of가 거부된 Promise를 만나면, 루프 본문 내에서 거부 사유를 에러로 throw합니다. 루프 주위에 try-catch가 없으므로, 이 처리되지 않은 에러가 즉시 반복을 종료합니다. 값 1은 출력되지만, 두 번째 yield가 거부된 Promise를 생성하면 루프가 'error'를 throw하여 세 번째 yield에 도달하지 못합니다. 이를 처리하려면 루프 본문이나 전체 루프를 try-catch 블록으로 감싸야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/for-await...of"
+  },
+  {
+    "id": "async-070",
+    "topic": "async",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Promise.resolve(value)에서 value가 네이티브 Promise인 경우와 thenable 객체인 경우의 차이는 무엇인가요?",
+    "options": [
+      "차이가 없다 — 둘 다 value로 resolve되는 새 Promise를 반환한다",
+      "네이티브 Promise는 새 Promise로 래핑되고, thenable은 그대로 반환된다",
+      "둘 다 새 Promise를 생성하지 않고 그대로 반환된다",
+      "네이티브 Promise는 그대로(같은 객체) 반환되고, thenable은 .then() 메서드를 호출하여 동화(assimilate)되어 새 Promise가 생성된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Promise.resolve()는 특별한 동작을 합니다: 인수가 네이티브 Promise(동일한 생성자로 생성된)인 경우, 래핑하지 않고 정확히 같은 객체를 반환합니다. 그러나 인수가 thenable(.then() 메서드를 가진 비-Promise 객체)인 경우, Promise.resolve()는 새 Promise를 생성하고 thenable의 .then() 메서드를 호출하여 새 Promise가 언제, 어떻게 settle될지 결정합니다. 이 차이는 동일성 검사(Promise.resolve(p) === p는 네이티브 Promise에서만 true)와 타이밍(thenable 동화는 추가 마이크로태스크 틱을 추가)에 중요합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
   }
 ]
