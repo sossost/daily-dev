@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-06-02
+
+### Features
+
+- **content**: add 5 async questions (066-070) (`d3fcd5f`)
+
 ## 2026-06-01
 
 ### Features

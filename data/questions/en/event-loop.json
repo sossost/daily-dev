@@ -1075,5 +1075,88 @@
     "correctIndex": 2,
     "explanation": "Both dispatchEvent() and programmatic element.click() invoke event handlers synchronously within the current call stack. The handlers execute immediately as part of the dispatchEvent/click call — they are not queued in the task queue. This means code after the dispatch/click call will not run until all handlers have completed. The key distinction is with real user interactions (physical clicks): the browser queues these as tasks in the macrotask queue. This is why button.click() in tests may behave differently from actual user clicks in terms of timing and event loop scheduling.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent"
+  },
+  {
+    "id": "event-loop-066",
+    "topic": "event-loop",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What information can you obtain by observing 'longtask' entries with PerformanceObserver?",
+    "options": [
+      "It provides a list of all microtasks currently running in the event loop",
+      "It measures latency of network requests",
+      "It returns the names of functions currently running in the call stack",
+      "It detects tasks taking longer than 50ms on the main thread to identify performance bottlenecks"
+    ],
+    "correctIndex": 3,
+    "explanation": "The Long Tasks API detects tasks that take 50ms or longer on the main thread via PerformanceObserver. Since browsers target 60fps (about 16ms per frame), tasks exceeding 50ms can cause frame drops and UI jank. Each long task entry includes start time, duration, and attribution (which context triggered it). This API does not track microtasks or individual functions — it measures execution time at the task level (macrotasks).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/PerformanceLongTaskTiming"
+  },
+  {
+    "id": "event-loop-067",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output order of the following code?",
+    "code": "console.log('A');\nnew Promise((resolve) => {\n  console.log('B');\n  resolve();\n}).then(() => console.log('C'));\nconsole.log('D');",
+    "options": [
+      "A, B, C, D",
+      "A, D, B, C",
+      "A, B, D, C",
+      "A, C, B, D"
+    ],
+    "correctIndex": 2,
+    "explanation": "The executor function passed to the Promise constructor runs synchronously and immediately. First 'A' is logged, then the Promise executor runs synchronously and logs 'B'. When resolve() is called, the .then() callback is registered in the microtask queue but will not execute until all current synchronous code completes. So 'D' is logged next, and when the call stack empties, 'C' executes from the microtask queue. The synchronous nature of the Promise constructor is a frequently tested interview concept.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise"
+  },
+  {
+    "id": "event-loop-068",
+    "topic": "event-loop",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "A developer calls dynamic import() inside a for loop but the modules do not load in order. What is the cause?",
+    "code": "const modules = ['./a.js', './b.js', './c.js'];\nfor (const path of modules) {\n  import(path).then(m => console.log(m.name));\n}\nconsole.log('done');",
+    "options": [
+      "Each import() is an independent async operation, so completion order depends on network response timing",
+      "import() is synchronous so the for loop blocks and executes in order",
+      "import() is processed as a macrotask rather than a microtask, so order is not guaranteed",
+      "for-of loops do not support async operations, so only the first import executes"
+    ],
+    "correctIndex": 0,
+    "explanation": "Dynamic import() returns a Promise — it is an asynchronous operation. The for loop synchronously fires three import() calls, starting three independent network requests. 'done' logs immediately. Each module's load completion time depends on file size, network conditions, cache state, etc., so the .then() callbacks may fire in any order. To guarantee order, use await inside a for-of loop or collect all results with Promise.all() before processing them.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import"
+  },
+  {
+    "id": "event-loop-069",
+    "topic": "event-loop",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the key difference between using scheduler.yield() and setTimeout(fn, 0) to break up long tasks?",
+    "options": [
+      "scheduler.yield() yields to the event loop while preserving the current task's priority and resumes promptly, while setTimeout(fn, 0) enqueues a new task at the lowest priority",
+      "setTimeout(fn, 0) always executes faster than scheduler.yield()",
+      "scheduler.yield() works as a microtask while setTimeout works as a macrotask",
+      "They are identical — scheduler.yield() is just an alias for setTimeout"
+    ],
+    "correctIndex": 0,
+    "explanation": "scheduler.yield() is part of the Scheduler API and pauses the current task to yield to the event loop. The key advantage is that when execution resumes, it retains the original task's priority. In contrast, setTimeout(fn, 0) adds the callback as a new macrotask, which may be placed behind other macrotasks already in the queue (such as user input events). This means scheduler.yield() allows rendering and urgent event handling while ensuring the work does not get unnecessarily delayed behind lower-priority tasks.",
+    "sourceUrl": "https://developer.chrome.com/blog/introducing-scheduler-yield-origin-trial"
+  },
+  {
+    "id": "event-loop-070",
+    "topic": "event-loop",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the output order of the following code?",
+    "code": "const thenable = {\n  then(resolve) {\n    console.log('T');\n    resolve('V');\n  }\n};\n\nPromise.resolve(thenable).then(v => console.log(v));\nPromise.resolve().then(() => console.log('P'));",
+    "options": [
+      "T, V, P",
+      "T, P, V",
+      "P, T, V",
+      "V, T, P"
+    ],
+    "correctIndex": 1,
+    "explanation": "When Promise.resolve() receives a thenable (an object with a then method), it calls the then method as a microtask to unwrap the Promise. Two microtasks are initially queued: the thenable's then invocation and the callback that logs 'P'. The thenable's then runs first, logging 'T' and calling resolve('V'). Then 'P' logs. The .then(v => console.log(v)) callback triggered by resolve('V') is enqueued as a new microtask and runs last, logging 'V'. The key insight is that thenable unwrapping requires an additional microtask tick.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
   }
 ]
