@@ -1082,5 +1082,89 @@
     "correctIndex": 2,
     "explanation": "이 코드는 실제로 'goodbye'를 출력합니다. 클로저는 변수의 값이 아닌 변수 자체(바인딩)에 대한 참조를 캡처합니다. callback과 update 함수 모두 setup의 동일한 message 변수를 참조하는 클로저입니다. update('goodbye')로 message를 변경하면, callback()은 변경된 최신 값 'goodbye'를 출력합니다. 이는 클로저가 값의 스냅샷이 아닌 살아있는 참조임을 보여줍니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
+  },
+  {
+    "id": "scope-066",
+    "topic": "scope",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "JavaScript의 with 문이 스코프에 미치는 영향으로 올바른 것은?",
+    "code": "const obj = { a: 1, b: 2 };\nwith (obj) {\n  console.log(a + b);\n}",
+    "options": [
+      "with 문은 새로운 블록 스코프를 생성하여 내부 변수를 격리한다",
+      "with 문은 전역 스코프에 obj의 속성을 영구적으로 추가한다",
+      "with 문은 클로저를 생성하여 obj의 속성에 대한 참조를 유지한다",
+      "with 문은 obj를 스코프 체인의 앞에 추가하여, obj의 속성을 변수처럼 참조할 수 있게 한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "with 문은 주어진 객체를 스코프 체인의 맨 앞에 삽입합니다. 이로 인해 블록 내에서 obj.a 대신 a로 직접 접근할 수 있습니다. 그러나 어떤 식별자가 객체 속성인지 외부 변수인지 코드만 보고 판단하기 어려워 최적화가 불가능하며, strict 모드에서는 with 사용이 금지됩니다. 이는 동적으로 스코프 체인을 수정하는 JavaScript의 유일한 구문입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/with"
+  },
+  {
+    "id": "scope-067",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "'use strict';\nvar x = 'global';\nfunction test() {\n  var x = 'local';\n  eval('var y = x');\n  console.log(y);\n}\ntest();",
+    "options": [
+      "'global'",
+      "ReferenceError",
+      "'local'",
+      "undefined"
+    ],
+    "correctIndex": 1,
+    "explanation": "strict 모드에서 eval은 자체적인 독립 스코프를 생성합니다. eval 내부에서 var y = x로 선언된 y는 eval의 자체 스코프에만 존재하며, 호출한 함수의 스코프로 유출되지 않습니다. 따라서 eval 외부에서 y에 접근하면 ReferenceError가 발생합니다. 비엄격 모드에서는 eval이 호출 스코프에 변수를 추가하므로 'local'이 출력됩니다. 이것이 strict 모드가 eval의 스코프 동작을 제한하는 이유 중 하나입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Strict_mode#eval을_통해_새로운_변수를_도입하지_못하게_함"
+  },
+  {
+    "id": "scope-068",
+    "topic": "scope",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "개발자는 catch 블록에서 잡은 에러 객체를 블록 외부에서 사용하려 했지만 ReferenceError가 발생합니다. 원인은 무엇인가요?",
+    "code": "try {\n  throw new Error('oops');\n} catch (err) {\n  console.log(err.message); // 'oops'\n}\nconsole.log(err.message); // ReferenceError",
+    "options": [
+      "catch의 매개변수 err은 catch 블록에 스코프가 한정되어 블록 외부에서 접근할 수 없기 때문",
+      "try 블록이 끝나면 에러 객체가 자동으로 가비지 컬렉션되기 때문",
+      "catch 블록은 에러 객체를 복사본으로 전달하므로 원본 참조가 끊어지기 때문",
+      "Error 객체의 message 속성은 catch 블록 내에서만 읽을 수 있기 때문"
+    ],
+    "correctIndex": 0,
+    "explanation": "catch 절의 매개변수(err)는 catch 블록에 스코프가 한정됩니다. ES3부터 catch 매개변수는 catch 블록의 스코프에만 존재하도록 설계되었습니다. 이는 let/const의 블록 스코프와 유사합니다. 블록 외부에서 err를 사용하려면 catch 블록 밖에서 별도의 변수를 선언하고 catch 내에서 할당해야 합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/try...catch#catch_바인딩"
+  },
+  {
+    "id": "scope-069",
+    "topic": "scope",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "ES 모듈의 최상위 스코프와 일반 스크립트의 최상위 스코프의 차이로 올바른 것은?",
+    "options": [
+      "ES 모듈과 일반 스크립트 모두 최상위 변수가 전역 객체의 속성이 된다",
+      "일반 스크립트에서 var로 선언한 최상위 변수는 모듈 스코프에 격리된다",
+      "ES 모듈의 최상위 변수는 모듈 스코프에 격리되어 전역 객체를 오염시키지 않지만, 일반 스크립트의 var 변수는 전역 객체의 속성이 된다",
+      "ES 모듈에서는 let/const만 사용할 수 있고 var는 문법 오류가 발생한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "ES 모듈은 자체적인 모듈 스코프를 가집니다. 모듈의 최상위에서 var, let, const로 선언한 변수는 모두 해당 모듈에 격리되며, window(또는 globalThis) 객체에 추가되지 않습니다. 반면 일반 스크립트(<script> 태그)에서 var로 선언한 최상위 변수는 전역 객체의 속성이 됩니다. 이 차이 덕분에 모듈은 전역 네임스페이스 오염 없이 안전하게 코드를 캡슐화할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Modules"
+  },
+  {
+    "id": "scope-070",
+    "topic": "scope",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "let count = 0;\nfunction outer() {\n  let count = 10;\n  function middle() {\n    let count = 20;\n    function inner() {\n      count++;\n      return count;\n    }\n    return inner;\n  }\n  return middle;\n}\nconst fn = outer()();\nconsole.log(fn());\nconsole.log(fn());\nconsole.log(count);",
+    "options": [
+      "11, 12, 0",
+      "21, 22, 2",
+      "1, 2, 2",
+      "21, 22, 0"
+    ],
+    "correctIndex": 3,
+    "explanation": "inner 함수는 가장 가까운 외부 스코프인 middle의 count(20)를 클로저로 캡처합니다. outer()()로 inner 함수를 얻고, fn()을 호출할 때마다 middle 스코프의 count가 증가합니다(20→21→22). 전역의 let count = 0은 inner의 스코프 체인에서 middle의 count에 의해 섀도잉되므로 영향을 받지 않습니다. 이는 스코프 체인이 가장 가까운 외부 스코프부터 탐색하는 원리를 보여줍니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures"
   }
 ]
