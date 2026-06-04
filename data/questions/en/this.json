@@ -1076,5 +1076,88 @@
     "correctIndex": 1,
     "explanation": "When you assign via obj.method = function() {}, the property defaults to enumerable: true, configurable: true, writable: true. With Object.defineProperty(obj, 'method', { value: fn }), the defaults are enumerable: false, configurable: false, writable: false. However, this binding is identical for both: calling obj.method() binds this to obj, while extracting the reference and calling standalone binds this to the global object (or undefined in strict mode). defineProperty is used when you need fine-grained control over property metadata.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty"
+  },
+  {
+    "id": "this-066",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "function greet(strings, ...values) {\n  return `${this.title}: ${strings.join('')}${values.join('')}`;\n}\n\nconst ctx = { title: 'Log' };\nconst bound = greet.bind(ctx);\nconsole.log(bound`Hello ${'World'}`);",
+    "options": [
+      "Log: Hello World",
+      "undefined: Hello World",
+      "Log: Hello ,World",
+      "TypeError"
+    ],
+    "correctIndex": 0,
+    "explanation": "When a bound function is used as a tagged template literal, this is still bound to the object specified by bind. The tag function receives strings as ['Hello ', ''] and values as ['World']. strings.join('') produces 'Hello ' and values.join('') produces 'World'. Since this.title is 'Log', the final result is 'Log: Hello World'. Tagged templates follow the same this binding rules as regular function calls, and bind-fixed this applies normally.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_templates"
+  },
+  {
+    "id": "this-067",
+    "topic": "this",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "In the following code, obj.getValues() returns an empty array. What is the cause?",
+    "code": "const obj = {\n  items: [1, 2, 3],\n  multiplier: 10,\n  getValues() {\n    return this.items.filter(function(n) {\n      return n * this.multiplier > 15;\n    });\n  }\n};\nconsole.log(obj.getValues()); // []",
+    "options": [
+      "The filter method cannot pass this to its callback function",
+      "All values in the items array are less than 15",
+      "The regular function callback in filter has this pointing to the global object instead of obj, making this.multiplier undefined, and NaN > 15 is always false",
+      "filter does not modify the original array"
+    ],
+    "correctIndex": 2,
+    "explanation": "The regular function (function keyword) callback passed to Array.prototype.filter is invoked as a standalone call, so this is the global object (non-strict) or undefined (strict). this.multiplier becomes undefined, and n * undefined is NaN. Since NaN > 15 is always false, every element is filtered out and an empty array is returned. Solutions: 1) Use an arrow function, 2) Pass this as filter's second argument: this.items.filter(function(n) { ... }, this).",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter"
+  },
+  {
+    "id": "this-068",
+    "topic": "this",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "What is the correct difference in this binding behavior between private methods (#method) and public methods in a class?",
+    "options": [
+      "Private methods always have this bound to the class itself",
+      "Both public and private methods follow the same this binding rules, but private methods can only be called on instances of that class, structurally preventing this-loss from external reference extraction",
+      "Private methods use lexical this like arrow functions",
+      "Private methods don't run in strict mode so this is always the global object"
+    ],
+    "correctIndex": 1,
+    "explanation": "Private methods (#method) and public methods use the same this binding mechanism — this is determined by the call pattern. The key difference is accessibility: private methods cannot be accessed outside the class, so patterns like const fn = obj.#method (reference extraction) are impossible. This structurally prevents the common this-loss pattern where a method reference is detached from its object. However, passing a private method as a callback within the class can still cause this-loss.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_properties"
+  },
+  {
+    "id": "this-069",
+    "topic": "this",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "const obj = {\n  name: 'outer',\n  inner: {\n    name: 'inner',\n    getName() {\n      return this.name;\n    }\n  }\n};\n\nconsole.log(obj.inner.getName());",
+    "options": [
+      "outer",
+      "undefined",
+      "inner",
+      "TypeError"
+    ],
+    "correctIndex": 2,
+    "explanation": "In a method call, this is bound to the object immediately before the dot. In obj.inner.getName(), the object directly before getName() is obj.inner, so this refers to the inner object. Therefore this.name is 'inner'. It's the immediate calling object that matters, not the outermost one. When calling methods on nested objects, this is always bound to the closest object that directly owns (or accesses) the method.",
+    "sourceUrl": "https://javascript.info/object-methods#this-in-methods"
+  },
+  {
+    "id": "this-070",
+    "topic": "this",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Which statement about this binding in async methods is correct?",
+    "options": [
+      "Async methods always use the global object as this",
+      "Code after await inside an async method may have a different this",
+      "The this in an async method is determined at call time and remains the same before and after await",
+      "Async methods use lexical this like arrow functions"
+    ],
+    "correctIndex": 2,
+    "explanation": "The this binding of an async method is determined at call time, just like regular methods. When called as obj.asyncMethod(), this is bound to obj, and this binding does not change before or after await. Although async functions use Promises internally, the execution context preserves the original this through suspension and resumption. This is similar to how generator functions handle this. However, extracting the method reference causes the same this-loss as with regular functions.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
   }
 ]
