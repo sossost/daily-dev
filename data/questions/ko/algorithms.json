@@ -1071,5 +1071,88 @@
     "correctIndex": 2,
     "explanation": "이것은 최대 부분 배열 문제를 위한 카데인(Kadane) 알고리즘입니다. 각 위치에서 끝나는 최대 합을 추적합니다. 과정을 따라가면: 부분 배열 [4, -1, 2, 1]이 최대 합 6을 줍니다. 각 단계에서 현재 부분 배열을 확장할지 새로 시작할지 결정하며, 전체 최대값을 기록합니다.",
     "sourceUrl": "https://en.wikipedia.org/wiki/Maximum_subarray_problem#Kadane's_algorithm"
+  },
+  {
+    "id": "algorithms-066",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "function prefixSum(arr) {\n  const prefix = [arr[0]];\n  for (let i = 1; i < arr.length; i++) {\n    prefix.push(prefix[i - 1] + arr[i]);\n  }\n  return prefix;\n}\nconst p = prefixSum([3, 1, 4, 1, 5]);\nconsole.log(p[3] - p[0]);",
+    "options": [
+      "6",
+      "9",
+      "5",
+      "3"
+    ],
+    "correctIndex": 0,
+    "explanation": "접두사 합(Prefix Sum) 배열은 원래 배열의 누적 합을 저장합니다. prefix = [3, 4, 8, 9, 14]가 됩니다. p[3] - p[0] = 9 - 3 = 6으로, 이는 인덱스 1부터 3까지의 부분 합(1 + 4 + 1)과 같습니다. 접두사 합을 사용하면 구간 합 쿼리를 O(1)에 처리할 수 있습니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Prefix_sum"
+  },
+  {
+    "id": "algorithms-067",
+    "topic": "algorithms",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 계수 정렬(Counting Sort) 구현의 버그는 무엇인가요?",
+    "code": "function countingSort(arr) {\n  const max = Math.max(...arr);\n  const count = new Array(max).fill(0);\n  for (const num of arr) count[num]++;\n  const result = [];\n  for (let i = 0; i < count.length; i++) {\n    for (let j = 0; j < count[i]; j++) {\n      result.push(i);\n    }\n  }\n  return result;\n}",
+    "options": [
+      "count 배열을 0이 아닌 -1로 초기화해야 한다",
+      "result에 i 대신 j를 push해야 한다",
+      "for...of 대신 일반 for 루프를 사용해야 한다",
+      "count 배열의 크기가 max + 1이어야 max 값 자체를 인덱싱할 수 있다"
+    ],
+    "correctIndex": 3,
+    "explanation": "new Array(max)는 크기가 max인 배열을 만들어 인덱스 0부터 max-1까지만 사용할 수 있습니다. 배열에 max 값이 있으면 count[max]는 배열 범위를 벗어납니다. new Array(max + 1)로 만들어야 max 값 자체도 인덱스로 사용할 수 있습니다. 이는 경계 값 처리에서 흔히 발생하는 오프 바이 원(off-by-one) 오류입니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Counting_sort"
+  },
+  {
+    "id": "algorithms-068",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "힙 정렬(Heap Sort)의 특성으로 올바른 것은 무엇인가요?",
+    "options": [
+      "최선, 평균, 최악 모두 O(n log n)의 시간 복잡도를 가지며 제자리(in-place) 정렬이다",
+      "평균 O(n log n)이지만 최악의 경우 O(n²)이다",
+      "안정 정렬(stable sort)을 보장한다",
+      "추가 메모리 O(n)이 필요하다"
+    ],
+    "correctIndex": 0,
+    "explanation": "힙 정렬은 최대 힙 또는 최소 힙 자료구조를 활용합니다. 힙 구성에 O(n), 요소 추출에 O(n log n)이 소요되어 모든 경우 O(n log n)을 보장합니다. 배열 내부에서 힙을 구성하므로 추가 메모리 O(1)의 제자리 정렬입니다. 다만 안정 정렬은 보장하지 않습니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Heapsort"
+  },
+  {
+    "id": "algorithms-069",
+    "topic": "algorithms",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "A* 탐색 알고리즘에 대한 설명으로 올바른 것은 무엇인가요?",
+    "options": [
+      "휴리스틱 함수 없이 동작하며 항상 최적해를 보장한다",
+      "음수 가중치 간선이 있는 그래프에서도 정확하게 동작한다",
+      "BFS와 동일한 시간 복잡도를 가지며 성능 차이가 없다",
+      "실제 비용과 목표까지의 추정 비용(휴리스틱)을 합산하여 탐색 우선순위를 결정하며, 허용 가능한 휴리스틱을 사용하면 최적해를 보장한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "A* 알고리즘은 f(n) = g(n) + h(n) 공식을 사용합니다. g(n)은 시작점에서 현재 노드까지의 실제 비용, h(n)은 현재 노드에서 목표까지의 추정 비용(휴리스틱)입니다. 휴리스틱이 허용 가능(admissible), 즉 실제 비용을 과대평가하지 않으면 최적해를 보장합니다. 다익스트라는 h(n)=0인 A*의 특수한 경우입니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/A*_search_algorithm"
+  },
+  {
+    "id": "algorithms-070",
+    "topic": "algorithms",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 트라이(Trie) 검색 코드의 버그는 무엇인가요?",
+    "code": "class TrieNode {\n  constructor() {\n    this.children = {};\n    this.isEnd = false;\n  }\n}\n\nfunction search(root, word) {\n  let node = root;\n  for (const char of word) {\n    if (!node.children[char]) return false;\n    node = node.children[char];\n  }\n  return true;\n}",
+    "options": [
+      "children를 Map 대신 일반 객체로 사용해서 문자 검색이 실패한다",
+      "for...of로 문자열을 순회하면 유니코드 문자가 깨진다",
+      "node = root 대신 node = root.children로 시작해야 한다",
+      "모든 문자를 순회한 후 node.isEnd를 확인하지 않아 접두어만 일치해도 true를 반환한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "트라이에서 단어 검색(search)과 접두어 검색(startsWith)은 다릅니다. 현재 코드는 모든 문자를 순회한 후 무조건 true를 반환하므로, 'app'이 저장되어 있을 때 'ap'을 검색해도 true를 반환합니다. 정확한 단어 검색을 위해서는 마지막에 return node.isEnd로 해당 노드가 단어의 끝인지 확인해야 합니다.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Trie"
   }
 ]

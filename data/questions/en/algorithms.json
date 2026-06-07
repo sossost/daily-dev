@@ -1071,5 +1071,88 @@
     "correctIndex": 2,
     "explanation": "This is Kadane's algorithm for the maximum subarray problem. It tracks the maximum sum ending at each position. Walking through: the subarray [4, -1, 2, 1] gives the maximum sum of 6. At each step, it decides whether to extend the current subarray or start fresh, keeping track of the overall maximum encountered.",
     "sourceUrl": "https://en.wikipedia.org/wiki/Maximum_subarray_problem#Kadane's_algorithm"
+  },
+  {
+    "id": "algorithms-066",
+    "topic": "algorithms",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "What is the output of the following code?",
+    "code": "function prefixSum(arr) {\n  const prefix = [arr[0]];\n  for (let i = 1; i < arr.length; i++) {\n    prefix.push(prefix[i - 1] + arr[i]);\n  }\n  return prefix;\n}\nconst p = prefixSum([3, 1, 4, 1, 5]);\nconsole.log(p[3] - p[0]);",
+    "options": [
+      "6",
+      "9",
+      "5",
+      "3"
+    ],
+    "correctIndex": 0,
+    "explanation": "A prefix sum array stores cumulative sums of the original array. prefix = [3, 4, 8, 9, 14]. p[3] - p[0] = 9 - 3 = 6, which equals the sum of elements from index 1 to 3 (1 + 4 + 1). Prefix sums allow range sum queries to be answered in O(1) time after O(n) preprocessing.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Prefix_sum"
+  },
+  {
+    "id": "algorithms-067",
+    "topic": "algorithms",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the bug in the following Counting Sort implementation?",
+    "code": "function countingSort(arr) {\n  const max = Math.max(...arr);\n  const count = new Array(max).fill(0);\n  for (const num of arr) count[num]++;\n  const result = [];\n  for (let i = 0; i < count.length; i++) {\n    for (let j = 0; j < count[i]; j++) {\n      result.push(i);\n    }\n  }\n  return result;\n}",
+    "options": [
+      "The count array should be initialized with -1 instead of 0",
+      "It should push j instead of i into the result",
+      "A regular for loop should be used instead of for...of",
+      "The count array size should be max + 1 to allow indexing the max value itself"
+    ],
+    "correctIndex": 3,
+    "explanation": "new Array(max) creates an array of size max with indices 0 to max-1. If the array contains the value max, count[max] is out of bounds. It should be new Array(max + 1) so that max itself can be used as an index. This is a classic off-by-one error in boundary value handling.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Counting_sort"
+  },
+  {
+    "id": "algorithms-068",
+    "topic": "algorithms",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "Which statement about Heap Sort is correct?",
+    "options": [
+      "It has O(n log n) time complexity in best, average, and worst cases, and is an in-place sort",
+      "It averages O(n log n) but degrades to O(n²) in the worst case",
+      "It guarantees a stable sort",
+      "It requires O(n) additional memory"
+    ],
+    "correctIndex": 0,
+    "explanation": "Heap Sort uses a max-heap or min-heap data structure. Building the heap takes O(n) and extracting elements takes O(n log n), guaranteeing O(n log n) in all cases. It builds the heap within the array itself, making it an in-place sort with O(1) extra memory. However, it is not a stable sort.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Heapsort"
+  },
+  {
+    "id": "algorithms-069",
+    "topic": "algorithms",
+    "type": "comparison",
+    "difficulty": "hard",
+    "question": "Which statement about the A* search algorithm is correct?",
+    "options": [
+      "It operates without a heuristic function and always guarantees an optimal solution",
+      "It works correctly on graphs with negative edge weights",
+      "It has the same time complexity as BFS with no performance difference",
+      "It determines search priority by combining actual cost and estimated cost to the goal (heuristic), and guarantees an optimal solution when using an admissible heuristic"
+    ],
+    "correctIndex": 3,
+    "explanation": "A* uses the formula f(n) = g(n) + h(n), where g(n) is the actual cost from start to the current node and h(n) is the estimated cost from the current node to the goal (heuristic). When the heuristic is admissible — meaning it never overestimates the actual cost — A* guarantees an optimal solution. Dijkstra's algorithm is a special case of A* where h(n) = 0.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/A*_search_algorithm"
+  },
+  {
+    "id": "algorithms-070",
+    "topic": "algorithms",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "What is the bug in the following Trie search code?",
+    "code": "class TrieNode {\n  constructor() {\n    this.children = {};\n    this.isEnd = false;\n  }\n}\n\nfunction search(root, word) {\n  let node = root;\n  for (const char of word) {\n    if (!node.children[char]) return false;\n    node = node.children[char];\n  }\n  return true;\n}",
+    "options": [
+      "Using a plain object instead of a Map for children causes character lookups to fail",
+      "Iterating a string with for...of corrupts Unicode characters",
+      "It should start with node = root.children instead of node = root",
+      "It does not check node.isEnd after traversing all characters, so it returns true for prefix-only matches"
+    ],
+    "correctIndex": 3,
+    "explanation": "In a Trie, word search and prefix search (startsWith) are different operations. The current code returns true after traversing all characters unconditionally, so searching for 'ap' when only 'app' is stored would return true. For exact word search, it should return node.isEnd at the end to verify the node marks the end of a complete word.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Trie"
   }
 ]
