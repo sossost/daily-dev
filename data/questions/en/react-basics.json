@@ -1068,5 +1068,88 @@
     "correctIndex": 2,
     "explanation": "React.memo is a higher-order component that performs a shallow comparison (Object.is) of previous and next props, skipping re-render if they haven't changed. However, if the component's own state or consumed context changes, it will still re-render even with unchanged props. When passing objects or functions as props, new references are created each render which invalidates memoization — so useMemo or useCallback should be used alongside for effectiveness.",
     "sourceUrl": "https://react.dev/reference/react/memo"
+  },
+  {
+    "id": "react-basics-066",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the final value of count after clicking the button in the following code? (React 18)",
+    "code": "function App() {\n  const [count, setCount] = useState(0);\n\n  function handleClick() {\n    setCount(c => c + 1);\n    setCount(c => c + 1);\n    setCount(c => c + 1);\n  }\n\n  return <button onClick={handleClick}>{count}</button>;\n}",
+    "options": [
+      "1 — setState is async so only the last call is applied",
+      "0 — state does not update inside event handlers",
+      "2 — the first call is ignored",
+      "3 — updater functions are applied sequentially based on the previous state"
+    ],
+    "correctIndex": 3,
+    "explanation": "When you pass an updater function (c => c + 1) to setState, React queues each updater and applies them sequentially based on the previous pending state. Unlike passing a value directly (count + 1), updater functions always receive the latest pending state as their argument, so all three calls are reflected and the final value is 3.",
+    "sourceUrl": "https://react.dev/learn/queueing-a-series-of-state-updates"
+  },
+  {
+    "id": "react-basics-067",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What core problem does React's Fiber architecture solve?",
+    "options": [
+      "It breaks rendering work into small units that can be paused and resumed, preventing long renders from blocking the main thread",
+      "It renders components in parallel across multiple web workers to utilize multi-core CPUs",
+      "It removes the Virtual DOM and directly manipulates the real DOM for better performance",
+      "It renders components on the server to reduce computation on the client"
+    ],
+    "correctIndex": 0,
+    "explanation": "Fiber is the reconciliation engine introduced in React 16 that splits rendering work into small units (fibers) that can be interrupted and resumed. This enables 'time-slicing' where high-priority updates (like user input) are processed first, while lower-priority work is deferred. This incremental rendering was impossible with the previous stack-based reconciler.",
+    "sourceUrl": "https://github.com/acdlite/react-fiber-architecture"
+  },
+  {
+    "id": "react-basics-068",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the count not increment every second and always show 1 in the following code?",
+    "code": "function Timer() {\n  const [count, setCount] = useState(0);\n\n  useEffect(() => {\n    const id = setInterval(() => {\n      setCount(count + 1);\n    }, 1000);\n    return () => clearInterval(id);\n  }, []);\n\n  return <div>{count}</div>;\n}",
+    "options": [
+      "Because setInterval does not guarantee exact 1-second intervals in browsers",
+      "Because the empty dependency array causes the callback to capture the initial count (0) in its closure, so it always sets 0 + 1 = 1",
+      "Because setInterval cannot be used inside useEffect",
+      "Because clearInterval is called on every render, resetting the timer"
+    ],
+    "correctIndex": 1,
+    "explanation": "With an empty dependency array ([]), useEffect runs only once on mount. The setInterval callback captures the initial render's count value (0) in its closure. So every second, setCount(0 + 1) is called, always setting count to 1. The fix is to use an updater function: setCount(c => c + 1), which always bases the update on the previous state.",
+    "sourceUrl": "https://react.dev/reference/react/useState#updating-state-based-on-the-previous-state"
+  },
+  {
+    "id": "react-basics-069",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between React.createElement and React.cloneElement?",
+    "options": [
+      "createElement supports only class components, while cloneElement supports only function components",
+      "createElement is synchronous, while cloneElement is asynchronous",
+      "createElement creates a new element, while cloneElement duplicates an existing element in the DOM",
+      "createElement creates a new React element from scratch, while cloneElement copies an existing element and merges in new props or replaces children"
+    ],
+    "correctIndex": 3,
+    "explanation": "React.createElement(type, props, children) creates a new React element with the specified type and props. React.cloneElement(element, props, children) uses an existing element as a template to create a copy, merging new props or replacing children. cloneElement is used when a parent needs to inject additional props into child components, though React docs recommend patterns like render props or Context instead.",
+    "sourceUrl": "https://react.dev/reference/react/cloneElement"
+  },
+  {
+    "id": "react-basics-070",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "Does the component re-render when the button is clicked in the following code?",
+    "code": "function App() {\n  const [value, setValue] = useState('hello');\n\n  console.log('rendered');\n\n  return (\n    <button onClick={() => setValue('hello')}>\n      Click\n    </button>\n  );\n}",
+    "options": [
+      "It re-renders — calling setState always triggers a re-render regardless of Object.is comparison",
+      "An error occurs — you cannot call setState with the same value",
+      "It does not re-render — setting the same value is always skipped",
+      "It does not re-render — React compares with Object.is and skips if the value is the same (though it may render once on the first call)"
+    ],
+    "correctIndex": 3,
+    "explanation": "React uses Object.is to compare the new state with the current state. If they are the same, React skips re-rendering. However, React may still call the component function once before bailing out of rendering its children — this is an implementation detail and does not affect the output. The key behavior is that setting the same value does not cause a meaningful re-render.",
+    "sourceUrl": "https://react.dev/reference/react/useState#ive-updated-the-state-but-the-screen-doesnt-update"
   }
 ]

@@ -1068,5 +1068,88 @@
     "correctIndex": 2,
     "explanation": "React.memo는 고차 컴포넌트로, 이전 props와 다음 props를 얕은 비교(Object.is)하여 변경이 없으면 리렌더링을 건너뜁니다. 단, 컴포넌트 자체의 state나 context가 변경되면 props가 같더라도 리렌더링됩니다. 객체나 함수를 props로 전달할 때는 매번 새로운 참조가 생성되어 메모이제이션이 무효화되므로, useMemo나 useCallback과 함께 사용해야 효과적입니다.",
     "sourceUrl": "https://react.dev/reference/react/memo"
+  },
+  {
+    "id": "react-basics-066",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 버튼을 클릭하면 count의 최종값은? (React 18 기준)",
+    "code": "function App() {\n  const [count, setCount] = useState(0);\n\n  function handleClick() {\n    setCount(c => c + 1);\n    setCount(c => c + 1);\n    setCount(c => c + 1);\n  }\n\n  return <button onClick={handleClick}>{count}</button>;\n}",
+    "options": [
+      "1 — setState는 비동기이므로 마지막 호출만 적용된다",
+      "0 — 이벤트 핸들러 내에서는 상태가 업데이트되지 않는다",
+      "2 — 첫 번째 호출은 무시된다",
+      "3 — 업데이터 함수는 이전 상태를 기반으로 순차 적용된다"
+    ],
+    "correctIndex": 3,
+    "explanation": "setState에 업데이터 함수(c => c + 1)를 전달하면 React는 각 업데이터를 큐에 넣고 이전 상태를 기반으로 순차적으로 적용합니다. 값(count + 1)을 직접 전달하는 것과 달리, 업데이터 함수는 항상 최신 pending 상태를 인자로 받으므로 3번의 호출이 모두 반영되어 최종값은 3이 됩니다.",
+    "sourceUrl": "https://react.dev/learn/queueing-a-series-of-state-updates"
+  },
+  {
+    "id": "react-basics-067",
+    "topic": "react-basics",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "React의 Fiber 아키텍처가 해결하는 핵심 문제는 무엇인가요?",
+    "options": [
+      "렌더링 작업을 작은 단위로 나누어 중단하고 재개할 수 있게 하여, 긴 렌더링이 메인 스레드를 차단하지 않도록 한다",
+      "컴포넌트를 여러 웹 워커에서 병렬로 렌더링하여 멀티코어를 활용한다",
+      "Virtual DOM을 제거하고 실제 DOM을 직접 조작하여 성능을 향상시킨다",
+      "서버에서 컴포넌트를 렌더링하여 클라이언트의 연산 부담을 줄인다"
+    ],
+    "correctIndex": 0,
+    "explanation": "Fiber는 React 16에서 도입된 재조정(reconciliation) 엔진으로, 렌더링 작업을 작은 단위(fiber)로 분할하여 중단과 재개가 가능하게 합니다. 이를 통해 우선순위가 높은 업데이트(사용자 입력 등)를 먼저 처리하고, 우선순위가 낮은 작업은 나중에 처리하는 '시분할(time-slicing)' 방식을 구현합니다. 이전의 스택 기반 재조정기에서는 불가능했던 증분 렌더링이 가능해졌습니다.",
+    "sourceUrl": "https://github.com/acdlite/react-fiber-architecture"
+  },
+  {
+    "id": "react-basics-068",
+    "topic": "react-basics",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 코드에서 1초 간격으로 count가 증가하지 않고 항상 1로만 표시되는 원인은?",
+    "code": "function Timer() {\n  const [count, setCount] = useState(0);\n\n  useEffect(() => {\n    const id = setInterval(() => {\n      setCount(count + 1);\n    }, 1000);\n    return () => clearInterval(id);\n  }, []);\n\n  return <div>{count}</div>;\n}",
+    "options": [
+      "setInterval이 브라우저에서 정확한 1초를 보장하지 않기 때문",
+      "빈 의존성 배열로 인해 콜백이 초기 count(0)를 클로저로 캡처하여, 매번 0 + 1 = 1로 설정되기 때문",
+      "useEffect 안에서 setInterval을 사용할 수 없기 때문",
+      "clearInterval이 매 렌더링마다 호출되어 타이머가 초기화되기 때문"
+    ],
+    "correctIndex": 1,
+    "explanation": "의존성 배열이 빈 배열([])이면 useEffect는 마운트 시 한 번만 실행됩니다. 이때 setInterval 콜백은 초기 렌더링의 count 값(0)을 클로저로 캡처합니다. 따라서 매 1초마다 setCount(0 + 1)이 호출되어 항상 1이 됩니다. 해결 방법은 업데이터 함수 setCount(c => c + 1)을 사용하여 이전 상태를 기반으로 업데이트하는 것입니다.",
+    "sourceUrl": "https://react.dev/reference/react/useState#updating-state-based-on-the-previous-state"
+  },
+  {
+    "id": "react-basics-069",
+    "topic": "react-basics",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "React.createElement와 React.cloneElement의 올바른 차이점은?",
+    "options": [
+      "createElement는 클래스 컴포넌트만, cloneElement는 함수 컴포넌트만 지원한다",
+      "createElement는 동기적이고, cloneElement는 비동기적이다",
+      "createElement는 새 엘리먼트를 생성하고, cloneElement는 기존 엘리먼트를 DOM에서 복제한다",
+      "createElement는 새로운 React 엘리먼트를 처음부터 생성하고, cloneElement는 기존 엘리먼트를 복사하면서 props를 병합하거나 children을 교체한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "React.createElement(type, props, children)는 지정된 타입과 props로 새로운 React 엘리먼트를 생성합니다. 반면 React.cloneElement(element, props, children)는 기존 엘리먼트를 템플릿으로 사용하여 복사본을 만들며, 새로운 props를 병합하거나 children을 교체할 수 있습니다. cloneElement는 부모가 자식 컴포넌트에 추가 props를 주입할 때 사용되지만, React 공식 문서에서는 render props나 Context 같은 패턴을 권장합니다.",
+    "sourceUrl": "https://react.dev/reference/react/cloneElement"
+  },
+  {
+    "id": "react-basics-070",
+    "topic": "react-basics",
+    "type": "output-prediction",
+    "difficulty": "easy",
+    "question": "다음 코드에서 버튼을 클릭하면 컴포넌트가 리렌더링되나요?",
+    "code": "function App() {\n  const [value, setValue] = useState('hello');\n\n  console.log('rendered');\n\n  return (\n    <button onClick={() => setValue('hello')}>\n      Click\n    </button>\n  );\n}",
+    "options": [
+      "리렌더링된다 — Object.is 비교와 관계없이 setState 호출 시 항상 리렌더링된다",
+      "에러가 발생한다 — 같은 값으로 setState를 호출할 수 없다",
+      "리렌더링되지 않는다 — 같은 값을 설정하면 무조건 건너뛴다",
+      "리렌더링되지 않는다 — React가 Object.is로 비교하여 값이 같으면 리렌더링을 건너뛴다 (단, 첫 번째 호출 시에는 렌더링할 수 있다)"
+    ],
+    "correctIndex": 3,
+    "explanation": "React는 Object.is를 사용하여 새로운 상태와 현재 상태를 비교합니다. 값이 같으면 리렌더링을 건너뜁니다. 다만 React가 자식 렌더링을 건너뛰기 전에 해당 컴포넌트 함수를 한 번 호출할 수는 있지만, 이는 구현 세부사항이며 출력에 영향을 주지 않습니다. 핵심은 같은 값을 설정하면 의미 있는 리렌더링이 발생하지 않는다는 것입니다.",
+    "sourceUrl": "https://react.dev/reference/react/useState#ive-updated-the-state-but-the-screen-doesnt-update"
   }
 ]
