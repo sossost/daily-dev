@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-06-11
+
+### Features
+
+- **content**: fix — react-basics-070 correctIndex to 3 (`31db163`)
+
 ## 2026-06-08
 
 ### Features
