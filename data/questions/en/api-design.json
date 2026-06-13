@@ -1055,5 +1055,87 @@
     "correctIndex": 3,
     "explanation": "The status is 429, so the if-block executes. headers.get('Retry-After') returns the string '120' (not null), so Number('120') evaluates to 120. The Retry-After header tells the client how many seconds to wait before retrying. Understanding rate limit headers (Retry-After, X-RateLimit-Remaining, X-RateLimit-Reset) is essential for building resilient API clients that respect server capacity.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After"
+  },
+  {
+    "id": "api-design-066",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "In HTTP content negotiation, what does the quality value (q) in the Accept header indicate?\n\nAccept: text/html, application/json;q=0.9, text/plain;q=0.5",
+    "options": [
+      "The compression ratio the client expects for each content type",
+      "The version number of the content type specification",
+      "The maximum response size in megabytes the client can handle",
+      "The client's relative preference for each content type, where higher values indicate greater preference"
+    ],
+    "correctIndex": 3,
+    "explanation": "The quality value (q) in the Accept header ranges from 0 to 1 and expresses the client's relative preference for each media type. A type without an explicit q value defaults to q=1 (highest preference). In this example, text/html has q=1 (most preferred), application/json has q=0.9, and text/plain has q=0.5 (least preferred). The server uses these values to select the best representation to return.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation"
+  },
+  {
+    "id": "api-design-067",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the correct difference between JSON Merge Patch (RFC 7396) and JSON Patch (RFC 6902) for updating API resources?",
+    "options": [
+      "JSON Merge Patch describes the desired final state by sending a partial document, while JSON Patch describes a sequence of operations (add, remove, replace) to apply",
+      "JSON Merge Patch supports only replacing fields, while JSON Patch supports only adding new fields",
+      "JSON Merge Patch uses the PUT method, while JSON Patch uses the DELETE method",
+      "JSON Merge Patch requires sending the entire resource, while JSON Patch sends only changed fields"
+    ],
+    "correctIndex": 0,
+    "explanation": "JSON Merge Patch (application/merge-patch+json) works by sending a partial JSON document that is merged with the current resource — keys present in the patch overwrite existing values, and a null value removes a key. JSON Patch (application/json-patch+json) sends an array of explicit operations like {\"op\": \"replace\", \"path\": \"/name\", \"value\": \"new\"}. Merge Patch is simpler but cannot distinguish between setting a value to null and removing a field, while JSON Patch provides precise control over every change.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PATCH"
+  },
+  {
+    "id": "api-design-068",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is logged to the console in the following code?\n\nconst cache = new Map();\n\nfunction deduplicatedFetch(url) {\n  if (cache.has(url)) {\n    return cache.get(url);\n  }\n  const promise = fetch(url).then(r => r.json());\n  cache.set(url, promise);\n  return promise;\n}\n\nconst p1 = deduplicatedFetch('/api/user');\nconst p2 = deduplicatedFetch('/api/user');\nconsole.log(p1 === p2);",
+    "code": "const cache = new Map();\n\nfunction deduplicatedFetch(url) {\n  if (cache.has(url)) {\n    return cache.get(url);\n  }\n  const promise = fetch(url).then(r => r.json());\n  cache.set(url, promise);\n  return promise;\n}\n\nconst p1 = deduplicatedFetch('/api/user');\nconst p2 = deduplicatedFetch('/api/user');\nconsole.log(p1 === p2);",
+    "options": [
+      "false",
+      "undefined",
+      "TypeError: Cannot read properties",
+      "true"
+    ],
+    "correctIndex": 3,
+    "explanation": "The deduplicatedFetch function uses a Map to cache promises by URL. The first call with '/api/user' creates a new promise from fetch().then() and stores it in the cache. The second call finds the URL already in the cache and returns the exact same promise object. Since both p1 and p2 reference the same promise object in memory, p1 === p2 evaluates to true. This request deduplication pattern prevents redundant network calls when the same resource is requested multiple times simultaneously.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch"
+  },
+  {
+    "id": "api-design-069",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "What is the problem with the following API pagination implementation using the Link header?\n\napp.get('/api/items', (req, res) => {\n  const page = parseInt(req.query.page) || 1;\n  const limit = parseInt(req.query.limit) || 20;\n  const items = getItems(page, limit);\n  const totalPages = getTotalPages(limit);\n\n  res.set('Link',\n    `</api/items?page=${page - 1}&limit=${limit}>; rel=\"prev\",` +\n    `</api/items?page=${page + 1}&limit=${limit}>; rel=\"next\"`\n  );\n  res.json(items);\n});",
+    "code": "app.get('/api/items', (req, res) => {\n  const page = parseInt(req.query.page) || 1;\n  const limit = parseInt(req.query.limit) || 20;\n  const items = getItems(page, limit);\n  const totalPages = getTotalPages(limit);\n\n  res.set('Link',\n    `</api/items?page=${page - 1}&limit=${limit}>; rel=\"prev\",` +\n    `</api/items?page=${page + 1}&limit=${limit}>; rel=\"next\"`\n  );\n  res.json(items);\n});",
+    "options": [
+      "The Link header always includes prev and next links without checking boundary conditions — page 1 shows a prev link to page 0, and the last page shows a next link beyond the total",
+      "The Link header format is invalid because it uses angle brackets instead of quotes",
+      "parseInt without a radix parameter will parse numbers in octal instead of decimal",
+      "The limit query parameter should not be included in the Link header URLs"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Link header is always set with both prev and next links regardless of the current page position. On page 1, it generates a prev link to page 0, which does not exist. On the last page, it generates a next link beyond totalPages, which returns empty results. The fix is to conditionally include prev only when page > 1 and next only when page < totalPages. The totalPages variable is computed but never used, which is a clear indicator of this bug.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link"
+  },
+  {
+    "id": "api-design-070",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the key difference between HTTP status codes 307 Temporary Redirect and 308 Permanent Redirect compared to 302 and 301?",
+    "options": [
+      "307 and 308 are only used for HTTPS redirects, while 301 and 302 work with any protocol",
+      "307 and 308 can only redirect to the same domain, while 301 and 302 allow cross-domain redirects",
+      "307 and 308 include the response body in the redirect, while 301 and 302 do not",
+      "307 and 308 guarantee the HTTP method and body are preserved during the redirect, while 301 and 302 may change POST to GET"
+    ],
+    "correctIndex": 3,
+    "explanation": "With 301 and 302 redirects, many browsers historically changed POST requests to GET when following the redirect, losing the request body. HTTP 307 (temporary) and 308 (permanent) were introduced to explicitly guarantee that the method and body are not changed during the redirect. This is critical for API design where a POST endpoint is moved — using 308 ensures clients continue sending POST requests with the original body to the new location.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308"
   }
 ]

@@ -1055,5 +1055,87 @@
     "correctIndex": 3,
     "explanation": "status가 429이므로 if 블록이 실행됩니다. headers.get('Retry-After')는 문자열 '120'을 반환하므로(null이 아님) Number('120')이 평가되어 120이 됩니다. Retry-After 헤더는 클라이언트에게 재시도 전 대기해야 할 초 수를 알려줍니다. 속도 제한 헤더(Retry-After, X-RateLimit-Remaining, X-RateLimit-Reset)를 이해하는 것은 서버 용량을 존중하는 견고한 API 클라이언트를 구축하는 데 필수적입니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Retry-After"
+  },
+  {
+    "id": "api-design-066",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "HTTP 콘텐츠 협상에서 Accept 헤더의 품질 값(q)은 무엇을 나타내나요?\n\nAccept: text/html, application/json;q=0.9, text/plain;q=0.5",
+    "options": [
+      "클라이언트가 각 콘텐츠 유형에 기대하는 압축률",
+      "콘텐츠 유형 사양의 버전 번호",
+      "클라이언트가 처리할 수 있는 최대 응답 크기(메가바이트)",
+      "각 콘텐츠 유형에 대한 클라이언트의 상대적 선호도로, 값이 높을수록 더 선호함을 나타낸다"
+    ],
+    "correctIndex": 3,
+    "explanation": "Accept 헤더의 품질 값(q)은 0에서 1 사이의 값으로, 각 미디어 유형에 대한 클라이언트의 상대적 선호도를 표현합니다. 명시적인 q 값이 없는 유형은 기본값 q=1(가장 높은 선호도)을 갖습니다. 이 예에서 text/html은 q=1(가장 선호), application/json은 q=0.9, text/plain은 q=0.5(가장 낮은 선호)입니다. 서버는 이 값들을 사용하여 반환할 최적의 표현을 선택합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Content_negotiation"
+  },
+  {
+    "id": "api-design-067",
+    "topic": "api-design",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "API 리소스 업데이트를 위한 JSON Merge Patch(RFC 7396)와 JSON Patch(RFC 6902)의 올바른 차이점은 무엇인가요?",
+    "options": [
+      "JSON Merge Patch는 부분 문서를 전송하여 원하는 최종 상태를 기술하고, JSON Patch는 적용할 연산(add, remove, replace) 시퀀스를 기술한다",
+      "JSON Merge Patch는 필드 교체만 지원하고, JSON Patch는 새 필드 추가만 지원한다",
+      "JSON Merge Patch는 PUT 메서드를 사용하고, JSON Patch는 DELETE 메서드를 사용한다",
+      "JSON Merge Patch는 전체 리소스를 전송해야 하고, JSON Patch는 변경된 필드만 전송한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "JSON Merge Patch(application/merge-patch+json)는 부분 JSON 문서를 전송하여 현재 리소스와 병합하는 방식입니다. 패치에 있는 키는 기존 값을 덮어쓰고, null 값은 키를 제거합니다. JSON Patch(application/json-patch+json)는 {\"op\": \"replace\", \"path\": \"/name\", \"value\": \"new\"}와 같은 명시적 연산의 배열을 전송합니다. Merge Patch는 더 간단하지만 값을 null로 설정하는 것과 필드를 제거하는 것을 구분할 수 없고, JSON Patch는 모든 변경에 대해 정밀한 제어를 제공합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Methods/PATCH"
+  },
+  {
+    "id": "api-design-068",
+    "topic": "api-design",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "다음 코드에서 콘솔에 출력되는 값은 무엇인가요?\n\nconst cache = new Map();\n\nfunction deduplicatedFetch(url) {\n  if (cache.has(url)) {\n    return cache.get(url);\n  }\n  const promise = fetch(url).then(r => r.json());\n  cache.set(url, promise);\n  return promise;\n}\n\nconst p1 = deduplicatedFetch('/api/user');\nconst p2 = deduplicatedFetch('/api/user');\nconsole.log(p1 === p2);",
+    "code": "const cache = new Map();\n\nfunction deduplicatedFetch(url) {\n  if (cache.has(url)) {\n    return cache.get(url);\n  }\n  const promise = fetch(url).then(r => r.json());\n  cache.set(url, promise);\n  return promise;\n}\n\nconst p1 = deduplicatedFetch('/api/user');\nconst p2 = deduplicatedFetch('/api/user');\nconsole.log(p1 === p2);",
+    "options": [
+      "false",
+      "undefined",
+      "TypeError: Cannot read properties",
+      "true"
+    ],
+    "correctIndex": 3,
+    "explanation": "deduplicatedFetch 함수는 Map을 사용하여 URL별로 프로미스를 캐시합니다. '/api/user'로 첫 번째 호출 시 fetch().then()에서 새 프로미스를 생성하고 캐시에 저장합니다. 두 번째 호출 시 캐시에서 URL을 찾아 동일한 프로미스 객체를 반환합니다. p1과 p2가 메모리에서 동일한 프로미스 객체를 참조하므로 p1 === p2는 true로 평가됩니다. 이 요청 중복 제거 패턴은 동일한 리소스가 동시에 여러 번 요청될 때 불필요한 네트워크 호출을 방지합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/API/Fetch_API/Using_Fetch"
+  },
+  {
+    "id": "api-design-069",
+    "topic": "api-design",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "다음 Link 헤더를 사용한 API 페이지네이션 구현의 문제점은 무엇인가요?\n\napp.get('/api/items', (req, res) => {\n  const page = parseInt(req.query.page) || 1;\n  const limit = parseInt(req.query.limit) || 20;\n  const items = getItems(page, limit);\n  const totalPages = getTotalPages(limit);\n\n  res.set('Link',\n    `</api/items?page=${page - 1}&limit=${limit}>; rel=\"prev\",` +\n    `</api/items?page=${page + 1}&limit=${limit}>; rel=\"next\"`\n  );\n  res.json(items);\n});",
+    "code": "app.get('/api/items', (req, res) => {\n  const page = parseInt(req.query.page) || 1;\n  const limit = parseInt(req.query.limit) || 20;\n  const items = getItems(page, limit);\n  const totalPages = getTotalPages(limit);\n\n  res.set('Link',\n    `</api/items?page=${page - 1}&limit=${limit}>; rel=\"prev\",` +\n    `</api/items?page=${page + 1}&limit=${limit}>; rel=\"next\"`\n  );\n  res.json(items);\n});",
+    "options": [
+      "Link 헤더가 경계 조건을 확인하지 않고 항상 prev와 next 링크를 포함한다 — 1페이지에서 0페이지로의 prev 링크가 표시되고, 마지막 페이지에서 전체 페이지 수를 초과하는 next 링크가 표시된다",
+      "Link 헤더 형식이 따옴표 대신 꺾쇠괄호를 사용하므로 유효하지 않다",
+      "radix 매개변수 없는 parseInt는 숫자를 10진수 대신 8진수로 파싱한다",
+      "limit 쿼리 매개변수가 Link 헤더 URL에 포함되면 안 된다"
+    ],
+    "correctIndex": 0,
+    "explanation": "Link 헤더가 현재 페이지 위치에 관계없이 항상 prev와 next 링크 모두 설정됩니다. 1페이지에서는 존재하지 않는 0페이지로의 prev 링크를 생성합니다. 마지막 페이지에서는 totalPages를 초과하는 next 링크를 생성하여 빈 결과를 반환합니다. 수정하려면 page > 1일 때만 prev를, page < totalPages일 때만 next를 조건부로 포함해야 합니다. totalPages 변수가 계산되었지만 사용되지 않는 것이 이 버그의 명확한 지표입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Link"
+  },
+  {
+    "id": "api-design-070",
+    "topic": "api-design",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "HTTP 상태 코드 307 Temporary Redirect와 308 Permanent Redirect가 302, 301과 비교하여 가지는 핵심 차이점은 무엇인가요?",
+    "options": [
+      "307과 308은 HTTPS 리다이렉트에만 사용되고, 301과 302는 모든 프로토콜에서 동작한다",
+      "307과 308은 동일 도메인으로만 리다이렉트할 수 있고, 301과 302는 교차 도메인 리다이렉트를 허용한다",
+      "307과 308은 응답 본문을 리다이렉트에 포함하지만, 301과 302는 포함하지 않는다",
+      "307과 308은 리다이렉트 시 HTTP 메서드와 본문이 보존됨을 보장하고, 301과 302는 POST를 GET으로 변경할 수 있다"
+    ],
+    "correctIndex": 3,
+    "explanation": "301과 302 리다이렉트에서 많은 브라우저가 역사적으로 리다이렉트를 따를 때 POST 요청을 GET으로 변경하여 요청 본문을 잃어버렸습니다. HTTP 307(임시)과 308(영구)은 리다이렉트 중 메서드와 본문이 변경되지 않음을 명시적으로 보장하기 위해 도입되었습니다. 이는 POST 엔드포인트가 이동된 API 설계에서 중요합니다. 308을 사용하면 클라이언트가 원래 본문과 함께 POST 요청을 새 위치로 계속 보내도록 보장합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/HTTP/Status/308"
   }
 ]
