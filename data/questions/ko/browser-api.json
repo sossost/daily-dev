@@ -1067,5 +1067,88 @@
     "correctIndex": 3,
     "explanation": "navigator.storage.persist()는 브라우저에게 사이트의 저장 데이터를 영구적으로 유지해 달라고 요청합니다. 기본적으로 브라우저는 저장 공간이 부족하면 오래된 사이트의 데이터를 자동으로 삭제(eviction)할 수 있습니다. persist()가 승인되면 사용자가 직접 삭제하지 않는 한 데이터가 유지됩니다. navigator.storage.estimate()로 현재 사용량과 할당량을 확인할 수도 있습니다.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist"
+  },
+  {
+    "id": "browser-api-066",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "다음 코드에서 요소의 너비를 읽고 스타일을 변경하는 작업을 반복합니다. 성능 문제의 원인은 무엇인가요?",
+    "code": "const items = document.querySelectorAll('.item');\nitems.forEach(item => {\n  const width = item.offsetWidth;\n  item.style.width = width + 10 + 'px';\n});",
+    "options": [
+      "offsetWidth 읽기와 style.width 쓰기가 반복되면서 매번 강제 리플로우(layout thrashing)가 발생한다",
+      "querySelectorAll이 라이브 컬렉션을 반환하여 루프 중 DOM이 변경된다",
+      "forEach는 NodeList에서 사용할 수 없어 에러가 발생한다",
+      "offsetWidth는 비동기적으로 계산되므로 정확한 값을 얻을 수 없다"
+    ],
+    "correctIndex": 0,
+    "explanation": "offsetWidth를 읽으면 브라우저는 최신 레이아웃 정보를 반환하기 위해 보류 중인 스타일 변경을 즉시 적용(리플로우)합니다. 루프 안에서 읽기(offsetWidth)와 쓰기(style.width)를 번갈아 하면 매 반복마다 강제 리플로우가 발생합니다. 이를 'layout thrashing'이라 하며, 모든 읽기를 먼저 수행한 후 쓰기를 일괄 처리하면 해결됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetWidth"
+  },
+  {
+    "id": "browser-api-067",
+    "topic": "browser-api",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "TextEncoder와 btoa()의 차이점으로 올바른 것은?",
+    "options": [
+      "둘 다 문자열을 Base64로 인코딩한다",
+      "TextEncoder는 바이너리 데이터를 텍스트로 변환하고 btoa()는 텍스트를 바이너리로 변환한다",
+      "btoa()는 비동기적이고 TextEncoder는 동기적이다",
+      "TextEncoder는 문자열을 UTF-8 바이트 배열(Uint8Array)로 변환하고, btoa()는 문자열을 Base64 문자열로 인코딩한다"
+    ],
+    "correctIndex": 3,
+    "explanation": "TextEncoder는 문자열을 UTF-8로 인코딩된 Uint8Array로 변환합니다. btoa()는 바이너리 문자열을 Base64 ASCII 문자열로 인코딩합니다. 둘의 목적이 완전히 다릅니다. btoa()는 Latin-1 범위(U+0000~U+00FF)의 문자만 처리할 수 있어 한글 등 유니코드 문자는 에러를 발생시키지만, TextEncoder는 모든 유니코드 문자를 처리할 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder"
+  },
+  {
+    "id": "browser-api-068",
+    "topic": "browser-api",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 코드의 출력 결과는 무엇인가요?",
+    "code": "const div = document.createElement('div');\ndiv.innerHTML = '<p>A</p>text<p>B</p>';\n\nconst walker = document.createTreeWalker(\n  div,\n  NodeFilter.SHOW_TEXT\n);\n\nconst texts = [];\nwhile (walker.nextNode()) {\n  texts.push(walker.currentNode.textContent);\n}\nconsole.log(texts.length);\nconsole.log(texts[1]);",
+    "options": [
+      "2, B",
+      "3, text",
+      "3, B",
+      "2, text"
+    ],
+    "correctIndex": 1,
+    "explanation": "document.createTreeWalker()는 노드 타입별로 필터링하며 DOM 트리를 순회합니다. NodeFilter.SHOW_TEXT를 사용하면 텍스트 노드만 방문합니다. innerHTML '<p>A</p>text<p>B</p>'는 세 개의 텍스트 노드를 생성합니다: 첫 번째 <p> 안의 'A', 두 <p> 사이의 'text', 두 번째 <p> 안의 'B'. 따라서 texts.length는 3이고 texts[1](두 번째 텍스트 노드)은 'text'입니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Document/createTreeWalker"
+  },
+  {
+    "id": "browser-api-069",
+    "topic": "browser-api",
+    "type": "concept",
+    "difficulty": "medium",
+    "question": "Screen Wake Lock API (navigator.wakeLock)의 주요 용도는 무엇인가요?",
+    "options": [
+      "화면 밝기를 프로그래밍 방식으로 조절한다",
+      "사용자가 화면을 터치하지 않아도 화면이 자동으로 꺼지지 않도록 요청한다",
+      "절전 모드에서도 백그라운드 작업을 계속 실행한다",
+      "화면 잠금 해제 시 비밀번호 대신 생체 인증을 사용한다"
+    ],
+    "correctIndex": 1,
+    "explanation": "Screen Wake Lock API는 브라우저에 화면이 자동으로 어두워지거나 꺼지지 않도록 요청할 수 있게 해줍니다. navigator.wakeLock.request('screen')으로 활성화하며, 레시피 앱, 프레젠테이션, 지도 내비게이션 등 사용자가 화면을 계속 봐야 하지만 터치하지 않는 상황에서 유용합니다. 탭이 비활성화되면 자동으로 해제됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API"
+  },
+  {
+    "id": "browser-api-070",
+    "topic": "browser-api",
+    "type": "debugging",
+    "difficulty": "easy",
+    "question": "다음 코드에서 요소의 계산된 폰트 크기를 숫자로 얻으려 합니다. 문제점은 무엇인가요?",
+    "code": "const el = document.querySelector('.title');\nconst size = window.getComputedStyle(el).fontSize;\nconst doubled = size * 2;\nconsole.log(doubled);",
+    "options": [
+      "getComputedStyle()은 문자열(예: '16px')을 반환하므로 parseFloat()로 숫자 변환이 필요하다",
+      "getComputedStyle()은 비동기 함수이므로 await가 필요하다",
+      "fontSize 대신 font-size를 사용해야 한다",
+      "getComputedStyle()은 인라인 스타일만 반환한다"
+    ],
+    "correctIndex": 0,
+    "explanation": "window.getComputedStyle()은 모든 CSS 속성을 문자열로 반환합니다. fontSize는 '16px'과 같은 단위가 포함된 문자열이므로 산술 연산에 사용하면 NaN이 됩니다. parseFloat('16px')를 사용하면 숫자 16을 얻을 수 있습니다. 참고로 getComputedStyle은 카멜 케이스(fontSize)와 케밥 케이스(font-size) 모두 지원합니다.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle"
   }
 ]
