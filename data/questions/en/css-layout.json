@@ -1058,5 +1058,86 @@
     "correctIndex": 2,
     "explanation": "On mobile browsers, 100vh uses the maximum viewport size including the address bar, which can be larger than the actually visible area. 100dvh (dynamic viewport height) dynamically reflects the actual viewport height as the address bar shows or hides. 100svh (small) and 100lvh (large) represent the minimum and maximum viewport heights respectively.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/length#viewport_units"
+  },
+  {
+    "id": "css-layout-066",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "What is the difference between contain: layout and contain: size in CSS?",
+    "options": [
+      "contain: layout isolates an element's layout changes from affecting external elements, while contain: size prevents the element's size from being determined by its children",
+      "contain: size enables responsive sizing and contain: layout disables it",
+      "Both are identical and only named differently depending on the browser",
+      "contain: layout hides the element from the screen, and contain: size sets the size to 0"
+    ],
+    "correctIndex": 0,
+    "explanation": "contain: layout isolates layout changes inside the element so they do not affect elements outside. This allows the browser to skip recalculating layout for elements outside the contained subtree. contain: size prevents the element's size from being determined by its child content, allowing the browser to skip size recalculations when children change. Both properties are used for rendering performance optimization.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/contain"
+  },
+  {
+    "id": "css-layout-067",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "What is the actual width of the .child element in the following CSS?",
+    "code": ".parent {\n  display: flex;\n  width: 600px;\n}\n.child {\n  flex: 1 1 0;\n  min-width: 250px;\n  max-width: 150px;\n}",
+    "options": [
+      "600px (flex-grow takes up all space)",
+      "0px (flex-basis is 0)",
+      "150px (max-width limits the final size)",
+      "250px (min-width takes priority over max-width)"
+    ],
+    "correctIndex": 3,
+    "explanation": "According to the CSS specification, when min-width and max-width conflict, min-width always wins. flex-grow: 1 would cause the child to expand to 600px, and max-width: 150px would normally limit that. However, since min-width: 250px is greater than max-width: 150px, the CSS specification dictates that min-width takes precedence, making the final width 250px. This is a fundamental CSS rule that applies regardless of flex calculations.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/min-width"
+  },
+  {
+    "id": "css-layout-068",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "A CSS Grid container has gap: 20px set, but there's also a 20px space between the first row and the top of the container. What is the most likely cause?",
+    "options": [
+      "The gap property always adds spacing to the container edges as well",
+      "There is an empty row defined in grid-template-rows, creating an empty track above the first item",
+      "gap works the same as padding, applying spacing to all four sides",
+      "It is caused by the browser's default margin from the user agent stylesheet"
+    ],
+    "correctIndex": 1,
+    "explanation": "The gap property only adds spacing between grid tracks (rows/columns), not at the container edges. If spacing appears at the top of the container, it means grid-template-rows has an empty track defined, or items are placed starting from the second row. For example, if an item has grid-row-start: 2, the gap between the empty first row and the second row appears as top spacing.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/gap"
+  },
+  {
+    "id": "css-layout-069",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "What is the role of the CSS isolation: isolate property?",
+    "options": [
+      "It completely separates the element from the DOM tree so events do not propagate",
+      "It prevents the element's styles from being inherited by its children",
+      "It forces the creation of a new stacking context on the element so internal z-index values do not mix with external ones",
+      "It separates the element into a dedicated rendering layer to enable GPU acceleration"
+    ],
+    "correctIndex": 2,
+    "explanation": "isolation: isolate explicitly creates a new stacking context on the element. This makes z-index values inside the element operate independently from z-index values of external elements. This is particularly useful in component-based development, preventing z-index conflicts between a component's internals and outside elements. Unlike transform or opacity, it creates a stacking context without any visual side effects.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/isolation"
+  },
+  {
+    "id": "css-layout-070",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the difference between using gap and margin for spacing in Flexbox?",
+    "options": [
+      "gap is only supported in IE while margin is supported in all browsers",
+      "gap and margin work identically with no difference",
+      "margin adds space outside the first and last items as well, while gap only adds space between items",
+      "gap only applies to inline elements and margin only applies to block elements"
+    ],
+    "correctIndex": 2,
+    "explanation": "The gap property only adds spacing between flex items. No space is added before the first item or after the last item. In contrast, margin is applied to the outside of each item, so the first item gets margin on the left (or top) and the last item gets margin on the right (or bottom). This makes gap more convenient for creating clean spacing without unwanted space at the container edges.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/CSS/gap"
   }
 ]

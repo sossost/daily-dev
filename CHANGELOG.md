@@ -2,6 +2,12 @@
 
 > Auto-generated from git history. Do not edit manually.
 
+## 2026-06-15
+
+### Features
+
+- **content**: fix — replace overlapping browser-api-068 (`63fd8c7`)
+
 ## 2026-06-14
 
 ### Features

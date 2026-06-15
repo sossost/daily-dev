@@ -1058,5 +1058,86 @@
     "correctIndex": 2,
     "explanation": "모바일 브라우저에서 100vh는 주소 표시줄을 포함한 최대 뷰포트 크기를 사용하므로 실제 보이는 영역보다 클 수 있습니다. 100dvh(dynamic viewport height)는 주소 표시줄의 표시/숨김 상태에 따라 동적으로 변하는 실제 뷰포트 높이를 반영합니다. 100svh(small)와 100lvh(large)는 각각 최소/최대 뷰포트 높이를 나타냅니다.",
     "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/length#viewport_units"
+  },
+  {
+    "id": "css-layout-066",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "medium",
+    "question": "CSS contain 속성의 contain: layout과 contain: size의 차이로 올바른 것은?",
+    "options": [
+      "contain: layout은 요소의 레이아웃 변경이 외부에 영향을 주지 않도록 격리하고, contain: size는 요소의 크기가 자식에 의해 결정되지 않도록 한다",
+      "contain: size는 반응형 크기 조절을 활성화하고, contain: layout은 비활성화한다",
+      "둘 다 동일하며 브라우저에 따라 이름만 다르다",
+      "contain: layout은 요소를 화면에서 숨기고, contain: size는 크기만 0으로 만든다"
+    ],
+    "correctIndex": 0,
+    "explanation": "contain: layout은 요소 내부의 레이아웃 변경이 외부 요소의 레이아웃에 영향을 주지 않도록 격리합니다. 이를 통해 브라우저는 해당 요소 외부의 레이아웃을 재계산하지 않아도 됩니다. contain: size는 요소의 크기가 자식 콘텐츠에 의해 결정되지 않도록 하여, 자식이 변경되어도 부모의 크기 재계산을 건너뛸 수 있게 합니다. 두 속성 모두 렌더링 성능 최적화에 사용됩니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/contain"
+  },
+  {
+    "id": "css-layout-067",
+    "topic": "css-layout",
+    "type": "output-prediction",
+    "difficulty": "hard",
+    "question": "다음 CSS에서 .child 요소의 실제 너비는?",
+    "code": ".parent {\n  display: flex;\n  width: 600px;\n}\n.child {\n  flex: 1 1 0;\n  min-width: 250px;\n  max-width: 150px;\n}",
+    "options": [
+      "600px (flex-grow로 전체를 차지)",
+      "0px (flex-basis가 0이므로)",
+      "150px (max-width가 최종 크기를 제한)",
+      "250px (min-width가 max-width보다 우선)"
+    ],
+    "correctIndex": 3,
+    "explanation": "CSS 사양에서 min-width와 max-width가 충돌할 경우 min-width가 항상 우선합니다. flex-grow: 1로 인해 자식은 600px까지 늘어나려 하지만, max-width: 150px가 이를 제한합니다. 그러나 min-width: 250px가 max-width: 150px보다 크므로, CSS 사양에 따라 min-width가 우선 적용되어 최종 너비는 250px가 됩니다. 이는 flex 계산과 무관하게 적용되는 CSS의 기본 규칙입니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/min-width"
+  },
+  {
+    "id": "css-layout-068",
+    "topic": "css-layout",
+    "type": "debugging",
+    "difficulty": "medium",
+    "question": "CSS Grid 컨테이너에 gap: 20px를 설정했는데, 첫 번째 행과 컨테이너 상단 사이에도 20px 간격이 생깁니다. 원인으로 가장 적절한 것은?",
+    "options": [
+      "gap 속성은 항상 컨테이너 가장자리에도 여백을 추가한다",
+      "grid-template-rows에 빈 행이 정의되어 있어 첫 번째 아이템 위에 빈 트랙이 존재한다",
+      "gap은 padding과 동일하게 동작하므로 상하좌우 모두 적용된다",
+      "브라우저 기본 스타일(user agent stylesheet)의 margin 때문이다"
+    ],
+    "correctIndex": 1,
+    "explanation": "gap 속성은 그리드 트랙(행/열) 사이에만 간격을 추가하며, 컨테이너 가장자리에는 간격을 추가하지 않습니다. 만약 컨테이너 상단에 간격이 보인다면, grid-template-rows 정의에 빈 트랙이 포함되어 있거나 아이템이 첫 번째 행이 아닌 두 번째 행부터 배치된 경우입니다. 예를 들어 grid-row-start: 2로 설정하면 첫 번째 빈 행과의 gap이 상단 여백처럼 보일 수 있습니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/gap"
+  },
+  {
+    "id": "css-layout-069",
+    "topic": "css-layout",
+    "type": "concept",
+    "difficulty": "hard",
+    "question": "CSS isolation: isolate 속성의 역할로 올바른 것은?",
+    "options": [
+      "요소를 DOM 트리에서 완전히 분리하여 이벤트가 전파되지 않게 한다",
+      "요소의 스타일이 자식에게 상속되지 않도록 차단한다",
+      "요소에 새로운 쌓임 맥락(stacking context)을 강제로 생성하여 내부의 z-index가 외부와 섞이지 않게 한다",
+      "요소를 별도의 렌더링 레이어로 분리하여 GPU 가속을 활성화한다"
+    ],
+    "correctIndex": 2,
+    "explanation": "isolation: isolate는 요소에 새로운 쌓임 맥락(stacking context)을 명시적으로 생성합니다. 이를 통해 해당 요소 내부의 z-index 값이 외부 요소의 z-index와 독립적으로 동작합니다. 이는 컴포넌트 기반 개발에서 특히 유용한데, 컴포넌트 내부의 z-index가 외부 요소와 예기치 않게 겹치는 문제를 방지할 수 있습니다. transform이나 opacity 등의 부수효과 없이 순수하게 쌓임 맥락만 생성합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/isolation"
+  },
+  {
+    "id": "css-layout-070",
+    "topic": "css-layout",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "Flexbox에서 gap 속성과 margin을 사용한 간격 처리의 차이로 올바른 것은?",
+    "options": [
+      "gap은 IE에서만 지원되고 margin은 모든 브라우저에서 지원된다",
+      "gap과 margin은 완전히 동일하게 동작하며 차이가 없다",
+      "margin은 아이템 사이뿐만 아니라 첫 번째와 마지막 아이템의 외부에도 공간을 추가하지만, gap은 아이템 사이에만 공간을 추가한다",
+      "gap은 인라인 요소에만 적용되고 margin은 블록 요소에만 적용된다"
+    ],
+    "correctIndex": 2,
+    "explanation": "gap 속성은 플렉스 아이템 사이에만 간격을 추가합니다. 첫 번째 아이템 앞이나 마지막 아이템 뒤에는 공간이 생기지 않습니다. 반면 margin은 각 아이템의 외부에 적용되므로, 첫 번째 아이템의 왼쪽(또는 위)과 마지막 아이템의 오른쪽(또는 아래)에도 여백이 생깁니다. 이 때문에 gap은 컨테이너 가장자리에 원치 않는 공간 없이 깔끔한 간격을 만들 수 있어 레이아웃 구현에 더 편리합니다.",
+    "sourceUrl": "https://developer.mozilla.org/ko/docs/Web/CSS/gap"
   }
 ]
