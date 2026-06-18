@@ -1074,5 +1074,88 @@
     "correctIndex": 0,
     "explanation": "In array destructuring, the rest element pattern (...rest) collects all remaining elements that were not assigned to preceding variables into a new array. first gets 10, and rest gets [20, 30, 40] as an array. The rest element pattern can only appear at the end of a destructuring pattern, and if no elements remain, it becomes an empty array.",
     "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#assigning_the_rest_of_an_array_to_a_variable"
+  },
+  {
+    "id": "data-structures-066",
+    "topic": "data-structures",
+    "type": "concept",
+    "difficulty": "easy",
+    "question": "What is the default behavior of the Array.prototype.flat() method?",
+    "options": [
+      "It completely flattens all levels of nesting",
+      "It sorts the array elements in ascending order",
+      "It removes falsy values from the array",
+      "It flattens only one level of nested arrays"
+    ],
+    "correctIndex": 3,
+    "explanation": "flat() defaults to a depth argument of 1, so it only flattens one level of nested arrays. For example, [1, [2, [3]]].flat() becomes [1, 2, [3]]. To flatten all levels, you need to use flat(Infinity). Additionally, flat() has the side effect of removing empty slots (holes) in sparse arrays.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat"
+  },
+  {
+    "id": "data-structures-067",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const map = new Map();\nmap.set('a', 1);\nmap.set('b', 2);\nmap.set('c', 3);\nmap.delete('b');\nmap.set('b', 4);\nconsole.log([...map.keys()]);",
+    "options": [
+      "['a', 'c', 'b']",
+      "['a', 'b', 'c']",
+      "['b', 'a', 'c']",
+      "['a', 'c', 'b'] or ['a', 'b', 'c'] (implementation-dependent)"
+    ],
+    "correctIndex": 0,
+    "explanation": "Map preserves insertion order. When 'b' is removed with delete() and then re-added with set(), it is treated as a new insertion and placed at the end. Therefore, the order is 'a' (first insertion), 'c' (existing undeleted entry), 'b' (re-inserted). This demonstrates that Map's insertion order guarantee is based on when currently existing entries were inserted, not when a key was first ever used.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map"
+  },
+  {
+    "id": "data-structures-068",
+    "topic": "data-structures",
+    "type": "debugging",
+    "difficulty": "hard",
+    "question": "Why does the following LRU cache implementation fail to correctly update the recently-used order when get() is called?",
+    "code": "class LRUCache {\n  constructor(capacity) {\n    this.capacity = capacity;\n    this.cache = new Map();\n  }\n  get(key) {\n    if (!this.cache.has(key)) return -1;\n    return this.cache.get(key);\n  }\n  set(key, value) {\n    if (this.cache.size >= this.capacity && !this.cache.has(key)) {\n      const oldest = this.cache.keys().next().value;\n      this.cache.delete(oldest);\n    }\n    this.cache.set(key, value);\n  }\n}",
+    "options": [
+      "Map's keys() does not guarantee insertion order",
+      "get() does not delete and re-insert the key to update the Map's order",
+      "There is an off-by-one error in the capacity comparison",
+      "Map's has() method cannot detect keys with undefined values"
+    ],
+    "correctIndex": 1,
+    "explanation": "In an LRU cache, get() must mark the accessed key as 'recently used'. Since Map maintains insertion order, deleting a key and re-inserting it with set() moves it to the end (most recent position). The current get() simply returns the value without updating order, so when eviction occurs later, the wrong entry (one that was accessed but not reordered) may be removed instead of the truly least-recently-used one.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map"
+  },
+  {
+    "id": "data-structures-069",
+    "topic": "data-structures",
+    "type": "output-prediction",
+    "difficulty": "medium",
+    "question": "What is the output of the following code?",
+    "code": "const arr = [1, [2, 3], [4, [5, 6]]];\nconst result = arr.flatMap(x => x);\nconsole.log(result);",
+    "options": [
+      "[1, 2, 3, 4, 5, 6]",
+      "[1, 2, 3, 4, [5, 6]]",
+      "[[1], [2, 3], [4, [5, 6]]]",
+      "[1, [2, 3], [4, [5, 6]]]"
+    ],
+    "correctIndex": 1,
+    "explanation": "flatMap() first applies map() and then flattens the result by one level (depth 1). The callback x => x returns each element as-is, so the map result is identical to the original array. Then flat(1) is applied, yielding [1, 2, 3, 4, [5, 6]]. The inner [5, 6] is at depth 2, so it is not flattened by flatMap() which only flattens one level deep.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap"
+  },
+  {
+    "id": "data-structures-070",
+    "topic": "data-structures",
+    "type": "comparison",
+    "difficulty": "easy",
+    "question": "What is the correct difference between the spread operator ([...iterable]) and Array.from(iterable)?",
+    "options": [
+      "The spread operator is always faster than Array.from()",
+      "The spread operator can only convert iterables, while Array.from() can also convert array-like objects",
+      "Array.from() mutates the original, while the spread operator always creates a new array",
+      "Array.from() cannot convert Sets and Maps"
+    ],
+    "correctIndex": 1,
+    "explanation": "The spread operator ([...x]) can only convert objects that implement Symbol.iterator (iterables) into arrays. Array.from(), on the other hand, can convert both iterables and array-like objects (objects with a length property and indexed keys, such as arguments and NodeList). Additionally, Array.from() accepts a mapping function as its second argument, allowing you to transform values during conversion.",
+    "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from"
   }
 ]
